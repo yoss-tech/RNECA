@@ -1,0 +1,425 @@
+@import url('https://fonts.googleapis.com/css2?family=Bitcount+Grid+Single:wght@100..900&family=Caveat:wght@400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+    --primary-color: #691b31;
+    --secondary-color: #A02142;
+    --negro-color: #545454;
+    --gris-color: #98989A;
+    --dorado-color: #BC955B;
+    --beige-color: #DDC9A3;
+    --blanco-color: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    width: 100%;
+    min-height: 100vh;
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+}
+
+body {
+    background: #f5f5f5;
+}
+
+.simple-linear {
+    background: linear-gradient(180deg, #691b31, #A02142);
+    min-height: 100vh;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.color {
+    color: var(--dorado-color);
+}
+
+.labelColor {
+    color: var(--primary-color);
+    font-weight: bold;
+    margin: 10px;
+}
+
+.header {
+    width: 100%;
+    height: 70px;
+    background-color: var(--primary-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    width: 180px;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.acciones-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.icono {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.perfil {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+}
+
+.perfil-icono {
+    font-size: 28px;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.nav {
+    width: 100%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.main {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
+    padding: 120px 40px 40px;
+    flex-wrap: wrap;
+}
+
+.left-content {
+    width: 100%;
+    max-width: 550px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.container-img {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    width: 100%;
+    max-width: 450px;
+    background-color: var(--blanco-color);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.card-conten {
+    width: 99%;
+    background-color: var(--blanco-color);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.submenu{
+    list-style: none;
+    margin-top: 10px;
+    padding-left: 5px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.submenu li{
+    margin: 10px 0;
+}
+.submenu i{
+    color: var(--blanco-color);
+}
+
+.submenu a{
+    text-decoration: none;
+    color: white;
+    font-size: 14px;
+}
+
+.submenu a:hover{
+    color: #cfcfcf;
+}
+
+h1 {
+    font-size: 60px;
+    color: var(--blanco-color);
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 24px;
+    color: var(--blanco-color);
+    font-weight: 700;
+}
+
+h4 {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--negro-color);
+}
+
+h5 {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--negro-color);
+}
+
+.p {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin:0;
+}
+
+label {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--negro-color);
+}
+
+input,
+.mes {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    font-size: 16px;
+}
+
+input:focus,
+.mes:focus {
+    border-color: var(--primary-color);
+}
+
+.btn1 {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+
+i {
+    padding: 5px;
+}
+
+.sidebar {
+    width: 210px;
+    height: calc(100vh - 70px);
+    background: var(--primary-color);
+    position: fixed;
+    top: 70px;
+    left: 0;
+    overflow-y: auto;
+    transition: 0.3s;
+    z-index: 999;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: white;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    margin-bottom: 5x;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.content {
+    margin-left: 240px;
+    margin-top: 70px;
+    padding: 10px;
+    width: calc(100% - 240px);
+    min-height: calc(100vh - 70px);
+    transition: 0.3s;
+}
+
+@media (max-width: 992px) {
+    .main {
+        gap: 50px;
+        padding: 120px 30px 40px;
+    }
+
+    h1 {
+        font-size: 48px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+
+    .sidebar {
+        width: 200px;
+    }
+
+    .content {
+        margin-left: 200px;
+        width: calc(100% - 200px);
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 0 15px;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .logo img {
+        width: 140px;
+    }
+
+    .acciones-header {
+        gap: 10px;
+    }
+
+    .main {
+        flex-direction: column;
+        padding: 110px 20px 30px;
+        gap: 40px;
+    }
+
+    .left-content {
+        max-width: 100%;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 40px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    .card {
+        padding: 25px;
+    }
+
+    .sidebar {
+        width: 250px;
+        height: 100vh;
+        top: 0;
+        left: -250px;
+        padding-top: 90px;
+        overflow-y: hidden;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .content {
+        width: 100%;
+        margin-left: 0;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        height: 70px;
+    }
+
+    h1 {
+        font-size: 32px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    h4 {
+        font-size: 20px;
+    }
+
+    h5 {
+        font-size: 16px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    input,
+    .mes,
+    .btn1 {
+        font-size: 15px;
+        padding: 12px;
+    }
+}
