@@ -3,28 +3,27 @@ import "/resources/css/Style.css";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
+import VECA_Presente from "./Eca_Presente.jsx";
+import VECA_Actividades from "./Eca_Actividades.jsx";
+
+
 function VECA_Inicio() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [submenuOpen, setSubmenuOpen] = useState(false);
+  const [vistaActual, setVistaActual] = useState("inicio");
 
   return (
-    <body>
+    <>
       <header className="header">
 
-        <button
-          className="menu-toggle"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
+        <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} >
           <i className="bi bi-list"></i>
         </button>
 
-        <div className="logo">
-          <img src={miImagen} alt="Logo RNECA" />
-        </div>
+        <div className="logo"><img src={miImagen} alt="Logo RNECA" /></div>
 
         <div className="acciones-header">
-
           <button className="icono">
             <i className="bi bi-envelope"></i>
           </button>
@@ -38,12 +37,10 @@ function VECA_Inicio() {
               <i className="bi bi-person-circle perfil-icono"></i>
             </a>
           </div>
-
         </div>
       </header>
 
       <div className={`sidebar ${menuOpen ? "active" : ""}`}>
-
         <div className="form-group p">
           <a href="">
             <i className="bi bi-house"></i>
@@ -51,33 +48,46 @@ function VECA_Inicio() {
           </a>
         </div>
 
-        {/* SUBMENÚ */}
-        <div className="form-group p">
-
-          <a
-            onClick={() => setSubmenuOpen(!submenuOpen)}
-            style={{ cursor: "pointer" }}
-          >
+        <div className="form-group">
+          <a onClick={() => setSubmenuOpen(!submenuOpen)} style={{ cursor: "pointer" }}>
             <i className="bi bi-clipboard2"></i>
-            Generación de registros
+             Generación de registros
           </a>
+
           {submenuOpen && (
             <ul className="submenu">
               <li>
-                <i class="bi bi-check-circle"></i><a href="">Presente</a>
+                <div className="submenu-item">
+                  <i className="bi bi-check-circle"></i>
+                  <a onClick={() => setVistaActual("presente")} style={{ cursor: "pointer" }} >
+                    Presente
+                  </a>
+                </div>
               </li>
               <li>
-                <a href="">Actividades del mes</a>
+
+                <div className="submenu-item">
+                  <i className="bi bi-clock"></i>
+                  <a onClick={() => setVistaActual("actividades")} style={{ cursor: "pointer" }}>
+                      Actividades del mes</a>
+                </div>
               </li>
+
               <li>
-                <a href="">Población Beneficiaria</a>
+                <div className="submenu-item">
+                  <i className="bi bi-clock"></i>
+                  <a href="">Población Beneficiaria</a>
+                </div>
               </li>
+
               <li>
-                <a href="">Memoria Fotográfica</a>
+                <div className="submenu-item">
+                  <i className="bi bi-clock"></i>
+                  <a href="">Memoria Fotográfica</a>
+                </div>
               </li>
             </ul>
           )}
-
         </div>
 
         <div className="form-group p">
@@ -93,90 +103,68 @@ function VECA_Inicio() {
             Consulta de registros
           </a>
         </div>
-
       </div>
 
       <div className="content">
-        <div className="form-group">
-          <h4>
-            Bienvenido a el Registro Nacional de Espacios de Cultura del Agua (RNECA)
-          </h4>
-        </div>
-
-        <div className="form-group">
-          <h5>
-            Administra, consulta y da seguimiento a los registros mensuales de actividades.
-          </h5>
-        </div>
-
-        <br />
-
-        <p className="labelColor">Registro del Mes</p>
-
-        <div className="card-conten">
-          <h5 className="card-header p color">
-            Informe del mes de Mayo
-          </h5>
-
-          <div className="card-body">
-            <div className="row">
-              <div className="col">
-                <h5 className="card-title">Fecha límite:</h5>
-              </div>
-
-              <div className="col">
-                <h5 className="card-title">7 Marzo 2026</h5>
-              </div>
+        {vistaActual === "inicio" && (
+          <>
+            <div className="form-group">
+              <h4>
+                Bienvenido a el Registro Nacional de Espacios de Cultura del Agua (RNECA)
+              </h4>
             </div>
 
-            <p className="card-text">
-              Completa tu registro mensual pendiente.
-            </p>
+            <div className="form-group">
+              <h5>
+                Administra, consulta y da seguimiento a los registros mensuales de actividades.
+              </h5>
+            </div>
+            <br />
 
-            <button
-              type="button"
-              className="btn btn-outline-dark"
-            >
-              Completar registro pendiente
-            </button>
-          </div>
-        </div>
+          <p className="labelColor">Registro del Mes</p>
+            <div className="card-conten">
+              <h5 className="card-header p color">Informe del mes de Mayo </h5>
 
-        <br />
+              <div className="card-body">
+                <div className="fecha-row">
+                  <h5 className="card-title">Fecha límite:</h5>
+                  <h5 className="card-title">7 Marzo 2026</h5>
+                </div>
 
-        <p className="labelColor">Último Registro</p>
-
-        <div className="card-conten">
-          <h5 className="card-header p color">
-            Informe del mes de Mayo
-          </h5>
-
-          <div className="card-body">
-            <div className="row">
-              <div className="col">
-                <h5 className="card-title">Fecha límite:</h5>
-              </div>
-
-              <div className="col">
-                <h5 className="card-title">7 Marzo 2026</h5>
+                <div className="fecha-row">
+                  <p className="card-text">Estado:</p>
+                  <p className="card-text">Pendiente</p>
+                </div>
+                <button type="button" className="btn-pendiente"> Completar registro pendiente </button>
               </div>
             </div>
+            <br/>
 
-            <p className="card-text">
-              Completa tu registro mensual pendiente.
-            </p>
+            <p className="labelColor">Último Registro</p>
+            <div className="card-conten">
+              <h5 className="card-header p color">Informe del mes de Mayo</h5>
 
-            <button
-              type="button"
-              className="btn btn-outline-dark"
-            >
-              Completar registro pendiente
-            </button>
-          </div>
-        </div>
+              <div className="card-body">
+                <div className="fecha-row">
+                  <p className="card-text">Estado:</p>
+                  <p className="card-text">Validada</p>
+                </div>
+                <button type="button" className="btn-secondary-pendiente"> Descargar </button>
+              </div>
+            </div>
+          </>
+        )}
+
+        {vistaActual === "presente" && (
+          <VECA_Presente />
+        )}
+        {vistaActual === "actividades" && (
+          <VECA_Actividades />
+        )}
 
       </div>
-    </body>
+
+    </>
   );
 }
 

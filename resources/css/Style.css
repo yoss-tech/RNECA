@@ -45,12 +45,14 @@ body {
 .labelColor {
     color: var(--primary-color);
     font-weight: bold;
-    margin: 10px;
+    font-size: 18px;
 }
+
+/* ================= HEADER ================= */
 
 .header {
     width: 100%;
-    height: 70px;
+    height: 60px;
     background-color: var(--primary-color);
     display: flex;
     justify-content: space-between;
@@ -109,6 +111,8 @@ body {
     cursor: pointer;
 }
 
+/* ================= MAIN ================= */
+
 .nav {
     width: 100%;
     height: 70px;
@@ -149,6 +153,77 @@ body {
     align-items: center;
 }
 
+/* ================= FECHAS ================= */
+
+.fecha-row{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.fecha-row h5{
+    margin: 0;
+}
+
+
+/* ================= Radio Buttons ================= */
+.radio-item input[type="radio"]{
+    appearance: none;
+    -webkit-appearance: none;
+    width: 13px;
+    height: 13px;
+    border: 2px solid var(--gris-color);
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+    position: relative;
+    outline: none;
+}
+
+.radio-item input[type="radio"]:checked{
+    background: white;
+    border: 2px solid var(--gris-color);
+}
+
+.radio-item input[type="radio"]:checked::before{
+    content: "";
+    width: 10px;
+    height: 10px;
+    background: var(--gris-color);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* ================= BOTONES ================= */
+
+.btn-pendiente{
+    padding: 8px 20px;
+    border: 2px solid var(--dorado-color);
+    background: transparent;
+    color: var(--dorado-color);
+    font-size: 18px;
+    border-radius: 5px;
+    display: block;
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.btn-secondary-pendiente{
+    padding: 8px 20px;
+    border: 2px solid var(--gris-color);
+    background: transparent;
+    color: var(--gris-color);
+    font-size: 18px;
+    border-radius: 5px;
+    display: block;
+    margin-left: auto;
+}
+
+/* ================= CARDS ================= */
+
 .card {
     width: 100%;
     max-width: 450px;
@@ -157,25 +232,79 @@ body {
     padding: 30px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
 .card-conten {
     width: 99%;
     background-color: var(--blanco-color);
-    border-radius: 15px;
+    border-radius: 4px;
     padding: 25px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0px 2px var(--gris-color);
 }
+
+/* ================= SIDEBAR ================= */
+
+.sidebar {
+    width: 210px;
+    height: calc(100vh - 60px);
+    background: var(--primary-color);
+    position: fixed;
+    top: 60px;
+    left: 0;
+    overflow-y: auto;
+    transition: 0.3s;
+    z-index: 999;
+    padding: 15px;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: white;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.menu-title{
+    color: var(--dorado-color);
+    margin-bottom: 20px;
+    font-size: 26px;
+    font-weight: 600;
+}
+
 .submenu{
     list-style: none;
-    margin-top: 10px;
+    margin-top: 0px;
     padding-left: 5px;
     font-family: 'Montserrat', sans-serif;
 }
 
 .submenu li{
-    margin: 10px 0;
+    margin: 0;
 }
+
 .submenu i{
     color: var(--blanco-color);
+}
+
+.submenu-item{
+    display: flex;
+    width: 100%;
+    align-items: center;   
+    padding-left: 25px;
 }
 
 .submenu a{
@@ -184,9 +313,23 @@ body {
     font-size: 14px;
 }
 
-.submenu a:hover{
-    color: #cfcfcf;
+.submenu-active a{
+    color: white !important;
+    font-weight: bold;
 }
+
+/* ================= CONTENT ================= */
+
+.content {
+    margin-left: 240px;
+    margin-top: 70px;
+    padding: 20px;
+    width: calc(100% - 240px); 
+    min-height: calc(100vh - 70px);
+    transition: 0.3s;
+}
+
+/* ================= TIPOGRAFIA ================= */
 
 h1 {
     font-size: 60px;
@@ -213,34 +356,41 @@ h5 {
 }
 
 .p {
-    font-size: 20px;
-    font-weight: 500;
+    font-size: 18px;
 }
+
+/* ================= FORMULARIOS ================= */
 
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin:0;
 }
 
 label {
     font-size: 16px;
     font-weight: 700;
     color: var(--negro-color);
+    margin-bottom: 8px;
 }
 
 input,
+textarea,
 .mes {
     width: 100%;
-    padding: 14px;
+    padding: 12px;
     border: 1px solid #ccc;
-    border-radius: 8px;
+    border-radius: 4px;
     outline: none;
-    font-size: 16px;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+textarea{
+    resize: none;
 }
 
 input:focus,
+textarea:focus,
 .mes:focus {
     border-color: var(--primary-color);
 }
@@ -255,59 +405,101 @@ input:focus,
     font-size: 18px;
     font-weight: bold;
     cursor: pointer;
-    transition: 0.3s;
 }
-
 
 i {
     padding: 5px;
 }
+/* ================= CORRECCION REGISTRO ================= */
 
-.sidebar {
-    width: 210px;
-    height: calc(100vh - 70px);
-    background: var(--primary-color);
-    position: fixed;
-    top: 70px;
-    left: 0;
-    overflow-y: auto;
-    transition: 0.3s;
-    z-index: 999;
+.registro-title{
+    font-size: 38px;
+    font-weight: 700;
+    color: var(--negro-color) !important;
+    margin-bottom: 5px;
 }
 
-.sidebar h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: white;
+.registro-subtitle{
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--negro-color) !important;
+    margin-bottom: 25px;
 }
 
-.sidebar a {
+.registro-text{
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.form-registro{
+    width: 95%;
+}
+
+.campo{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 22px;
+}
+
+.botones-registro{
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-vista{
+    border: 1px solid var(--gris-color);
+    background: transparent;
+    color: var(--gris-color);
+    padding: 10px 30px;
+    border-radius: 4px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.btn-guardar{
+    border: 1px solid var(--primary-color);
+    background: transparent;
+    color: var(--primary-color);
+    padding: 10px 30px;
+    border-radius: 4px;
+    font-size: 18px;
+    cursor: pointer;
+}
+/* ================= ACTIVIDADES ================= */
+
+.actividad-title{
+    color: var(--primary-color);
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.radio-group{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.radio-item{
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px;
-    margin-bottom: 5x;
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    font-size: 15px;
-    transition: 0.3s;
+    gap: 8px;
+    font-weight: 500;
+    color: var(--negro-color);
 }
 
-.sidebar a:hover {
-    background: rgba(255, 255, 255, 0.15);
+.radio-item input{
+    width: auto;
+    margin: 0;
 }
-
-.content {
-    margin-left: 240px;
-    margin-top: 70px;
-    padding: 10px;
-    width: calc(100% - 240px);
-    min-height: calc(100vh - 70px);
-    transition: 0.3s;
-}
+/* ================= RESPONSIVE ================= */
 
 @media (max-width: 992px) {
+
     .main {
         gap: 50px;
         padding: 120px 30px 40px;
@@ -332,6 +524,7 @@ i {
 }
 
 @media (max-width: 768px) {
+
     .header {
         padding: 0 15px;
     }
@@ -389,9 +582,18 @@ i {
         margin-left: 0;
         padding: 20px;
     }
+
+    .registro-title{
+        font-size: 28px;
+    }
+
+    .registro-subtitle{
+        font-size: 18px;
+    }
 }
 
 @media (max-width: 480px) {
+
     .header {
         height: 70px;
     }
@@ -417,9 +619,19 @@ i {
     }
 
     input,
+    textarea,
     .mes,
     .btn1 {
         font-size: 15px;
         padding: 12px;
+    }
+
+    .botones-registro{
+        flex-direction: column;
+    }
+
+    .btn-vista,
+    .btn-guardar{
+        width: 100%;
     }
 }

@@ -14,6 +14,8 @@ Route::get('/inicio_eca', function () {
     return Inertia::render('VECA_Inicio');
 })->name('inicio_eca');
 
+
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
