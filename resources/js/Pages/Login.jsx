@@ -33,7 +33,7 @@ function Login() {
                 type="text"
                 placeholder="Ingresa tu usuario"/>
             </div>
-
+            <br />
             <div className="form-group">
               <label htmlFor="password">
                 Contraseña:
@@ -44,13 +44,9 @@ function Login() {
                 placeholder="Ingresa tu contraseña"
               />
             </div>
-
-            <a href="inicio_eca">ENVIAR</a>
             <br />
-            <button className="btn1" type="submit">
-              Iniciar Sesión
-            </button>
-          </form>
+            <button className="btn1" onClick={() => window.location.href = "inicio_eca"} type="button">Iniciar Sesión </button>
+            </form>
         </div>
         </div>
       </div>
