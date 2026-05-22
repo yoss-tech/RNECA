@@ -56,7 +56,6 @@ function VECA_Actividades() {
         </div>
 
         <div className="botones-registro">
-          <button type="button" className="btn-vista" >Vista previa</button>
           <button type="button" className="btn-guardar" >Guardar </button>
         </div>
       </div>
