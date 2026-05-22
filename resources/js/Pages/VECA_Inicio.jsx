@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import "/resources/css/Style.css";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
 import "bootstrap-icons/font/bootstrap-icons.css";
-
+import VECA_VistaP from "./Eca_VistaPrevia.jsx";
 import VECA_Presente from "./Eca_Presente.jsx";
 import VECA_Actividades from "./Eca_Actividades.jsx";
+import VECA_Poblacion from "./Eca_Poblacion.jsx";
+import VECA_Memoria from "./Eca_Memoria.jsx";
+import VECA_ConsultaReg from "./Eca_ConsultaRegistros.jsx";
+
 
 
 function VECA_Inicio() {
@@ -22,7 +26,6 @@ function VECA_Inicio() {
         </button>
 
         <div className="logo"><img src={miImagen} alt="Logo RNECA" /></div>
-
         <div className="acciones-header">
           <button className="icono">
             <i className="bi bi-envelope"></i>
@@ -42,7 +45,7 @@ function VECA_Inicio() {
 
       <div className={`sidebar ${menuOpen ? "active" : ""}`}>
         <div className="form-group p">
-          <a href="">
+          <a onClick={() => setVistaActual("inicio")} style={{ cursor: "pointer" }} >
             <i className="bi bi-house"></i>
             Inicio
           </a>
@@ -76,14 +79,14 @@ function VECA_Inicio() {
               <li>
                 <div className="submenu-item">
                   <i className="bi bi-clock"></i>
-                  <a href="">Población Beneficiaria</a>
+                  <a onClick={() => setVistaActual("poblacion")} style={{ cursor: "pointer" }}>Población Beneficiaria</a>
                 </div>
               </li>
 
               <li>
                 <div className="submenu-item">
                   <i className="bi bi-clock"></i>
-                  <a href="">Memoria Fotográfica</a>
+                 <a onClick={() => setVistaActual("memoria")} style={{ cursor: "pointer" }}>Memoria Fotográfica</a>
                 </div>
               </li>
             </ul>
@@ -91,15 +94,15 @@ function VECA_Inicio() {
         </div>
 
         <div className="form-group p">
-          <a href="">
+           <a onClick={() => setVistaActual("vista_previa")} style={{ cursor: "pointer" }}>
             <i className="bi bi-clipboard2-check"></i>
             Vista previa
           </a>
         </div>
 
         <div className="form-group p">
-          <a href="">
-            <i className="bi bi-folder"></i>
+           <a onClick={() => setVistaActual("consulta_registros")} style={{ cursor: "pointer" }}>
+           <i className="bi bi-folder"></i>
             Consulta de registros
           </a>
         </div>
@@ -109,15 +112,11 @@ function VECA_Inicio() {
         {vistaActual === "inicio" && (
           <>
             <div className="form-group">
-              <h4>
-                Bienvenido a el Registro Nacional de Espacios de Cultura del Agua (RNECA)
-              </h4>
+              <h4>Bienvenido a el Registro Nacional de Espacios de Cultura del Agua (RNECA) </h4>
             </div>
 
             <div className="form-group">
-              <h5>
-                Administra, consulta y da seguimiento a los registros mensuales de actividades.
-              </h5>
+              <h5>Administra, consulta y da seguimiento a los registros mensuales de actividades.</h5>
             </div>
             <br />
 
@@ -160,6 +159,18 @@ function VECA_Inicio() {
         )}
         {vistaActual === "actividades" && (
           <VECA_Actividades />
+        )}
+        {vistaActual === "poblacion" && (
+          <VECA_Poblacion />
+        )}
+        {vistaActual === "memoria" && (
+          <VECA_Memoria />
+        )}
+        {vistaActual === "vista_previa" && (
+          <VECA_VistaP />
+        )}
+        {vistaActual === "consulta_registros" && (
+          <VECA_ConsultaReg />
         )}
 
       </div>

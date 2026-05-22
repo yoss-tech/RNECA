@@ -14,6 +14,12 @@ Route::get('/inicio_eca', function () {
     return Inertia::render('VECA_Inicio');
 })->name('inicio_eca');
 
+Route::get('/inicio_dicm', function () {
+    return Inertia::render('DicM_Inicio');
+})->name('inicio_dicm');
+
+
+
 
 
 Route::get('/dashboard', function () {
