@@ -29,7 +29,7 @@ function VECA_Poblacion() {
           <input type="text"  placeholder="Ingresa el número de alumnos atendidosIngresa el número de material didactico según su modalidad"/>
         </div>
         
-        <p className="labelColor">Asistentes
+        <p className="color-label">Asistentes
             <button type="button" title="Tooltip on right"> <i class="bi bi-question-circle"></i></button>
         </p> 
         <p className="registro-text">Hombres
@@ -77,14 +77,14 @@ function VECA_Poblacion() {
         </div>
         </p>
 
-        <p className="labelColor">Total de la población atendida
+        <p className="color-label">Total de la población atendida
             <button type="button" title="Tooltip on right"> <i class="bi bi-question-circle"></i></button>
         </p> 
         <div className="campo">
           <input type="text"  placeholder="Sumatoria de los asistentes" />
         </div>
 
-        <p className="labelColor">Anexos
+        <p className="color-label">Anexos
              <button type="button" title="Tooltip on right"> <i class="bi bi-question-circle"></i></button>
         </p> 
         <div className="check-group">
@@ -101,7 +101,7 @@ function VECA_Poblacion() {
             </label>
         </div><br />
 
-        <p className="labelColor">Comentarios/Observaciones
+        <p className="color-label">Comentarios/Observaciones
              <button type="button" title="Tooltip on right"> <i class="bi bi-question-circle"></i></button>
         </p> 
         <div className="campo">  

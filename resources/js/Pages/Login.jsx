@@ -31,11 +31,8 @@ function Login() {
               <label htmlFor="password">Contraseña:</label>
               <input id="password" type="password" placeholder="Ingresa tu contraseña"/>
             </div><br />
-
-            <button className="btn1" onClick={() => window.location.href = "inicio_dicm"} type="button">DricM</button>
-   <br /><br />
-            <button className="btn1" onClick={() => window.location.href = "inicio_eca"} type="button">Iniciar Sesión </button>
-          </form>
+             <button className="btn1" onClick={() => window.location.href = "inicio_eca"} type="button">Iniciar Sesión </button>
+         </form>
         </div>
       </div>
     </div>
