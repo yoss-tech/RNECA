@@ -120,7 +120,7 @@ function VECA_Inicio() {
             </div>
             <br />
 
-          <p className="labelColor">Registro del Mes</p>
+          <p className="color-label">Registro del Mes</p>
             <div className="card-conten">
               <h5 className="card-header p color">Informe del mes de Mayo </h5>
 
@@ -139,7 +139,7 @@ function VECA_Inicio() {
             </div>
             <br/>
 
-            <p className="labelColor">Último Registro</p>
+            <p className="color-label">Último Registro</p>
             <div className="card-conten">
               <h5 className="card-header p color">Informe del mes de Mayo</h5>
 

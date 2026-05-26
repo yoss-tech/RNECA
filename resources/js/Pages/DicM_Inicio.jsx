@@ -3,6 +3,12 @@ import "/resources/css/Style.css";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
+import DICRegistros_Recibidos from "./Dic_RegistrosR.jsx";
+import DIC_Correcciones from "./Dic_Correcciones.jsx";
+import DIC_Validados from "./Dic_Validados.jsx";
+import DIC_Firmados from "./Dic_Firmados.jsx";
+
+
 
 
 function DicM_Inicio() {
@@ -41,28 +47,29 @@ function DicM_Inicio() {
         </div>
 
         <div className="form-group">
-          <a onClick={() => setVistaActual("inicio")} style={{ cursor: "pointer" }} >
+          <a onClick={() => setVistaActual("registros_recibidos")} style={{ cursor: "pointer" }} >
             <i className="bi bi-folder"></i>
              Registros recibidos
           </a>
         </div>
 
         <div className="form-group p">
-           <a onClick={() => setVistaActual("vista_previa")} style={{ cursor: "pointer" }}>
+           <a onClick={() => setVistaActual("correciones")} style={{ cursor: "pointer" }}>
             <i class="bi bi-pencil"></i>
             Correciones
           </a>
         </div>
 
+
         <div className="form-group p">
-           <a onClick={() => setVistaActual("consulta_registros")} style={{ cursor: "pointer" }}>
+           <a onClick={() => setVistaActual("validados")} style={{ cursor: "pointer" }}>
            <i class="bi bi-clipboard-check"></i>
             Registros Validados
           </a>
         </div>
         
         <div className="form-group p">
-           <a onClick={() => setVistaActual("consulta_registros")} style={{ cursor: "pointer" }}>
+           <a onClick={() => setVistaActual("registros_firmados")} style={{ cursor: "pointer" }}>
            <i class="bi bi-upload"></i>
             Registros Firmados
           </a>
@@ -122,23 +129,17 @@ function DicM_Inicio() {
           </>
         )}
 
-        {vistaActual === "presente" && (
-          <VECA_Presente />
+        {vistaActual === "registros_recibidos" && (
+          <DICRegistros_Recibidos />
         )}
-        {vistaActual === "actividades" && (
-          <VECA_Actividades />
+        {vistaActual === "correciones" && (
+          <DIC_Correcciones />
         )}
-        {vistaActual === "poblacion" && (
-          <VECA_Poblacion />
+        {vistaActual === "validados" && (
+          <DIC_Validados />
         )}
-        {vistaActual === "memoria" && (
-          <VECA_Memoria />
-        )}
-        {vistaActual === "vista_previa" && (
-          <VECA_VistaP />
-        )}
-        {vistaActual === "consulta_registros" && (
-          <VECA_ConsultaReg />
+        {vistaActual === "registros_firmados" && (
+          <DIC_Firmados />
         )}
 
       </div>

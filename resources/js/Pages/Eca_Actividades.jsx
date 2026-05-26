@@ -15,7 +15,7 @@ function VECA_Actividades() {
         </div>
 
       <p className="registro-text">Ingresa la información de actividades del mes.</p>
-      <p className="labelColor">Actividad 1</p>
+      <p className="color-label">Actividad 1</p>
         <div className="campo">
           <label>Municipio</label>
           <input type="text"  placeholder="Ingresa el municipio" />

@@ -19,7 +19,7 @@ function VECA_Memoria() {
 
         <p className="registro-text">Ingresa la información detallada de las actividades del mes.</p>
       
-        <p className="labelColor">Actividad 1</p>
+        <p className="color-label">Actividad 1</p>
 
         <div className="campo">
           <label>Título</label>
