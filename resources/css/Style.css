@@ -232,7 +232,10 @@ body {
 .container-img,
 .container {
     display: flex;
+    align-items: center;
     justify-content: center;
+    max-width: 100%;
+    margin-bottom: 30px;
 }
 
 .container-img {
@@ -399,6 +402,11 @@ input[type="file"] {
     color: var(--blanco-color);
     font-weight: bold;
 }
+
+.btn1:hover {
+    background-color: var(--secondary-color);
+}
+
 
 .btn {
     min-width: 110px;
