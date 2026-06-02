@@ -4,8 +4,8 @@ function VECA_ConsultaReg() {
 
   return (
         <div className="registro-container">
-      <h2 className="registro-title">Consulta de registros</h2>
-      <h5 className="registro-subtitle">Consulta, edita o descarga los registros registrados y enviados.</h5>
+      <h1 className="registro-title">Historial de informes mensuales enviados.</h1>
+      <h2 className="registro-subtitle">Consulte los informes registrados y enviados en periodos anteriores.</h2>
 
         <table class="tabla-registros">
           <thead>

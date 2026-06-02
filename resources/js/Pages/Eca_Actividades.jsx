@@ -5,8 +5,8 @@ function VECA_Actividades() {
   return (
 
     <div className="registro-container">
-      <h2 className="registro-title"> Generación de registros</h2>
-      <h5 className="registro-subtitle"> Informe mensual Cultura del Agua.</h5>
+      <h1 className="registro-title"> Registro de actividades realizadas durante el periodo.</h1>
+      <h2 className="registro-subtitle">Capture la información de las actividades efectuadas durante el mes correspondiente.</h2>
 
       <div className="form-registro">
         <div className="campo">
@@ -15,7 +15,7 @@ function VECA_Actividades() {
         </div>
 
       <p className="registro-text">Ingresa la información de actividades del mes.</p>
-      <p className="color-label">Actividad 1</p>
+      <h3 className="color-label">Actividad 1</h3>
         <div className="campo">
           <label>Municipio</label>
           <input type="text"  placeholder="Ingresa el municipio" />

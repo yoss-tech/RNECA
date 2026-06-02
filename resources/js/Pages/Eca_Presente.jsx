@@ -5,9 +5,9 @@ function VECA_Presente() {
   return (
 
     <div className="registro-container">
-      <h2 className="registro-title"> Generación de registros</h2>
-      <h5 className="registro-subtitle"> Presente del informe mensual del Espacio de Cultura del Agua</h5>
-       <p className="registro-text">Verifique que la información mostrada sea correcta.</p>
+      <h1 className="registro-title"> Confirmación de información</h1>
+      <h2 className="registro-subtitle"> Verifique los datos capturados antes de continuar.</h2>
+       <p className="registro-text">Revise la información registrada antes de guardar o enviar el informe mensual.</p>
 
       <div className="form-registro">
         <div className="campo">

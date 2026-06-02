@@ -5,8 +5,8 @@ function VECA_VistaP() {
   return (
 
     <div className="registro-container">
-      <h2 className="registro-title">Registro del mes</h2>
-      <h5 className="registro-subtitle">Vista previa</h5>
+      <h1 className="registro-title">Consulta y revisión del avance del informe.</h1>
+      <h2 className="registro-subtitle">Visualice el progreso del informe y verifique la información registrada antes del envío.</h2>
 
       <p className="registro-text">Verifique que la información mostrada en la vista previa sea correcta.</p>
         <div className="botones-registro">

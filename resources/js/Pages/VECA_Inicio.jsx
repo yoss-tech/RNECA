@@ -36,9 +36,9 @@ function VECA_Inicio() {
           </button>
 
           <div className="perfil">
-            <a href="/">
+           <button className="icono">
               <i className="bi bi-person-circle perfil-icono"></i>
-            </a>
+            </button>
           </div>
         </div>
       </header>
@@ -112,22 +112,22 @@ function VECA_Inicio() {
         {vistaActual === "inicio" && (
           <>
             <div className="form-group">
-              <h4>Bienvenido a el Registro Nacional de Espacios de Cultura del Agua (RNECA) </h4>
+              <h1 className="registro-title">Seguimiento y control de informes mensuales. </h1>
             </div>
 
             <div className="form-group">
-              <h5>Administra, consulta y da seguimiento a los registros mensuales de actividades.</h5>
+              <h2 className="registro-subtitle">Administra, consulta y da seguimiento a los registros mensuales de actividades.</h2>
             </div>
             <br />
 
           <p className="color-label">Registro del Mes</p>
             <div className="card-conten">
-              <h5 className="card-header p color">Informe del mes de Mayo </h5>
+              <p className="card-header color">Informe del mes de Mayo </p>
 
               <div className="card-body">
                 <div className="fecha-row">
-                  <h5 className="card-title">Fecha límite:</h5>
-                  <h5 className="card-title">7 Marzo 2026</h5>
+                  <p className="card-title">Fecha límite:</p>
+                  <p className="card-title">7 Marzo 2026</p>
                 </div>
 
                 <div className="fecha-row">
@@ -141,7 +141,7 @@ function VECA_Inicio() {
 
             <p className="color-label">Último Registro</p>
             <div className="card-conten">
-              <h5 className="card-header p color">Informe del mes de Mayo</h5>
+              <p className="card-header color">Informe del mes de Mayo</p>
 
               <div className="card-body">
                 <div className="fecha-row">
