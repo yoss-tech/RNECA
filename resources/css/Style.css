@@ -41,11 +41,11 @@ body {
 }
 
 .color {
-    color: var(--dorado-color);
+    color: var(--secondary-color);
 }
 
 .color-label {
-    color: var(--primary-color);
+    color: var(--dorado-color);
     font-size: 18px;
     font-weight: bold;
 }
@@ -198,16 +198,6 @@ body {
 }
 
 /* ================= MAIN ================= */
-
-.nav {
-    width: 100%;
-    height: 70px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
 .main {
     width: 100%;
     min-height: 100vh;
@@ -248,18 +238,15 @@ body {
 }
 
 /* ================= TIPOGRAFIA ================= */
-
-h1 {
+h1{
     color: var(--blanco-color);
     font-size: 60px;
-    font-weight: 700;
 }
 
-h2 {
+h2{
     color: var(--blanco-color);
-    font-size: 24px;
-    font-weight: 700;
 }
+
 
 h4 {
     color: var(--negro-color);
@@ -275,6 +262,7 @@ h5 {
 
 .p {
     font-size: 18px;
+    margin-bottom: 5px;
 }
 
 /* ================= FECHAS ================= */
@@ -285,9 +273,6 @@ h5 {
     gap: 10px;
 }
 
-.fecha-row h5 {
-    margin: 0;
-}
 
 /* ================= CARDS ================= */
 
@@ -305,9 +290,25 @@ h5 {
     width: 99%;
     padding: 25px;
     border-radius: 4px;
-
+    margin: 10px 0;
     background-color: var(--blanco-color);
     box-shadow: 0 0 2px var(--gris-color);
+}
+
+.card-header {
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.card-title {
+    font-weight: 700;
+    color: var(--negro-color);
+    margin-bottom: 5px;
+}
+
+.card-text {
+    color: var(--negro-color);
+    margin-bottom: 5px;
 }
 
 /* ================= FORMULARIOS ================= */
@@ -339,7 +340,6 @@ textarea,
 .mes,
 .form-group input {
     width: 100%;
-    border-radius: 4px;
     outline: none;
 
     font-size: 15px;
@@ -388,7 +388,7 @@ input[type="file"] {
 .btn-space,
 .btn-pendiente,
 .btn-secondary-pendiente {
-    border-radius: 4px;
+    border-radius: 3px;
     font-size: 18px;
     cursor: pointer;
 }
@@ -441,7 +441,7 @@ input[type="file"] {
 .btn-space,
 .btn-pendiente,
 .btn-secondary-pendiente {
-    padding: 8px 20px;
+    padding: 10px 25px;
 }
 
 .btn-pendiente,
@@ -484,13 +484,11 @@ i {
 .fondo_i {
     width: 100%;
     height: 100%;
-
-    display: flex;
     align-items: center;
     justify-content: center;
-
+    padding: 5px 10px;
     border: 2px solid var(--gris-color);
-    border-radius: 5px;
+    border-radius: 3px;
 
     cursor: pointer;
     transition: 0.3s;
@@ -506,23 +504,20 @@ i {
 
 .registro-title {
     margin-bottom: 5px;
-
-    color: var(--negro-color) !important;
-    font-size: 38px;
+    color: var(--primary-color) !important;
+    font-size: 32px;
     font-weight: 700;
 }
 
 .registro-subtitle {
-    margin-bottom: 25px;
-
+    margin-bottom: 15px;
     color: var(--negro-color) !important;
-    font-size: 22px;
-    font-weight: 600;
+    font-size: 24px;
+    font-weight: 100;
 }
 
 .registro-text {
     margin-bottom: 25px;
-
     color: #666;
     font-size: 18px;
 }
@@ -558,6 +553,7 @@ i {
 
 .tabla-registros {
     width: 100%;
+    margin-top: 15px;
     border-collapse: collapse;
 }
 
@@ -689,14 +685,6 @@ i {
         padding: 120px 30px 40px;
     }
 
-    h1 {
-        font-size: 48px;
-    }
-
-    h2 {
-        font-size: 22px;
-    }
-
     .sidebar {
         width: 200px;
     }
@@ -736,13 +724,7 @@ i {
         text-align: center;
     }
 
-    h1 {
-        font-size: 40px;
-    }
-
-    h2 {
-        font-size: 20px;
-    }
+    
 
     .card {
         padding: 25px;
@@ -782,14 +764,6 @@ i {
 
     .header {
         height: 70px;
-    }
-
-    h1 {
-        font-size: 32px;
-    }
-
-    h2 {
-        font-size: 18px;
     }
 
     h4 {

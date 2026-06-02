@@ -19,8 +19,6 @@ Route::get('/inicio_dicm', function () {
 })->name('inicio_dicm');
 
 
-
-
 /*
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

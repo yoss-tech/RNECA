@@ -1,36 +1,37 @@
 import React from "react";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 function VECA_Poblacion() {
 
   return (
 
     <div className="registro-container">
-      <h2 className="registro-title"> Generación de registros</h2>
-      <h5 className="registro-subtitle">Información sobre la población beneficiaria con las acciones de Cultura del Agua.</h5>
+      <h1 className="registro-title">Registro de participantes y beneficiarios.</h1>
+      <h2 className="registro-subtitle">Ingrese la información relacionada con la población participante en las actividades realizadas.</h2>
 
       <div className="form-registro">
       <p className="registro-text">Ingresa la información sobre la población beneficiaria del mes.</p>
-      <p className="labelColor">Material didáctico
-      <button type="button" title="Tooltip on right"> <i class="bi bi-question-circle"></i></button>
+      <p className="color-label">Material didáctico
+      <i class="bi bi-question-circle" title="Tooltip on right"></i>
       </p> 
 
         <div className="campo">
           <label>Inédito</label>
-          <input type="text"  placeholder="Ingresa el número de material didactico según su modalidad" />
+          <input type="text"  placeholder="Ingresa el número de material didáctico según su modalidad" />
         </div>
 
         <div className="campo">
           <label>Reproducido</label>
-          <input type="text" placeholder="Ingresa el número de material didactico según su modalidad"/>
+          <input type="text" placeholder="Ingresa el número de material didáctico según su modalidad"/>
         </div>
         
         <div className="campo">
           <label>Adquirido</label>
-          <input type="text"  placeholder="Ingresa el número de alumnos atendidosIngresa el número de material didactico según su modalidad"/>
+          <input type="text"  placeholder="Ingresa el número de material didáctico según su modalidad"/>
         </div>
         
         <p className="color-label">Asistentes
-            <button type="button" title="Tooltip on right"> <i class="bi bi-question-circle"></i></button>
+        <i class="bi bi-question-circle" title="Tooltip on right"></i>
         </p> 
         <p className="registro-text">Hombres
         <div className="campo">
@@ -78,15 +79,15 @@ function VECA_Poblacion() {
         </p>
 
         <p className="color-label">Total de la población atendida
-            <button type="button" title="Tooltip on right"> <i class="bi bi-question-circle"></i></button>
+        <i class="bi bi-question-circle" title="Tooltip on right"></i>
         </p> 
         <div className="campo">
           <input type="text"  placeholder="Sumatoria de los asistentes" />
         </div>
 
         <p className="color-label">Anexos
-             <button type="button" title="Tooltip on right"> <i class="bi bi-question-circle"></i></button>
-        </p> 
+        <i class="bi bi-question-circle" title="Tooltip on right"></i>
+         </p> 
         <div className="check-group">
             <label className="check-item">
                 <input type="checkbox" />Lista de asistencia
@@ -102,7 +103,7 @@ function VECA_Poblacion() {
         </div><br />
 
         <p className="color-label">Comentarios/Observaciones
-             <button type="button" title="Tooltip on right"> <i class="bi bi-question-circle"></i></button>
+        <i class="bi bi-question-circle" title="Tooltip on right"></i>
         </p> 
         <div className="campo">  
           <textarea rows="3" placeholder="Ingresa algún comentario u observación"></textarea>

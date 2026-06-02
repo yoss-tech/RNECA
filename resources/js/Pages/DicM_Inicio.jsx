@@ -5,7 +5,6 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 
 import DICRegistros_Recibidos from "./Dic_RegistrosR.jsx";
 import DIC_Correcciones from "./Dic_Correcciones.jsx";
-import DIC_Validados from "./Dic_Validados.jsx";
 import DIC_Firmados from "./Dic_Firmados.jsx";
 
 
@@ -31,9 +30,9 @@ function DicM_Inicio() {
           </button>
 
           <div className="perfil">    
-            <a href="/">
+          <button className="icono">
               <i className="bi bi-person-circle perfil-icono"></i>
-            </a>
+            </button>
           </div>
         </div>
       </header>
@@ -56,21 +55,12 @@ function DicM_Inicio() {
         <div className="form-group p">
            <a onClick={() => setVistaActual("correciones")} style={{ cursor: "pointer" }}>
             <i class="bi bi-pencil"></i>
-            Correciones
-          </a>
-        </div>
-
-
-        <div className="form-group p">
-           <a onClick={() => setVistaActual("validados")} style={{ cursor: "pointer" }}>
-           <i class="bi bi-clipboard-check"></i>
-            Registros Validados
-          </a>
+            Registros con observaciones</a>
         </div>
         
         <div className="form-group p">
            <a onClick={() => setVistaActual("registros_firmados")} style={{ cursor: "pointer" }}>
-           <i class="bi bi-upload"></i>
+          <i class="bi bi-check-circle"></i>
             Registros Firmados
           </a>
         </div>
@@ -80,23 +70,20 @@ function DicM_Inicio() {
         {vistaActual === "inicio" && (
           <>
             <div className="form-group">
-              <h4>Bienvenido a el Registro Nacional de Espacios de Cultura del Agua (RNECA) </h4>
+              <h1 className="registro-title">Seguimiento de informes pendientes. </h1>
             </div>
 
             <div className="form-group">
-              <h5>Administra, consulta y da seguimiento a los registros mensuales de actividades.</h5>
+              <h2 className="registro-subtitle">Visualice los informes más recientes recibidos y el estado actual de cada registro.</h2>
             </div>
-            <br />
 
-          <p className="labelColor">Registros Pendientes</p><br />           
         <table class="tabla-registros">
           <thead>
             <tr>
               <th>ECA</th>
               <th>Mes</th>
-              <th>Fecha de envío</th>
+              <th>Fecha validación</th>
               <th>Estado</th>
-              <th>Acciones</th>
             </tr>
           </thead>
 
@@ -106,7 +93,6 @@ function DicM_Inicio() {
               <td>Abril</td>
               <td>05 de Mayo del 2026</td>
               <td class="estado revisado">Pendiente</td>
-              <td><button type="button" className="btn-space">Revisar</button></td>
             </tr>
 
             <tr>
@@ -114,7 +100,6 @@ function DicM_Inicio() {
               <td>Abril</td>
               <td>07 de Abril del 2026</td>
               <td class="estado revisado">Corrección enviada</td>
-              <td><button type="button" className="btn-vista">Esperando</button></td>
             </tr>
 
             <tr>
@@ -122,7 +107,6 @@ function DicM_Inicio() {
               <td>Marzo</td>
               <td>03 de Marzo del 2026</td>
               <td class="estado revisado">Validado</td>
-              <td><button type="button" className="btn-guardar">Subir Archivo</button></td>
             </tr>
           </tbody>
         </table>
@@ -134,9 +118,6 @@ function DicM_Inicio() {
         )}
         {vistaActual === "correciones" && (
           <DIC_Correcciones />
-        )}
-        {vistaActual === "validados" && (
-          <DIC_Validados />
         )}
         {vistaActual === "registros_firmados" && (
           <DIC_Firmados />

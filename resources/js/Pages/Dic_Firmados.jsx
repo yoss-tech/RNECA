@@ -4,8 +4,8 @@ function DIC_Firmados() {
 
   return (
         <div className="registro-container">
-        <h2 className="registro-title">Registros firmados de Espacios de Cultura del Agua</h2>
-      <h5 className="registro-subtitle">Administra, consulta y da seguimiento a los registros mensuales de actividades.</h5>
+        <h1 className="registro-title">Historial de informes completados.</h1>
+      <h2 className="registro-subtitle">Consulte los informes firmados, sellados y cargados correctamente en el sistema.</h2>
 
         <table class="tabla-registros">
           <thead>
@@ -21,7 +21,7 @@ function DIC_Firmados() {
             <tr>
               <td>Lic. Luis Garcia Contreras</td>
               <td>Abril</td>
-              <td><i class="bi bi-file-earmark-pdf fondo_i"></i></td>
+              <td><p className="fondo_i">Descargar PDF</p> </td>
               <td>03 de Marzo del 2026</td>
             </tr>
           </tbody>

@@ -4,16 +4,16 @@ function DIC_Correcciones() {
 
   return (
         <div className="registro-container">
-      <h2 className="registro-title">Registros con correcciones de Espacios de Cultura del Agua</h2>
-      <h5 className="registro-subtitle">Administra documentos devueltos para modificación o actualización.</h5>
+      <h1 className="registro-title">Informes en corrección.</h1>
+      <h2 className="registro-subtitle">Visualice los informes devueltos para corrección debido a observaciones detectadas durante la revisión.</h2>
 
         <table class="tabla-registros">
           <thead>
             <tr>
               <th>ECA</th>
               <th>Mes</th>
-              <th>Motivo</th>
-              <th>Fecha de envío de envíones</th>
+              <th>Observaciones</th>
+              <th>Fecha</th>
             </tr>
           </thead>
 
