@@ -18,6 +18,10 @@ Route::get('/inicio_dicm', function () {
     return Inertia::render('DicM_Inicio');
 })->name('inicio_dicm');
 
+Route::get('/inicio_ceaa', function () {
+    return Inertia::render('CEAA_Inicio');
+})->name('inicio_ceaa');
+
 
 /*
 Route::get('/dashboard', function () {

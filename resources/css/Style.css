@@ -264,7 +264,7 @@ h5 {
     font-size: 18px;
     margin-bottom: 5px;
 }
-
+_
 /* ================= FECHAS ================= */
 
 .fecha-row {
@@ -275,43 +275,128 @@ h5 {
 
 
 /* ================= CARDS ================= */
-
-.card {
+.card { 
     width: 100%;
     max-width: 450px;
-    padding: 30px;
-    border-radius: 15px;
+    padding: 30px; 
+    border-radius: 15px; 
+    background-color: var(--blanco-color); 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+} 
 
-    background-color: var(--blanco-color);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.card-body {
+     display: flex; 
+     flex-direction: column; 
+} 
+
+.cards{
+    width: 100%;
+    max-width: 1000px;
+    padding: 16px;
+    background-color: var(--dorado-color);
+    
+    border-radius: 4px; 
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+.cards-revision{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
 }
 
-.card-conten {
-    width: 99%;
+.cards-revision .card-municipio{
+    width: 100%;
+    max-width: none;
+}
+.card-municipio{
     padding: 25px;
+    border-radius: 15px;
+    background: var(--blanco-color);
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+}
+
+.card-municipio .btn-pendiente{
+    margin-left: auto;
+    display: block;
+}
+
+.card-grafico{
+    background: white;
+    border: 1px solid  var(--primary-color);
+    padding: 20px;
     border-radius: 4px;
-    margin: 10px 0;
-    background-color: var(--blanco-color);
-    box-shadow: 0 0 2px var(--gris-color);
 }
 
-.card-header {
-    font-weight: 700;
-    margin-bottom: 5px;
+.card-conten { 
+    width: 99%; 
+    padding: 25px; 
+    border-radius: 4px; 
+    margin: 10px 0; 
+    background-color: var(--blanco-color); 
+    box-shadow: 0 0 2px var(--gris-color); 
 }
 
-.card-title {
-    font-weight: 700;
-    color: var(--negro-color);
-    margin-bottom: 5px;
-}
+.card-header { 
+    font-weight: 700; 
+    margin-bottom: 5px; 
+} 
 
-.card-text {
-    color: var(--negro-color);
-    margin-bottom: 5px;
+.card-title { 
+    font-weight: 700; 
+    color: var(--negro-color); 
+    margin-bottom: 5px; 
+} 
+
+.card-titulo { 
+    font-weight: 700; 
+    color: var(--primary-color); 
+    margin-bottom: 5px; 
+} 
+
+.card-text { 
+    color: var(--negro-color); 
+    margin-bottom: 5px; 
 }
 
 /* ================= FORMULARIOS ================= */
+.dashboard{
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.dashboard-left{
+    flex: 2;
+}
+
+.dashboard-right{
+    flex: 1;
+}
+
+.buscador{
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.buscador input{
+    flex: 1;
+    height: 40px;
+    border: 1px solid #ccc;
+    border-right: none;
+    border-radius: 4px;
+    padding: 0 12px;
+}
+
+.buscador button{
+    width: 50px;
+    border: none;
+    border-radius: 4px;
+    background: var(--primary-color);
+    color: white;
+    cursor: pointer;
+}
 
 .form-group,
 .campo {
@@ -486,7 +571,7 @@ i {
     height: 100%;
     align-items: center;
     justify-content: center;
-    padding: 5px 10px;
+    padding: 10px 10px;
     border: 2px solid var(--gris-color);
     border-radius: 3px;
 
