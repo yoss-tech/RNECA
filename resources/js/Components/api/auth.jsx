@@ -1,6 +1,11 @@
 import axiosInstance from "./axiosInstance";
 
 export const loginUser = async (correo, password) => {
+    // Es vital pedir la cookie CSRF antes del login para evitar el error 419
+    await axiosInstance.get('http://localhost:8000/sanctum/csrf-cookie', {
+        withCredentials: true
+    });
+
     const credentials = { correo, password };
     try {
         const response = await axiosInstance.post('/login', credentials);
@@ -38,5 +43,27 @@ export const loginUser = async (correo, password) => {
                 errors: {}
             };
         }
+    }
+}
+
+export const logoutUser = async () => {
+    try {
+        const response = await axiosInstance.post('/logout');
+        return response.data; // { status, message }
+    } catch (error) {
+        return {
+            status: 'error',
+            message: 'Error al cerrar sesión.',
+            errors: {}
+        };
+    }
+}
+
+export const checkAuth = async () => {
+    try {
+        const response = await axiosInstance.get('/check-auth');
+        return response.data; // { status, message, body: {...} }
+    } catch (error) {
+        return null; // No autenticado o error de conexión
     }
 }

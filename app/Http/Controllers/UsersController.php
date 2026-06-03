@@ -57,25 +57,13 @@ class UsersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Users $users) : JsonResponse
+    public function show(Users $user) : JsonResponse
     {
-        $users  = Users::all();
-
-        $data = [
+        return response()->json([
             'message' => 'Usuarios obtenidos correctamente',
             'status' => 200,
-            'body' => $users
-        ];
-
-        if($users->isEmpty()){
-            $data = [
-                'message' => 'No se encontraron usuarios',
-                'status' => 200
-            ];
-            return response()->json($data, 404);
-        }
-
-        return response()->json($data, 200);
+            'body' => $user
+        ], 200);
     }
 
     /**

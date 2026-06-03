@@ -4,8 +4,8 @@ import miImagen from "/resources/img/PNG/Logotipo1.png";
 import { useForm, Head } from "@inertiajs/react";
 import InputError from "../Components/InputError";
 import VECA_Inicio from "./VECA_Inicio";
-import { loginUser } from "../Components/auth.jsx";
-import { GetUserInfo } from "../Components/users.jsx";
+import { loginUser } from "../Components/api/auth.jsx";
+import { GetUserInfo } from "../Components/api/users.jsx";
 
 function Login() {
   const { data, setData, processing, errors, setError, clearErrors } = useForm({

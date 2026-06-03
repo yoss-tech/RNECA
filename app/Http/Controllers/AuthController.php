@@ -15,31 +15,50 @@ class AuthController extends Controller
 {
     public function login(LoginRequest $request)
     {
-        $user = Users::where('correo', $request->correo)->first();
+        // Usamos el método authenticate() definido en tu LoginRequest.php
+        $request->authenticate();
 
-        // Simplificamos la lógica: Si no hay usuario O la contraseña no coincide
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'message' => 'Credenciales inválidas.',
-                'errors'  => [
-                    'correo' => ['El correo o la contraseña son incorrectos.']
-                ]
-            ], 422);
-        }
+        // IMPORTANTE: Regenerar la sesión para evitar fijación de sesiones
+        $request->session()->regenerate();
 
-        // Eliminar tokens antiguos para mantener la base de datos limpia (Opcional)
-        $user->tokens()->delete();
+        $user = Auth::user();
 
-        // Esto requiere que exista la tabla personal_access_tokens
-        $token = $user->createToken('auth_token')->plainTextToken;
+        // Si vas a usar sesiones (como indica tu config), no necesitas Tokens de Sanctum.
+        // Pero si los necesitas para una App Móvil futura, puedes dejarlos.
+        // Por ahora, priorizamos la sesión para React.
+        
+        // $credentials = $request->only('correo', 'password');
 
         return response()->json([
             'status' => 'success',
             'message' => 'Bienvenido',
-            'body' => [
-                'user' => $user,
-                'token' => $token
-            ]
+            'user' => $user
         ], 200);
     }
+
+    // CORRECCIÓN: Aquí debe ser Request normal, no LoginRequest
+    public function logout(Request $request)
+    {
+        Auth::logout(); // Quita la autenticación del usuario
+
+        $request->session()->invalidate(); // Equivale a borrar los datos de sesión (session_destroy)
+        $request->session()->regenerateToken(); // Regenera el token CSRF por seguridad
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Sesión cerrada'
+        ]);
+    }
+
+    public function checkAuth(): JsonResponse
+    {
+        if (Auth::check()) {
+            return response()->json([
+                'authenticated' => true,
+                'user' => Auth::user()
+            ]);
+        } else {
+            return response()->json(['authenticated' => false]);
+        }
+    }   
 }
