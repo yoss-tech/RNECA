@@ -4,23 +4,27 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\AuthController; // Importa tu AuthController
 
 
-Route::get('/', function () {
+Route::middleware('guest')->get('/', function () {
     return Inertia::render('Login');
+})->name('login'); // Nombramos esta ruta como 'login'
+
+Route::middleware(['auth:sanctum', 'no-cache'])->group(function () {
+
+    Route::get('/inicio_eca', function () { // Esta ruta es para el rol 'rol1' (ECA)
+        return Inertia::render('VECA_Inicio');
+    })->middleware('check.role:rol1')->name('inicio_eca');
+
+    Route::get('/inicio_dicm', function () { // Esta ruta es para el rol 'rol2' (Dicm)
+        return Inertia::render('DicM_Inicio');
+    })->middleware('check.role:rol2')->name('inicio_dicm');
+
+    Route::get('/inicio_ceaa', function () { // Esta ruta es para el rol 'rol5' (CEAA)
+        return Inertia::render('CEAA_Inicio');
+    })->middleware('check.role:rol5')->name('inicio_ceaa');
 });
-
-Route::get('/inicio_eca', function () {
-    return Inertia::render('VECA_Inicio');
-})->name('inicio_eca');
-
-Route::get('/inicio_dicm', function () {
-    return Inertia::render('DicM_Inicio');
-})->name('inicio_dicm');
-
-Route::get('/inicio_ceaa', function () {
-    return Inertia::render('CEAA_Inicio');
-})->name('inicio_ceaa');
 
 
 /*
@@ -35,9 +39,6 @@ Route::middleware('auth')->group(function () {
 });
 */
 
-require __DIR__.'/auth.php';
 
-
-
-
-
+// Eliminamos la inclusión de las rutas de autenticación de Breeze para evitar conflictos
+// require __DIR__.'/auth.php';

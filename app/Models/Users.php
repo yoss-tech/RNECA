@@ -27,9 +27,34 @@ class Users extends Authenticatable
     ];
 
     protected $hidden = [
-        'id_rol',
         'password',
     ];
+
+    // Estas funciones actúan como tus consultas de validación
+    public function esEca(): bool
+    {
+        return $this->id_rol === 'rol1';
+    }
+
+    public function esDicm(): bool
+    {
+        return $this->id_rol === 'rol2';
+    }
+
+    public function esLic(): bool
+    {
+        return $this->id_rol === 'rol3';
+    }
+
+    public function esSubdi(): bool
+    {
+        return $this->id_rol === 'rol4';
+    }
+
+    public function esCeaa(): bool
+    {
+        return $this->id_rol === 'rol5';
+    }
 }
 
 ?>

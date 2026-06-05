@@ -21,20 +21,19 @@ Route::get('/prueba', function () {
 });
 
 Route::get('/users', [UsersController::class, 'index']);
-// Corregimos la ruta show para que acepte un parámetro
 Route::get('/users/{user}', [UsersController::class, 'show']);
 Route::post('/users', [UsersController::class, 'store']);
 
-// El login se maneja a través de AuthController vinculado en auth.php o aquí
+// El login se maneja a través de AuthController vinculado en auth.php
 Route::post('/login', [AuthController::class, 'login'])->name('api.login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
 Route::get('/check-auth', [AuthController::class, 'checkAuth'])->name('api.checkAuth');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified', 'no-cache'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'no-cache'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

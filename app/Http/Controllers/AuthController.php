@@ -18,31 +18,27 @@ class AuthController extends Controller
         // Usamos el método authenticate() definido en tu LoginRequest.php
         $request->authenticate();
 
-        // IMPORTANTE: Regenerar la sesión para evitar fijación de sesiones
+        // Regenerar la sesión para evitar fijación de sesiones
         $request->session()->regenerate();
 
         $user = Auth::user();
 
-        // Si vas a usar sesiones (como indica tu config), no necesitas Tokens de Sanctum.
-        // Pero si los necesitas para una App Móvil futura, puedes dejarlos.
-        // Por ahora, priorizamos la sesión para React.
-        
-        // $credentials = $request->only('correo', 'password');
-
+        // En lugar de consultar a todos, validamos el campo 'id_rol' del usuario autenticado
+        // Asumiendo que los valores en tu base de datos coinciden con estos strings
         return response()->json([
             'status' => 'success',
-            'message' => 'Bienvenido',
-            'user' => $user
+            'message' => 'Bienvenido ' . $user->nombre,
+            'user' => $user,
+            'rol' => $user->id_rol // Enviamos el rol real que tiene el usuario
         ], 200);
     }
 
-    // CORRECCIÓN: Aquí debe ser Request normal, no LoginRequest
     public function logout(Request $request)
     {
-        Auth::logout(); // Quita la autenticación del usuario
+        Auth::logout();
 
-        $request->session()->invalidate(); // Equivale a borrar los datos de sesión (session_destroy)
-        $request->session()->regenerateToken(); // Regenera el token CSRF por seguridad
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return response()->json([
             'status' => 'success',
@@ -60,5 +56,5 @@ class AuthController extends Controller
         } else {
             return response()->json(['authenticated' => false]);
         }
-    }   
+    }
 }
