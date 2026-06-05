@@ -6,8 +6,8 @@ function CEAA_Pendientes() {
   return (
 
     <div className="registro-container">
-      <h1 className="registro-title">Informes en espera de revisión.</h1>
-      <h2 className="registro-subtitle">Consulte los informes enviados por cada municipio que se encuentran pendientes de validación.</h2>
+      <h1 className="registro-title">Validación de solicitudes extraordinarias.</h1>
+      <h2 className="registro-subtitle">Revise los oficios enviados para solicitar la habilitación temporal de la plataforma para carga extemporánea de informes.</h2>
     
        <div className="dashboard">
             <div className="dashboard-left">

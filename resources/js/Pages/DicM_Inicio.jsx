@@ -14,7 +14,7 @@ function DicM_Inicio() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
-
+  const [CerrarSesion, setCerrarSesion] = useState(false);
   return (
     <>
       <header className="header">
@@ -29,11 +29,15 @@ function DicM_Inicio() {
             <i className="bi bi-bell"></i>
           </button>
 
-          <div className="perfil">    
-          <button className="icono">
-              <i className="bi bi-person-circle perfil-icono"></i>
+          <div className="perfil">
+            <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)} >
+              <i className="bi bi-person-circle perfil-icono"></i> 
             </button>
-          </div>
+            {CerrarSesion && (
+              <div className="menu-perfil">
+                <button className="btn-cerrar-sesion">Cerrar sesión</button>
+              </div>)}
+            </div>
         </div>
       </header>
 

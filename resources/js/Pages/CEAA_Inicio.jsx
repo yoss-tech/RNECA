@@ -5,11 +5,16 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 
 
 import CEAA_Pendientes from "./CEAA_Pendientes.jsx";
+import CEAA_Observaciones from "./CEAA_Observaciones.jsx";
+import CEAA_Validados from "./CEAA_Validados.jsx";
+import CEAA_Solicitudes from "./CEAA_Solicitudes.jsx";
+import CEAA_Historial from "./CEAA_Historial.jsx";
 
 function CEAA_Inicio() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
+  const [CerrarSesion, setCerrarSesion] = useState(false);
 
   return (
     <>
@@ -25,11 +30,15 @@ function CEAA_Inicio() {
             <i className="bi bi-bell"></i>
           </button>
 
-          <div className="perfil">    
-          <button className="icono">
-              <i className="bi bi-person-circle perfil-icono"></i>
+           <div className="perfil">
+            <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)} >
+              <i className="bi bi-person-circle perfil-icono"></i> 
             </button>
-          </div>
+            {CerrarSesion && (
+              <div className="menu-perfil">
+                <button className="btn-cerrar-sesion">Cerrar sesión</button>
+              </div>)}
+            </div>
         </div>
       </header>
 
@@ -49,25 +58,25 @@ function CEAA_Inicio() {
         </div>
 
         <div className="form-group p">
-           <a onClick={() => setVistaActual("correciones")} style={{ cursor: "pointer" }}>
+           <a onClick={() => setVistaActual("observaciones")} style={{ cursor: "pointer" }}>
             <i class="bi bi-pencil"></i>
             Registros con observaciones</a>
         </div>
 
         <div className="form-group p">
-           <a onClick={() => setVistaActual("correciones")} style={{ cursor: "pointer" }}>
+           <a onClick={() => setVistaActual("validados")} style={{ cursor: "pointer" }}>
             <i class="bi bi-clipboard-check"></i>
             Registros validados</a>
         </div>
 
         <div className="form-group p">
-           <a onClick={() => setVistaActual("correciones")} style={{ cursor: "pointer" }}>
+           <a onClick={() => setVistaActual("solicitudes")} style={{ cursor: "pointer" }}>
             <i class="bi bi-files"></i>
             Solicitudes de registros fuera de plazo</a>
         </div>
         
         <div className="form-group p">
-           <a onClick={() => setVistaActual("registros_firmados")} style={{ cursor: "pointer" }}>
+           <a onClick={() => setVistaActual("historial")} style={{ cursor: "pointer" }}>
             <i class="bi bi-search"></i>
             Consulta de Registros
           </a>
@@ -188,22 +197,18 @@ function CEAA_Inicio() {
         {vistaActual === "pendientes" && (
           <CEAA_Pendientes/>
         )}
-        {vistaActual === "actividades" && (
-          <VECA_Actividades />
+        {vistaActual === "observaciones" && (
+          <CEAA_Observaciones />
         )}
-        {vistaActual === "poblacion" && (
-          <VECA_Poblacion />
+        {vistaActual === "validados" && (
+          <CEAA_Validados/>
         )}
-        {vistaActual === "memoria" && (
-          <VECA_Memoria />
+        {vistaActual === "solicitudes" && (
+          <CEAA_Solicitudes/>
         )}
-        {vistaActual === "vista_previa" && (
-          <VECA_VistaP />
+        {vistaActual === "historial" && (
+          <CEAA_Historial />
         )}
-        {vistaActual === "consulta_registros" && (
-          <VECA_ConsultaReg />
-        )}
-
       </div>    
 
     </>

@@ -12,7 +12,8 @@ import VECA_ConsultaReg from "./Eca_ConsultaRegistros.jsx";
 
 
 function VECA_Inicio() {
-
+  
+  const [CerrarSesion, setCerrarSesion] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [submenuOpen, setSubmenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
@@ -36,10 +37,14 @@ function VECA_Inicio() {
           </button>
 
           <div className="perfil">
-           <button className="icono">
-              <i className="bi bi-person-circle perfil-icono"></i>
+            <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)} >
+              <i className="bi bi-person-circle perfil-icono"></i> 
             </button>
-          </div>
+            {CerrarSesion && (
+              <div className="menu-perfil">
+                <button className="btn-cerrar-sesion">Cerrar sesión</button>
+              </div>)}
+            </div>
         </div>
       </header>
 
