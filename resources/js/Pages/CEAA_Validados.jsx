@@ -1,13 +1,13 @@
 import { Select } from "@headlessui/react";
 import React from "react";
 
-function CEAA_Pendientes() {
+function CEAA_Validados() {
 
   return (
 
     <div className="registro-container">
-      <h1 className="registro-title">Informes en espera de revisión.</h1>
-      <h2 className="registro-subtitle">Consulte los informes enviados por cada municipio que se encuentran pendientes de validación.</h2>
+      <h1 className="registro-title">Informes revisados y aprobados.</h1>
+      <h2 className="registro-subtitle">Consulte los informes que fueron revisados y validados correctamente durante el periodo mensual.</h2>
     
        <div className="dashboard">
             <div className="dashboard-left">
@@ -30,7 +30,7 @@ function CEAA_Pendientes() {
                             <h3 class="card-title">Instancia Operativa</h3>
                             <p class="card-text">Mes:</p>
                             <p class="card-text">Fecha:</p>
-                            <button className="btn btn-pendiente ">Revisar</button>
+                            <button className="btn btn-guardar">Leer documento</button>
                         </div>
                     </div>
 
@@ -40,7 +40,7 @@ function CEAA_Pendientes() {
                             <h3 class="card-title">Instancia Operativa</h3>
                             <p class="card-text">Mes:</p>
                             <p class="card-text">Fecha:</p>
-                            <button className="btn btn-pendiente ">Revisar</button>
+                            <button className="btn btn-guardar">Leer documento</button>
                         </div>
                     </div>
 
@@ -50,7 +50,7 @@ function CEAA_Pendientes() {
                             <h3 class="card-title">Instancia Operativa</h3>
                             <p class="card-text">Mes:</p>
                             <p class="card-text">Fecha:</p>
-                            <button className="btn btn-pendiente ">Revisar</button>
+                            <button className="btn btn-guardar">Leer documento</button>
                         </div>
                     </div>
 
@@ -60,7 +60,7 @@ function CEAA_Pendientes() {
                             <h3 class="card-title">Instancia Operativa</h3>
                             <p class="card-text">Mes:</p>
                             <p class="card-text">Fecha:</p>
-                            <button className="btn btn-pendiente ">Revisar</button>
+                            <button className="btn btn-guardar">Leer documento</button>
                         </div>
                     </div>
                     
@@ -70,7 +70,7 @@ function CEAA_Pendientes() {
                             <h3 class="card-title">Instancia Operativa</h3>
                             <p class="card-text">Mes:</p>
                             <p class="card-text">Fecha:</p>
-                            <button className="btn btn-pendiente ">Revisar</button>
+                            <button className="btn btn-guardar">Leer documento</button>
                         </div>
                     </div>
 
@@ -80,7 +80,7 @@ function CEAA_Pendientes() {
                             <h3 class="card-title">Instancia Operativa</h3>
                             <p class="card-text">Mes:</p>
                             <p class="card-text">Fecha:</p>
-                            <button className="btn btn-pendiente ">Revisar</button>
+                            <button className="btn btn-guardar">Leer documento</button>
                         </div>
                     </div>
                 </div>
@@ -91,4 +91,4 @@ function CEAA_Pendientes() {
   );
 }
 
-export default CEAA_Pendientes;     
+export default CEAA_Validados;     

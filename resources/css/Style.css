@@ -359,6 +359,32 @@ _
     color: var(--negro-color); 
     margin-bottom: 5px; 
 }
+.card-historial{
+    width: 100%;
+    max-width: 100%;
+    grid-column: 1 / -1;
+}
+
+.card-header-municipio{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.card-body-municipio{
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.flecha{
+    transition: transform .3s ease;
+}
+
+.flecha.abierta{
+    transform: rotate(180deg);
+}
 
 /* ================= FORMULARIOS ================= */
 .dashboard{
@@ -373,6 +399,16 @@ _
 
 .dashboard-right{
     flex: 1;
+}
+
+.municipio-select{
+    width: 220px;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0 10px;
+    color: var(--gris-color);
+    background: var(--blanco-color);
 }
 
 .buscador{
@@ -560,7 +596,32 @@ input[type="file"] {
     border: none;
 }
 
+.btn-cerrar-sesion{
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+}
+
+.btn-cerrar-sesion:hover{
+    background: #f5f5f5;
+}
+
 /* ================= ICONOS ================= */
+.menu-perfil{
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,.15);
+    min-width: 180px;
+}
+
 
 i {
     padding: 5px;
@@ -655,7 +716,7 @@ i {
 }
 
 .tabla-registros th {
-    color: var(--primary-color);
+    color: var(--secondary-color);
     font-weight: 700;
 }
 
