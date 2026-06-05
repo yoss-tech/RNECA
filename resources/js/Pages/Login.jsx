@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "/resources/css/style.css";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
 import { useForm, Head } from "@inertiajs/react";
 import InputError from "../Components/InputError";
 import VECA_Inicio from "./VECA_Inicio";
-import { loginUser } from "../Components/api/auth.jsx";
+import { loginUser, checkAuth } from "../Components/api/auth.jsx";
 import { GetUserInfo } from "../Components/api/users.jsx";
 
 function Login() {
@@ -13,15 +13,47 @@ function Login() {
     password: '',
   });
 
+  // Definimos un mapa de rutas por rol para evitar duplicar lógica
+  const roleRoutes = {
+    'rol1': '/inicio_eca',
+    'rol2': '/inicio_dicm',
+    'rol3': '/inicio_lic',
+    'rol4': '/inicio_subdi',
+    'rol5': '/inicio_ceaa',
+  };
+
+  // Ejecutamos la verificación al cargar el componente
+  useEffect(() => {
+    checkAuthentication();
+  }, []);
+
+  const checkAuthentication = async () => {
+    try {
+      const result = await checkAuth();
+      // Si está autenticado, obtenemos su rol y redirigimos a la ruta correspondiente
+      if (result?.authenticated && result?.user?.id_rol) {
+        const destination = roleRoutes[result.user.id_rol];
+        if (destination) {
+          window.location.href = destination;
+        }
+      }
+    } catch (error) {
+      console.error("Error al verificar autenticación:", error);
+    }
+  };
+
   const submit = async (e) => {
     e.preventDefault();
     clearErrors();
 
     try {
       const result = await loginUser(data.correo, data.password);
-
-      if (result && (result.status === 'success' || result.status === 200)) {
-        window.location.href = "/inicio_eca";
+      
+      if (result?.status === 'success' && result?.rol) {
+        const destination = roleRoutes[result.rol];
+        window.location.href = destination || '/';
+      } else {
+        setError('correo', result.message || 'Error desconocido.');
       }
     } catch (error) {
       // Si el backend devuelve 422 (Validación fallida)
@@ -37,7 +69,6 @@ function Login() {
       }
     }
   };
-
   return (
     <div className="min-h-screen">
       <Head title="Iniciar Sesión" />

@@ -24,6 +24,11 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
         ]);
 
+        $middleware->alias([
+            'no-cache' => \App\Http\Middleware\NoCache::class,
+            'check.role' => \App\Http\Middleware\CheckRole::class,
+        ]);
+
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
