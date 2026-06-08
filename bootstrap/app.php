@@ -28,6 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'no-cache' => \App\Http\Middleware\NoCache::class,
             'check.role' => \App\Http\Middleware\CheckRole::class,
         ]);
+        $middleware->redirectUsersTo('/inicio');
 
         //
     })

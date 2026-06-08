@@ -4,7 +4,6 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\AuthController; // Importa tu AuthController
 
 
 Route::middleware('guest')->get('/', function () {
@@ -12,6 +11,18 @@ Route::middleware('guest')->get('/', function () {
 })->name('login'); // Nombramos esta ruta como 'login'
 
 Route::middleware(['auth:sanctum', 'no-cache'])->group(function () {
+    Route::get('/inicio', function () {
+        $dashboardRoute = match (auth()->user()->id_rol) {
+            'rol1' => 'inicio_eca',
+            'rol2' => 'inicio_dicm',
+            'rol5' => 'inicio_ceaa',
+            default => null,
+        };
+
+        abort_if(! $dashboardRoute, 403, 'No tienes permiso para acceder a esta página.');
+
+        return redirect()->route($dashboardRoute);
+    })->name('inicio');
 
     Route::get('/inicio_eca', function () { // Esta ruta es para el rol 'rol1' (ECA)
         return Inertia::render('VECA_Inicio');
