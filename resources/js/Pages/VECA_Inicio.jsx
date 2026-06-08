@@ -8,19 +8,55 @@ import VECA_Actividades from "./Eca_Actividades.jsx";
 import VECA_Poblacion from "./Eca_Poblacion.jsx";
 import VECA_Memoria from "./Eca_Memoria.jsx";
 import VECA_ConsultaReg from "./Eca_ConsultaRegistros.jsx";
+import { Head } from "@inertiajs/react";
+import { mostrarSoloMes, dateLimit } from "../Components/functions.jsx";
+import { logoutUser, checkAuth } from "../Components/api/auth.jsx";
 
 function VECA_Inicio() {
   const [CerrarSesion, setCerrarSesion] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [submenuOpen, setSubmenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
+
+  const menuItems = document.querySelectorAll('.sidebar .form-group a');
+
+  const submitLogout = async () => {
+    try {
+      const response = await logoutUser();
+      if (response.status === 'success') {
+        window.location.href = "/"; // Redirige al login después de cerrar sesión
+      }
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
+  }
+
+  menuItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const sidebar = document.querySelector('.sidebar');
+      sidebar.classList.remove('active');
+      setMenuOpen(false);
+    });
+  });
+
+  document.addEventListener('click', (event) => {
+    const sidebar = document.querySelector('.sidebar');
+    const toggleButton = document.querySelector('.menu-toggle');
+
+    if (!sidebar.contains(event.target) && !toggleButton.contains(event.target)) {
+      sidebar.classList.remove('active');
+      setMenuOpen(false);
+    }
+  });
+
+
   return (
     <>
       <header className="header">
         <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} >
           <i className="bi bi-list"></i>
         </button>
-        
+
         <div className="logo"><img src={miImagen} alt="Logo RNECA" /></div>
         <div className="acciones-header">
           <button className="icono">
@@ -33,13 +69,15 @@ function VECA_Inicio() {
 
           <div className="perfil">
             <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)}>
-              <i className="bi bi-person-circle perfil-icono"></i> 
+              <i className="bi bi-person-circle perfil-icono"></i>
             </button>
             {CerrarSesion && (
               <div className="menu-perfil">
-                <button className="btn-cerrar-sesion">Cerrar sesión</button>
+                <button className="btn-cerrar-sesion" onClick={submitLogout}>
+                  Cerrar sesión
+                </button>
               </div>
-             )}
+            )}
           </div>
         </div>
       </header>
@@ -58,7 +96,7 @@ function VECA_Inicio() {
         <div className="form-group">
           <a onClick={() => setSubmenuOpen(!submenuOpen)} style={{ cursor: "pointer" }}>
             <i className="bi bi-clipboard2"></i>
-             Generación de registros
+            Generación de registros
           </a>
 
           {submenuOpen && (
@@ -122,11 +160,11 @@ function VECA_Inicio() {
         </div>
 
         <div className="form-group p">
-           <a
+          <a
             className={vistaActual === "consulta_registros" ? "active" : ""}
             onClick={() => setVistaActual("consulta_registros")}
             style={{ cursor: "pointer" }}>
-           <i className="bi bi-folder"></i>
+            <i className="bi bi-folder"></i>
             Consulta de registros
           </a>
         </div>
@@ -141,25 +179,25 @@ function VECA_Inicio() {
               
               <h3 className="color-label">Registro del Mes</h3>
               <div className="card-conten">
-                <p className="card-header color">Informe del mes de MES</p>
-                
+                <p className="card-header color">Informe del mes de {mostrarSoloMes(new Date())}</p>
+
                 <div className="card-body">
                   <div className="fecha-row">
                     <p className="card-title">Fecha límite:</p>
-                    <p className="card-title">DIA de MES del AÑO</p>
+                    <p className="card-title">{dateLimit()}</p>
                   </div>
-                  
+
                   <div className="fecha-row">
                     <p className="card-text">Estado:</p>
                     <p className="card-text">Pendiente</p>
                   </div>
-                  
+
                   <div className="botones-cards">
                     <button type="button" className="btn-primario">Completar registro pendiente</button>
                   </div>
                 </div>
               </div>
-              
+
               <h3 className="color-label">Último Registro</h3>
               <div className="card-conten">
                 <p className="card-header color">Informe del mes de MES</p>

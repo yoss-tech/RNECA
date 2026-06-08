@@ -8,10 +8,24 @@ import CEAA_Validados from "./CEAA_Validados.jsx";
 import CEAA_Solicitudes from "./CEAA_Solicitudes.jsx";
 import CEAA_Historial from "./CEAA_Historial.jsx";
 
+import { logoutUser } from "@/Components/api/auth.jsx";
+
 function CEAA_Inicio() {
-  const [CerrarSesion, setCerrarSesion] = useState(false);
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
+  const [CerrarSesion, setCerrarSesion] = useState(false);
+
+  const submitLogout = async () => {
+    try {
+      const response = await logoutUser();
+      if (response.status === 'success') {
+        window.location.href = "/"; // Redirige al login después de cerrar sesión
+      }
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
+  }
 
   return (
     <>
@@ -33,10 +47,11 @@ function CEAA_Inicio() {
             </button>
             {CerrarSesion && (
               <div className="menu-perfil">
-                <button className="btn-cerrar-sesion">Cerrar sesión</button>
-              </div>
-              )}
-          </div>
+                <button className="btn-cerrar-sesion" onClick={submitLogout}>
+                  Cerrar sesión
+                </button>
+              </div>)}
+            </div>
         </div>
       </header>
 
@@ -107,6 +122,9 @@ function CEAA_Inicio() {
           <>
             <div className="registro-container">
               <h1 className="registro-title">Seguimiento general de informes municipales.</h1>
+            </div>
+
+            <div className="form-group">
               <h2 className="registro-subtitle">Visualice los informes recientemente cargados y consulte el avance mensual mediante indicadores y gráficas de cumplimiento.</h2>
               
               <div className="dashboard">
