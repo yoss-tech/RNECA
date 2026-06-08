@@ -9,23 +9,18 @@ import VECA_Poblacion from "./Eca_Poblacion.jsx";
 import VECA_Memoria from "./Eca_Memoria.jsx";
 import VECA_ConsultaReg from "./Eca_ConsultaRegistros.jsx";
 
-
-
 function VECA_Inicio() {
-  
   const [CerrarSesion, setCerrarSesion] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [submenuOpen, setSubmenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
-
   return (
     <>
       <header className="header">
-
         <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} >
           <i className="bi bi-list"></i>
         </button>
-
+        
         <div className="logo"><img src={miImagen} alt="Logo RNECA" /></div>
         <div className="acciones-header">
           <button className="icono">
@@ -37,20 +32,24 @@ function VECA_Inicio() {
           </button>
 
           <div className="perfil">
-            <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)} >
+            <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)}>
               <i className="bi bi-person-circle perfil-icono"></i> 
             </button>
             {CerrarSesion && (
               <div className="menu-perfil">
                 <button className="btn-cerrar-sesion">Cerrar sesión</button>
-              </div>)}
-            </div>
+              </div>
+             )}
+          </div>
         </div>
       </header>
 
       <div className={`sidebar ${menuOpen ? "active" : ""}`}>
         <div className="form-group p">
-          <a onClick={() => setVistaActual("inicio")} style={{ cursor: "pointer" }} >
+          <a
+            className={vistaActual === "inicio" ? "active" : ""}
+            onClick={() => setVistaActual("inicio")}
+            style={{ cursor: "pointer" }}>
             <i className="bi bi-house"></i>
             Inicio
           </a>
@@ -66,32 +65,46 @@ function VECA_Inicio() {
             <ul className="submenu">
               <li>
                 <div className="submenu-item">
-                  <i className="bi bi-check-circle"></i>
-                  <a onClick={() => setVistaActual("presente")} style={{ cursor: "pointer" }} >
+                  <a
+                    className={vistaActual === "presente" ? "active" : ""}
+                    onClick={() => setVistaActual("presente")}
+                    style={{ cursor: "pointer" }}>
+                    <i className="bi bi-check-circle"></i>
                     Presente
                   </a>
                 </div>
               </li>
-              <li>
 
+              <li>
                 <div className="submenu-item">
-                  <i className="bi bi-clock"></i>
-                  <a onClick={() => setVistaActual("actividades")} style={{ cursor: "pointer" }}>
-                      Actividades del mes</a>
+                  <a
+                    className={vistaActual === "actividades" ? "active" : ""}
+                    onClick={() => setVistaActual("actividades")}
+                    style={{ cursor: "pointer" }}>
+                    <i className="bi bi-clock"></i>
+                    Actividades del mes</a>
                 </div>
               </li>
 
               <li>
                 <div className="submenu-item">
-                  <i className="bi bi-clock"></i>
-                  <a onClick={() => setVistaActual("poblacion")} style={{ cursor: "pointer" }}>Población Beneficiaria</a>
+                  <a
+                    className={vistaActual === "poblacion" ? "active" : ""}
+                    onClick={() => setVistaActual("poblacion")}
+                    style={{ cursor: "pointer" }}>
+                    <i className="bi bi-clock"></i>
+                    Población Beneficiaria</a>
                 </div>
               </li>
 
               <li>
                 <div className="submenu-item">
-                  <i className="bi bi-clock"></i>
-                 <a onClick={() => setVistaActual("memoria")} style={{ cursor: "pointer" }}>Memoria Fotográfica</a>
+                  <a
+                    className={vistaActual === "memoria" ? "active" : ""}
+                    onClick={() => setVistaActual("memoria")}
+                    style={{ cursor: "pointer" }}>
+                    <i className="bi bi-clock"></i>
+                    Memoria Fotográfica</a>
                 </div>
               </li>
             </ul>
@@ -99,14 +112,20 @@ function VECA_Inicio() {
         </div>
 
         <div className="form-group p">
-           <a onClick={() => setVistaActual("vista_previa")} style={{ cursor: "pointer" }}>
+          <a
+            className={vistaActual === "vista_previa" ? "active" : ""}
+            onClick={() => setVistaActual("vista_previa")}
+            style={{ cursor: "pointer" }}>
             <i className="bi bi-clipboard2-check"></i>
             Vista previa
           </a>
         </div>
 
         <div className="form-group p">
-           <a onClick={() => setVistaActual("consulta_registros")} style={{ cursor: "pointer" }}>
+           <a
+            className={vistaActual === "consulta_registros" ? "active" : ""}
+            onClick={() => setVistaActual("consulta_registros")}
+            style={{ cursor: "pointer" }}>
            <i className="bi bi-folder"></i>
             Consulta de registros
           </a>
@@ -116,44 +135,44 @@ function VECA_Inicio() {
       <div className="content">
         {vistaActual === "inicio" && (
           <>
-            <div className="form-group">
+            <div className="registro-container">
               <h1 className="registro-title">Seguimiento y control de informes mensuales. </h1>
-            </div>
-
-            <div className="form-group">
               <h2 className="registro-subtitle">Administra, consulta y da seguimiento a los registros mensuales de actividades.</h2>
-            </div>
-            <br />
-
-          <p className="color-label">Registro del Mes</p>
-            <div className="card-conten">
-              <p className="card-header color">Informe del mes de Mayo </p>
-
-              <div className="card-body">
-                <div className="fecha-row">
-                  <p className="card-title">Fecha límite:</p>
-                  <p className="card-title">7 Marzo 2026</p>
+              
+              <h3 className="color-label">Registro del Mes</h3>
+              <div className="card-conten">
+                <p className="card-header color">Informe del mes de MES</p>
+                
+                <div className="card-body">
+                  <div className="fecha-row">
+                    <p className="card-title">Fecha límite:</p>
+                    <p className="card-title">DIA de MES del AÑO</p>
+                  </div>
+                  
+                  <div className="fecha-row">
+                    <p className="card-text">Estado:</p>
+                    <p className="card-text">Pendiente</p>
+                  </div>
+                  
+                  <div className="botones-cards">
+                    <button type="button" className="btn-primario">Completar registro pendiente</button>
+                  </div>
                 </div>
-
-                <div className="fecha-row">
-                  <p className="card-text">Estado:</p>
-                  <p className="card-text">Pendiente</p>
-                </div>
-                <button type="button" className="btn-pendiente"> Completar registro pendiente </button>
               </div>
-            </div>
-            <br/>
-
-            <p className="color-label">Último Registro</p>
-            <div className="card-conten">
-              <p className="card-header color">Informe del mes de Mayo</p>
-
-              <div className="card-body">
-                <div className="fecha-row">
-                  <p className="card-text">Estado:</p>
-                  <p className="card-text">Validada</p>
+              
+              <h3 className="color-label">Último Registro</h3>
+              <div className="card-conten">
+                <p className="card-header color">Informe del mes de MES</p>
+                
+                <div className="card-body">
+                  <div className="fecha-row">
+                    <p className="card-text">Estado:</p>
+                    <p className="card-text">Validada</p>
+                  </div>
+                  <div className="botones-cards">
+                    <button type="button" className="btn-neutral">Descargar PDF</button>
+                  </div>
                 </div>
-                <button type="button" className="btn-secondary-pendiente"> Descargar </button>
               </div>
             </div>
           </>
@@ -179,7 +198,6 @@ function VECA_Inicio() {
         )}
 
       </div>
-
     </>
   );
 }
