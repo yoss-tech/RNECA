@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 
 class CheckRole
@@ -17,10 +18,34 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        if(Auth::check() && Auth::user()->id_rol === $role) {
-            return $next($request);
-        } else {
-            return redirect('/') ->with('error', 'No tienes permiso para acceder a esta página.');
+        if (! Auth::check()) {
+            return redirect()->route('login');
         }
+
+        $user = Auth::user();
+
+        if ($user->id_rol === $role) {
+            return $next($request);
+        }
+
+        $dashboardRoute = $this->dashboardRouteByRole($user->id_rol);
+
+        if ($dashboardRoute && Route::has($dashboardRoute)) {
+            return redirect()
+                ->route($dashboardRoute)
+                ->with('error', 'No tienes permiso para acceder a esa sección.');
+        }
+
+        abort(403, 'No tienes permiso para acceder a esta página.');
+    }
+
+    private function dashboardRouteByRole(?string $role): ?string
+    {
+        return match ($role) {
+            'rol1' => 'inicio_eca',
+            'rol2' => 'inicio_dicm',
+            'rol5' => 'inicio_ceaa',
+            default => null,
+        };
     }
 }
