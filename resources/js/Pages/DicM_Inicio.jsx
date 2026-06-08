@@ -6,10 +6,25 @@ import DICRegistros_Recibidos from "./Dic_RegistrosR.jsx";
 import DIC_Correcciones from "./Dic_Correcciones.jsx";
 import DIC_Firmados from "./Dic_Firmados.jsx";
 
+import { Head } from "@inertiajs/react";
+import { logoutUser, checkAuth } from "../Components/api/auth.jsx";
+
 function DicM_Inicio() {
   const [CerrarSesion, setCerrarSesion] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
+
+  const submitLogout = async () => {
+    try {
+      const response = await logoutUser();
+      if (response.status === 'success') {
+        window.location.href = "/"; // Redirige al login después de cerrar sesión
+      }
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
+  }
+
 
   return (
     <>
@@ -31,7 +46,9 @@ function DicM_Inicio() {
             </button>
             {CerrarSesion && (
               <div className="menu-perfil">
-                <button className="btn-cerrar-sesion">Cerrar sesión</button>
+                <button className="btn-cerrar-sesion" onClick={submitLogout}>
+                  Cerrar sesión
+                </button>
               </div>
              )}
           </div>
