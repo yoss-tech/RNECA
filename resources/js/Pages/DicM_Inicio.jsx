@@ -2,23 +2,19 @@ import React, { useState } from "react";
 import "/resources/css/Style.css";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
 import "bootstrap-icons/font/bootstrap-icons.css";
-
 import DICRegistros_Recibidos from "./Dic_RegistrosR.jsx";
 import DIC_Correcciones from "./Dic_Correcciones.jsx";
 import DIC_Firmados from "./Dic_Firmados.jsx";
 
-
-
-
 function DicM_Inicio() {
-
+  const [CerrarSesion, setCerrarSesion] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
-  const [CerrarSesion, setCerrarSesion] = useState(false);
+
   return (
     <>
       <header className="header">
-        <div className="logo"><img src={miImagen} alt="Logo RNECA" /></div>
+        <div className="logo"><img src={miImagen} alt="Logo RNECA"/></div>
 
         <div className="acciones-header">
           <button className="icono">
@@ -36,35 +32,48 @@ function DicM_Inicio() {
             {CerrarSesion && (
               <div className="menu-perfil">
                 <button className="btn-cerrar-sesion">Cerrar sesión</button>
-              </div>)}
-            </div>
+              </div>
+             )}
+          </div>
         </div>
       </header>
 
       <div className={`sidebar ${menuOpen ? "active" : ""}`}>
         <div className="form-group p">
-          <a onClick={() => setVistaActual("inicio")} style={{ cursor: "pointer" }} >
+          <a
+            className={vistaActual === "inicio" ? "active" : ""}
+            onClick={() => setVistaActual("inicio")}
+            style={{ cursor: "pointer" }} >
             <i className="bi bi-house"></i>
             Inicio
           </a>
         </div>
 
         <div className="form-group">
-          <a onClick={() => setVistaActual("registros_recibidos")} style={{ cursor: "pointer" }} >
+          <a
+            className={vistaActual === "registros_recibidos" ? "active" : ""}
+            onClick={() => setVistaActual("registros_recibidos")}
+            style={{ cursor: "pointer" }} >
             <i className="bi bi-folder"></i>
-             Registros recibidos
+            Registros recibidos
           </a>
         </div>
 
         <div className="form-group p">
-           <a onClick={() => setVistaActual("correciones")} style={{ cursor: "pointer" }}>
+           <a
+            className={vistaActual === "correciones" ? "active" : ""}
+            onClick={() => setVistaActual("correciones")}
+            style={{ cursor: "pointer" }}>
             <i class="bi bi-pencil"></i>
             Registros con observaciones</a>
         </div>
         
         <div className="form-group p">
-           <a onClick={() => setVistaActual("registros_firmados")} style={{ cursor: "pointer" }}>
-          <i class="bi bi-check-circle"></i>
+           <a
+            className={vistaActual === "registros_firmados" ? "active" : ""}
+            onClick={() => setVistaActual("registros_firmados")}
+            style={{ cursor: "pointer" }}>
+            <i class="bi bi-check-circle"></i>
             Registros Firmados
           </a>
         </div>
@@ -73,47 +82,44 @@ function DicM_Inicio() {
       <div className="content">
         {vistaActual === "inicio" && (
           <>
-            <div className="form-group">
+            <div className="registro-container">
               <h1 className="registro-title">Seguimiento de informes pendientes. </h1>
-            </div>
-
-            <div className="form-group">
               <h2 className="registro-subtitle">Visualice los informes más recientes recibidos y el estado actual de cada registro.</h2>
+              
+              <table class="tabla-registros">
+                <thead>
+                  <tr>
+                    <th>ECA</th>
+                    <th>Mes</th>
+                    <th>Fecha validación</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                
+                <tbody>
+                  <tr>
+                    <td>Lic. Luis Garcia Contreras</td>
+                    <td>Abril</td>
+                    <td>05 de Mayo del 2026</td>
+                    <td class="estado revisado">Pendiente</td>
+                  </tr>
+                  
+                  <tr>
+                    <td>Lic. Luis Garcia Contreras</td>
+                    <td>Abril</td>
+                    <td>07 de Abril del 2026</td>
+                    <td class="estado revisado">Corrección enviada</td>
+                  </tr>
+                  
+                  <tr>
+                    <td>Lic. Luis Garcia Contreras</td>
+                    <td>Marzo</td>
+                    <td>03 de Marzo del 2026</td>
+                    <td class="estado revisado">Validado</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
-        <table class="tabla-registros">
-          <thead>
-            <tr>
-              <th>ECA</th>
-              <th>Mes</th>
-              <th>Fecha validación</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-
-        <tbody>
-            <tr>
-              <td>Lic. Luis Garcia Contreras</td>
-              <td>Abril</td>
-              <td>05 de Mayo del 2026</td>
-              <td class="estado revisado">Pendiente</td>
-            </tr>
-
-            <tr>
-              <td>Lic. Luis Garcia Contreras</td>
-              <td>Abril</td>
-              <td>07 de Abril del 2026</td>
-              <td class="estado revisado">Corrección enviada</td>
-            </tr>
-
-            <tr>
-              <td>Lic. Luis Garcia Contreras</td>
-              <td>Marzo</td>
-              <td>03 de Marzo del 2026</td>
-              <td class="estado revisado">Validado</td>
-            </tr>
-          </tbody>
-        </table>
           </>
         )}
 
@@ -128,7 +134,6 @@ function DicM_Inicio() {
         )}
 
       </div>
-
     </>
   );
 }

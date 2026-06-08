@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import "/resources/css/Style.css";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
 import "bootstrap-icons/font/bootstrap-icons.css";
-
-
 import CEAA_Pendientes from "./CEAA_Pendientes.jsx";
 import CEAA_Observaciones from "./CEAA_Observaciones.jsx";
 import CEAA_Validados from "./CEAA_Validados.jsx";
@@ -11,15 +9,14 @@ import CEAA_Solicitudes from "./CEAA_Solicitudes.jsx";
 import CEAA_Historial from "./CEAA_Historial.jsx";
 
 function CEAA_Inicio() {
-
+  const [CerrarSesion, setCerrarSesion] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
-  const [CerrarSesion, setCerrarSesion] = useState(false);
 
   return (
     <>
       <header className="header">
-        <div className="logo"><img src={miImagen} alt="Logo RNECA" /></div>
+        <div className="logo"><img src={miImagen} alt="Logo RNECA"/></div>
 
         <div className="acciones-header">
           <button className="icono">
@@ -30,53 +27,75 @@ function CEAA_Inicio() {
             <i className="bi bi-bell"></i>
           </button>
 
-           <div className="perfil">
+          <div className="perfil">
             <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)} >
               <i className="bi bi-person-circle perfil-icono"></i> 
             </button>
             {CerrarSesion && (
               <div className="menu-perfil">
                 <button className="btn-cerrar-sesion">Cerrar sesión</button>
-              </div>)}
-            </div>
+              </div>
+              )}
+          </div>
         </div>
       </header>
 
       <div className={`sidebar ${menuOpen ? "active" : ""}`}>
         <div className="form-group p">
-          <a onClick={() => setVistaActual("inicio")} style={{ cursor: "pointer" }} >
+          <a
+            className={vistaActual === "inicio" ? "active" : ""}
+            onClick={() => setVistaActual("inicio")}
+            style={{ cursor: "pointer" }} >
             <i className="bi bi-house"></i>
             Inicio
           </a>
         </div>
 
         <div className="form-group">
-          <a onClick={() => setVistaActual("pendientes")} style={{ cursor: "pointer" }} >
+          <a
+            className={vistaActual === "pendientes" ? "active" : ""}
+            onClick={() => setVistaActual("pendientes")}
+            style={{ cursor: "pointer" }} >
             <i className="bi bi-folder"></i>
-             Registros pendientes
+            Registros pendientes
           </a>
         </div>
 
         <div className="form-group p">
-           <a onClick={() => setVistaActual("observaciones")} style={{ cursor: "pointer" }}>
+          <a
+            className={vistaActual === "observaciones" ? "active" : ""}
+            onClick={() => setVistaActual("observaciones")}
+            style={{ cursor: "pointer" }} >
             <i class="bi bi-pencil"></i>
-            Registros con observaciones</a>
+            Registros con observaciones
+          </a>
         </div>
 
         <div className="form-group p">
-           <a onClick={() => setVistaActual("validados")} style={{ cursor: "pointer" }}>
+          <a
+            className={vistaActual === "validados" ? "active" : ""}
+            onClick={() => setVistaActual("validados")}
+            style={{ cursor: "pointer" }} >
             <i class="bi bi-clipboard-check"></i>
-            Registros validados</a>
+            Registros validados
+          </a>
         </div>
 
         <div className="form-group p">
-           <a onClick={() => setVistaActual("solicitudes")} style={{ cursor: "pointer" }}>
+          <a
+            className={vistaActual === "solicitudes" ? "active" : ""}
+            onClick={() => setVistaActual("solicitudes")}
+            style={{ cursor: "pointer" }}>
             <i class="bi bi-files"></i>
-            Solicitudes de registros fuera de plazo</a>
+            Solicitudes de registros fuera de plazo
+          </a>
         </div>
         
         <div className="form-group p">
-           <a onClick={() => setVistaActual("historial")} style={{ cursor: "pointer" }}>
+          <a
+            className={vistaActual === "historial" ? "active" : ""}
+            onClick={() => setVistaActual("historial")}
+            style={{ cursor: "pointer" }}>
             <i class="bi bi-search"></i>
             Consulta de Registros
           </a>
@@ -86,111 +105,104 @@ function CEAA_Inicio() {
       <div className="content">
         {vistaActual === "inicio" && (
           <>
-            <div className="form-group">
+            <div className="registro-container">
               <h1 className="registro-title">Seguimiento general de informes municipales.</h1>
-            </div>
-
-            <div className="form-group">
               <h2 className="registro-subtitle">Visualice los informes recientemente cargados y consulte el avance mensual mediante indicadores y gráficas de cumplimiento.</h2>
-            </div>
-            <br />
-           
-            <div className="dashboard">
-              <div className="dashboard-left">
-                <div className="buscador">
-                  <input type="text" placeholder="Buscar..."/>
-                  <button><i className="bi bi-search border-radius"></i></button>
-                  </div>
               
-              <div className="cards">
-                <div class="row">
-
-                  <div class="col-md-6 mb-3">
-                  <div class="card card-municipio">
-                    <div class="card-body">
-                      <h3 class="card-titulo">Municipio</h3>
-                      <h3 class="card-title">Instancia Operativa</h3>
-                      <p class="card-text">Informes pedientes:</p>
-                      <p class="card-text">Validados:</p>
-                      <button className="btn btn-pendiente ">Ver detalles</button>
-                    </div>
+              <div className="dashboard">
+                <div className="dashboard-left">
+                  <div className="buscador">
+                    <input type="text" placeholder="Buscar..."/>
+                    <button><i className="bi bi-search border-radius"></i></button>
                   </div>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                  <div class="card card-municipio">
-                    <div class="card-body">
-                      <h3 class="card-titulo">Municipio</h3>
-                      <h3 class="card-title">Instancia Operativa</h3>
-                      <p class="card-text">Informes pedientes:</p>
-                      <p class="card-text">Validados:</p>
-                      <button className="btn btn-pendiente ">Ver detalles</button>
+                  
+                  <div className="cards">
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <div class="card card-municipio">
+                          <div class="card-body">
+                            <h3 class="card-titulo">Municipio</h3>
+                            <h3 class="card-title">Instancia Operativa</h3>
+                            <p class="card-text">Informes pedientes:</p>
+                            <p class="card-text">Validados:</p>
+                            <button className="btn btn-pendiente ">Ver detalles</button>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="col-md-6 mb-3">
+                        <div class="card card-municipio">
+                          <div class="card-body">
+                            <h3 class="card-titulo">Municipio</h3>
+                            <h3 class="card-title">Instancia Operativa</h3>
+                            <p class="card-text">Informes pedientes:</p>
+                            <p class="card-text">Validados:</p>
+                            <button className="btn btn-pendiente ">Ver detalles</button>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="col-md-6 mb-3">
+                        <div class="card card-municipio">
+                          <div class="card-body">
+                            <h3 class="card-titulo">Municipio</h3>
+                            <h3 class="card-title">Instancia Operativa</h3>
+                            <p class="card-text">Informes pedientes:</p>
+                            <p class="card-text">Validados:</p>
+                            <button className="btn btn-pendiente ">Ver detalles</button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                
-                <div class="col-md-6 mb-3">
-                  <div class="card card-municipio">
-                    <div class="card-body">
-                      <h3 class="card-titulo">Municipio</h3>
-                      <h3 class="card-title">Instancia Operativa</h3>
-                      <p class="card-text">Informes pedientes:</p>
-                      <p class="card-text">Validados:</p>
-                      <button className="btn btn-pendiente ">Ver detalles</button>
-                    </div>
-                  </div>
-                </div>
-                
-              </div>
-            
-             <div class="row">
-              <div class="col-md-6 mb-3">
-                  <div class="card card-municipio">
-                    <div class="card-body">
-                      <h3 class="card-titulo">Municipio</h3>
-                      <h3 class="card-title">Instancia Operativa</h3>
-                      <p class="card-text">Informes pedientes:</p>
-                      <p class="card-text">Validados:</p>
-                      <button className="btn btn-pendiente ">Ver detalles</button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                  <div class="card card-municipio">
-                    <div class="card-body">
-                      <h3 class="card-titulo">Municipio</h3>
-                      <h3 class="card-title">Instancia Operativa</h3>
-                      <p class="card-text">Informes pedientes:</p>
-                      <p class="card-text">Validados:</p>
-                      <button className="btn btn-pendiente ">Ver detalles</button>
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="col-md-6 mb-3">
-                  <div class="card card-municipio">
-                    <div class="card-body">
-                      <h3 class="card-titulo">Municipio</h3>
-                      <h3 class="card-title">Instancia Operativa</h3>
-                      <p class="card-text">Informes pedientes:</p>
-                      <p class="card-text">Validados:</p>
-                      <button className="btn btn-pendiente ">Ver detalles</button>
+                    
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <div class="card card-municipio">
+                          <div class="card-body">
+                            <h3 class="card-titulo">Municipio</h3>
+                            <h3 class="card-title">Instancia Operativa</h3>
+                            <p class="card-text">Informes pedientes:</p>
+                            <p class="card-text">Validados:</p>
+                            <button className="btn btn-pendiente ">Ver detalles</button>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="col-md-6 mb-3">
+                        <div class="card card-municipio">
+                          <div class="card-body">
+                            <h3 class="card-titulo">Municipio</h3>
+                            <h3 class="card-title">Instancia Operativa</h3>
+                            <p class="card-text">Informes pedientes:</p>
+                            <p class="card-text">Validados:</p>
+                            <button className="btn btn-pendiente ">Ver detalles</button>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="col-md-6 mb-3">
+                        <div class="card card-municipio">
+                          <div class="card-body">
+                            <h3 class="card-titulo">Municipio</h3>
+                            <h3 class="card-title">Instancia Operativa</h3>
+                            <p class="card-text">Informes pedientes:</p>
+                            <p class="card-text">Validados:</p>
+                            <button className="btn btn-pendiente ">Ver detalles</button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div> 
               </div>
+              
+              <div className="dashboard-right">
+                <div className="card-grafico">
+                  <h3 className="card-titulo">Cumplimiento de Entrega de Informes mensuales </h3>
+                  <p className="card-text">Visualice el porcentaje de municipios que han cumplido con la entrega de su informe mensual y aquellos que se encuentran pendientes.</p>
+                </div>
+              </div>
             </div>
-          </div>
-        
-        <div className="dashboard-right">
-          <div className="card-grafico">
-            <h3 className="card-titulo">Cumplimiento de Entrega de Informes mensuales </h3>
-            
-            <p className="card-text">Visualice el porcentaje de municipios que han cumplido con la entrega de su informe mensual y aquellos que se encuentran pendientes.</p>
-            </div>
-          </div>
-        </div>
           </>
         )}
 
@@ -209,8 +221,8 @@ function CEAA_Inicio() {
         {vistaActual === "historial" && (
           <CEAA_Historial />
         )}
-      </div>    
 
+      </div>
     </>
   );
 }
