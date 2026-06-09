@@ -3,16 +3,16 @@ import React from "react";
 function DICRegistros_Recibidos() {
   
   return (
-  <div className="registro-container">
-    <h1 className="registro-title">Informes pendientes de validación.</h1>
-    <h2 className="registro-subtitle">Consulte los informes enviados por su municipio para descargar, revisar, firmar y sellar.</h2>
+  <div className="page-container">
+    <h1 className="page-title">Informes pendientes de validación.</h1>
+    <h2 className="page-subtitle">Consulte los informes enviados por su municipio para descargar, revisar, firmar y sellar.</h2>
     
     <table class="tabla-registros">
       <thead>
         <tr>
-          <th>ECA</th>
-          <th>Mes</th>
-          <th>Fecha de envío</th>
+          <th className="th-start">ECA</th>
+          <th className="th-start">Mes</th>
+          <th className="th-start">Fecha de envío</th>
           <th>Acciones</th>
         </tr>
       </thead>

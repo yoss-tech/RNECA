@@ -29,7 +29,9 @@ function CEAA_Validados() {
               <h3 class="card-title">Instancia Operativa</h3>
               <p class="card-text">Mes:</p>
               <p class="card-text">Fecha:</p>
-              <button className="btn btn-guardar">Leer documento</button>
+              <div className="botones-cards">
+                <button className="btn-neutral">Leer documento</button>
+              </div>
             </div>
           </div>
           
@@ -39,7 +41,9 @@ function CEAA_Validados() {
               <h3 class="card-title">Instancia Operativa</h3>
               <p class="card-text">Mes:</p>
               <p class="card-text">Fecha:</p>
-              <button className="btn btn-guardar">Leer documento</button>
+              <div className="botones-cards">
+                <button className="btn-neutral">Leer documento</button>
+              </div>
             </div>
           </div>
           
@@ -49,7 +53,9 @@ function CEAA_Validados() {
               <h3 class="card-title">Instancia Operativa</h3>
               <p class="card-text">Mes:</p>
               <p class="card-text">Fecha:</p>
-              <button className="btn btn-guardar">Leer documento</button>
+              <div className="botones-cards">
+                <button className="btn-neutral">Leer documento</button>
+              </div>
             </div>
           </div>
           
@@ -59,7 +65,9 @@ function CEAA_Validados() {
               <h3 class="card-title">Instancia Operativa</h3>
               <p class="card-text">Mes:</p>
               <p class="card-text">Fecha:</p>
-              <button className="btn btn-guardar">Leer documento</button>
+              <div className="botones-cards">
+                <button className="btn-neutral">Leer documento</button>
+              </div>
             </div>
           </div>
           
@@ -69,7 +77,9 @@ function CEAA_Validados() {
               <h3 class="card-title">Instancia Operativa</h3>
               <p class="card-text">Mes:</p>
               <p class="card-text">Fecha:</p>
-              <button className="btn btn-guardar">Leer documento</button>
+              <div className="botones-cards">
+                <button className="btn-neutral">Leer documento</button>
+              </div>
             </div>
           </div>
 
@@ -79,7 +89,9 @@ function CEAA_Validados() {
               <h3 class="card-title">Instancia Operativa</h3>
               <p class="card-text">Mes:</p>
               <p class="card-text">Fecha:</p>
-              <button className="btn btn-guardar">Leer documento</button>
+              <div className="botones-cards">
+                <button className="btn-neutral">Leer documento</button>
+              </div>
             </div>
           </div>
         </div>
@@ -89,4 +101,4 @@ function CEAA_Validados() {
   );
 }
 
-export default CEAA_Validados;     
+export default CEAA_Validados;

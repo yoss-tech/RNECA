@@ -13,10 +13,11 @@ function SelectorImagen() {
 
   return (
     <div>
-      <input 
-        type="file" 
+      <input
+        type="file"
         accept="image/*"
         onChange={manejarImagen}
+        className="selector-control"
       />
 
       {imagen && (
