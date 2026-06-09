@@ -173,23 +173,23 @@ function VECA_Inicio() {
       <div className="content">
         {vistaActual === "inicio" && (
           <>
-            <div className="registro-container">
-              <h1 className="registro-title">Seguimiento y control de informes mensuales. </h1>
-              <h2 className="registro-subtitle">Administra, consulta y da seguimiento a los registros mensuales de actividades.</h2>
+            <div className="page-container">
+              <h1 className="page-title">Seguimiento y control de informes mensuales. </h1>
+              <h2 className="page-subtitle">Administra, consulta y da seguimiento a los registros mensuales de actividades.</h2>
               
-              <h3 className="color-label">Registro del Mes</h3>
-              <div className="card-conten">
-                <p className="card-header color">Informe del mes de {mostrarSoloMes(new Date())}</p>
+              <h3 className="form-subtitle">Registro del Mes</h3>
+              <div className="card-contenedor">
+                <p className="card-header">Informe del mes de {mostrarSoloMes(new Date())}</p>
 
                 <div className="card-body">
                   <div className="fecha-row">
                     <p className="card-title">Fecha límite:</p>
-                    <p className="card-title">{dateLimit()}</p>
+                    <p className="card-text">{dateLimit()}</p>
                   </div>
 
                   <div className="fecha-row">
-                    <p className="card-text">Estado:</p>
-                    <p className="card-text">Pendiente</p>
+                    <p className="card-title">Estado:</p>
+                    <p className="card-text">ESTADO</p>
                   </div>
 
                   <div className="botones-cards">
@@ -198,14 +198,14 @@ function VECA_Inicio() {
                 </div>
               </div>
 
-              <h3 className="color-label">Último Registro</h3>
-              <div className="card-conten">
-                <p className="card-header color">Informe del mes de MES</p>
+              <h3 className="form-subtitle">Último Registro</h3>
+              <div className="card-contenedor">
+                <p className="card-header">Informe del mes de MES</p>
                 
                 <div className="card-body">
                   <div className="fecha-row">
-                    <p className="card-text">Estado:</p>
-                    <p className="card-text">Validada</p>
+                    <p className="card-title">Estado:</p>
+                    <p className="card-text">ESTADO</p>
                   </div>
                   <div className="botones-cards">
                     <button type="button" className="btn-neutral">Descargar PDF</button>

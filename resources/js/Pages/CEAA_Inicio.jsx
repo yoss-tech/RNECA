@@ -56,7 +56,7 @@ function CEAA_Inicio() {
       </header>
 
       <div className={`sidebar ${menuOpen ? "active" : ""}`}>
-        <div className="form-group p">
+        <div className="form-group">
           <a
             className={vistaActual === "inicio" ? "active" : ""}
             onClick={() => setVistaActual("inicio")}
@@ -76,7 +76,7 @@ function CEAA_Inicio() {
           </a>
         </div>
 
-        <div className="form-group p">
+        <div className="form-group">
           <a
             className={vistaActual === "observaciones" ? "active" : ""}
             onClick={() => setVistaActual("observaciones")}
@@ -86,7 +86,7 @@ function CEAA_Inicio() {
           </a>
         </div>
 
-        <div className="form-group p">
+        <div className="form-group">
           <a
             className={vistaActual === "validados" ? "active" : ""}
             onClick={() => setVistaActual("validados")}
@@ -96,7 +96,7 @@ function CEAA_Inicio() {
           </a>
         </div>
 
-        <div className="form-group p">
+        <div className="form-group">
           <a
             className={vistaActual === "solicitudes" ? "active" : ""}
             onClick={() => setVistaActual("solicitudes")}
@@ -106,7 +106,7 @@ function CEAA_Inicio() {
           </a>
         </div>
         
-        <div className="form-group p">
+        <div className="form-group">
           <a
             className={vistaActual === "historial" ? "active" : ""}
             onClick={() => setVistaActual("historial")}
@@ -120,18 +120,15 @@ function CEAA_Inicio() {
       <div className="content">
         {vistaActual === "inicio" && (
           <>
-            <div className="registro-container">
-              <h1 className="registro-title">Seguimiento general de informes municipales.</h1>
-            </div>
-
-            <div className="form-group">
-              <h2 className="registro-subtitle">Visualice los informes recientemente cargados y consulte el avance mensual mediante indicadores y gráficas de cumplimiento.</h2>
+            <div className="page-container">
+              <h1 className="page-title">Seguimiento general de informes municipales.</h1>
+              <h2 className="page-subtitle">Visualice los informes recientemente cargados y consulte el avance mensual mediante indicadores y gráficas de cumplimiento.</h2>
               
               <div className="dashboard">
                 <div className="dashboard-left">
                   <div className="buscador">
-                    <input type="text" placeholder="Buscar..."/>
-                    <button><i className="bi bi-search border-radius"></i></button>
+                    <input type="text" placeholder="Buscar..." className="buscador-control"/>
+                    <button className="buscador-button"><i className="bi bi-search"></i></button>
                   </div>
                   
                   <div className="cards">
@@ -143,7 +140,9 @@ function CEAA_Inicio() {
                             <h3 class="card-title">Instancia Operativa</h3>
                             <p class="card-text">Informes pedientes:</p>
                             <p class="card-text">Validados:</p>
-                            <button className="btn btn-pendiente ">Ver detalles</button>
+                            <div className="botones-cards">
+                              <button className="btn-neutral">Ver detalles</button>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -155,7 +154,9 @@ function CEAA_Inicio() {
                             <h3 class="card-title">Instancia Operativa</h3>
                             <p class="card-text">Informes pedientes:</p>
                             <p class="card-text">Validados:</p>
-                            <button className="btn btn-pendiente ">Ver detalles</button>
+                            <div className="botones-cards">
+                              <button className="btn-neutral">Ver detalles</button>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -167,7 +168,9 @@ function CEAA_Inicio() {
                             <h3 class="card-title">Instancia Operativa</h3>
                             <p class="card-text">Informes pedientes:</p>
                             <p class="card-text">Validados:</p>
-                            <button className="btn btn-pendiente ">Ver detalles</button>
+                            <div className="botones-cards">
+                              <button className="btn-neutral">Ver detalles</button>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -181,7 +184,9 @@ function CEAA_Inicio() {
                             <h3 class="card-title">Instancia Operativa</h3>
                             <p class="card-text">Informes pedientes:</p>
                             <p class="card-text">Validados:</p>
-                            <button className="btn btn-pendiente ">Ver detalles</button>
+                            <div className="botones-cards">
+                              <button className="btn-neutral">Ver detalles</button>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -193,7 +198,9 @@ function CEAA_Inicio() {
                             <h3 class="card-title">Instancia Operativa</h3>
                             <p class="card-text">Informes pedientes:</p>
                             <p class="card-text">Validados:</p>
-                            <button className="btn btn-pendiente ">Ver detalles</button>
+                            <div className="botones-cards">
+                              <button className="btn-neutral">Ver detalles</button>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -205,19 +212,21 @@ function CEAA_Inicio() {
                             <h3 class="card-title">Instancia Operativa</h3>
                             <p class="card-text">Informes pedientes:</p>
                             <p class="card-text">Validados:</p>
-                            <button className="btn btn-pendiente ">Ver detalles</button>
+                            <div className="botones-cards">
+                              <button className="btn-neutral">Ver detalles</button>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div> 
-              </div>
-              
-              <div className="dashboard-right">
-                <div className="card-grafico">
-                  <h3 className="card-titulo">Cumplimiento de Entrega de Informes mensuales </h3>
-                  <p className="card-text">Visualice el porcentaje de municipios que han cumplido con la entrega de su informe mensual y aquellos que se encuentran pendientes.</p>
+                </div>
+                
+                <div className="dashboard-right">
+                  <div className="card-grafico">
+                    <h3 className="card-titulo">Cumplimiento de Entrega de Informes mensuales </h3>
+                    <p className="card-text">Visualice el porcentaje de municipios que han cumplido con la entrega de su informe mensual y aquellos que se encuentran pendientes.</p>
+                  </div>
                 </div>
               </div>
             </div>

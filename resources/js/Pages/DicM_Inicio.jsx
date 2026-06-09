@@ -56,7 +56,7 @@ function DicM_Inicio() {
       </header>
 
       <div className={`sidebar ${menuOpen ? "active" : ""}`}>
-        <div className="form-group p">
+        <div className="form-group">
           <a
             className={vistaActual === "inicio" ? "active" : ""}
             onClick={() => setVistaActual("inicio")}
@@ -76,7 +76,7 @@ function DicM_Inicio() {
           </a>
         </div>
 
-        <div className="form-group p">
+        <div className="form-group">
            <a
             className={vistaActual === "correciones" ? "active" : ""}
             onClick={() => setVistaActual("correciones")}
@@ -85,7 +85,7 @@ function DicM_Inicio() {
             Registros con observaciones</a>
         </div>
         
-        <div className="form-group p">
+        <div className="form-group">
            <a
             className={vistaActual === "registros_firmados" ? "active" : ""}
             onClick={() => setVistaActual("registros_firmados")}
@@ -99,16 +99,16 @@ function DicM_Inicio() {
       <div className="content">
         {vistaActual === "inicio" && (
           <>
-            <div className="registro-container">
-              <h1 className="registro-title">Seguimiento de informes pendientes. </h1>
-              <h2 className="registro-subtitle">Visualice los informes más recientes recibidos y el estado actual de cada registro.</h2>
+            <div className="page-container">
+              <h1 className="page-title">Seguimiento de informes pendientes. </h1>
+              <h2 className="page-subtitle">Visualice los informes más recientes recibidos y el estado actual de cada registro.</h2>
               
               <table class="tabla-registros">
                 <thead>
                   <tr>
-                    <th>ECA</th>
-                    <th>Mes</th>
-                    <th>Fecha validación</th>
+                    <th className="th-start">ECA</th>
+                    <th className="th-start">Mes</th>
+                    <th className="th-start">Fecha validación</th>
                     <th>Estado</th>
                   </tr>
                 </thead>
@@ -118,21 +118,21 @@ function DicM_Inicio() {
                     <td>Lic. Luis Garcia Contreras</td>
                     <td>Abril</td>
                     <td>05 de Mayo del 2026</td>
-                    <td class="estado revisado">Pendiente</td>
+                    <td className="td-center">Pendiente</td>
                   </tr>
                   
                   <tr>
                     <td>Lic. Luis Garcia Contreras</td>
                     <td>Abril</td>
                     <td>07 de Abril del 2026</td>
-                    <td class="estado revisado">Corrección enviada</td>
+                    <td className="td-center">Correcciones</td>
                   </tr>
                   
                   <tr>
                     <td>Lic. Luis Garcia Contreras</td>
                     <td>Marzo</td>
                     <td>03 de Marzo del 2026</td>
-                    <td class="estado revisado">Validado</td>
+                    <td className="td-center">Validado</td>
                   </tr>
                 </tbody>
               </table>

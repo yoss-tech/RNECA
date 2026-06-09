@@ -57,25 +57,25 @@ function Login() {
     <div className="min-h-screen">
       <Head title="Iniciar Sesión" />
       <div className="simple-linear">
-        <div className="container-img">
+        <div className="login-image">
           <div className="logo">
             <img src={miImagen} alt="Logo RNECA" />
           </div>
         </div>
 
-        <div className="text-center title-section">
-          <h1>RNECA</h1>
-          <h2>
-            ACCESO AL REGISTRO NACIONAL DE ESPACIOS
-            DE CULTURA DEL AGUA
-          </h2>
-        </div>
-        <br/>
-        <div className="container">
-          <div className="card login-card">
+        <div className="login-container">
+          <div className="login-text title-section">
+            <h1>RNECA</h1>
+            <h2>
+              ACCESO AL REGISTRO NACIONAL DE ESPACIOS
+              DE CULTURA DEL AGUA
+            </h2>
+          </div>
+
+          <div className="login-card">
             <form className='loginForm' onSubmit={submit}>
               <div className="form-group">
-                <label htmlFor="correo">
+                <label htmlFor="correo" className="form-label">
                   Correo electrónico:
                 </label>
                 <input
@@ -89,9 +89,8 @@ function Login() {
                 />
                 <InputError message={errors.correo} className="mt-2" />
               </div>
-              <br/>
               <div className="form-group">
-                <label htmlFor="password">
+                <label htmlFor="password" className="form-label">
                   Contraseña:
                 </label>
                 <input
@@ -105,7 +104,6 @@ function Login() {
                 />
                 <InputError message={errors.password} className="mt-2" />
               </div>
-              <br />
               <button className="btn-login" disabled={processing} type="submit">
                 {processing ? 'Verificando...' : 'Iniciar Sesión'}
               </button>
