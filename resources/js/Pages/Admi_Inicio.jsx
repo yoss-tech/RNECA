@@ -57,7 +57,8 @@ function Admi_Inicio() {
           <i className="bi bi-list"></i>
         </button>
 
-        <div className="logo"><img src={miImagen} alt="Logo RNECA" /></div>
+        <div className="logo"><img src={miImagen} alt="Logo RNECA"/></div>
+
         <div className="acciones-header">
           <button className="icono">
             <i className="bi bi-envelope"></i>
@@ -83,7 +84,7 @@ function Admi_Inicio() {
       </header>
 
       <div className={`sidebar ${menuOpen ? "active" : ""}`}>
-        <div className="form-group p">
+        <div className="form-group">
           <a
             className={vistaActual === "inicio" ? "active" : ""}
             onClick={() => setVistaActual("inicio")}
@@ -153,33 +154,31 @@ function Admi_Inicio() {
       <div className="content">
         {vistaActual === "inicio" && (
           <>
-            <div className="registro-container">
-              <h1 className="registro-title">Administración general de usuarios.</h1>
-              <h2 className="registro-subtitle">Consulte información general sobre los usuarios registrados y gestione el acceso a la plataforma.</h2>
-            
-            <div className="dashboard">
-            <div className="card card-municipio">
-                <div class="card-body">
-                <h3 class="card-title">Total de usuarios</h3>
-                <h1 className="registro-title">Numero</h1>
+            <div className="page-container">
+              <h1 className="page-title">Administración general de usuarios.</h1>
+              <h2 className="page-subtitle">Consulte información general sobre los usuarios registrados y gestione el acceso a la plataforma.</h2>
+              
+              <div className="dashboard">
+                <div className="card-number">
+                  <div class="card-body">
+                    <h3 className="card-subtitle">Total de usuarios</h3>
+                    <h1 className="number">Numero</h1>
+                  </div>
                 </div>
-            </div> 
-
-            <div className="card card-municipio">
-                <div class="card-body">
-                <h3 class="card-title">Total de usuarios</h3>
-                <h1 className="registro-title">Numero</h1>
+                <div className="card-number">
+                  <div class="card-body">
+                    <h3 className="card-subtitle">Total de municipios</h3>
+                    <h1 className="number">Numero</h1>
+                  </div>
                 </div>
-            </div> 
-
-            <div className="card card-municipio">
-                <div class="card-body">
-                <h3 class="card-title">Total de usuarios</h3>
-                <h1 className="registro-title">Numero</h1>
+                <div className="card-number">
+                  <div class="card-body">
+                    <h3 className="card-subtitle">Total de usuarios inactivos</h3>
+                    <h1 className="number">Numero</h1>
+                  </div>
                 </div>
-            </div> 
+              </div>
             </div>
-        </div>
           </>
         )}
 

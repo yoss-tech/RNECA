@@ -256,6 +256,10 @@ h2 {
     color: var(--blanco-color);
 }
 
+h3 {
+    font-weight: 700;
+}
+
 p {
     font-size: 18px;
     font-weight: 500;
@@ -290,26 +294,34 @@ p {
 } 
 
 .card-body {
-    display: flex; 
+    display: flex;
     flex-direction: column; 
 } 
 
-.cards {
+.cards-municipio,
+.cards-revision,
+.cards-historial {
     width: 100%;
-    max-width: 1000px;
     padding: 16px;
     background-color: var(--dorado-color);
-    
-    border-radius: 4px; 
+    border-radius: 4px;
+}
+
+.cards-municipio {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    gap: 8px;
 }
 
 .cards-revision {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    gap: 8px;
+}
+
+.cards-historial {
+    display: grid;
+    gap: 8px;
 }
 
 .cards-revision .card-municipio {
@@ -317,16 +329,26 @@ p {
     max-width: none;
 }
 
-.card-municipio {
-    padding: 25px;
-    border-radius: 15px;
+.card-municipio,
+.card-number {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
     background: var(--blanco-color);
     box-shadow: 0 4px 12px rgba(0,0,0,.1);
+    border: 1px solid var(--primary-color);
 }
 
-.card-municipio .btn-pendiente {
+.card-municipio {
     margin-left: auto;
     display: block;
+}
+
+.card-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .card-grafico {
@@ -350,19 +372,26 @@ p {
     color: var(--secondary-color);
 }
 
-.card-title {
-    margin-bottom: 5px;
+.card-title,
+.td-title {
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--primary-color);
+}
+
+.card-subtitle,
+.td-subtitle {
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--negro-color)
 }
 
 .card-text {
-    font-weight: 600;
-    margin-bottom: 5px; 
+    margin-bottom: 4px; 
 }
 
-.card-titulo { 
-    font-weight: 700; 
-    color: var(--primary-color); 
-    margin-bottom: 5px; 
+.card-titles { 
+    margin-bottom: 10px; 
 } 
 .card-historial {
     width: 100%;
@@ -379,7 +408,7 @@ p {
 
 .card-body-municipio {
     margin-top: 10px;
-    padding-top: 10px;
+    padding: 4px 0px;
     border-top: 1px solid #ddd;
 }
 
@@ -411,17 +440,26 @@ p {
     height: 30px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    padding: 0 10px;
+    padding: 6px 0;
+    margin-left: 4px;
     color: var(--gris-color);
     background: var(--blanco-color);
 }
 
 .buscador {
     display: flex;
+    align-items: stretch;
+    margin-bottom: 15px;
+}
+
+.filtro {
+    display: flex;
+    align-items: center;
     margin-bottom: 15px;
 }
 
 .buscador-control {
+    flex: 1;
     padding: 6px 12px;
     border-radius: 4px 0 0 4px;
     font-family: 'Montserrat', sans-serif;
@@ -432,14 +470,11 @@ p {
     box-shadow: 0 0 0 0.2rem rgba(160, 33, 66, 0.25);
 }
 
-.buscador input {
-    flex: 1;
-    height: 40px;
-    border: 1px solid #ccc;
-}
-
 .buscador-button {
-    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 12px;
     border-radius: 0 4px 4px 0;
     border: none;
     background: var(--primary-color);
@@ -560,8 +595,16 @@ input[type="file"] {
     justify-content: flex-end;
 }
 
-.btn-container {
+.btn-container-vertical {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-container-horizontal {
+    display: flex;
+    flex-direction: row;
     justify-content: center;
     gap: 8px;
 }
@@ -600,7 +643,6 @@ input[type="file"] {
     box-shadow: 0 8px 25px rgba(0,0,0,.15);
     min-width: 180px;
 }
-
 
 i {
     font-size: 18px;
@@ -772,6 +814,10 @@ td {
     filter: grayscale(100%);
 }
 
+.number {
+    font-weight: 900;
+    color: var(--primary-color);
+}
 /* ================= RESPONSIVE ================= */
 
 @media (max-width: 992px) {
@@ -847,8 +893,9 @@ td {
         padding: 20px;
     }
 
-    .registro-title {
+    .number {
         font-size: 28px;
+        color: var(--primary-color);
     }
 
     .registro-subtitle {

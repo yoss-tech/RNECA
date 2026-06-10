@@ -22,7 +22,7 @@ function DIC_Firmados() {
           <td>Lic. Luis Garcia Contreras</td>
           <td>Abril</td>
           <td>03 de Marzo del 2026</td>
-          <td className="btn-container">
+          <td className="btn-container-horizontal">
             <button type="button" className="btn-neutral">Descargar PDF</button>
           </td>
         </tr>
