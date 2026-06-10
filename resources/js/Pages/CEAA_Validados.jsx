@@ -4,14 +4,14 @@ import React from "react";
 function CEAA_Validados() {
     
   return (
-  <div className="registro-container">
-    <h1 className="registro-title">Informes revisados y aprobados.</h1>
-    <h2 className="registro-subtitle">Consulte los informes que fueron revisados y validados correctamente durante el periodo mensual.</h2>
+  <div className="page-container">
+    <h1 className="page-title">Informes revisados y aprobados.</h1>
+    <h2 className="page-subtitle">Consulte los informes que fueron revisados y validados correctamente durante el periodo mensual.</h2>
     
     <div className="dashboard">
       <div className="dashboard-left">
-        <div className="buscador">
-          <h3 class="card-text">Municipio:</h3>
+        <div className="filtro">
+          <p className="card-text">Municipio:</p>
           <select className="municipio-select">
             <option value="">Selecciona una opción</option>
             <option value="1">Toluca</option>
@@ -22,73 +22,15 @@ function CEAA_Validados() {
           </select>
         </div>
         
-        <div className="cards cards-revision">
-          <div className="card card-municipio">
-            <div class="card-body">
-              <h3 class="card-titulo">Municipio</h3>
-              <h3 class="card-title">Instancia Operativa</h3>
-              <p class="card-text">Mes:</p>
-              <p class="card-text">Fecha:</p>
-              <div className="botones-cards">
-                <button className="btn-neutral">Leer documento</button>
+        <div className="cards-revision">
+          <div className="card-municipio">
+            <div className="card-body">
+              <div className="card-titles">
+                <h3 className="card-title">Municipio</h3>
+                <h3 className="card-subtitle">Instancia Operativa</h3>
+                <p className="card-text">Mes:</p>
+                <p className="card-text">Fecha:</p>
               </div>
-            </div>
-          </div>
-          
-          <div className="card card-municipio">
-            <div class="card-body">
-              <h3 class="card-titulo">Municipio</h3>
-              <h3 class="card-title">Instancia Operativa</h3>
-              <p class="card-text">Mes:</p>
-              <p class="card-text">Fecha:</p>
-              <div className="botones-cards">
-                <button className="btn-neutral">Leer documento</button>
-              </div>
-            </div>
-          </div>
-          
-          <div className="card card-municipio">
-            <div class="card-body">
-              <h3 class="card-titulo">Municipio</h3>
-              <h3 class="card-title">Instancia Operativa</h3>
-              <p class="card-text">Mes:</p>
-              <p class="card-text">Fecha:</p>
-              <div className="botones-cards">
-                <button className="btn-neutral">Leer documento</button>
-              </div>
-            </div>
-          </div>
-          
-          <div className="card card-municipio">
-            <div class="card-body">
-              <h3 class="card-titulo">Municipio</h3>
-              <h3 class="card-title">Instancia Operativa</h3>
-              <p class="card-text">Mes:</p>
-              <p class="card-text">Fecha:</p>
-              <div className="botones-cards">
-                <button className="btn-neutral">Leer documento</button>
-              </div>
-            </div>
-          </div>
-          
-          <div className="card card-municipio">
-            <div class="card-body">
-              <h3 class="card-titulo">Municipio</h3>
-              <h3 class="card-title">Instancia Operativa</h3>
-              <p class="card-text">Mes:</p>
-              <p class="card-text">Fecha:</p>
-              <div className="botones-cards">
-                <button className="btn-neutral">Leer documento</button>
-              </div>
-            </div>
-          </div>
-
-          <div className="card card-municipio">
-            <div class="card-body">
-              <h3 class="card-titulo">Municipio</h3>
-              <h3 class="card-title">Instancia Operativa</h3>
-              <p class="card-text">Mes:</p>
-              <p class="card-text">Fecha:</p>
               <div className="botones-cards">
                 <button className="btn-neutral">Leer documento</button>
               </div>

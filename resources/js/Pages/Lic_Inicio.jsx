@@ -53,7 +53,7 @@ function Lic_Inicio() {
       </header>
 
       <div className={`sidebar ${menuOpen ? "active" : ""}`}>
-        <div className="form-group p">
+        <div className="form-group">
           <a
             className={vistaActual === "inicio" ? "active" : ""}
             onClick={() => setVistaActual("inicio")}
@@ -73,7 +73,7 @@ function Lic_Inicio() {
           </a>
         </div>
 
-        <div className="form-group p">
+        <div className="form-group">
           <a
             className={vistaActual === "consulta_registros" ? "active" : ""}
             onClick={() => setVistaActual("consulta_registros")}
@@ -87,104 +87,38 @@ function Lic_Inicio() {
       <div className="content">
         {vistaActual === "inicio" && (
           <>
-            <div className="registro-container">
-              <h1 className="registro-title">Monitoreo general de informes municipales.</h1>
-            </div>
-
-            <div className="form-group">
-              <h2 className="registro-subtitle">Visualice indicadores de cumplimiento, el estado de los informes mensuales y el avance de los municipios mediante gráficas y tarjetas informativas.</h2>
+            <div className="page-container">
+              <h1 className="page-title">Monitoreo general de informes municipales.</h1>
+              <h2 className="page-subtitle">Visualice indicadores de cumplimiento, el estado de los informes mensuales y el avance de los municipios mediante gráficas y tarjetas informativas.</h2>
               
               <div className="dashboard">
                 <div className="dashboard-left">
                   <div className="buscador">
-                    <input type="text" placeholder="Buscar..."/>
-                    <button><i className="bi bi-search border-radius"></i></button>
+                    <input type="text" placeholder="Buscar..." className="buscador-control"/>
+                    <button className="buscador-button"><i className="bi bi-search"></i></button>
                   </div>
                   
-                  <div className="cards">
-                    <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <div class="card card-municipio">
-                          <div class="card-body">
-                            <h3 class="card-titulo">Municipio</h3>
-                            <h3 class="card-title">Instancia Operativa</h3>
-                            <p class="card-text">Informes pedientes:</p>
-                            <p class="card-text">Validados:</p>
-                            <button className="btn btn-pendiente ">Ver detalles</button>
-                          </div>
+                  <div className="cards-municipio">
+                    <div class="card-municipio">
+                      <div class="card-body">
+                        <div className="card-titles">
+                          <h3 class="card-titulo">Municipio</h3>
+                          <h3 class="card-title">Instancia Operativa</h3>
+                          <p class="card-text">Informes pedientes:</p>
+                          <p class="card-text">Validados:</p>
                         </div>
-                      </div>
-                      
-                      <div class="col-md-6 mb-3">
-                        <div class="card card-municipio">
-                          <div class="card-body">
-                            <h3 class="card-titulo">Municipio</h3>
-                            <h3 class="card-title">Instancia Operativa</h3>
-                            <p class="card-text">Informes pedientes:</p>
-                            <p class="card-text">Validados:</p>
-                            <button className="btn btn-pendiente ">Ver detalles</button>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div class="col-md-6 mb-3">
-                        <div class="card card-municipio">
-                          <div class="card-body">
-                            <h3 class="card-titulo">Municipio</h3>
-                            <h3 class="card-title">Instancia Operativa</h3>
-                            <p class="card-text">Informes pedientes:</p>
-                            <p class="card-text">Validados:</p>
-                            <button className="btn btn-pendiente ">Ver detalles</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <div class="card card-municipio">
-                          <div class="card-body">
-                            <h3 class="card-titulo">Municipio</h3>
-                            <h3 class="card-title">Instancia Operativa</h3>
-                            <p class="card-text">Informes pedientes:</p>
-                            <p class="card-text">Validados:</p>
-                            <button className="btn btn-pendiente ">Ver detalles</button>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div class="col-md-6 mb-3">
-                        <div class="card card-municipio">
-                          <div class="card-body">
-                            <h3 class="card-titulo">Municipio</h3>
-                            <h3 class="card-title">Instancia Operativa</h3>
-                            <p class="card-text">Informes pedientes:</p>
-                            <p class="card-text">Validados:</p>
-                            <button className="btn btn-pendiente ">Ver detalles</button>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div class="col-md-6 mb-3">
-                        <div class="card card-municipio">
-                          <div class="card-body">
-                            <h3 class="card-titulo">Municipio</h3>
-                            <h3 class="card-title">Instancia Operativa</h3>
-                            <p class="card-text">Informes pedientes:</p>
-                            <p class="card-text">Validados:</p>
-                            <button className="btn btn-pendiente ">Ver detalles</button>
-                          </div>
+                        <div className="botones-cards">
+                          <button className="btn-neutral">Ver detalles</button>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div> 
-              </div>
-              
-              <div className="dashboard-right">
-                <div className="card-grafico">
-                  <h3 className="card-titulo">Cumplimiento de Entrega de Informes mensuales </h3>
-                  <p className="card-text">Visualice el porcentaje de municipios que han cumplido con la entrega de su informe mensual y aquellos que se encuentran pendientes.</p>
+                </div>
+                <div className="dashboard-right">
+                  <div className="card-grafico">
+                    <h3 className="card-title">Cumplimiento de Entrega de Informes mensuales </h3>
+                    <p className="card-text">Visualice el porcentaje de municipios que han cumplido con la entrega de su informe mensual y aquellos que se encuentran pendientes.</p>
+                  </div>
                 </div>
               </div>
             </div>

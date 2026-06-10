@@ -50,8 +50,9 @@ function CEAA_Inicio() {
                 <button className="btn-cerrar-sesion" onClick={submitLogout}>
                   Cerrar sesión
                 </button>
-              </div>)}
-            </div>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
@@ -131,100 +132,25 @@ function CEAA_Inicio() {
                     <button className="buscador-button"><i className="bi bi-search"></i></button>
                   </div>
                   
-                  <div className="cards">
-                    <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <div class="card card-municipio">
-                          <div class="card-body">
-                            <h3 class="card-titulo">Municipio</h3>
-                            <h3 class="card-title">Instancia Operativa</h3>
-                            <p class="card-text">Informes pedientes:</p>
-                            <p class="card-text">Validados:</p>
-                            <div className="botones-cards">
-                              <button className="btn-neutral">Ver detalles</button>
-                            </div>
-                          </div>
+                  <div className="cards-municipio">
+                    <div className="card-municipio">
+                      <div class="card-body">
+                        <div className="card-titles">
+                          <h3 className="card-title">Municipio</h3>
+                          <h3 className="card-subtitle">Instancia Operativa</h3>
+                          <p className="card-text">Informes pedientes:</p>
+                          <p className="card-text">Validados:</p>
                         </div>
-                      </div>
-                      
-                      <div class="col-md-6 mb-3">
-                        <div class="card card-municipio">
-                          <div class="card-body">
-                            <h3 class="card-titulo">Municipio</h3>
-                            <h3 class="card-title">Instancia Operativa</h3>
-                            <p class="card-text">Informes pedientes:</p>
-                            <p class="card-text">Validados:</p>
-                            <div className="botones-cards">
-                              <button className="btn-neutral">Ver detalles</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div class="col-md-6 mb-3">
-                        <div class="card card-municipio">
-                          <div class="card-body">
-                            <h3 class="card-titulo">Municipio</h3>
-                            <h3 class="card-title">Instancia Operativa</h3>
-                            <p class="card-text">Informes pedientes:</p>
-                            <p class="card-text">Validados:</p>
-                            <div className="botones-cards">
-                              <button className="btn-neutral">Ver detalles</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <div class="card card-municipio">
-                          <div class="card-body">
-                            <h3 class="card-titulo">Municipio</h3>
-                            <h3 class="card-title">Instancia Operativa</h3>
-                            <p class="card-text">Informes pedientes:</p>
-                            <p class="card-text">Validados:</p>
-                            <div className="botones-cards">
-                              <button className="btn-neutral">Ver detalles</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div class="col-md-6 mb-3">
-                        <div class="card card-municipio">
-                          <div class="card-body">
-                            <h3 class="card-titulo">Municipio</h3>
-                            <h3 class="card-title">Instancia Operativa</h3>
-                            <p class="card-text">Informes pedientes:</p>
-                            <p class="card-text">Validados:</p>
-                            <div className="botones-cards">
-                              <button className="btn-neutral">Ver detalles</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div class="col-md-6 mb-3">
-                        <div class="card card-municipio">
-                          <div class="card-body">
-                            <h3 class="card-titulo">Municipio</h3>
-                            <h3 class="card-title">Instancia Operativa</h3>
-                            <p class="card-text">Informes pedientes:</p>
-                            <p class="card-text">Validados:</p>
-                            <div className="botones-cards">
-                              <button className="btn-neutral">Ver detalles</button>
-                            </div>
-                          </div>
+                        <div className="botones-cards">
+                          <button className="btn-neutral">Ver detalles</button>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                
                 <div className="dashboard-right">
                   <div className="card-grafico">
-                    <h3 className="card-titulo">Cumplimiento de Entrega de Informes mensuales </h3>
+                    <h3 className="card-title">Cumplimiento de Entrega de Informes mensuales </h3>
                     <p className="card-text">Visualice el porcentaje de municipios que han cumplido con la entrega de su informe mensual y aquellos que se encuentran pendientes.</p>
                   </div>
                 </div>

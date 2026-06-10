@@ -183,12 +183,12 @@ function VECA_Inicio() {
 
                 <div className="card-body">
                   <div className="fecha-row">
-                    <p className="card-title">Fecha límite:</p>
+                    <p className="card-subtitle">Fecha límite:</p>
                     <p className="card-text">{dateLimit()}</p>
                   </div>
 
                   <div className="fecha-row">
-                    <p className="card-title">Estado:</p>
+                    <p className="card-subtitle">Estado:</p>
                     <p className="card-text">ESTADO</p>
                   </div>
 
@@ -204,7 +204,7 @@ function VECA_Inicio() {
                 
                 <div className="card-body">
                   <div className="fecha-row">
-                    <p className="card-title">Estado:</p>
+                    <p className="card-subtitle">Estado:</p>
                     <p className="card-text">ESTADO</p>
                   </div>
                   <div className="botones-cards">

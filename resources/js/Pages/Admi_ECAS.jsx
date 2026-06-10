@@ -3,34 +3,34 @@ import React from "react";
 function Admi_ECAS() {
   
   return (
-  <div className="registro-container">
-    <h1 className="registro-title">Administración de usuarios ECA.</h1>
-    <h2 className="registro-subtitle">Consulte, actualice o elimine usuarios asignados a los Espacios de Cultura del Agua.</h2>
+  <div className="page-container">
+    <h1 className="page-title">Administración de usuarios ECA.</h1>
+    <h2 className="page-subtitle">Consulte, actualice o elimine usuarios asignados a los Espacios de Cultura del Agua.</h2>
     
     <button type="button" className="btn-primario">Crear un nuevo ECA</button>
 
     <table class="tabla-registros">
       <thead>
         <tr>
-          <th>ECA</th>
-          <th>Correo</th>
-          <th>Contraseña</th>
-          <th>Estado</th>
+          <th className="th-start">ECA</th>
+          <th className="th-start">Correo</th>
+          <th className="th-start">Contraseña</th>
+          <th className="th-start">Estado</th>
           <th>Acciones</th>
         </tr>
       </thead>
       
       <tbody>
         <tr>
-           <td>
-            <div className="color-label">MUNICIPIO</div>
-            <div className="card-title">INSTANCIA OPERATIVA</div>
-            <div className="card-text">NOMBRE</div>
-            </td>
+          <td>
+            <p className="form-subtitle">MUNICIPIO</p>
+            <p className="card-subtitle">INSTANCIA OPERATIVA</p>
+            <p className="card-text">NOMBRE</p>
+          </td>
           <td>CORREO</td>
           <td>CONTRASEÑA</td>
           <td>ACTIVO</td>
-          <td >
+          <td className="btn-container-vertical">
             <button type="button" className="btn-neutral">Eliminar</button>
             <button type="button" className="btn-negativo">Modificar</button></td>
         </tr>
