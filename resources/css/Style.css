@@ -35,10 +35,6 @@ body {
     background: linear-gradient(180deg, #691b31, #A02142);
 }
 
-.text-center {
-    text-align: center;
-}
-
 .form-subtitle {
     color: var(--dorado-color);
     font-weight: 700;
@@ -191,29 +187,6 @@ body {
     flex-wrap: wrap;
 }
 
-.left-content {
-    width: 100%;
-    max-width: 550px;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    width: 100%;
-}
-
-.container-img {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 30px;
-}
-
 .login-image {
     position: fixed;
     left: 0;
@@ -239,11 +212,6 @@ body {
     align-items: center;
     text-align: center;
     margin-bottom: 25px;
-}
-
-.container {
-    width: 100%;
-    align-items: center;
 }
 
 /* ================= TIPOGRAFIA ================= */
@@ -275,15 +243,6 @@ p {
 }
 
 /* ================= CARDS ================= */
-.card { 
-    width: 100%;
-    max-width: 450px;
-    padding: 30px; 
-    border-radius: 15px; 
-    background-color: var(--blanco-color); 
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
-} 
-
 .login-card { 
     width: 100%;
     max-width: 450px;
@@ -648,26 +607,6 @@ i {
     font-size: 18px;
     padding: 5px;
 }
-
-.fondo_i {
-    width: 100%;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 10px;
-    border: 2px solid var(--gris-color);
-    border-radius: 3px;
-
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.fondo_i:hover {
-    border-color: var(--primary-color);
-    background: var(--primary-color);
-    color: var(--blanco-color);
-}
-
 /* ================= REGISTROS ================= */
 .page-title {
     font-size: 32px;
@@ -723,14 +662,6 @@ td {
 }
 
 /* ================= ACTIVIDADES ================= */
-.actividad-title {
-    margin-bottom: 15px;
-
-    color: var(--primary-color);
-    font-size: 24px;
-    font-weight: 700;
-}
-
 .radio-group,
 .check-group {
     display: flex;
