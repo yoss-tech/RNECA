@@ -62,7 +62,7 @@ export const logoutUser = async () => {
 export const checkAuth = async () => {
     try {
         const response = await axiosInstance.get('/check-auth');
-        return response.data; // { status, message, body: {...} }
+        return response.data;
     } catch (error) {
         return null; // No autenticado o error de conexión
     }

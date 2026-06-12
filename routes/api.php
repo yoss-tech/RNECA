@@ -6,6 +6,8 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\AuthController;
 use Inertia\Inertia;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\EcaController;
+
 
 Route::get('/', function () {
     return Inertia::render('Login');
@@ -20,9 +22,17 @@ Route::get('/prueba', function () {
     ], 200);
 });
 
+// USUARIOS
 Route::get('/users', [UsersController::class, 'index']);
 Route::get('/users/{user}', [UsersController::class, 'show']);
 Route::post('/users', [UsersController::class, 'store']);
+
+// ECA
+// Agregamos el middleware para asegurar que auth()->user() no sea null
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/infoEca', [EcaController::class, 'index']);
+    Route::get('/eca/{eca}', [EcaController::class, 'show']);
+});
 
 // El login se maneja a través de AuthController vinculado en auth.php
 Route::post('/login', [AuthController::class, 'login'])->name('api.login');
