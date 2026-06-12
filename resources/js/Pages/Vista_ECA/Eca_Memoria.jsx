@@ -1,5 +1,5 @@
 import React from "react";
-import SelectorImagen from "../Components/SelectorImagen.jsx";
+import SelectorImagen from "../../Components/SelectorImagen.jsx";
 
 function VECA_Memoria() {
 

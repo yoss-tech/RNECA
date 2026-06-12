@@ -2,7 +2,7 @@ import axios from 'axios';
 
 axios.defaults.withCredentials = true; // Esto es VITAL para que Laravel Sanctum funcione correctamente
 
-const apiBaseUrl = import.meta.env.APP_URL || 'http://localhost:8000' || 'http://127.0.0.1:8000'
+const apiBaseUrl = import.meta.env.APP_URL ||  'http://127.0.0.1:8000' ||'http://localhost:8000'
 
 const axiosInstance = axios.create({
     // En local/Docker, el navegador accede al backend por localhost:8000

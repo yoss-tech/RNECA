@@ -9,8 +9,8 @@ import VECA_Poblacion from "./Eca_Poblacion.jsx";
 import VECA_Memoria from "./Eca_Memoria.jsx";
 import VECA_ConsultaReg from "./Eca_ConsultaRegistros.jsx";
 import { Head } from "@inertiajs/react";
-import { mostrarSoloMes, dateLimit } from "../Components/functions.jsx";
-import { logoutUser, checkAuth } from "../Components/api/auth.jsx";
+import { mostrarSoloMes, dateLimit } from "../../Components/functions.jsx";
+import { logoutUser, checkAuth } from "../../Components/api/auth.jsx";
 
 function VECA_Inicio() {
   const [CerrarSesion, setCerrarSesion] = useState(false);

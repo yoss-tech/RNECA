@@ -25,15 +25,15 @@ Route::middleware(['auth:sanctum', 'no-cache'])->group(function () {
     })->name('inicio');
 
     Route::get('/inicio_eca', function () { // Esta ruta es para el rol 'rol1' (ECA)
-        return Inertia::render('VECA_Inicio');
+        return Inertia::render('Vista_ECA/VECA_Inicio');
     })->middleware('check.role:rol1')->name('inicio_eca');
 
     Route::get('/inicio_dicm', function () { // Esta ruta es para el rol 'rol2' (Dicm)
-        return Inertia::render('DicM_Inicio');
+        return Inertia::render('Vista_Direc_Mun/DicM_Inicio');
     })->middleware('check.role:rol2')->name('inicio_dicm');
 
     Route::get('/inicio_ceaa', function () { // Esta ruta es para el rol 'rol5' (CEAA)
-        return Inertia::render('CEAA_Inicio');
+        return Inertia::render('Vista_CEAA/CEAA_Inicio');
     })->middleware('check.role:rol5')->name('inicio_ceaa');
 });
 

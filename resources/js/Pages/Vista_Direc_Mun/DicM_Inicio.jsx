@@ -7,7 +7,7 @@ import DIC_Correcciones from "./Dic_Correcciones.jsx";
 import DIC_Firmados from "./Dic_Firmados.jsx";
 
 import { Head } from "@inertiajs/react";
-import { logoutUser, checkAuth } from "../Components/api/auth.jsx";
+import { logoutUser, checkAuth } from "../../Components/api/auth.jsx";
 
 function DicM_Inicio() {
   const [CerrarSesion, setCerrarSesion] = useState(false);
