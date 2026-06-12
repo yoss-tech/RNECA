@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\DB;
 
 class Users extends Authenticatable
 {
@@ -33,7 +34,16 @@ class Users extends Authenticatable
     // Estas funciones actúan como tus consultas de validación
     public function esEca(): bool
     {
-        return $this->id_rol === 'rol1';
+        $role = DB::table('usuarios')
+            ->join('rol', 'usuarios.id_rol', '=', 'rol.id_rol')
+            ->select(
+                'usuarios.id_usuario', 
+                'usuarios.nombre', 
+                'rol.nombre_rol as rol'
+            )
+            ->where('rol.nombre_rol', 'ECA')
+            ->get();
+        return $role->isNotEmpty();
     }
 
     public function esDicm(): bool

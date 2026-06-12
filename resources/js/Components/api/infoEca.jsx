@@ -12,3 +12,16 @@ export const infoEca = async () =>{
         return null;
     }
 }
+
+// metodo post para la creación del oficio hecho por el ECA
+export const createOfice = async () => {
+    try{
+        const response = await axiosInstance.post()
+        return response.data;
+    }
+    catch(error){
+        console.error("Error en createOfice:", error);
+        return null;
+    }
+}
+

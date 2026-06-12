@@ -32,6 +32,7 @@ Route::post('/users', [UsersController::class, 'store']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/infoEca', [EcaController::class, 'index']);
     Route::get('/eca/{eca}', [EcaController::class, 'show']);
+    Route::post('/eca');
 });
 
 // El login se maneja a través de AuthController vinculado en auth.php

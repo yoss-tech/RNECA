@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Users;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 // use App\Http\resource\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -14,7 +15,15 @@ class UsersController extends Controller
     // GET /api/users
     public function index()
     {
-        $users  = Users::all();
+        $users = DB::table('usuarios')
+            ->join('rol', 'usuarios.id_rol', '=', 'rol.id_rol')
+            ->select(
+                'usuarios.id_usuario', 
+                'usuarios.nombre', 
+                'usuarios.correo', 
+                'rol.nombre_rol as rol'
+            )
+            ->get();
 
         $data = [
             'message' => 'Usuarios obtenidos correctamente',
