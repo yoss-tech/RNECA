@@ -3,8 +3,8 @@ import "/resources/css/Style.css";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { Head } from "@inertiajs/react";
-import { mostrarSoloMes, dateLimit } from "../Components/functions.jsx";
-import { logoutUser, checkAuth } from "../Components/api/auth.jsx";
+import { mostrarSoloMes, dateLimit } from "../../Components/functions.jsx";
+import { logoutUser, checkAuth } from "../../Components/api/auth.jsx";
 
 import Admi_DireA from "./Admi_DireA.jsx";
 import Admi_SupervisoresECAS from "./Admi_SEcas.jsx";

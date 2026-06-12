@@ -15,6 +15,8 @@ Route::middleware(['auth:sanctum', 'no-cache'])->group(function () {
         $dashboardRoute = match (auth()->user()->id_rol) {
             'rol1' => 'inicio_eca',
             'rol2' => 'inicio_dicm',
+            'rol3' => 'inicio_lic',
+            'rol4' => 'inicio_subdi',
             'rol5' => 'inicio_ceaa',
             default => null,
         };
@@ -31,6 +33,14 @@ Route::middleware(['auth:sanctum', 'no-cache'])->group(function () {
     Route::get('/inicio_dicm', function () { // Esta ruta es para el rol 'rol2' (Dicm)
         return Inertia::render('Vista_Direc_Mun/DicM_Inicio');
     })->middleware('check.role:rol2')->name('inicio_dicm');
+
+    Route::get('/inicio_lic', function () { // Esta ruta es para el rol 'rol3' (Lic)
+        return Inertia::render('Vista_Lic_CEAA/Lic_Inicio');
+    })->middleware('check.role:rol3')->name('inicio_lic');
+
+    Route::get('/inicio_admin', function () { // Esta ruta es para el rol 'rol4' (Subdi)
+        return Inertia::render('Vista_Administrador/Admi_Inicio');
+    })->middleware('check.role:rol4')->name('inicio_admin');
 
     Route::get('/inicio_ceaa', function () { // Esta ruta es para el rol 'rol5' (CEAA)
         return Inertia::render('Vista_CEAA/CEAA_Inicio');
