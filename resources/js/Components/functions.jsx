@@ -33,3 +33,9 @@ export function dateLimit() {
 
     return fechaLimite;
 }
+
+export function dateNow(){
+    const fecha = new Date();
+    
+    return fecha;
+}
