@@ -11,26 +11,32 @@ function VECA_Poblacion() {
     <div className="form-registro">
       <p className="page-text">Ingresa la información sobre la población beneficiaria del mes.</p>
       <p className="form-subtitle">Material didáctico
-        <i class="bi bi-question-circle" title="Tooltip on right"></i>
+        <i class="bi bi-question-circle" title="Indicar el número de material didáctico que se distribuyó en el ECA según su modalidad"></i>
       </p>
       
       <div className="form-campo">
-        <label className="form-label">Inédito</label>
+        <label className="form-label">Inédito
+          <i class="bi bi-question-circle" title="Indicar si ha recibido algún material inedito"></i>
+        </label>
         <input type="text" placeholder="Ingresa el número de material didáctico según su modalidad" className="form-control"/>
       </div>
 
       <div className="form-campo">
-        <label className="form-label">Reproducido</label>
+        <label className="form-label">Reproducido
+          <i class="bi bi-question-circle" title="Indicar si han recibido KITS ahorradores, manuales, librillos, lapiceros, entre otros consumibles"></i>
+        </label>
         <input type="text" placeholder="Ingresa el número de material didáctico según su modalidad" className="form-control"/>
       </div>
         
       <div className="form-campo">
-        <label className="form-label">Adquirido</label>
+        <label className="form-label">Adquirido
+          <i class="bi bi-question-circle" title="Indicar si el espacio cuenta con maquetas"></i>
+        </label>
         <input type="text" placeholder="Ingresa el número de material didáctico según su modalidad" className="form-control"/>
       </div>
       
       <p className="form-subtitle">Asistentes
-        <i class="bi bi-question-circle" title="Tooltip on right"></i>
+        <i class="bi bi-question-circle" title="Indicar el número de asistentes según el rango de edad, asi como si se trata de niños menores de 12 años"></i>
       </p>
       <p className="form-text">Hombres</p>
       <div className="form-campo">
@@ -83,14 +89,14 @@ function VECA_Poblacion() {
       </div>
 
       <p className="form-subtitle">Total de la población atendida
-        <i class="bi bi-question-circle" title="Tooltip on right"></i>
+        <i class="bi bi-question-circle" title="Sumatoria de los asistentes"></i>
       </p> 
       <div className="form-campo">
         <input type="text" placeholder="Sumatoria de los asistentes" className="form-control"/>
       </div>
 
       <p className="form-subtitle">Anexos
-        <i class="bi bi-question-circle" title="Tooltip on right"></i>
+        <i class="bi bi-question-circle" title="Indicar los entregables con los que se cuenta como evidencia de la acción en cuestión (lista de asistencia, evidencia fotográfica o nota periodística). Estos deberán anexarse a este formato"></i>
       </p> 
       <div className="check-group">
         <label className="check-item">
@@ -107,7 +113,7 @@ function VECA_Poblacion() {
       </div>
 
       <p className="form-subtitle">Comentarios/Observaciones
-        <i class="bi bi-question-circle" title="Tooltip on right"></i>
+        <i class="bi bi-question-circle" title="Algún comentario u observaciones que se consideren relevantes y/o añadir listado general de las actividades en el mes"></i>
       </p>
 
       <div className="form-campo">  
