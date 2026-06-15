@@ -1,1 +1,115 @@
-@import url('https://framework-gb.cdn.gob.mx/gm/v3/assets/styles/main.css');
+:root {
+    --primary-color: #691b31;
+    --secondary-color: #A02142;
+    --negro-color: #545454;
+    --gris-color: #98989A;
+    --dorado-color: #BC955B;
+    --beige-color: #DDC9A3;
+    --blanco-color: #ffffff;
+}
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 9999;
+}
+
+.modal-box {
+    width: 100%;
+    max-width: 550px;
+    max-height: 95vh;
+    background: var(--blanco-color);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    animation: modalIn .25s ease;
+}
+
+.modal-head {
+    padding: 18px 24px;
+    background-color: var(--negro-color);
+    border-bottom: 1px solid var(--blanco-color);
+
+    flex-shrink: 0;
+}
+
+.modal-head h4 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--blanco-color);
+    font-weight: 600;
+}
+
+.modal-body {
+    padding: 24px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.modal-foot {
+    padding: 16px 24px;
+    border-top: 1px solid #e9ecef;
+
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+
+    background: var(--blanco-color);
+
+    flex-shrink: 0;
+}
+
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: var(--blanco-color);
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: var(--gris-color);
+    border-radius: 10px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: var(--negro-color);
+}
+
+/* Formularios */
+.modal-body .form-group {
+    margin-bottom: 18px;
+}
+
+.modal-body label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: var(--negro-color);
+}
+
+.modal-body input,
+.modal-body select,
+.modal-body textarea {
+    width: 100%;
+}
+
+/* Animación */
+@keyframes modalIn {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
