@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 
 function SelectorImagen() {
-  const [imagen, setImagen] = useState(null);
+  const [imagenes, setImagenes] = useState([]);
 
   const manejarImagen = (e) => {
-    const archivo = e.target.files[0];
+    const archivos = Array.from(e.target.files);
 
-    if (archivo) {
-      setImagen(URL.createObjectURL(archivo));
+    if (archivos.length > 0) {
+      const urls = archivos.map((archivo) => URL.createObjectURL(archivo));
+      setImagenes(urls);
     }
   };
 
@@ -16,17 +17,24 @@ function SelectorImagen() {
       <input
         type="file"
         accept="image/*"
+        multiple
         onChange={manejarImagen}
         className="selector-control"
       />
 
-      {imagen && (
-        <img 
-          src={imagen} 
-          alt="Vista previa" 
-          style={{ width: "150px", marginTop: "10px", border: "1px solid var(--gris-color)" }}
-        />
-      )}
+      <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+        {imagenes.map((img, index) => (
+          <img
+            key={index}
+            src={img}
+            alt={`Vista previa ${index + 1}`}
+            style={{ 
+              width: "150px",
+              border: "1px solid var(--gris-color)",
+            }}
+          />
+        ))}
+      </div>
     </div>
   );
 }
