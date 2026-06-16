@@ -1,7 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 function VECA_Poblacion() {
+  const [poblacion, setPoblacion] = useState({
+    hombres13_17: 0,
+    hombres18_30: 0,
+    hombres30_40: 0,
+    hombres40_50: 0,
+    hombres50mas: 0,
+    mujeres13_17: 0,
+    mujeres18_30: 0,
+    mujeres30_40: 0,
+    mujeres40_50: 0,
+    mujeres50mas: 0,
+    ninos12: 0,
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setPoblacion({
+      ...poblacion,
+      [name]: Number(value),
+    });
+  };
+
+  const total = 
+  poblacion.hombres13_17 +
+  poblacion.hombres18_30 +
+  poblacion.hombres30_40 +
+  poblacion.hombres40_50 +
+  poblacion.hombres50mas +
+  poblacion.mujeres13_17 +
+  poblacion.mujeres18_30 +
+  poblacion.mujeres30_40 +
+  poblacion.mujeres40_50 +
+  poblacion.mujeres50mas +
+  poblacion.ninos12;
 
   return (
   <div className="page-container">
@@ -41,58 +75,129 @@ function VECA_Poblacion() {
       <p className="form-text">Hombres</p>
       <div className="form-campo">
         <label className="form-label">Rangos de edad</label>
-        <input type="text" placeholder="Ingresa el número de asistentes de 13 a 17" className="form-control"/>
+        <input
+          type="number"
+          name="hombres13_17"
+          placeholder="Ingresa el número de asistentes de 13 a 17"
+          className="form-control"
+          onChange={handleChange}
+        />
       </div>
         
       <div className="form-campo">
-        <input type="text" placeholder="Ingresa el número de asistentes de 18 a 30" className="form-control"/>
+        <input
+          type="number"
+          name="hombres18_30"
+          placeholder="Ingresa el número de asistentes de 18 a 30"
+          className="form-control"
+          onChange={handleChange}
+        />
       </div>
       
       <div className="form-campo">
-        <input type="text" placeholder="Ingresa el número de asistentes de 30 a 40" className="form-control"/>
+        <input
+          type="number"
+          name="hombres30_40"
+          placeholder="Ingresa el número de asistentes de 30 a 40"
+          className="form-control"
+          onChange={handleChange}
+        />
       </div>
       
       <div className="form-campo">
-        <input type="text" placeholder="Ingresa el número de asistentes de 40 a 50" className="form-control"/>
+        <input
+          type="number"
+          name="hombres40_50"
+          placeholder="Ingresa el número de asistentes de 40 a 50"
+          className="form-control"
+          onChange={handleChange}
+        />
       </div>
     
       <div className="form-campo">
-        <input type="text" placeholder="Ingresa el número de asistentes de 50 o  +" className="form-control"/>
+        <input
+          type="number"
+          name="hombres50mas"
+          placeholder="Ingresa el número de asistentes de 50 o  +"
+          className="form-control"
+          onChange={handleChange}
+        />
       </div>
 
       <p className="form-text">Mujeres</p>
       <div className="form-campo">
         <label className="form-label">Rangos de edad</label>
-        <input type="text" placeholder="Ingresa el número de asistentes de 13 a 17" className="form-control"/>
+        <input
+          type="number"
+          name="mujeres13_17"
+          placeholder="Ingresa el número de asistentes de 13 a 17"
+          className="form-control"
+          onChange={handleChange}
+        />
       </div>
     
       <div className="form-campo">
-        <input type="text" placeholder="Ingresa el número de asistentes de 18 a 30" className="form-control"/>
+        <input
+          type="number"
+          name="mujeres18_30"
+          placeholder="Ingresa el número de asistentes de 18 a 30"
+          className="form-control"
+          onChange={handleChange}
+        />
       </div>
       
       <div className="form-campo">
-        <input type="text" placeholder="Ingresa el número de asistentes de 30 a 40" className="form-control"/>
+        <input
+          type="number"
+          name="mujeres30_40"
+          placeholder="Ingresa el número de asistentes de 30 a 40"
+          className="form-control"
+          onChange={handleChange}
+        />
       </div>
       
       <div className="form-campo">
-        <input type="text" placeholder="Ingresa el número de asistentes de 40 a 50" className="form-control"/>
+        <input
+          type="number"
+          name="mujeres40_50"
+          placeholder="Ingresa el número de asistentes de 40 a 50"
+          className="form-control"
+          onChange={handleChange}
+        />
       </div>
         
       <div className="form-campo">
-        <input type="text" placeholder="Ingresa el número de asistentes de 50 o  +" className="form-control"/>
+        <input
+          type="number"
+          name="mujeres50mas"
+          placeholder="Ingresa el número de asistentes de 50 o  +"
+          className="form-control"
+          onChange={handleChange}
+        />
       </div>
 
       <p className="form-text">Niños</p>
       <div className="form-campo">
         <label className="form-label">Rangos de edad</label>
-        <input type="text" placeholder="Ingresa el número de asistentes menores de 12" className="form-control"/>
+        <input
+          type="number"
+          name="ninos12"
+          placeholder="Ingresa el número de asistentes menores de 12"
+          className="form-control"
+          onChange={handleChange}
+        />
       </div>
 
       <p className="form-subtitle">Total de la población atendida
         <i class="bi bi-question-circle" title="Sumatoria de los asistentes"></i>
       </p> 
       <div className="form-campo">
-        <input type="text" placeholder="Sumatoria de los asistentes" className="form-control"/>
+        <input
+          type="number"
+          value={total}
+          readOnly
+          className="form-control"
+        />
       </div>
 
       <p className="form-subtitle">Anexos
