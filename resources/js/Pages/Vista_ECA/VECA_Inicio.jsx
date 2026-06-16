@@ -17,6 +17,7 @@ function VECA_Inicio() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [submenuOpen, setSubmenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
+  const [numActividades, setNumActividades] = useState(0);
 
   const menuItems = document.querySelectorAll('.sidebar .form-group a');
 
@@ -220,13 +221,16 @@ function VECA_Inicio() {
           <VECA_Presente />
         )}
         {vistaActual === "actividades" && (
-          <VECA_Actividades />
+          <VECA_Actividades
+            numActividades={numActividades}
+            setNumActividades={setNumActividades}
+          />
         )}
         {vistaActual === "poblacion" && (
           <VECA_Poblacion />
         )}
         {vistaActual === "memoria" && (
-          <VECA_Memoria />
+          <VECA_Memoria numActividades={numActividades}/>
         )}
         {vistaActual === "vista_previa" && (
           <VECA_VistaP />
