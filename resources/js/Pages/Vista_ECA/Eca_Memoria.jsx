@@ -1,7 +1,7 @@
 import React from "react";
 import SelectorImagen from "../../Components/SelectorImagen.jsx";
 
-function VECA_Memoria() {
+function VECA_Memoria({ numActividades }) {
 
   return (
   <div className="page-container">
@@ -13,29 +13,40 @@ function VECA_Memoria() {
         <label className="form-label">Descripción general de la memoria fotográfica</label>
         <textarea rows="3" placeholder="Ingresa la descripción general" className="form-control"></textarea>
       </div>
-      
-      <div className="form-campo">
+
+      {numActividades > 0 && (
+        <>
         <p className="page-text">Ingresa la información detallada de las actividades del mes.</p>
-        <p className="form-subtitle">Actividad 1</p>
-        <label className="form-label">Título</label>
-        <input type="text"  placeholder="Ingresa el título de la actividad" className="form-control"/>
-      </div>
+        {[...Array(numActividades)].map((_, index) => (
+          <div key={index}>
+            <p className="form-subtitle">Actividad {index + 1}</p>
+            
+            <div className="form-campo">
+              <label className="form-label">Título</label>
+              <input type="text"  placeholder="Ingresa el título de la actividad" className="form-control"/>
+            </div>
+            
+            <div className="form-campo">
+              <label className="form-label">Descripción de la actividad</label>
+              <div className="form-campo">
+                <textarea rows="3" placeholder="Ingresa la descripción de la actividad" className="form-control"></textarea>
+              </div>
+            </div>
 
-      <div className="form-campo">
-        <label className="form-label">Descripción de la actividad</label>
-        <div className="form-campo">  
-          <textarea rows="3" placeholder="Ingresa la descripción de la actividad" className="form-control"></textarea>
+            <div className="form-campo">
+              <label className="form-label">Subir fotográfias de la actividad:</label>
+              <SelectorImagen/>
+            </div>
+          </div>
+        ))}
+        </>
+      )}
+
+      {numActividades > 0 && (
+        <div className="page-botones">
+          <button type="button" className="btn-primario">Guardar</button>
         </div>
-      </div>
-
-      <div className="form-campo">
-        <label className="form-label">Subir fotográfias de la actividad:</label>
-        <SelectorImagen/>
-      </div>
-
-      <div className="page-botones">
-        <button type="button" className="btn-primario">Guardar</button>
-      </div>
+      )}
     </div>
   </div>
   );

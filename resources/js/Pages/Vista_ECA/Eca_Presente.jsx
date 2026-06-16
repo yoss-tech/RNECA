@@ -30,7 +30,7 @@ function VECA_Presente() {
       </div>
 
       <div className="form-campo">
-        <label className="form-label">CCP</label>
+        <label className="form-label">Con copia</label>
         <textarea rows="3" placeholder="Ingresa el CCP" className="form-control"></textarea>
       </div>
 
