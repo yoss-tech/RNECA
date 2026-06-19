@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "/resources/css/Style.css";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
+import Perfil_CEAA from "../Modals/Perfiles/Perfil_CEAA.jsx";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import CEAA_Pendientes from "./CEAA_Pendientes.jsx";
 import CEAA_Observaciones from "./CEAA_Observaciones.jsx";
@@ -9,11 +10,15 @@ import CEAA_Solicitudes from "./CEAA_Solicitudes.jsx";
 import CEAA_Historial from "./CEAA_Historial.jsx";
 
 import { logoutUser } from "@/Components/api/auth.jsx";
+import Notificaciones_CEAA from "../Modals/Notificaciones/Notificacion_CEAA.jsx";
+import Avisos_CEAA from "../Modals/Avisos/Avisos_CEAA.jsx";
 
 function CEAA_Inicio() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [mostrarModal2, setMostrarModal2] = useState(false);
   const [CerrarSesion, setCerrarSesion] = useState(false);
 
   const submitLogout = async () => {
@@ -33,20 +38,38 @@ function CEAA_Inicio() {
         <div className="logo"><img src={miImagen} alt="Logo RNECA"/></div>
 
         <div className="acciones-header">
-          <button className="icono">
-            <i className="bi bi-envelope"></i>
-          </button>
+            <button className="icono"  onClick={() =>setMostrarModal(true)}>
+              <i className="bi bi-envelope"></i>
+                </button>
+                {mostrarModal && (
+                <Avisos_CEAA
+                    cerrarModal={() => setMostrarModal(false)}
+                />
+            )}
 
-          <button className="icono">
-            <i className="bi bi-bell"></i>
-          </button>
-
+            <button className="icono"  onClick={() =>setMostrarModal2(true)}>
+             <i className="bi bi-bell"></i>
+                </button>
+                {mostrarModal2 && (
+                <Notificaciones_CEAA
+                    cerrarModal={() => setMostrarModal2(false)}
+                />
+                )}
+                
           <div className="perfil">
-            <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)} >
-              <i className="bi bi-person-circle perfil-icono"></i> 
+            <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)}>
+              <i className="bi bi-person-circle perfil-icono"></i>
             </button>
             {CerrarSesion && (
               <div className="menu-perfil">
+                <button className="btn-cerrar-sesion"  onClick={() =>setMostrarModal(true)}>
+                  Perfil
+                </button>
+                 {mostrarModal && (
+                <Perfil_CEAA
+                    cerrarModal={() => setMostrarModal(false)}
+                />
+            )}
                 <button className="btn-cerrar-sesion" onClick={submitLogout}>
                   Cerrar sesión
                 </button>

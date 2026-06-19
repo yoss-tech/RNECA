@@ -5,16 +5,20 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { Head } from "@inertiajs/react";
 import { mostrarSoloMes, dateLimit } from "../../Components/functions.jsx";
 import { logoutUser, checkAuth } from "../../Components/api/auth.jsx";
-
+import Perfil_Admi from "../Modals/Perfiles/Perfil_Admi.jsx";
 import Admi_DireA from "./Admi_DireA.jsx";
 import Admi_SupervisoresECAS from "./Admi_SEcas.jsx";
 import Admi_DireMu from "./Admi_DireMu.jsx";
 import Admi_ECAS from "./Admi_ECAS.jsx";
+import Notificaciones_Admi from "../Modals/Notificaciones/Notificacion_Admi.jsx";
+import Avisos_Admi from "../Modals/Avisos/Avisos_Admi.jsx";
 
 
 function Admi_Inicio() {
   const [CerrarSesion, setCerrarSesion] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [mostrarModal2, setMostrarModal2] = useState(false);
   const [submenuOpen, setSubmenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
 
@@ -60,13 +64,23 @@ function Admi_Inicio() {
         <div className="logo"><img src={miImagen} alt="Logo RNECA"/></div>
 
         <div className="acciones-header">
-          <button className="icono">
-            <i className="bi bi-envelope"></i>
-          </button>
+          <button className="icono"  onClick={() =>setMostrarModal(true)}>
+              <i className="bi bi-envelope"></i>
+                </button>
+                {mostrarModal && (
+                <Avisos_Admi
+                    cerrarModal={() => setMostrarModal(false)}
+                />
+            )}
 
-          <button className="icono">
-            <i className="bi bi-bell"></i>
-          </button>
+            <button className="icono"  onClick={() =>setMostrarModal2(true)}>
+             <i className="bi bi-bell"></i>
+                </button>
+                {mostrarModal2 && (
+                <Notificaciones_Admi
+                    cerrarModal={() => setMostrarModal2(false)}
+                />
+                )}
 
           <div className="perfil">
             <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)}>
@@ -74,6 +88,14 @@ function Admi_Inicio() {
             </button>
             {CerrarSesion && (
               <div className="menu-perfil">
+                <button className="btn-cerrar-sesion"  onClick={() =>setMostrarModal(true)}>
+                  Perfil
+                </button>
+                 {mostrarModal && (
+                <Perfil_Admi
+                    cerrarModal={() => setMostrarModal(false)}
+                />
+            )}
                 <button className="btn-cerrar-sesion" onClick={submitLogout}>
                   Cerrar sesión
                 </button>

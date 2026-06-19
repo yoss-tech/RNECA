@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "/resources/css/Style.css";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
+import Perfil_DirectorM from "../Modals/Perfiles/Perfil_DM.jsx";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import DICRegistros_Recibidos from "./Dic_RegistrosR.jsx";
 import DIC_Correcciones from "./Dic_Correcciones.jsx";
@@ -8,10 +9,14 @@ import DIC_Firmados from "./Dic_Firmados.jsx";
 
 import { Head } from "@inertiajs/react";
 import { logoutUser, checkAuth } from "../../Components/api/auth.jsx";
+import Notificaciones_DireMunicipal from "../Modals/Notificaciones/Notificacion_DM.jsx";
+import Avisos_DireMunicipal from "../Modals/Avisos/Avisos_DM.jsx";
 
 function DicM_Inicio() {
   const [CerrarSesion, setCerrarSesion] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [mostrarModal2, setMostrarModal2] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
 
   const submitLogout = async () => {
@@ -32,25 +37,43 @@ function DicM_Inicio() {
         <div className="logo"><img src={miImagen} alt="Logo RNECA"/></div>
 
         <div className="acciones-header">
-          <button className="icono">
-            <i className="bi bi-envelope"></i>
-          </button>
+           <button className="icono"  onClick={() =>setMostrarModal(true)}>
+              <i className="bi bi-envelope"></i>
+                </button>
+                {mostrarModal && (
+                <Avisos_DireMunicipal
+                    cerrarModal={() => setMostrarModal(false)}
+                />
+            )}
 
-          <button className="icono">
-            <i className="bi bi-bell"></i>
-          </button>
-
+            <button className="icono"  onClick={() =>setMostrarModal2(true)}>
+             <i className="bi bi-bell"></i>
+                </button>
+                {mostrarModal2 && (
+                <Notificaciones_DireMunicipal
+                    cerrarModal={() => setMostrarModal2(false)}
+                />
+                )}
+                
           <div className="perfil">
-            <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)} >
-              <i className="bi bi-person-circle perfil-icono"></i> 
+            <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)}>
+              <i className="bi bi-person-circle perfil-icono"></i>
             </button>
             {CerrarSesion && (
               <div className="menu-perfil">
+                <button className="btn-cerrar-sesion"  onClick={() =>setMostrarModal(true)}>
+                  Perfil
+                </button>
+                 {mostrarModal && (
+                <Perfil_DirectorM
+                    cerrarModal={() => setMostrarModal(false)}
+                />
+            )}
                 <button className="btn-cerrar-sesion" onClick={submitLogout}>
                   Cerrar sesión
                 </button>
               </div>
-             )}
+            )}
           </div>
         </div>
       </header>

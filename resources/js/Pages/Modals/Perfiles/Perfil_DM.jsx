@@ -2,20 +2,20 @@ import React from "react";
 import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
 
-function PerfilECA({ cerrarModal }) {
+function Perfil_DirectorM({ cerrarModal }) {
     return (
         <div className="overlay">
 
             <div className="modal-box">
 
                 <div className="modal-head">
-                    <h4>Completa los siguientes datos</h4>
+                    <h4>Perfil</h4>
                 </div>
 
                 <div className="modal-body">
                      <div className="form-group">
-                        <label className="card-subtitle">ECA:</label>
-                        <input type="text" className="form-control" placeholder="Nombre del ECA"/>
+                        <label className="card-subtitle">Nombre:</label>
+                        <input type="text" className="form-control" placeholder="Nombre del director municipal"/>
                     </div>
 
                     <div className="form-group">
@@ -25,17 +25,12 @@ function PerfilECA({ cerrarModal }) {
 
                     <div className="form-group">
                         <label className="card-subtitle">Contraseña:</label>
-                        <input id="nombre" type="text" className="form-control" placeholder="Contraseña del ECA"/>
+                        <input id="nombre" type="text" className="form-control" placeholder="Contraseña del director municipal"/>
                     </div>
 
                     <div className="form-group">
                         <label className="card-subtitle">Municipio:</label>
                         <input id="nombre" type="text" className="form-control" placeholder="Nombre del municipio"/>
-                    </div>
-
-                    <div className="form-group">
-                        <label className="card-subtitle">Director general:</label>
-                        <input id="nombre" type="text" className="form-control" placeholder="Nombre del director general"/>
                     </div>
 
                     <div className="form-group">
@@ -46,11 +41,9 @@ function PerfilECA({ cerrarModal }) {
 
                 <div className="modal-foot">
                     <button type="button" className="btn-neutral" onClick={cerrarModal}>Cerrar</button>
-                    <button type="button" className="btn-primario">Guardar</button>
                 </div>
             </div>
         </div>
     );
 }
-
-export default PerfilECA;
+export default Perfil_DirectorM;
