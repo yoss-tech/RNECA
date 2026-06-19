@@ -3,14 +3,18 @@ import "/resources/css/Style.css";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { logoutUser } from "@/Components/api/auth.jsx";
-
+import Perfil_LIC from "../Modals/Perfiles/PerfilLIC.jsx";
 import Lic_Registros from "./Lic_Registros.jsx";
 import Lic_ConsultaR from "./Lic_ConsultaR.jsx";
+import Notificaciones_LIC from "../Modals/Notificaciones/NotificaciónLIC.jsx";
+import Avisos_LIC from "../Modals/Avisos/AvisosLIC.jsx";
 
 function Lic_Inicio() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [mostrarModal2, setMostrarModal2] = useState(false);
   const [CerrarSesion, setCerrarSesion] = useState(false);
 
   const submitLogout = async () => {
@@ -30,25 +34,44 @@ function Lic_Inicio() {
         <div className="logo"><img src={miImagen} alt="Logo RNECA"/></div>
 
         <div className="acciones-header">
-          <button className="icono">
-            <i className="bi bi-envelope"></i>
-          </button>
+           <button className="icono"  onClick={() =>setMostrarModal(true)}>
+              <i className="bi bi-envelope"></i>
+                </button>
+                {mostrarModal && (
+                <Avisos_LIC
+                    cerrarModal={() => setMostrarModal(false)}
+                />
+            )}
 
-          <button className="icono">
-            <i className="bi bi-bell"></i>
-          </button>
+            <button className="icono"  onClick={() =>setMostrarModal2(true)}>
+             <i className="bi bi-bell"></i>
+                </button>
+                {mostrarModal2 && (
+                <Notificaciones_LIC
+                    cerrarModal={() => setMostrarModal2(false)}
+                />
+                )}
 
           <div className="perfil">
-            <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)} >
-              <i className="bi bi-person-circle perfil-icono"></i> 
+            <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)}>
+              <i className="bi bi-person-circle perfil-icono"></i>
             </button>
             {CerrarSesion && (
               <div className="menu-perfil">
+                <button className="btn-cerrar-sesion"  onClick={() =>setMostrarModal(true)}>
+                  Perfil
+                </button>
+                 {mostrarModal && (
+                <Perfil_LIC
+                    cerrarModal={() => setMostrarModal(false)}
+                />
+            )}
                 <button className="btn-cerrar-sesion" onClick={submitLogout}>
                   Cerrar sesión
                 </button>
-              </div>)}
-            </div>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
