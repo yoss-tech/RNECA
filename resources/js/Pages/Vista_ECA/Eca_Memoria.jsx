@@ -1,7 +1,16 @@
 import React from "react";
 import SelectorImagen from "../../Components/SelectorImagen.jsx";
 
-function VECA_Memoria({ numActividades }) {
+function VECA_Memoria({ onComplete }) {
+
+  const handleSubmit = () => {
+    try {
+      //Post para bd
+      onComplete();
+    } catch(error) {
+      console.error("Error al guardar:", error);
+    }
+  };
 
   return (
   <div className="page-container">
@@ -14,39 +23,30 @@ function VECA_Memoria({ numActividades }) {
         <textarea rows="3" placeholder="Ingresa la descripción general" className="form-control"></textarea>
       </div>
 
-      {numActividades > 0 && (
-        <>
-        <p className="page-text">Ingresa la información detallada de las actividades del mes.</p>
-        {[...Array(numActividades)].map((_, index) => (
-          <div key={index}>
-            <p className="form-subtitle">Actividad {index + 1}</p>
-            
-            <div className="form-campo">
-              <label className="form-label">Título</label>
-              <input type="text"  placeholder="Ingresa el título de la actividad" className="form-control"/>
-            </div>
-            
-            <div className="form-campo">
-              <label className="form-label">Descripción de la actividad</label>
-              <div className="form-campo">
-                <textarea rows="3" placeholder="Ingresa la descripción de la actividad" className="form-control"></textarea>
-              </div>
-            </div>
-
-            <div className="form-campo">
-              <label className="form-label">Subir fotográfias de la actividad:</label>
-              <SelectorImagen/>
-            </div>
-          </div>
-        ))}
-        </>
-      )}
-
-      {numActividades > 0 && (
-        <div className="page-botones">
-          <button type="button" className="btn-primario">Guardar</button>
+      <p className="page-text">Ingresa la información detallada de las actividades del mes.</p>
+      <div>
+        <p className="form-subtitle">Actividad</p>
+        <div className="form-campo">
+          <label className="form-label">Título</label>
+          <input type="text"  placeholder="Ingresa el título de la actividad" className="form-control"/>
         </div>
-      )}
+            
+        <div className="form-campo">
+          <label className="form-label">Descripción de la actividad</label>
+          <div className="form-campo">
+            <textarea rows="3" placeholder="Ingresa la descripción de la actividad" className="form-control"></textarea>
+          </div>
+        </div>
+
+        <div className="form-campo">
+          <label className="form-label">Subir fotográfias de la actividad:</label>
+          <SelectorImagen/>
+        </div>
+      </div>
+
+      <div className="page-botones">
+        <button type="button" className="btn-primario" onClick={handleSubmit}>Guardar</button>
+      </div>
     </div>
   </div>
   );
