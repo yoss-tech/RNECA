@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import {dateNow, mostrarSoloMes} from "../../Components/functions.jsx";
 import {infoEca} from "../../Components/api/infoEca.jsx";
 
-function VECA_Presente() {
+function VECA_Presente({ onComplete }) {
 
   const [municipio, setMunicipio] = useState('');
   const [director, setDirector] = useState('');
@@ -19,6 +19,15 @@ function VECA_Presente() {
 
     loadInfo();
   }, []); // Agregamos [] para que solo se ejecute al montar el componente
+
+  const handleSubmit = () => {
+    try {
+      //Post para bd
+      onComplete();
+    } catch(error) {
+      console.error("Error al guardar:", error);
+    }
+  };
   
   return (
   <div className="page-container">
@@ -53,7 +62,7 @@ function VECA_Presente() {
       </div>
 
       <div className="page-botones">
-        <button type="button" className="btn-primario">Guardar</button>
+        <button type="button" className="btn-primario" onClick={handleSubmit}>Guardar</button>
       </div>
     </div>
   </div>

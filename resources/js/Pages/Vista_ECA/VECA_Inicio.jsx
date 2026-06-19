@@ -17,7 +17,9 @@ function VECA_Inicio() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [submenuOpen, setSubmenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
-  const [numActividades, setNumActividades] = useState(0);
+  const [completedStep1, setCompletedStep1] = useState(false);
+  const [completedStep2, setCompletedStep2] = useState(false);
+  const [completedStep3, setCompletedStep3] = useState(false);
 
   const menuItems = document.querySelectorAll('.sidebar .form-group a');
 
@@ -105,15 +107,14 @@ function VECA_Inicio() {
               <li>
                 <div className="submenu-item">
                   <a
-                    className={vistaActual === "presente" ? "active" : ""}
-                    onClick={() => setVistaActual("presente")}
+                    className={vistaActual === "poblacion" ? "active" : ""}
+                    onClick={() => setVistaActual("poblacion")}
                     style={{ cursor: "pointer" }}>
-                    <i className="bi bi-check-circle"></i>
-                    Presente
-                  </a>
+                    <i className="bi bi-clock"></i>
+                    Población Beneficiaria</a>
                 </div>
               </li>
-
+              
               <li>
                 <div className="submenu-item">
                   <a
@@ -128,22 +129,25 @@ function VECA_Inicio() {
               <li>
                 <div className="submenu-item">
                   <a
-                    className={vistaActual === "poblacion" ? "active" : ""}
-                    onClick={() => setVistaActual("poblacion")}
-                    style={{ cursor: "pointer" }}>
-                    <i className="bi bi-clock"></i>
-                    Población Beneficiaria</a>
-                </div>
-              </li>
-
-              <li>
-                <div className="submenu-item">
-                  <a
                     className={vistaActual === "memoria" ? "active" : ""}
                     onClick={() => setVistaActual("memoria")}
                     style={{ cursor: "pointer" }}>
                     <i className="bi bi-clock"></i>
                     Memoria Fotográfica</a>
+                </div>
+              </li>
+              
+              <li>
+                <div className="submenu-item">
+                  <a
+                    className={vistaActual === "presente" ? "active" : ""}
+                    onClick={() => setVistaActual("presente")}
+                    style={{ cursor: "pointer" }}>
+                    <i className="bi bi-clock"></i>
+                    {/*Solo cuando este completado*/}
+                    {/*<i className="bi bi-check-circle"></i>*/}
+                    Presente
+                  </a>
                 </div>
               </li>
             </ul>
@@ -217,20 +221,33 @@ function VECA_Inicio() {
           </>
         )}
 
-        {vistaActual === "presente" && (
-          <VECA_Presente />
+        {vistaActual === "poblacion" && (
+          <VECA_Poblacion 
+          onComplete={() => {
+            setCompletedStep1(true);
+          }}
+          />
         )}
         {vistaActual === "actividades" && (
           <VECA_Actividades
-            numActividades={numActividades}
-            setNumActividades={setNumActividades}
+          onComplete={() => {
+            setCompletedStep2(true);
+          }}
           />
         )}
-        {vistaActual === "poblacion" && (
-          <VECA_Poblacion />
-        )}
         {vistaActual === "memoria" && (
-          <VECA_Memoria numActividades={numActividades}/>
+          <VECA_Memoria
+          onComplete={() => {
+            setCompletedStep3(true);
+          }}
+          />
+        )}
+        {vistaActual === "presente" && (
+          completedStep1 && completedStep2 && completedStep3 
+          ? <VECA_Presente />
+          : <div>
+
+            </div>
         )}
         {vistaActual === "vista_previa" && (
           <VECA_VistaP />

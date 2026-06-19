@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-function VECA_Poblacion() {
+function VECA_Poblacion({ onComplete }) {
   const [poblacion, setPoblacion] = useState({
     hombres13_17: 0,
     hombres18_30: 0,
@@ -22,6 +22,15 @@ function VECA_Poblacion() {
       ...poblacion,
       [name]: Number(value),
     });
+  };
+
+  const handleSubmit = () => {
+    try {
+      //Post para bd
+      onComplete();
+    } catch(error) {
+      console.error("Error al guardar:", error);
+    }
   };
 
   const total = 
@@ -226,7 +235,7 @@ function VECA_Poblacion() {
       </div>
 
       <div className="page-botones">
-        <button type="button" className="btn-primario">Guardar</button>
+        <button type="button" className="btn-primario" onClick={handleSubmit}>Guardar</button>
       </div>
     </div>
   </div>
