@@ -17,8 +17,13 @@ return new class extends Migration
             $table->string('correo')->unique();
             $table->string('telefono', 14);
             $table->string('password');
-            $table->string('id_rol', 20)->index();
+            $table->string('id_rol', 20);
+            $table->string('id_dicm', 20)->nullable(); // La FK puede ser nula
             $table->timestamps();
+
+            // Definición de llaves foráneas
+            $table->foreign('id_rol')->references('id_rol')->on('rol');
+            $table->foreign('id_dicm')->references('id_usuario')->on('usuarios');
         });
     }
 
