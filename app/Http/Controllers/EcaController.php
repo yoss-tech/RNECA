@@ -1,6 +1,4 @@
 <?php
-// AÚN NO SE LLAMARA EL CONTROLLER, QUEDARA PENDIENTE
-
 namespace App\Http\Controllers;
 
 use App\Models\Eca;
@@ -22,8 +20,8 @@ class EcaController extends Controller
         ->leftJoin('usuarios as dicm', 'dicm.id_usuario', '=', 'usuarios.id_dicm') 
         ->select(
             'eca.id_usuario',
-            'eca.nombre_Inst',
-            'eca.nombre_InstOpe',
+            'eca.nombre_inst',
+            'eca.nombre_inst_ope',
             'usuarios.nombre as nombre_Responsable',
             DB::raw("IFNULL(dicm.nombre, 'Sin asignar') as director"),
             'municipio.nombre_munipio as municipio'
