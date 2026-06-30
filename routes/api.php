@@ -5,10 +5,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\AuthController;
 use Inertia\Inertia;
+
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EcaController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\EspacioController;
+use App\Http\Controllers\MemoriaFotoController;
+
 
 
 Route::get('/', function () {
@@ -40,7 +43,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 });
 
+// Programa_cultura
 Route::post('/create_program', [ProgramController::class, 'store']);
+
+//Espacio de cultura
+Route::post('/create_espacio', [EspacioController::class, 'store']);
+
+//Memoria fotografica
+Route::post('/create_memoria', [MemoriaFotoController::class, 'store']);
 
 // El login se maneja a través de AuthController vinculado en auth.php
 Route::post('/login', [AuthController::class, 'login'])->name('api.login');

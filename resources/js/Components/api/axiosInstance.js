@@ -8,10 +8,10 @@ const axiosInstance = axios.create({
     // En local/Docker, el navegador accede al backend por localhost:8000
     baseURL: `${apiBaseUrl}/api`,
     timeout: 10000,
-    headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-    },
+    // headers: {
+    //     'Content-Type': 'application/json',
+    //     'Accept': 'application/json',
+    // },
     // Esto es VITAL si usas Laravel Sanctum para que envíe las cookies de sesión
     withCredentials: true, 
     withXSRFToken: true,
