@@ -23,16 +23,15 @@ class espacio extends Model
             if (empty($espacio->id_espacio)) {
                 $espacio->id_espacio = 'ESP-' . strtoupper(Str::random(10));
             }
+
+            espacio::bootHasAutoFecha();
         });
     }
 
     protected $fillable = [
         'id_espacio',
-        'material_did',
         'total_pobl',
-        'anexos',
         'comentarios',
-        'asistentes',
         'clave_eca',
         'id_fecha'
     ];

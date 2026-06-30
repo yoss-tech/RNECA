@@ -18,7 +18,7 @@ class ProgramController extends Controller
     public function store(Request $request)
     {
         
-        // 1. Obtener la información del ECA vinculada al usuario autenticado
+        // Obtener la información del ECA vinculada al usuario autenticado
         $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
 
         if (!$eca) {
