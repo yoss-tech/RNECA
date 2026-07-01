@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
+import SubirArchivo from "../Modals/SubirArchivo";  
 
 function DICRegistros_Recibidos() {
-  
+   const [mostrarModal, setMostrarModal] = useState(false);
+
   return (
   <div className="page-container">
     <h1 className="page-title">Informes pendientes de validación.</h1>
@@ -24,7 +26,14 @@ function DICRegistros_Recibidos() {
           <td>03 de Marzo del 2026</td>
           <td className="btn-container-horizontal">
             <button type="button" className="btn-neutral">Descargar PDF</button>
-            <button type="button" className="btn-primario">Subir Firmado</button></td>
+            <button className="btn-primario"  onClick={() =>setMostrarModal(true)}>
+             Subir Firmado</button>
+                {mostrarModal && (
+                <SubirArchivo
+                    cerrarModal={() => setMostrarModal(false)}
+                />
+                )}
+          </td>
         </tr>
       </tbody>
     </table>

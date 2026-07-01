@@ -1,14 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
+import Modificar_ECAS from "../Modals/Modificar/Mod_ECAS";
+import Crear_ECAS from "../Modals/Crear/Crear_ECAS";
 
 function Admi_ECAS() {
-  
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [mostrarModal2, setMostrarModal2] = useState(false);
+    
   return (
   <div className="page-container">
     <h1 className="page-title">Administración de usuarios ECA.</h1>
     <h2 className="page-subtitle">Consulte, actualice o elimine usuarios asignados a los Espacios de Cultura del Agua.</h2>
     
-    <button type="button" className="btn-primario">Crear un nuevo ECA</button>
+    <button className="btn-primario"  onClick={() =>setMostrarModal2(true)}>
+             Crear un nuevo ECA</button>
+                {mostrarModal2 && (
+                <Crear_ECAS
+                    cerrarModal={() => setMostrarModal2(false)}
+                />
+                )}
 
+ 
     <table class="tabla-registros">
       <thead>
         <tr>
@@ -32,7 +43,14 @@ function Admi_ECAS() {
           <td>ACTIVO</td>
           <td className="btn-container-vertical">
             <button type="button" className="btn-neutral">Eliminar</button>
-            <button type="button" className="btn-negativo">Modificar</button></td>
+            <button className="btn-negativo"  onClick={() =>setMostrarModal(true)}>
+             Modificar</button>
+                {mostrarModal && (
+                <Modificar_ECAS
+                    cerrarModal={() => setMostrarModal(false)}
+                />
+                )}
+          </td>
         </tr>
       </tbody>
     </table>
