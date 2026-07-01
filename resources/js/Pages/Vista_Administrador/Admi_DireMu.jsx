@@ -1,13 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
+import Modificar_DireMunicipal from "../Modals/Modificar/Mod_DireMu";
+import Crear_DirectorMunicipal from "../Modals/Crear/Crear_DireMu";
 
 function Admi_DireMu() {
-  
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [mostrarModal2, setMostrarModal2] = useState(false);
+
   return (
   <div className="page-container">
     <h1 className="page-title">Administración de usuarios directivos.</h1>
     <h2 className="page-subtitle">Gestione las cuentas de los directores municipales responsables de la validación de informes.</h2>
-    
-    <button type="button" className="btn-primario">Crear un nuevo director municipal</button>
+  
+    <button className="btn-primario"  onClick={() =>setMostrarModal2(true)}>
+             Crear un nuevo director municipal</button>
+                {mostrarModal2 && (
+                <Crear_DirectorMunicipal
+                    cerrarModal={() => setMostrarModal2(false)}
+                />
+                )}
 
     <table class="tabla-registros">
       <thead>
@@ -32,7 +42,13 @@ function Admi_DireMu() {
           <td>ACTIVO</td>
           <td className="btn-container-vertical">
             <button type="button" className="btn-neutral">Eliminar</button>
-            <button type="button" className="btn-negativo">Modificar</button>
+            <button className="btn-negativo"  onClick={() =>setMostrarModal(true)}>
+             Modificar</button>
+                {mostrarModal && (
+                <Modificar_DireMunicipal
+                    cerrarModal={() => setMostrarModal(false)}
+                />
+                )}
           </td>
         </tr>
       </tbody>

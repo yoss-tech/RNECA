@@ -1,14 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
+import Modificar_SupervisorEcas from "../Modals/Modificar/Mod_SEcas";
+import Crear_SupervisorECAS from "../Modals/Crear/Crear_SEcas";
 
 function Admi_SupervisoresECAS() {
-  
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [mostrarModal2, setMostrarModal2] = useState(false);
+
   return (
   <div className="page-container">
     <h1 className="page-title">Administración de usuarios revisores.</h1>
     <h2 className="page-subtitle">Administre las cuentas encargadas de la revisión y validación de los informes municipales.</h2>
     
-    <button type="button" className="btn-primario">Crear un nuevo supervisor</button>
-
+    <button className="btn-primario"  onClick={() =>setMostrarModal2(true)}>
+             Crear un nuevo supervisor</button>
+                {mostrarModal2 && (
+                <Crear_SupervisorECAS
+                    cerrarModal={() => setMostrarModal2(false)}
+                />
+                )}
     <table class="tabla-registros">
       <thead>
         <tr>
@@ -28,7 +37,14 @@ function Admi_SupervisoresECAS() {
           <td>ACTIVO</td>
           <td className="btn-container-horizontal">
             <button type="button" className="btn-neutral">Eliminar</button>
-            <button type="button" className="btn-negativo">Modificar</button></td>
+            <button className="btn-negativo"  onClick={() =>setMostrarModal(true)}>
+             Modificar</button>
+                {mostrarModal && (
+                <Modificar_SupervisorEcas
+                    cerrarModal={() => setMostrarModal(false)}
+                />
+                )}
+          </td>
         </tr>
       </tbody>
     </table>
