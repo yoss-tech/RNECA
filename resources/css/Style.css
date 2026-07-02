@@ -488,6 +488,25 @@ input[type="file"] {
     background: transparent;
 }
 
+.input-password{
+    position: relative;
+    width: 100%;
+}
+
+.input-password input{
+    width: 100%;
+    padding-right: 40px; 
+}
+
+.input-password i{
+    position: absolute;
+    right: 10px;
+    top: 20%;
+    cursor: pointer;
+    color: var(--gris-color);
+    font-size: 18px;
+}
+     
 /* ================= BOTONES ================= */
 .btn-primario,
 .btn-negativo,
