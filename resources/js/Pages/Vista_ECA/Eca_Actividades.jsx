@@ -2,140 +2,55 @@ import React, { useState  } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { useForm } from "@inertiajs/react";
 import { create_program } from "../../Components/api/program.jsx";
+import Crear_actividad from "../Modals/Crear_actividad";
 
-function VECA_Actividades({ onComplete }) {
+function VECA_Actividades() {
 
-  const [formData, setFormData] = useState({
-    municipio: '',
-    localidad: '',
-    tipo_platica: '',
-    otras_activ: '',
-    alumnos_Aten: '',
-    pobl_ate: '',
-    fecha_mes: '',
-    // id_fecha:'18052026'
-  });
-
-  const handleSubmit = async (e) => {
-    //Post para bd
-    e.preventDefault();
-    console.log(formData)
-    await create_program(formData);
-  };
-
+  const [mostrarModal, setMostrarModal] = useState(false);
 
   return (
     <div className="page-container">
       <h1 className="page-title">Registro de actividades realizadas durante el periodo.</h1>
       <h2 className="page-subtitle">Capture la información de las actividades efectuadas durante el mes correspondiente.</h2>
 
-      <form classname="form-registro" onSubmit={handleSubmit}>
-        <div className="form-registro">
-
-          <div className="form-campo">
-            <label className="form-label">Municipio</label>
-            <input
-              type="text"
-              name="municipio"
-              id="municipio"
-              placeholder="Ingresa el municipio"
-              className="form-control"
-              onChange={(e) => setFormData({ ...formData, municipio: e.target.value })}
-            />
-          </div>
-
-          <div className="form-campo">
-            <label className="form-label">Localidad</label>
-            <input
-              type="text"
-              name='localidad'
-              id="localidad"
-              placeholder="Ingresa la localidad"
-              className="form-control"
-              onChange={(e) => setFormData({ ...formData, localidad: e.target.value })}
-            />
-          </div>
-
-          <div className="form-campo">
-            <label className="form-label">Platica</label>
-            <div className="radio-group">
-              <label className="radio-item">
-                <input
-                  type="radio"
-                  name='tipo_platica'
-                  id='platica_escolar'
-                  value={'escolar'}
-                  onChange={(e) => setFormData({ ...formData, tipo_platica: e.target.value })}
-                />
-                Escolar
-              </label>
-              <label className="radio-item">
-                <input
-                  type="radio"
-                  name='tipo_platica'
-                  id='platica_comunitaria'
-                  value={'comunitaria'}
-                  onChange={(e) => setFormData({ ...formData, tipo_platica: e.target.value })}
-                />
-                Comunitaria
-              </label>
-            </div>
-          </div>
-
-          <div className="form-campo">
-            <label className="form-label">Otras Actividades</label>
-            <textarea
-              rows="3"
-              name='otras_activ'
-              id="otras_activ"
-              placeholder="Ingresa las otras actividades"
-              className="form-control"
-              onChange={(e) => setFormData({ ...formData, otras_activ: e.target.value })}>
-            </textarea>
-          </div>
-
-          <div className="form-campo">
-            <label className="form-label">Alumnos Atendidos</label>
-            <input
-              type="number"
-              name='alumnos_Aten'
-              id="alumnos_Aten"
-              placeholder="Ingresa el número de alumnos atendidos"
-              className="form-control"
-              onChange={(e) => setFormData({ ...formData, alumnos_Aten: e.target.value })}
-            />
-          </div>
-
-          <div className="form-campo">
-            <label className="form-label">Población atendida</label>
-            <input
-              type="number"
-              name='pobl_ate'
-              id="pobl_ate"
-              placeholder="Ingresa la población atendida"
-              className="form-control"
-              onChange={(e) => setFormData({ ...formData, pobl_ate: e.target.value })}
-            />
-          </div>
-
-          <div className="form-campo">
-            <label className="form-label">Fecha de la actividad</label>
-            <input
-              type="date"
-              name='fecha_mes'
-              id="fecha_mes"
-              placeholder="Ingresa la fecha de la actividad"
-              className="form-control"
-              onChange={(e) => setFormData({ ...formData, fecha_mes: e.target.value })}
-            />
-          </div>
-        </div>
-        <div className="page-botones">
-          <button type="submit" className="btn-primario">Guardar</button>
-        </div>
-      </form >
+      <button className="btn-primario" onClick={() => setMostrarModal(true)}>
+        Nueva actividad
+      </button>
+      {mostrarModal && (
+        <Crear_actividad
+          cerrarModal={() => setMostrarModal(false)}
+        />
+      )}
+      <table class="tabla-registros">
+        <thead>
+          <tr>
+            <th className="th-start">Dirección</th>
+            <th className="th-start">Platica</th>
+            <th className="th-start">Otras actividades</th>
+            <th className="th-start">Habitantes atendidos</th>
+            <th className="th-start">Fecha</th>
+            <th>Acciones</th>
+        </tr>
+      </thead>
+      
+      <tbody>
+        <tr>
+          <td>
+            <p className="form-subtitle">MUNICIPIO</p>
+            <p className="card-text">LOCALIDAD</p>
+          </td>
+          <td>ESCOLAR/COMUNITARIA</td>
+          <td>ACTIVIDADES</td>
+          <td>HABITANTES</td>
+          <td>FECHA</td>
+          <td className="btn-container-vertical">
+            <button type="button" className="btn-neutral">Eliminar</button>
+            <button className="btn-negativo">Modificar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
     </div >
-
   );
 }
 

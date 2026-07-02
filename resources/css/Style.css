@@ -662,43 +662,34 @@ td {
 }
 
 /* ================= ACTIVIDADES ================= */
-.radio-group,
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .check-group {
     display: flex;
     flex-direction: column;
-}
-
-.radio-group {
-    gap: 8px;
-    margin-top: 10px;
-}
-
-.check-group {
-    gap: 10px;
     margin-bottom: 15px;
+    gap: 10px;
 }
 
-.radio-item,
 .check-item {
     display: flex;
     align-items: center;
-}
-
-.radio-item {
-    gap: 8px;
-    color: var(--negro-color);
-    font-weight: 500;
-}
-
-.check-item {
-    gap: 10px;
+    gap: 4px;
     color: var(--negro-color);
     font-size: 18px;
 }
 
-.radio-item input {
-    width: auto;
-    margin: 0;
+.radio-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    color: var(--negro-color);
+    font-weight: 400 !important;
 }
 
 .radio-item input[type="radio"] {
@@ -707,14 +698,16 @@ td {
 
     width: 13px;
     height: 13px;
+    margin: 0;
 
     border: 2px solid var(--gris-color);
     border-radius: 50%;
-
     background: var(--blanco-color);
+
     cursor: pointer;
     outline: none;
     position: relative;
+    flex-shrink: 0;
 }
 
 .radio-item input[type="radio"]:checked::before {

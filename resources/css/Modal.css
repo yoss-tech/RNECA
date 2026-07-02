@@ -30,6 +30,7 @@
     flex-direction: column;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     animation: modalIn .25s ease;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .modal-head {
@@ -88,7 +89,7 @@
     margin-bottom: 18px;
 }
 
-.modal-body label {
+.modal-body label:not(.radio-item):not(.check-item) {
     display: block;
     margin-bottom: 6px;
     font-weight: 600;
