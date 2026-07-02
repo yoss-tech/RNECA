@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import Modificar_DireA from "../Modals/Modificar/Mod_DireA";
 import Crear_DirectorArea from "../Modals/Crear/Crear_DireA";
+import EliminarElemento from "../Modals/Eliminar_Elemento";
 
 function Admi_DireA() {
    const [mostrarModal, setMostrarModal] = useState(false);
    const [mostrarModal2, setMostrarModal2] = useState(false);
+   const [mostrarModal3, setMostrarModal3] = useState(false);
    
   return (
   <div className="page-container">
@@ -37,7 +39,13 @@ function Admi_DireA() {
           <td>CONTRASEÑA</td>
           <td>ACTIVO</td>
           <td className="btn-container-horizontal">
-            <button type="button" className="btn-neutral">Eliminar</button>
+            <button className="btn-neutral"  onClick={() =>setMostrarModal3(true)}>
+             Eliminar</button>
+                {mostrarModal3 && (
+                <EliminarElemento
+                    cerrarModal={() => setMostrarModal3(false)}
+                />
+                )}
             <button className="btn-negativo"  onClick={() =>setMostrarModal(true)}>
              Modificar</button>
                 {mostrarModal && (

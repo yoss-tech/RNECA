@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import Modificar_SupervisorEcas from "../Modals/Modificar/Mod_SEcas";
 import Crear_SupervisorECAS from "../Modals/Crear/Crear_SEcas";
+import EliminarElemento from "../Modals/Eliminar_Elemento";
 
 function Admi_SupervisoresECAS() {
   const [mostrarModal, setMostrarModal] = useState(false);
   const [mostrarModal2, setMostrarModal2] = useState(false);
+  const [mostrarModal3, setMostrarModal3] = useState(false);
 
   return (
   <div className="page-container">
@@ -36,7 +38,13 @@ function Admi_SupervisoresECAS() {
           <td>CONTRASEÑA</td>
           <td>ACTIVO</td>
           <td className="btn-container-horizontal">
-            <button type="button" className="btn-neutral">Eliminar</button>
+             <button className="btn-neutral"  onClick={() =>setMostrarModal3(true)}>
+             Eliminar</button>
+                {mostrarModal3 && (
+                <EliminarElemento
+                    cerrarModal={() => setMostrarModal3(false)}
+                />
+                )}
             <button className="btn-negativo"  onClick={() =>setMostrarModal(true)}>
              Modificar</button>
                 {mostrarModal && (
