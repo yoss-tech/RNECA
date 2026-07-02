@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
 
+
 function Crear_SupervisorECAS({ cerrarModal }) {
+    const [mostrarPassword, setMostrarPassword] = useState(false);
+
     return (
         <div className="overlay">
 
@@ -20,12 +23,15 @@ function Crear_SupervisorECAS({ cerrarModal }) {
 
                     <div className="form-group">
                         <label className="card-subtitle">Correo:</label>
-                        <input type="text" className="form-control" placeholder="Ingresa el correo"/>
+                        <input type="email" className="form-control" placeholder="Ingresa el correo"/>
                     </div>
 
                     <div className="form-group">
                         <label className="card-subtitle">Crear contraseña:</label>
-                        <input id="nombre" type="text" className="form-control" placeholder="Ingresa una contraseña"/>
+                        <div className="input-password">
+                            <input type={mostrarPassword ? "text" : "password"} className="form-control" placeholder="Ingresa una contraseña"/>
+                            <i className={mostrarPassword ? "bi bi-eye-slash" : "bi bi-eye"} onClick={() => setMostrarPassword(!mostrarPassword)}></i>
+                        </div>
                     </div>
                 </div>
 

@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
 import SelectorImagen from "../../Components/SelectorImagen.jsx";
 
 function ECAM_Inicio({ cerrarModal }) {
+    const [mostrarPassword, setMostrarPassword] = useState(false);
+
     return (
         <div className="overlay">
 
-            <div className="modal-box">
+            <div classNzame="modal-box">
 
                 <div className="modal-head">
                     <h4>Completa los siguientes datos</h4>
@@ -36,7 +38,10 @@ function ECAM_Inicio({ cerrarModal }) {
 
                     <div className="form-group">
                         <label className="card-subtitle">Nueva contraseña:</label>
-                        <input id="nombre" type="text" className="form-control" placeholder="Ingresa una nueva contraseña"/>
+                        <div className="input-password">
+                            <input type={mostrarPassword ? "text" : "password"} className="form-control" placeholder="Ingresa una contraseña"/>
+                            <i className={mostrarPassword ? "bi bi-eye-slash" : "bi bi-eye"} onClick={() => setMostrarPassword(!mostrarPassword)}></i>
+                        </div>
                     </div>
                 </div>
 

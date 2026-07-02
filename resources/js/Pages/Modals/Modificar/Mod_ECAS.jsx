@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
 
 function Modificar_ECAS({ cerrarModal }) {
+    const [mostrarPassword, setMostrarPassword] = useState(false);
+
     return (
         <div className="overlay">
 
@@ -17,13 +19,18 @@ function Modificar_ECAS({ cerrarModal }) {
                         <label className="card-subtitle">Nombre:</label>
                         <input type="text" className="form-control" placeholder="Ingresa tu nombre"/>
                     </div>
+
                     <div className="form-group">
                         <label className="card-subtitle">Correo:</label>
                         <input type="text" className="form-control" placeholder="Ingresa tu correo"/>
                     </div>
-                    <div className="form-group">
+
+                     <div className="form-group">
                         <label className="card-subtitle">Contraseña:</label>
-                        <input type="text" className="form-control" placeholder="Ingresa tu contraseña"/>
+                        <div className="input-password">
+                            <input type={mostrarPassword ? "text" : "password"} className="form-control" placeholder="Ingresa tu contraseña"/>
+                            <i className={mostrarPassword ? "bi bi-eye-slash" : "bi bi-eye"} onClick={() => setMostrarPassword(!mostrarPassword)}></i>
+                        </div>
                     </div>
                 </div>
 

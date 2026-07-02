@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import Modificar_ECAS from "../Modals/Modificar/Mod_ECAS";
 import Crear_ECAS from "../Modals/Crear/Crear_ECAS";
+import EliminarElemento from "../Modals/Eliminar_Elemento";
 
 function Admi_ECAS() {
   const [mostrarModal, setMostrarModal] = useState(false);
   const [mostrarModal2, setMostrarModal2] = useState(false);
-    
+  const [mostrarModal3, setMostrarModal3] = useState(false); 
   return (
   <div className="page-container">
     <h1 className="page-title">Administración de usuarios ECA.</h1>
@@ -42,7 +43,13 @@ function Admi_ECAS() {
           <td>CONTRASEÑA</td>
           <td>ACTIVO</td>
           <td className="btn-container-vertical">
-            <button type="button" className="btn-neutral">Eliminar</button>
+             <button className="btn-neutral"  onClick={() =>setMostrarModal3(true)}>
+             Eliminar</button>
+                {mostrarModal3 && (
+                <EliminarElemento
+                    cerrarModal={() => setMostrarModal3(false)}
+                />
+                )}
             <button className="btn-negativo"  onClick={() =>setMostrarModal(true)}>
              Modificar</button>
                 {mostrarModal && (

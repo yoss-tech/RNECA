@@ -11,6 +11,9 @@ import VECA_ConsultaReg from "./Eca_ConsultaRegistros.jsx";
 import { Head } from "@inertiajs/react";
 import { mostrarSoloMes, dateLimit } from "../../Components/functions.jsx";
 import { logoutUser, checkAuth } from "../../Components/api/auth.jsx";
+import Notificaciones_Eca from "../Modals/Notificaciones/NoticacionECA.jsx";
+import PerfilECA from "../Modals/Perfiles/PerfilECA.jsx";
+import Avisos_eca from "../Modals/Avisos/AvisosECA.jsx";
 
 function VECA_Inicio() {
   const [CerrarSesion, setCerrarSesion] = useState(false);
@@ -20,6 +23,8 @@ function VECA_Inicio() {
   const [completedStep1, setCompletedStep1] = useState(false);
   const [completedStep2, setCompletedStep2] = useState(false);
   const [completedStep3, setCompletedStep3] = useState(false);
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [mostrarModal2, setMostrarModal2] = useState(false);
 
   const menuItems = document.querySelectorAll('.sidebar .form-group a');
 
@@ -55,20 +60,31 @@ function VECA_Inicio() {
 
   return (
     <>
-      <header className="header">
+       <header className="header">
         <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} >
           <i className="bi bi-list"></i>
         </button>
 
-        <div className="logo"><img src={miImagen} alt="Logo RNECA" /></div>
-        <div className="acciones-header">
-          <button className="icono">
-            <i className="bi bi-envelope"></i>
-          </button>
+        <div className="logo"><img src={miImagen} alt="Logo RNECA"/></div>
 
-          <button className="icono">
-            <i className="bi bi-bell"></i>
-          </button>
+        <div className="acciones-header">
+          <button className="icono"  onClick={() =>setMostrarModal(true)}>
+              <i className="bi bi-envelope"></i>
+                </button>
+                {mostrarModal && (
+                <Avisos_eca
+                    cerrarModal={() => setMostrarModal(false)}
+                />
+            )}
+
+            <button className="icono"  onClick={() =>setMostrarModal2(true)}>
+             <i className="bi bi-bell"></i>
+                </button>
+                {mostrarModal2 && (
+                <Notificaciones_Eca
+                    cerrarModal={() => setMostrarModal2(false)}
+                />
+                )}
 
           <div className="perfil">
             <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)}>
@@ -76,6 +92,14 @@ function VECA_Inicio() {
             </button>
             {CerrarSesion && (
               <div className="menu-perfil">
+                <button className="btn-cerrar-sesion"  onClick={() =>setMostrarModal(true)}>
+                  Perfil
+                </button>
+                 {mostrarModal && (
+                <PerfilECA
+                    cerrarModal={() => setMostrarModal(false)}
+                />
+            )}
                 <button className="btn-cerrar-sesion" onClick={submitLogout}>
                   Cerrar sesión
                 </button>
