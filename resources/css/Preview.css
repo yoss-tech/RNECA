@@ -1,0 +1,296 @@
+/* Estilos para el contenedor principal de la vista previa */
+.documento-preview-container {
+    padding: 1rem;
+    background-color: #f3f4f6;
+    border-radius: 0.5rem;
+    align-items: center;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+    overflow: auto;
+}
+
+/* Simula la hoja física A4 */
+.hoja-a4 {
+    background-color: #ffffff;
+    padding: 2rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    color: #000000;
+    width: 210mm;
+    min-height: 297mm;
+    page-break-after: always; /* Asegura saltos de página en la impresión */
+}
+
+/* Modificador para la hoja horizontal */
+.pagina-horizontal {
+    width: 297mm;
+    height: 210mm;
+    min-height: 210mm;
+}
+
+/* Estilos de impresión para la hoja */
+@media print {
+
+    body, html {
+        background: #fff;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+    
+    .paginacion-controles {
+        display: none;
+    }
+
+    .pagina-oculta-pantalla {
+        display: block !important;
+    }
+
+    .documento-preview-container {
+        padding: 0;
+        background-color: transparent;
+        border-radius: 0;
+        box-shadow: none;
+        overflow: visible;
+    }
+
+    .hoja-a4 {
+        box-shadow: none;
+        margin: 0;
+        width: auto;
+        height: auto;
+        min-height: unset;
+        background: transparent;
+        transform: scale(1) !important;
+        font-size: 5pt;
+        padding: 1cm;
+    }
+    
+    .pagina-horizontal .tabla-programa{
+        font-size: 8pt;
+    }
+
+    @page vertical {
+        size: A4 portrait;
+        margin: 1cm;
+    }
+
+    @page horizontal {
+        size: A4 landscape;
+        margin: 1cm;
+    }
+
+    .hoja-a4:not(.pagina-horizontal) {
+        page-break-after: always;
+        page: vertical;
+    }
+
+    .pagina-horizontal {
+        page-break-after: always;
+        page: horizontal;
+    }
+}
+
+/* Encabezado del documento */
+.header-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imagen {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+
+.documento-header {
+    border-bottom-width: 2px;
+    border-color: #d1d5db;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-info p {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.header-meta {
+    text-align: right;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+/* Contenido dinámico */
+.documento-contenido {
+    &>*+* {
+        margin-top: 1.5rem;
+    }
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    background-color: #f9fafb;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    border-width: 1px;
+}
+
+.info-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #9ca3af;
+    text-transform: uppercase;
+}
+
+.info-dato {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.info-firma {
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* Títulos de sección */
+.seccion-titulo,
+.seccion-despedida {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 0.5rem;
+}
+
+/* Párrafo de descripción */
+.descripcion-parrafo {
+    color: #4b5563;
+    line-height: 1.625;
+    text-align: justify;
+}
+
+/* Pie de página */
+.documento-footer {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top-width: 1px;
+    border-color: #e5e7eb;
+    text-align: center;
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+/* --- Estilos para PanelDocumento.jsx --- */
+
+/* Contenedor principal del panel */
+.panel-documento-grid {
+    display: flex;
+    flex-direction: column;
+    background-color: #f0f2f5;
+    min-height: 100vh;
+}
+
+@media (min-width: 1024px) {
+    .panel-documento-grid {
+        flex-direction: row;
+    }
+}
+
+/* Panel de controles/formulario */
+.panel-controles {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    height: fit-content;
+}
+
+@media (min-width: 1024px) {
+    .panel-controles {
+        width: 33.333333%;
+    }
+}
+
+.panel-controles-titulo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #000000;
+}
+
+.panel-controles-form>div+div {
+    margin-top: 1rem;
+}
+
+.panel-form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.panel-form-input {
+    margin-top: 0.25rem;
+    display: block;
+    width: 100%;
+    border-radius: 0.25rem;
+    border: 1px solid #d1d5db;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    padding: 0.5rem;
+}
+
+/* Panel de vista previa */
+.panel-preview {
+    width: 100%;
+    overflow-x: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@media (min-width: 1024px) {
+    .panel-preview {
+        width: 66.666667%;
+    }
+}
+
+.tabla-programa {
+    width: 100%;
+    margin-top: 15px;
+    border-collapse: collapse;
+}
+
+/* Estilos para la paginación */
+.paginacion-controles {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    width: fit-content;
+}
+
+.pagina-activa {
+    display: block;
+}
+
+.pagina-oculta-pantalla {
+    display: none;
+}
