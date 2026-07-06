@@ -235,6 +235,10 @@ p {
     margin-bottom: 5px;
 }
 
+.text-white {
+    color: var(--blanco-color);
+}
+
 /* ================= FECHAS ================= */
 .fecha-row {
     display: flex;
@@ -510,12 +514,22 @@ input[type="file"] {
 /* ================= BOTONES ================= */
 .btn-primario,
 .btn-negativo,
-.btn-neutral {
+.btn-neutral,
+.btn-acciones {
     background: transparent;
-    padding: 10px 25px;
     border-radius: 3px;
     font-size: 18px;
     cursor: pointer;
+}
+
+.btn-primario,
+.btn-negativo,
+.btn-neutral {
+    padding: 10px 25px;
+}
+
+.btn-acciones {
+    padding: 6px;
 }
 
 .btn-login {
@@ -553,12 +567,12 @@ input[type="file"] {
     color: var(--blanco-color);
 }
 
-.btn-neutral {
+.btn-neutral, .btn-acciones {
     border: 1.6px solid var(--gris-color);
     color: var(--gris-color);
 }
 
-.btn-neutral:hover {
+.btn-neutral:hover, .btn-acciones:hover {
     background-color: var(--gris-color);
     color: var(--blanco-color);
 }
@@ -678,6 +692,10 @@ td {
 .td-center {
     text-align: center;
     font-weight: 700;
+}
+
+tr {
+    height: auto;
 }
 
 /* ================= ACTIVIDADES ================= */
