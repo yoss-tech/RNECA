@@ -14,6 +14,7 @@ import { logoutUser, checkAuth } from "../../Components/api/auth.jsx";
 import Notificaciones_Eca from "../Modals/Notificaciones/NoticacionECA.jsx";
 import PerfilECA from "../Modals/Perfiles/PerfilECA.jsx";
 import Avisos_eca from "../Modals/Avisos/AvisosECA.jsx";
+import PanelDocumento from "./PanelDocumento.jsx";
 
 function VECA_Inicio() {
   const [CerrarSesion, setCerrarSesion] = useState(false);
@@ -60,31 +61,31 @@ function VECA_Inicio() {
 
   return (
     <>
-       <header className="header">
+      <header className="header">
         <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} >
           <i className="bi bi-list"></i>
         </button>
 
-        <div className="logo"><img src={miImagen} alt="Logo RNECA"/></div>
-
+        <div className="logo"><img src={miImagen} alt="Logo RNECA" /></div>
         <div className="acciones-header">
-          <button className="icono"  onClick={() =>setMostrarModal(true)}>
-              <i className="bi bi-envelope"></i>
-                </button>
-                {mostrarModal && (
-                <Avisos_eca
-                    cerrarModal={() => setMostrarModal(false)}
-                />
-            )}
+          <button className="icono" onClick={() => setMostrarModal(true)}>
+            <i className="bi bi-envelope"></i>
+          </button>
 
-            <button className="icono"  onClick={() =>setMostrarModal2(true)}>
-             <i className="bi bi-bell"></i>
-                </button>
-                {mostrarModal2 && (
-                <Notificaciones_Eca
-                    cerrarModal={() => setMostrarModal2(false)}
-                />
-                )}
+          {mostrarModal && (
+            <Avisos_eca
+              cerrarModal={() => setMostrarModal(false)}
+            />
+          )}
+
+          <button className="icono" onClick={() => setMostrarModal2(true)}>
+            <i className="bi bi-bell"></i>
+          </button>
+          {mostrarModal2 && (
+            <Notificaciones_Eca
+              cerrarModal={() => setMostrarModal2(false)}
+            />
+          )}
 
           <div className="perfil">
             <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)}>
@@ -92,14 +93,14 @@ function VECA_Inicio() {
             </button>
             {CerrarSesion && (
               <div className="menu-perfil">
-                <button className="btn-cerrar-sesion"  onClick={() =>setMostrarModal(true)}>
+                <button className="btn-cerrar-sesion" onClick={() => setMostrarModal(true)}>
                   Perfil
                 </button>
-                 {mostrarModal && (
-                <PerfilECA
+                {mostrarModal && (
+                  <PerfilECA
                     cerrarModal={() => setMostrarModal(false)}
-                />
-            )}
+                  />
+                )}
                 <button className="btn-cerrar-sesion" onClick={submitLogout}>
                   Cerrar sesión
                 </button>
@@ -138,7 +139,7 @@ function VECA_Inicio() {
                     Población Beneficiaria</a>
                 </div>
               </li>
-              
+
               <li>
                 <div className="submenu-item">
                   <a
@@ -160,7 +161,7 @@ function VECA_Inicio() {
                     Memoria Fotográfica</a>
                 </div>
               </li>
-              
+
               <li>
                 <div className="submenu-item">
                   <a
@@ -205,7 +206,7 @@ function VECA_Inicio() {
             <div className="page-container">
               <h1 className="page-title">Seguimiento y control de informes mensuales. </h1>
               <h2 className="page-subtitle">Administra, consulta y da seguimiento a los registros mensuales de actividades.</h2>
-              
+
               <h3 className="form-subtitle">Registro del Mes</h3>
               <div className="card-contenedor">
                 <p className="card-header">Informe del mes de {mostrarSoloMes(new Date())}</p>
@@ -230,7 +231,7 @@ function VECA_Inicio() {
               <h3 className="form-subtitle">Último Registro</h3>
               <div className="card-contenedor">
                 <p className="card-header">Informe del mes de MES</p>
-                
+
                 <div className="card-body">
                   <div className="fecha-row">
                     <p className="card-subtitle">Estado:</p>
@@ -246,24 +247,24 @@ function VECA_Inicio() {
         )}
 
         {vistaActual === "poblacion" && (
-          <VECA_Poblacion 
-          onComplete={() => {
-            setCompletedStep1(true);
-          }}
+          <VECA_Poblacion
+            onComplete={() => {
+              setCompletedStep1(true);
+            }}
           />
         )}
         {vistaActual === "actividades" && (
           <VECA_Actividades
-          onComplete={() => {
-            setCompletedStep2(true);
-          }}
+            onComplete={() => {
+              setCompletedStep2(true);
+            }}
           />
         )}
         {vistaActual === "memoria" && (
           <VECA_Memoria
-          onComplete={() => {
-            setCompletedStep3(true);
-          }}
+            onComplete={() => {
+              setCompletedStep3(true);
+            }}
           />
         )}
         {vistaActual === "presente" && (
@@ -272,9 +273,10 @@ function VECA_Inicio() {
           : <div>
 
             </div>
-        )}
+          )}
         {vistaActual === "vista_previa" && (
-          <VECA_VistaP />
+           //<VECA_VistaP />
+          <PanelDocumento />
         )}
         {vistaActual === "consulta_registros" && (
           <VECA_ConsultaReg />
