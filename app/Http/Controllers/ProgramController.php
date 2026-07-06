@@ -31,8 +31,8 @@ class ProgramController extends Controller
             'localidad' => 'required',
             'tipo_platica' => 'required',
             'otras_activ' => 'required',
-            'alumnos_Aten' => 'required',
-            'pobl_ate' => 'required',
+            //'alumnos_Aten' => 'required',
+            //'pobl_ate' => 'required',
             'fecha_mes' => 'required',
             // 'id_fecha' => 'required',
         ]);

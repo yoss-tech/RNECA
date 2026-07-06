@@ -1,12 +1,12 @@
 import React, { useState  } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { useForm } from "@inertiajs/react";
-import { create_program } from "../../Components/api/program.jsx";
-import Crear_actividad from "../Modals/Crear_actividad";
+import Crear_Actividad from "../Modals/Crear/Crear_Actividad.jsx";
+import Opciones from "../Modals/Opciones.jsx";
 
 function VECA_Actividades() {
 
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [mostrarOpciones, setMostrarOpciones] = useState(false);
 
   return (
     <div className="page-container">
@@ -17,7 +17,7 @@ function VECA_Actividades() {
         Nueva actividad
       </button>
       {mostrarModal && (
-        <Crear_actividad
+        <Crear_Actividad
           cerrarModal={() => setMostrarModal(false)}
         />
       )}
@@ -43,9 +43,15 @@ function VECA_Actividades() {
           <td>ACTIVIDADES</td>
           <td>HABITANTES</td>
           <td>FECHA</td>
-          <td className="btn-container-vertical">
-            <button type="button" className="btn-neutral">Eliminar</button>
-            <button className="btn-negativo">Modificar</button>
+          <td>
+            <button className="btn-acciones" onClick={() => setMostrarOpciones(true)}>
+              <i class="bi bi-gear"></i>
+            </button>
+            {mostrarOpciones && (
+              <Opciones
+                cerrarModal={() => setMostrarOpciones(false)}
+              />
+            )}
           </td>
         </tr>
       </tbody>

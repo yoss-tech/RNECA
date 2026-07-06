@@ -1,29 +1,9 @@
 import React, { useState } from "react";
 import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
-import { create_program } from "../../Components/api/program.jsx";
-import { useForm } from "@inertiajs/react";
 
-function Crear_actividad({ cerrarModal }) {
-
-    const [formData, setFormData] = useState({
-        municipio: '',
-        localidad: '',
-        tipo_platica: '',
-        otras_activ: '',
-        alumnos_Aten: '',
-        pobl_ate: '',
-        fecha_mes: '',
-        // id_fecha:'18052026'
-    });
-      
-    const handleSubmit = async (e) => {
-        //Post para bd
-        e.preventDefault();
-        console.log(formData)
-        await create_program(formData);
-    };
-
+function Mod_Actividad({ cerrarModal }) {
+    
     return (
     <div className="overlay">
       <div className="modal-box">
@@ -31,7 +11,7 @@ function Crear_actividad({ cerrarModal }) {
           <h4>Completa los siguientes datos</h4>
         </div>
         <div className="modal-body">
-          <form className="form-registro" onSubmit={handleSubmit}>
+          <form className="form-registro">
             <div className="form-registro">
               <div className="form-campo">
                 <label className="form-label">Municipio</label>
@@ -41,7 +21,6 @@ function Crear_actividad({ cerrarModal }) {
                   id="municipio"
                   placeholder="Ingresa el municipio"
                   className="form-control"
-                  onChange={(e) => setFormData({ ...formData, municipio: e.target.value })}
                 />
               </div>
               
@@ -53,7 +32,6 @@ function Crear_actividad({ cerrarModal }) {
                   id="localidad"
                   placeholder="Ingresa la localidad"
                   className="form-control"
-                  onChange={(e) => setFormData({ ...formData, localidad: e.target.value })}
                 />
               </div>
               <div className="form-campo">
@@ -65,7 +43,6 @@ function Crear_actividad({ cerrarModal }) {
                       name='tipo_platica'
                       id='platica_escolar'
                       value={'escolar'}
-                      onChange={(e) => setFormData({ ...formData, tipo_platica: e.target.value })}
                     />
                     Escolar
                   </label>
@@ -75,7 +52,6 @@ function Crear_actividad({ cerrarModal }) {
                       name='tipo_platica'
                       id='platica_comunitaria'
                       value={'comunitaria'}
-                      onChange={(e) => setFormData({ ...formData, tipo_platica: e.target.value })}
                     />
                     Comunitaria
                   </label>
@@ -89,8 +65,7 @@ function Crear_actividad({ cerrarModal }) {
                   name='otras_activ'
                   id="otras_activ"
                   placeholder="Ingresa las otras actividades"
-                  className="form-control"
-                  onChange={(e) => setFormData({ ...formData, otras_activ: e.target.value })}>
+                  className="form-control">
                 </textarea>
               </div>
               
@@ -103,7 +78,6 @@ function Crear_actividad({ cerrarModal }) {
                     id="alumnos_Aten"
                     placeholder="Ingresa el número de alumnos atendidos"
                     className="form-control"
-                    onChange={(e) => setFormData({ ...formData, alumnos_Aten: e.target.value })}
                   />
                 </div>
               )}
@@ -117,7 +91,6 @@ function Crear_actividad({ cerrarModal }) {
                     id="pobl_ate"
                     placeholder="Ingresa la población atendida"
                     className="form-control"
-                    onChange={(e) => setFormData({ ...formData, pobl_ate: e.target.value })}
                   />
                 </div>
               )}
@@ -130,7 +103,6 @@ function Crear_actividad({ cerrarModal }) {
                   id="fecha_mes"
                   placeholder="Ingresa la fecha de la actividad"
                   className="form-control"
-                  onChange={(e) => setFormData({ ...formData, fecha_mes: e.target.value })}
                 />
               </div>
             </div>
@@ -145,4 +117,4 @@ function Crear_actividad({ cerrarModal }) {
   );
 }
 
-export default Crear_actividad;
+export default Mod_Actividad;
