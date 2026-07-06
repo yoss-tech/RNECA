@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\espacio; 
+use App\Models\espacio;
 use App\Models\Eca;
 use App\Models\detail_asist;
 use App\Models\detail_nex;
@@ -16,7 +17,29 @@ class EspacioController extends Controller
 {
     public function index()
     {
-        
+        $espacio = DB::table('eca')
+            ->join('espaciocultura as esp', 'eca.clave_eca', '=', 'esp.clave_eca')
+            ->join('detalle_asistente as da', 'esp.id_espacio', '=', 'da.id_espacio')
+            ->join('detalle_nexo as dn', 'esp.id_espacio', '=', 'dn.id_espacio')
+            ->join('material_didact as md', 'esp.id_espacio', '=', 'md.id_espacio')
+            ->select(
+                'eca.clave_eca',
+                'md.inedito',
+                'md.reproducido',
+                'md.adquirido',
+                'da.genero',
+                'da.rango_edad',
+                'da.cantidad',
+                'esp.total_pobl',
+                'dn.list_asist',
+                'dn.evi_foto',
+                'dn.nota_period',
+                'esp.comentarios',
+                'eca.fecha_apert',
+                'eca.fecha_forta'
+            )
+            ->get();
+        return response()->json($espacio);
     }
 
     public function store(Request $request){
@@ -25,10 +48,10 @@ class EspacioController extends Controller
 
         if (!$eca) {
             return response()->json(['message' => 'El usuario no tiene un ECA asignado'], 403);
-        } 
+        }
 
         //Registrar el esapcio de cultura primero
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'total_pobl' => 'required',
             'comentarios' => 'required',
             'asistentes' => 'required|array', // 'asistentes' debe ser un arreglo.
@@ -36,7 +59,7 @@ class EspacioController extends Controller
             'material' => 'required|array'
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             $data = [
                 'message' => 'Error en la validación de datos',
                 'status' => 400,
@@ -51,7 +74,7 @@ class EspacioController extends Controller
             'clave_eca' => $eca->clave_eca, // Se asigna automáticamente
         ]);
 
-        if(!$espacio){
+        if (!$espacio) {
             $data = [
                 'message' => 'Error al crear el espacio de cultura',
                 'status' => 500
@@ -75,7 +98,7 @@ class EspacioController extends Controller
         }
 
         // Para los nexos, ya no es un bucle. Recibimos un solo objeto.
-        if($request->has('nexo')){
+        if ($request->has('nexo')) {
             $nexoData = $request->nexo;
             detail_nex::create([
                 'list_asist' => $nexoData['lista_asistencia'] ? 'sí' : 'no',
@@ -86,7 +109,7 @@ class EspacioController extends Controller
         }
 
         // Para registrar el material didactico
-        if($request->has('material')){
+        if ($request->has('material')) {
             $materialData = $request->material;
             material_didact::create([
                 'inedito' => $materialData['inedito'],
@@ -98,10 +121,9 @@ class EspacioController extends Controller
 
         $data = [
             'message' => 'Espacio de cultura y sus detalles creados correctamente',
-            'status' => 201                 
-            ];
+            'status' => 201
+        ];
 
         return response()->json($data, 201);
     }
-
 }

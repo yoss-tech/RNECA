@@ -40,17 +40,21 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/eca');
 
     // Programa_cultura
+    Route::post('/create_program', [ProgramController::class, 'store']);
 
+    //Espacio de cultura
+    Route::post('/create_espacio', [EspacioController::class, 'store']);
+
+    //Memoria fotografica
+    Route::post('/create_memoria', [MemoriaFotoController::class, 'store']);
+
+    Route::get('/infoEspacio', [EspacioController::class, 'index']);
+
+    Route::get('/infoProgram', [ProgramController::class, 'index']);
+
+    Route::get('/infoMemoria', [MemoriaFotoController::class, 'index']);
 });
 
-// Programa_cultura
-Route::post('/create_program', [ProgramController::class, 'store']);
-
-//Espacio de cultura
-Route::post('/create_espacio', [EspacioController::class, 'store']);
-
-//Memoria fotografica
-Route::post('/create_memoria', [MemoriaFotoController::class, 'store']);
 
 // El login se maneja a través de AuthController vinculado en auth.php
 Route::post('/login', [AuthController::class, 'login'])->name('api.login');
