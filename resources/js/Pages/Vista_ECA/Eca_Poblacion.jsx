@@ -70,6 +70,7 @@ function VECA_Poblacion({ onComplete }) {
       };
       console.log(dataToSend);
       await create_espacio(dataToSend);
+      onComplete(); 
     } catch (error) {
       console.error("Error al guardar:", error);
     }
@@ -102,7 +103,9 @@ function VECA_Poblacion({ onComplete }) {
             <i class="bi bi-question-circle" title="Indicar el número de material didáctico que se distribuyó en el ECA según su modalidad"></i>
           </p>
 
-          <div className="form-campo">
+          <div className="btn-container-horizontal">
+
+            <div className="input-container-horizontal">
             <label className="form-label">Inédito
               <i class="bi bi-question-circle" title="Indicar si ha recibido algún material inedito"></i>
             </label>
@@ -115,13 +118,13 @@ function VECA_Poblacion({ onComplete }) {
               value={material.inedito}
               onChange={(e) => setMaterial({ ...material, inedito: e.target.value })}
             />
-          </div>
+            </div>
 
-          <div className="form-campo">
-            <label className="form-label">Reproducido
-              <i class="bi bi-question-circle" title="Indicar si han recibido KITS ahorradores, manuales, librillos, lapiceros, entre otros consumibles"></i>
-            </label>
-            <input 
+             <div className="input-container-horizontal">
+              <label className="form-label">Reproducido
+                <i class="bi bi-question-circle" title="Indicar si han recibido KITS ahorradores, manuales, librillos, lapiceros, entre otros consumibles"></i>
+              </label>
+              <input 
               type="number" 
               placeholder="Ingresa el número de material didáctico según su modalidad" 
               className="form-control" 
@@ -129,10 +132,10 @@ function VECA_Poblacion({ onComplete }) {
               name="reproducido"
               value={material.reproducido}
               onChange={(e) => setMaterial({ ...material, reproducido: e.target.value })}
-            />
-          </div>
-
-          <div className="form-campo">
+              />
+            </div>
+            
+            <div className="input-container-horizontal">
             <label className="form-label">Adquirido
               <i class="bi bi-question-circle" title="Indicar si el espacio cuenta con maquetas"></i>
             </label>
@@ -145,113 +148,114 @@ function VECA_Poblacion({ onComplete }) {
               value={material.adquirido}
               onChange={(e) => setMaterial({ ...material, adquirido: e.target.value })} 
             />
+            </div>
           </div>
 
+  
           <p className="form-subtitle">Asistentes
             <i class="bi bi-question-circle" title="Indicar el número de asistentes según el rango de edad, asi como si se trata de niños menores de 12 años"></i>
           </p>
           <p className="form-text">Hombres</p>
           <div className="form-campo">
             <label className="form-label">Rangos de edad</label>
+            
+            <div className="btn-container-horizontal">
             <input
               type="number"
               name="hombres13_17"
-              placeholder="Ingresa el número de asistentes de 13 a 17"
+              placeholder="De 13 a 17"
               className="form-control"
               onChange={handleChange}
+              title="Ingresa el número de asistentes de 13 a 17"
             />
-          </div>
 
-          <div className="form-campo">
             <input
               type="number"
               name="hombres18_30"
-              placeholder="Ingresa el número de asistentes de 18 a 30"
+              placeholder="De 18 a 30"
               className="form-control"
               onChange={handleChange}
+              title="Ingresa el número de asistentes de 18 a 30"
             />
-          </div>
 
-          <div className="form-campo">
             <input
               type="number"
               name="hombres30_40"
-              placeholder="Ingresa el número de asistentes de 30 a 40"
+              placeholder=" De 30 a 40"
               className="form-control"
               onChange={handleChange}
+              title="Ingresa el número de asistentes de 30 a 40"
             />
-          </div>
 
-          <div className="form-campo">
-            <input
+              <input
               type="number"
               name="hombres40_50"
-              placeholder="Ingresa el número de asistentes de 40 a 50"
+              placeholder=" De 40 a 50"
               className="form-control"
               onChange={handleChange}
+              title="Ingresa el número de asistentes de 40 a 50"
             />
-          </div>
 
-          <div className="form-campo">
             <input
               type="number"
               name="hombres50mas"
-              placeholder="Ingresa el número de asistentes de 50 o  +"
+              placeholder="De 50 o  +"
               className="form-control"
               onChange={handleChange}
+              title="Ingresa el número de asistentes de 50 o más"
             />
+            </div>
           </div>
 
           <p className="form-text">Mujeres</p>
           <div className="form-campo">
             <label className="form-label">Rangos de edad</label>
+            <div className="btn-container-horizontal">
             <input
               type="number"
               name="mujeres13_17"
-              placeholder="Ingresa el número de asistentes de 13 a 17"
+              placeholder="De 13 a 17"
               className="form-control"
               onChange={handleChange}
+              title="Ingresa el número de asistentes de 13 a 17"
             />
-          </div>
 
-          <div className="form-campo">
             <input
               type="number"
               name="mujeres18_30"
-              placeholder="Ingresa el número de asistentes de 18 a 30"
+              placeholder="De 18 a 30"
               className="form-control"
               onChange={handleChange}
+              title="Ingresa el número de asistentes de 18 a 30"
             />
-          </div>
-
-          <div className="form-campo">
+            
             <input
               type="number"
               name="mujeres30_40"
-              placeholder="Ingresa el número de asistentes de 30 a 40"
+              placeholder="De 30 a 40"
               className="form-control"
               onChange={handleChange}
+              title="Ingresa el número de asistentes de 30 a 40"
             />
-          </div>
 
-          <div className="form-campo">
             <input
               type="number"
               name="mujeres40_50"
-              placeholder="Ingresa el número de asistentes de 40 a 50"
+              placeholder="De 40 a 50"
               className="form-control"
               onChange={handleChange}
+              title="Ingresa el número de asistentes de 40 a 50"
             />
-          </div>
 
-          <div className="form-campo">
             <input
               type="number"
               name="mujeres50mas"
-              placeholder="Ingresa el número de asistentes de 50 o  +"
+              placeholder="De 50 o  +"
               className="form-control"
               onChange={handleChange}
+              title="Ingresa el número de asistentes de 50 o más"
             />
+            </div>
           </div>
 
           <p className="form-text">Niños</p>
@@ -263,56 +267,66 @@ function VECA_Poblacion({ onComplete }) {
               placeholder="Ingresa el número de asistentes menores de 12"
               className="form-control"
               onChange={handleChange}
+              title="Ingresa el número de asistentes menores de 12"
             />
           </div>
 
-          <p className="form-subtitle">Total de la población atendida
-            <i class="bi bi-question-circle" title="Sumatoria de los asistentes"></i>
-          </p>
-          <div className="form-campo">
-            <input
-              type="number"
-              value={total}
-              id="total_pobl"
-              name="total_pobl"
-              readOnly
-              className="form-control"
-            />
-          </div>
+          <div className="btn-container-horizontal">
 
-          <p className="form-subtitle">Anexos
-            <i class="bi bi-question-circle" title="Indicar los entregables con los que se cuenta como evidencia de la acción en cuestión (lista de asistencia, evidencia fotográfica o nota periodística). Estos deberán anexarse a este formato"></i>
-          </p>
-          <div className="check-group">
-            <label className="check-item">
-              <input 
-                type="checkbox"
-                name="lista_asistencia"
-                id="lista_asistencia"
-                checked={nexo.lista_asistencia}
-                onChange={(e) => setNexo({ ...nexo, lista_asistencia: e.target.checked })} 
-              />Lista de asistencia
-            </label>
+            <div className="input-container-horizontal">
+              <p className="form-subtitle">Anexos
+                <i class="bi bi-question-circle" title="Indicar los entregables con los que se cuenta como evidencia de la acción en cuestión (lista de asistencia, evidencia fotográfica o nota periodística). Estos deberán anexarse a este formato"></i>
+              </p>
+              
+              <div className="check-group">
+                <label className="check-item">
+                  <input 
+                  type="checkbox"
+                  name="lista_asistencia"
+                  id="lista_asistencia"
+                  checked={nexo.lista_asistencia}
+                  onChange={(e) => setNexo({ ...nexo, lista_asistencia: e.target.checked })} 
+                  />Lista de asistencia
+                </label>
+                
+                <label className="check-item">
+                  <input 
+                  type="checkbox"
+                  id='evidencia_fotografica'
+                  name='evidencia_fotografica'
+                  checked={nexo.evidencia_fotografica}
+                  onChange={(e) => setNexo({ ...nexo, evidencia_fotografica: e.target.checked })}
+                  />Evidencia fotográfica
+                  </label>
+                  
+                <label className="check-item">
+                  <input 
+                  type="checkbox"
+                  id='nota_periodica'
+                  name='nota_periodica'
+                  checked={nexo.nota_periodica}
+                  onChange={(e) => setNexo({ ...nexo, nota_periodica: e.target.checked })} 
+                  />Nota periodística
+                </label>
+              </div>
+            </div>
 
-            <label className="check-item">
-              <input 
-                type="checkbox"
-                id='evidencia_fotografica'
-                name='evidencia_fotografica'
-                checked={nexo.evidencia_fotografica}
-                onChange={(e) => setNexo({ ...nexo, evidencia_fotografica: e.target.checked })}
-              />Evidencia fotográfica
-            </label>
-
-            <label className="check-item">
-              <input 
-                type="checkbox"
-                id='nota_periodica'
-                name='nota_periodica'
-                checked={nexo.nota_periodica}
-                onChange={(e) => setNexo({ ...nexo, nota_periodica: e.target.checked })} 
-              />Nota periodística
-            </label>
+            <div className="input-container-horizontal">
+              <p className="form-subtitle">Total de la población atendida
+                <i class="bi bi-question-circle" title="Sumatoria de los asistentes"></i>
+              </p>
+              
+              <div className="form-campo">
+                <input
+                type="number"
+                value={total}
+                id="total_pobl"
+                name="total_pobl"
+                readOnly
+                className="form-control"
+                />
+              </div>
+            </div>
           </div>
 
           <p className="form-subtitle">Comentarios/Observaciones
