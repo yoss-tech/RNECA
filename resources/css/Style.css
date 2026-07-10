@@ -91,6 +91,10 @@ body {
     font-size: 20px;
 }
 
+.icono:hover {
+    color: var(--beige-color);
+}
+
 .menu-toggle {
     display: none;
     font-size: 28px;
@@ -510,6 +514,14 @@ input[type="file"] {
     color: var(--gris-color);
     font-size: 18px;
 }
+
+.input-container-horizontal {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    width: 100%;
+    
+}
      
 /* ================= BOTONES ================= */
 .btn-primario,
@@ -620,7 +632,9 @@ input[type="file"] {
 }
 
 .btn-cerrar-sesion:hover{
-    background: var(--fondo-color);
+    background: var(--ginda-color);
+    color: var(--blanco-color);
+
 }
 
 /* ================= ICONOS ================= */
