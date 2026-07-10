@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
+import ECA_Correccion from "../Modals/ECA_Correccion.jsx";
 
 function VECA_ConsultaReg() {
+
+  const [mostrarCorreccion, setMostrarCorreccion] = useState(false);
 
   return (
   <div className="page-container">
@@ -32,7 +35,14 @@ function VECA_ConsultaReg() {
           <td class="estado correcciones">Correcciones</td>
           <td>DIA de MES del AÑO</td>
           <td className="btn-container-horizontal">
-            <button type="button" className="btn-negativo">Corregir</button>
+            <button type="button" className="btn-negativo" onClick={() => setMostrarCorreccion(true)}>
+              Ver correcciones
+            </button>
+            {mostrarCorreccion && (
+              <ECA_Correccion
+                cerrarModal={() => setMostrarCorreccion(false)}
+              />
+            )}
           </td>
         </tr>
         

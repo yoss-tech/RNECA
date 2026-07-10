@@ -21,9 +21,7 @@ function VECA_Inicio() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [submenuOpen, setSubmenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
-  const [completedStep1, setCompletedStep1] = useState(false);
-  const [completedStep2, setCompletedStep2] = useState(false);
-  const [completedStep3, setCompletedStep3] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [mostrarModal2, setMostrarModal2] = useState(false);
 
@@ -161,20 +159,6 @@ function VECA_Inicio() {
                     Memoria Fotográfica</a>
                 </div>
               </li>
-
-              <li>
-                <div className="submenu-item">
-                  <a
-                    className={vistaActual === "presente" ? "active" : ""}
-                    onClick={() => setVistaActual("presente")}
-                    style={{ cursor: "pointer" }}>
-                    <i className="bi bi-clock"></i>
-                    {/*Solo cuando este completado*/}
-                    {/*<i className="bi bi-check-circle"></i>*/}
-                    Presente
-                  </a>
-                </div>
-              </li>
             </ul>
           )}
         </div>
@@ -246,34 +230,24 @@ function VECA_Inicio() {
           </>
         )}
 
-        {vistaActual === "poblacion" && (
+        {vistaActual === "poblacion" && currentStep >= 1 && (
           <VECA_Poblacion
             onComplete={() => {
-              setCompletedStep1(true);
+              setCurrentStep(2);
             }}
           />
         )}
-        {vistaActual === "actividades" && (
+        {vistaActual === "actividades" && currentStep >= 2 && (
           <VECA_Actividades
             onComplete={() => {
-              setCompletedStep2(true);
+              setCurrentStep(3);
             }}
           />
         )}
-        {vistaActual === "memoria" && (
+        {vistaActual === "memoria" && currentStep >= 3 && (
           <VECA_Memoria
-            onComplete={() => {
-              setCompletedStep3(true);
-            }}
           />
         )}
-        {vistaActual === "presente" && (
-          completedStep1 && completedStep2 && completedStep3 
-          ? <VECA_Presente />
-          : <div>
-
-            </div>
-          )}
         {vistaActual === "vista_previa" && (
            //<VECA_VistaP />
           <PanelDocumento />
