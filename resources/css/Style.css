@@ -610,7 +610,7 @@ input[type="file"] {
     border: none;
 }
 
-.btn-cerrar-sesion{
+.btn-cerrar-sesion, .btn-modificar, .btn-eliminar, .btn-evidencia{
     width: 100%;
     padding: 12px 16px;
     border: none;
@@ -621,6 +621,21 @@ input[type="file"] {
 
 .btn-cerrar-sesion:hover{
     background: var(--fondo-color);
+}
+
+.btn-modificar:hover{
+    background: var(--fondo-color);
+
+}
+
+.btn-eliminar:hover{
+    background: var(--fondo-color);
+
+} 
+
+.btn-evidencia:hover{
+    background: var(--fondo-color);
+
 }
 
 /* ================= ICONOS ================= */
