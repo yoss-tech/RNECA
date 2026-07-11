@@ -1,12 +1,51 @@
-import React, { useState  } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Crear_Actividad from "../Modals/Crear/Crear_Actividad.jsx";
-import Opciones from "../Modals/Opciones.jsx";
+// El modal Crear_Memoria es el que se usa para adjuntar evidencia fotográfica.
+import Crear_Memoria from "../Modals/Crear/Crear_Memoria.jsx";
+import { getProgramData } from "../../Components/api/program.jsx"
 
 function VECA_Actividades() {
 
   const [mostrarModal, setMostrarModal] = useState(false);
-  const [mostrarOpciones, setMostrarOpciones] = useState(false);
+  const [mostrarModalEvidencia, setMostrarModalEvidencia] = useState(false);
+  const [actividadSeleccionada, setActividadSeleccionada] = useState(null);
+  const [opcionesAbiertas, setOpcionesAbiertas] = useState(null); // Almacena el índice de la fila con el menú abierto
+
+  const [actvidades, setActividades] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  // const [CerrarSesion, setCerrarSesion] = useState(false); // Esta variable no se usa, se puede eliminar.
+
+  useEffect(() => {
+    const loadInfo = async () => {
+      try {
+        const response = await getProgramData();
+        setActividades(response || []); // Asigna la respuesta directamente. Si es null/undefined, usa un array vacío.
+      }
+      catch (error) {
+        console.log("Error al cargar los datos del programa")
+      }
+      finally {
+        setCargando(false);
+      }
+    }
+
+    loadInfo();
+  }, []);
+
+  const toggleOpciones = (index) => {
+    // Si el menú actual ya está abierto, ciérralo. Si no, ábrelo.
+    setOpcionesAbiertas(opcionesAbiertas === index ? null : index);
+  };
+
+  const handleAdjuntarEvidencia = (actividad) => {
+    setActividadSeleccionada(actividad);
+    setMostrarModalEvidencia(true);
+  };
+
+  if (cargando) {
+    return <p>Cargando datos...</p>
+  }
 
   return (
     <div className="page-container">
@@ -21,7 +60,14 @@ function VECA_Actividades() {
           cerrarModal={() => setMostrarModal(false)}
         />
       )}
-      <table class="tabla-registros">
+      {/* Modal para adjuntar evidencia */}
+      {mostrarModalEvidencia && actividadSeleccionada && (
+        <Crear_Memoria
+          cerrarModal={() => setMostrarModalEvidencia(false)}
+          actividad={actividadSeleccionada} // Pasamos la actividad seleccionada al modal
+        />
+      )}
+      <table className="tabla-registros">
         <thead>
           <tr>
             <th className="th-start">Dirección</th>
@@ -30,32 +76,44 @@ function VECA_Actividades() {
             <th className="th-start">Habitantes atendidos</th>
             <th className="th-start">Fecha</th>
             <th>Acciones</th>
-        </tr>
-      </thead>
-      
-      <tbody>
-        <tr>
-          <td>
-            <p className="form-subtitle">MUNICIPIO</p>
-            <p className="card-text">LOCALIDAD</p>
-          </td>
-          <td>ESCOLAR/COMUNITARIA</td>
-          <td>ACTIVIDADES</td>
-          <td>HABITANTES</td>
-          <td>FECHA</td>
-          <td>
-            <button className="btn-acciones" onClick={() => setMostrarOpciones(true)}>
-              <i class="bi bi-gear"></i>
-            </button>
-            {mostrarOpciones && (
-              <Opciones
-                cerrarModal={() => setMostrarOpciones(false)}
-              />
-            )}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </tr>
+        </thead>
+
+        <tbody>
+          {actvidades.map((item, index) => (
+            <tr key={index}>
+              <td>
+                <p className="form-subtitle">{item.municipio}</p>
+                <p className="card-text">{item.localidad}</p>
+              </td>
+              <td>{item.tipo_platica}</td>
+              <td>{item.otras_activ}</td>
+              <td>{item.pobl_ate}</td>
+              <td>{new Date(item.fecha_mes).toLocaleDateString()}</td>
+              <td style={{ position: 'relative' }}> {/* Contenedor relativo para el menú */}
+                <div>
+                  <button className="btn-acciones" onClick={() => toggleOpciones(index)}>
+                    <i className="bi bi-gear"></i>
+                  </button>
+                  {opcionesAbiertas === index && (
+                    <div className="menu-perfil" style={{ position: 'absolute', right: 0, top: '100%', zIndex: 10 }}>
+                      <button className="btn-evidencia" onClick={() => handleAdjuntarEvidencia(item)}>
+                        Adjuntar evidencia
+                      </button>
+                      <button className="btn-modificar">
+                        Modificar
+                      </button>
+                      <button className="btn-eliminar">
+                        Eliminar
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div >
   );
 }

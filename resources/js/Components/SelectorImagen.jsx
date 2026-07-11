@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 
-function SelectorImagen() {
+function SelectorImagen({ onChange, multiple = false }) {
   const [imagenes, setImagenes] = useState([]);
 
   const manejarImagen = (e) => {
     const archivos = Array.from(e.target.files);
 
+    // Llama a la función `onChange` del componente padre para pasarle los archivos.
+    if (onChange) {
+      onChange(e); // Pasamos el evento completo para que el padre pueda acceder a e.target.files
+    }
+
     if (archivos.length > 0) {
-      const urls = archivos.map((archivo) => URL.createObjectURL(archivo));
+      const urls = archivos.map(archivo => URL.createObjectURL(archivo));
       setImagenes(urls);
     }
   };
@@ -15,9 +20,10 @@ function SelectorImagen() {
   return (
     <div>
       <input
+        id="imagen"
         type="file"
         accept="image/*"
-        multiple
+        multiple={multiple}
         onChange={manejarImagen}
         className="selector-control"
       />

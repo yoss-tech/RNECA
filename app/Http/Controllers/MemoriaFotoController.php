@@ -24,10 +24,10 @@ class MemoriaFotoController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'descripcion' => 'required|string',
-            'titulo' => 'required|string',
-            'descripcion_act' => 'required|string',
-            'ruta_img' => 'required|image|mimes:png,jpg|max:5000'
+            'descrip_gen' => 'required|string'
+            // 'titulo' => 'required|string',
+            // 'descripcion_act' => 'required|string',
+            // 'ruta_img' => 'required|image|mimes:png,jpg|max:5000'
         ]);
 
         // 1. Validar primero
@@ -40,13 +40,13 @@ class MemoriaFotoController extends Controller
             return response()->json($data, 400);
         }
 
-        $path = $request->file('ruta_img')->store('uploads', 'public');
+        // $path = $request->file('ruta_img')->store('uploads', 'public');
 
         $memoria_foto = memoria_foto::create([
-            'descripcion' => $request->descripcion,
-            'titulo' => $request->titulo,
-            'descripcion_act' => $request->descripcion_act,
-            'ruta_img' => $path,
+            'descrip_gen' => $request->descrip_gen,
+            // 'titulo' => $request->titulo,
+            // 'descripcion_act' => $request->descripcion_act,
+            // 'ruta_img' => $path,
             'id_claveEca' => $eca->clave_eca, // Se asigna automáticamente
         ]);
 
@@ -64,10 +64,5 @@ class MemoriaFotoController extends Controller
         ];
 
         return response()->json($data, 201);
-    }
-
-    public function show()
-    {
-        //
     }
 }

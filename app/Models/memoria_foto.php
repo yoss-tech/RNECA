@@ -23,19 +23,16 @@ class memoria_foto extends Model
         });
     }
     
-    protected $appends = ['ruta_img'];
+    // protected $appends = ['ruta_img'];
 
     protected $fillable = [
         'id_memoría',
-        'descripcion',
-        'titulo',
-        'descripcion_act',
-        'ruta_img',
+        'descrip_gen',
         'id_claveEca'
     ];
 
 
-    public function getImagePathAttribute(){
-        return $this -> imagen_path ? asset(Storage::url($this->imagen_path)) : null;
-    }
+    // public function getImagePathAttribute(){
+    //     return $this -> imagen_path ? asset(Storage::url($this->imagen_path)) : null;
+    // }
 }

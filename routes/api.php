@@ -11,6 +11,7 @@ use App\Http\Controllers\EcaController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\EspacioController;
 use App\Http\Controllers\MemoriaFotoController;
+use App\Http\Controllers\ActividadMemoController;
 
 
 
@@ -42,17 +43,26 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Programa_cultura
     Route::post('/create_program', [ProgramController::class, 'store']);
 
-    //Espacio de cultura
+    // Espacio de cultura
     Route::post('/create_espacio', [EspacioController::class, 'store']);
 
-    //Memoria fotografica
+    // Memoria fotografica
     Route::post('/create_memoria', [MemoriaFotoController::class, 'store']);
 
+    // Actividades para la memoria fotografica
+    Route::post('/create_activ', [ActividadMemoController::class, 'store']);
+
+    // Informacion del espacio de cultura
     Route::get('/infoEspacio', [EspacioController::class, 'index']);
 
+    // Informacion del programa de cultura
     Route::get('/infoProgram', [ProgramController::class, 'index']);
 
-    Route::get('/infoMemoria', [MemoriaFotoController::class, 'index']);
+    // Informacion de la memoria fotografica
+    Route::get('/infoMemoria', [ActividadMemoController::class, 'index']);
+
+    // Informacion de la actividad
+    Route::get('/infoActiv', [ActividadMemoController::class, 'index']);
 });
 
 

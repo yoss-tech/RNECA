@@ -50,7 +50,6 @@ class EspacioController extends Controller
             return response()->json(['message' => 'El usuario no tiene un ECA asignado'], 403);
         }
 
-        //Registrar el esapcio de cultura primero
         $validator = Validator::make($request->all(), [
             'total_pobl' => 'required',
             'comentarios' => 'required',
