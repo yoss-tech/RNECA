@@ -23,7 +23,8 @@ class ProgramController extends Controller
                 'pc.otras_activ',
                 'pc.alumnos_Aten',
                 'pc.pobl_ate',
-                'pc.fecha_mes'
+                'pc.fecha_mes',
+                'pc.id_program'
             )
             ->get();
         return response()->json($programs); // Devuelve un array de objetos.

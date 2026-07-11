@@ -7,7 +7,7 @@ const apiBaseUrl = import.meta.env.APP_URL ||  'http://127.0.0.1:8000' ||'http:/
 const axiosInstance = axios.create({
     // En local/Docker, el navegador accede al backend por localhost:8000
     baseURL: `${apiBaseUrl}/api`,
-    timeout: 10000,
+    timeout: 20000,
     // headers: {
     //     'Content-Type': 'application/json',
     //     'Accept': 'application/json',

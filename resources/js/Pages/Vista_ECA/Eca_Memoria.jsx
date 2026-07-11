@@ -1,18 +1,38 @@
-import React, { useState } from "react";
-import { create_memoria } from "../../Components/api/memoria.jsx";
+import React, { useState, useEffect } from "react";
+import { create_memoria, get_activ } from "../../Components/api/memoria.jsx";
+import { getProgramData } from "../../Components/api/program.jsx";
 
 
 function VECA_Memoria({ onComplete }) {
 
-  const [descripcion, setDescripcion] = useState('');
+  // Crear la descripcion de la memoria
+  const [descrip_gen, setDescripcion] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     await create_memoria({
-      descripcion
+      descrip_gen
     });
     onComplete();
   };
+
+  //Traer datos de la memoria fotografica completa
+  const [memoria, setMemoria] = useState({});
+
+  useEffect (() => {
+      const loadInfo = async () => {
+        try {
+          const response = await get_activ();
+          setActividades(response || []); // Asigna la respuesta directamente. Si es null/undefined, usa un array vacío.
+          console.log(response);
+        }
+        catch (error) {
+          console.log("Error al cargar los datos del programa")
+        }
+      }
+  
+      loadInfo();
+    }, []);
 
 
   return (
@@ -25,7 +45,7 @@ function VECA_Memoria({ onComplete }) {
           <div className="form-campo">
             <label className="form-label">Descripción general de la memoria fotográfica</label>
             <textarea
-              id="descripcion"
+              id="descrip_gen"
               ows="3"
               placeholder="Ingresa la descripción general"
               className="form-control"

@@ -1,32 +1,34 @@
 import React, { useState } from "react";
 import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
-import { create_program } from "../../../Components/api/program.jsx";
+import SelectorImagen from "../../../Components/SelectorImagen.jsx";
+import { create_activ } from "../../../Components/api/memoria.jsx";
 
-function Crear_Memoria({ cerrarModal }) {
-    const [descripcion, setDescripcion] = useState('');
-    const [titulo, setTitulo] = useState('');
-    const [descripcion_act, setDescripcion_act] = useState('');
-    const [imagen, setImagen] = useState(null);
-    
-    const handleImageChange = (e) => {
-      setImagen(e.target.files[0]);
-    };
-    
-    console.log(imagen);
-    
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      await create_memoria({
-        titulo,
-        descripcion,
-        descripcion_act,
-        imagen,
+function Crear_Memoria({ cerrarModal, actividad }) {
+  // Estado para la descripción de la actividad fotográfica
+  const [descripcion, setDescripcion] = useState('');
+  // Estado para guardar la lista de archivos de imagen seleccionados
+  const [imagenes, setImagenes] = useState([]); // Este estado guardará los archivos (File objects)
+
+  const handleImageChange = (e) => {
+    // e.target.files es una lista de archivos, la convertimos a un array
+    if (e.target.files) {
+      setImagenes(Array.from(e.target.files));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Llamamos a la función de la API con todos los datos que el backend necesita
+    await create_activ({
+      descripcion: descripcion,
+      id_program: actividad.id_program, // El ID viene de la actividad seleccionada
+      imagenes: imagenes, // El array de archivos de imagen
     });
-    onComplete();
-    };
+    cerrarModal(); // Cerramos el modal después de guardar
+  };
 
-    return (
+  return (
     <div className="overlay">
       <div className="modal-box">
         <div className="modal-head">
@@ -37,32 +39,33 @@ function Crear_Memoria({ cerrarModal }) {
           <form className="form-registro" onSubmit={handleSubmit}>
             <div className="form-registro">
               <div className="form-campo">
-                <label className="form-label">Título</label>
+                <label className="form-label">Actividad (Título)</label>
                 <input
                   type="text"
                   placeholder="Ingresa el título de la actividad"
                   className="form-control"
                   id="titulo"
-                  onChange={(e) => setTitulo(e.target.value)}
+                  value={actividad?.otras_activ || 'Cargando...'} // Usamos el título de la actividad
+                  readOnly // Hacemos el campo de solo lectura
                 />
               </div>
-              
+
               <div className="form-campo">
                 <label className="form-label">Descripción de la actividad</label>
-                <div className="form-campo">
-                  <textarea
-                    rows="3"
-                    placeholder="Ingresa la descripción de la actividad"
-                    className="form-control"
-                    id="descripcion_act"
-                    onChange={(e) => setDescripcion_act(e.target.value)}
-                  ></textarea>
-                </div>
+                <textarea
+                  rows="3"
+                  placeholder="Ingresa la descripción de la evidencia fotográfica"
+                  className="form-control"
+                  id="descripcion"
+                  value={descripcion}
+                  onChange={(e) => setDescripcion(e.target.value)}
+                ></textarea>
               </div>
-              
+
               <div className="form-campo">
                 <label className="form-label">Subir fotográfias de la actividad:</label>
-                <input type="file" accept="image/*" id="imagen" onChange={handleImageChange}/>
+                {/* Asegúrate que SelectorImagen pase el 'multiple' al input real */}
+                <SelectorImagen onChange={handleImageChange} multiple={true} />
               </div>
             </div>
           </form >
