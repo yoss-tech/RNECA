@@ -12,7 +12,6 @@ import Admi_DireMu from "./Admi_DireMu.jsx";
 import Admi_ECAS from "./Admi_ECAS.jsx";
 import Notificaciones_Admi from "../Modals/Notificaciones/Notificacion_Admi.jsx";
 import Avisos_Admi from "../Modals/Avisos/Avisos_Admi.jsx";
-import Diseño_Formularios from "./Admi_DiseñForm.jsx";
 
 
 function Admi_Inicio() {
@@ -171,15 +170,6 @@ function Admi_Inicio() {
               </li>
             </ul>
           )}
-        </div>
-        <div className="form-group">
-          <a
-            className={vistaActual === "diseñador" ? "active" : ""}
-            onClick={() => setVistaActual("diseñador")}
-            style={{ cursor: "pointer" }}>
-            <i class="bi bi-brush"></i>
-            Diseñador de formularios
-          </a>
         </div>
       </div>
 
