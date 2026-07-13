@@ -46,10 +46,7 @@ class ProgramController extends Controller
             'localidad' => 'required',
             'tipo_platica' => 'required',
             'otras_activ' => 'required',
-            //'alumnos_Aten' => 'required',
-            //'pobl_ate' => 'required',
             'fecha_mes' => 'required',
-            // 'id_fecha' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -87,6 +84,29 @@ class ProgramController extends Controller
         ];
 
         return response()->json($data, 201);
+    }
+
+    public function destroy($id)
+    {
+        $program= program::find($id);
+
+        if (!$program) {
+            $data = [
+                'message' => 'Programa de cultura no encontrado',
+                'status' => 404
+            ];
+            return response()->json($data, 404);
+        }
+
+        $program->delete();
+
+        $data = [
+            'message' => 'Programa de cultura eliminado correctamente',
+            'status' => 200
+        ];
+
+        return response()->json($data, 200);
+        
     }
 
     public function show()

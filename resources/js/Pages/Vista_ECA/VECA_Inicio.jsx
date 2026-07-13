@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "/resources/css/Style.css";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -11,6 +11,7 @@ import VECA_ConsultaReg from "./Eca_ConsultaRegistros.jsx";
 import { Head } from "@inertiajs/react";
 import { mostrarSoloMes, dateLimit } from "../../Components/functions.jsx";
 import { logoutUser, checkAuth } from "../../Components/api/auth.jsx";
+import { checkEspacioRegistro } from "../../Components/api/espacio.jsx";
 import Notificaciones_Eca from "../Modals/Notificaciones/NoticacionECA.jsx";
 import PerfilECA from "../Modals/Perfiles/PerfilECA.jsx";
 import Avisos_eca from "../Modals/Avisos/AvisosECA.jsx";
@@ -24,6 +25,16 @@ function VECA_Inicio() {
   const [currentStep, setCurrentStep] = useState(1);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [mostrarModal2, setMostrarModal2] = useState(false);
+
+  useEffect(() => {
+    const checkRegistro = async () => {
+      const data = await checkEspacioRegistro();
+      if (data.registro_existente) {
+        setCurrentStep(4);
+      }
+    };
+    checkRegistro();
+  }, []);
 
   const menuItems = document.querySelectorAll('.sidebar .form-group a');
 

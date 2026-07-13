@@ -35,6 +35,8 @@ Route::post('/users', [UsersController::class, 'store']);
 
 // Agregamos el middleware para asegurar que auth()->user() no sea null
 Route::middleware(['auth:sanctum'])->group(function () {
+    
+    //METODOS POST
     //ECA    
     Route::get('/infoEca', [EcaController::class, 'index']);
     Route::get('/eca/{eca}', [EcaController::class, 'show']);
@@ -45,6 +47,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Espacio de cultura
     Route::post('/create_espacio', [EspacioController::class, 'store']);
+    Route::get('/espacio/check', [EspacioController::class, 'checkRegistroActual']);
 
     // Memoria fotografica
     Route::post('/create_memoria', [MemoriaFotoController::class, 'store']);
@@ -52,6 +55,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Actividades para la memoria fotografica
     Route::post('/create_activ', [ActividadMemoController::class, 'store']);
 
+
+    //METODOS GET
     // Informacion del espacio de cultura
     Route::get('/infoEspacio', [EspacioController::class, 'index']);
 
@@ -63,6 +68,21 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Informacion de la actividad
     Route::get('/infoActiv', [ActividadMemoController::class, 'index']);
+
+
+    //METODOS DELETE
+    // Eliminar una actividad de la memoria
+    Route::delete('/delete_activ/{id}', [ActividadMemoController::class, 'destroy']);
+
+    //Eliminar la memoria fotografica (Completa)
+    Route::delete('/delete_memoria/{id}', [MemoriaFotoController::class, 'destroy']);
+
+    //Eliminar el programa de cultura esto incluira las actividades de la memoria
+    Route::delete('/delete_program/{id}', [ProgramController::class, 'destroy']);
+
+    //Eliminar el espacio de cultura
+    Route::delete('/delete_espacio/{id}', [EspacioController::class, 'destroy']);
+    
 });
 
 

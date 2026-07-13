@@ -3,11 +3,13 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import Crear_Actividad from "../Modals/Crear/Crear_Actividad.jsx";
 // El modal Crear_Memoria es el que se usa para adjuntar evidencia fotográfica.
 import Crear_Memoria from "../Modals/Crear/Crear_Memoria.jsx";
-import { getProgramData } from "../../Components/api/program.jsx"
+import { getProgramData, delete_program } from "../../Components/api/program.jsx"
+import Mod_Actividad from "../../Pages/Modals/Modificar/Mod_Actividad.jsx";
 
 function VECA_Actividades() {
 
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [mostrarModalMod, setMostrarModalMod] = useState(false);
   const [mostrarModalEvidencia, setMostrarModalEvidencia] = useState(false);
   const [actividadSeleccionada, setActividadSeleccionada] = useState(null);
   const [opcionesAbiertas, setOpcionesAbiertas] = useState(null); // Almacena el índice de la fila con el menú abierto
@@ -43,9 +45,28 @@ function VECA_Actividades() {
     setMostrarModalEvidencia(true);
   };
 
-  if (cargando) {
-    return <p>Cargando datos...</p>
-  }
+  const handleModificarActividad = (actividad) => {
+    setActividadSeleccionada(actividad);
+    setMostrarModalMod(true);
+  };
+
+  const handleDelete = async (id_program) => {
+    // Pedir confirmación al usuario
+    if (window.confirm("¿Estás seguro de que deseas eliminar esta actividad?")) {
+      try {
+        const response = await delete_program(id_program);
+        if (response) { // Asumiendo que una respuesta exitosa no es null
+          // Actualizar el estado para remover la actividad eliminada de la UI
+          setActividades(actvidades.filter(act => act.id_program !== id_program));
+        }
+      } catch (error) {
+        console.error("Error al eliminar la actividad:", error);
+      }
+    }
+  };
+  // if (cargando) {
+  //   return <p>Cargando datos...</p>
+  // }
 
   return (
     <div className="page-container">
@@ -67,6 +88,14 @@ function VECA_Actividades() {
           actividad={actividadSeleccionada} // Pasamos la actividad seleccionada al modal
         />
       )}
+      {/* Modal para modificar actividad */}
+      {mostrarModalMod && (
+        <Mod_Actividad
+          cerrarModal={() => setMostrarModalMod(false)}
+          actividad={actividadSeleccionada}
+        />
+      )}
+
       <table className="tabla-registros">
         <thead>
           <tr>
@@ -100,10 +129,10 @@ function VECA_Actividades() {
                       <button className="btn-evidencia" onClick={() => handleAdjuntarEvidencia(item)}>
                         Adjuntar evidencia
                       </button>
-                      <button className="btn-modificar">
+                      <button className="btn-modificar" onClick={() => handleModificarActividad(item)}>
                         Modificar
                       </button>
-                      <button className="btn-eliminar">
+                      <button className="btn-eliminar" onClick={() => handleDelete(item.id_program)}>
                         Eliminar
                       </button>
                     </div>

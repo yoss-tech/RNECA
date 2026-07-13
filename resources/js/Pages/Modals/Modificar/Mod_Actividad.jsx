@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
 
-function Mod_Actividad({ cerrarModal }) {
+function Mod_Actividad({ cerrarModal, actividad }) {
     
     return (
     <div className="overlay">
@@ -69,7 +69,7 @@ function Mod_Actividad({ cerrarModal }) {
                 </textarea>
               </div>
               
-              {formData.tipo_platica === "escolar" && (
+              
                 <div className="form-campo">
                   <label className="form-label">Alumnos Atendidos</label>
                   <input
@@ -80,9 +80,9 @@ function Mod_Actividad({ cerrarModal }) {
                     className="form-control"
                   />
                 </div>
-              )}
               
-              {formData.tipo_platica === "comunitaria" && (
+              
+              
                 <div className="form-campo">
                   <label className="form-label">Población atendida</label>
                   <input
@@ -93,7 +93,7 @@ function Mod_Actividad({ cerrarModal }) {
                     className="form-control"
                   />
                 </div>
-              )}
+              
               
               <div className="form-campo" class="mb-0">
                 <label className="form-label">Fecha de la actividad</label>

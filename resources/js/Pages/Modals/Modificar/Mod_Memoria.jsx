@@ -3,7 +3,7 @@ import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
 import { create_program } from "../../../Components/api/program.jsx";
 
-function Mod_Memoria({ cerrarModal }) {
+function Mod_Memoria({ cerrarModal, memoria }) {
     const [descripcion, setDescripcion] = useState('');
     const [titulo, setTitulo] = useState('');
     const [descripcion_act, setDescripcion_act] = useState('');
