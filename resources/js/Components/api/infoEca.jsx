@@ -13,7 +13,7 @@ export const infoEca = async () =>{
     }
 }
 
-// metodo post para la creación del oficio hecho por el ECA
+//Función con método post para la creación del oficio hecho por el ECA
 export const createOfice = async () => {
     try{
         const response = await axiosInstance.post()

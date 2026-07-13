@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { create_memoria, get_activ } from "../../Components/api/memoria.jsx";
 import { getProgramData } from "../../Components/api/program.jsx";
+import Mod_Memoria from "../../Pages/Modals/Modificar/Mod_Memoria.jsx";
 
 
-function VECA_Memoria({ onComplete }) {
+function VECA_Memoria({ onCompletes }) {
 
   // Crear la descripcion de la memoria
   const [descrip_gen, setDescripcion] = useState('');
+  const [mostrarModalMod, setMostrarModalMod] = useState(false);
+  const [memoriaSeleccionada, setMemoriaSeleccionada] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,13 +20,13 @@ function VECA_Memoria({ onComplete }) {
   };
 
   //Traer datos de la memoria fotografica completa
-  const [memoria, setMemoria] = useState({});
+  const [memoria, setMemoria] = useState([]);
 
   useEffect (() => {
       const loadInfo = async () => {
         try {
           const response = await get_activ();
-          setActividades(response || []); // Asigna la respuesta directamente. Si es null/undefined, usa un array vacío.
+          setMemoria(response || []); // Asigna la respuesta directamente. Si es null/undefined, usa un array vacío.
           console.log(response);
         }
         catch (error) {
@@ -32,7 +35,12 @@ function VECA_Memoria({ onComplete }) {
       }
   
       loadInfo();
-    }, []);
+  }, []);
+
+  const handleModificarMemoria = (memoria) => {
+    setMemoriaSeleccionada(memoria);
+    setMostrarModalMod(true);
+  };
 
 
   return (
@@ -49,6 +57,7 @@ function VECA_Memoria({ onComplete }) {
               ows="3"
               placeholder="Ingresa la descripción general"
               className="form-control"
+              value={memoria.descrip_gen || ''}
               onChange={(e) => setDescripcion(e.target.value)}
             ></textarea>
           </div>
@@ -66,16 +75,28 @@ function VECA_Memoria({ onComplete }) {
             <th>Acciones</th>
           </tr>
         </thead>
+        {
+          mostrarModalMod && (
+            <Mod_Memoria
+              cerrarModal={() => setMostrarModalMod(false)}
+              actividad={memoriaSeleccionada}
+            />
+          )
+        }
         
         <tbody>
-          <tr>
-            <td>TÍTULO</td>
-            <td>DESCRIPCIÓN</td>
-            <td>FOTOGRAFÍAS</td>
-            <td className="btn-container-horizontal">
-              <button type="button" className="btn-negativo">Modificar</button>
-            </td>
-          </tr>
+          {memoria.map((item, index) => (
+            <tr key={index}>
+              <td>{item.otras_activ}</td>
+              <td>{item.descripcion}</td>
+              <td>
+                <button type="button" className="btn-primario">Ver fotografías</button>
+              </td>
+              <td>
+                <button type="button" className="btn-negativo" onClick={() => handleModificarMemoria(item)}>Modificar</button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>          
     </div>

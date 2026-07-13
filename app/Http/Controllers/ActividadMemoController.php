@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
@@ -26,14 +27,15 @@ class ActividadMemoController extends Controller
             ->select(
                 'mf.descrip_gen',
                 'am.descripcion',
-                'fa.ruta_img',
+                'pc.otras_activ',
                 'am.id_actividad',
                 'am.id_memoria',
                 'am.id_program',
-                'id_claveEca'
-               )
-            ->where('id_claveEca', $eca->id_claveEca)
-        ->get();
+                'mf.id_claveEca'
+            )
+            ->where('mf.id_claveEca', $eca->clave_eca)
+            ->distinct()
+            ->get();
 
         return response()->json($actividad_memo);
     }
@@ -106,7 +108,6 @@ class ActividadMemoController extends Controller
             'actividad' => $actividad,
             'imagenes'  => $imagenesGuardadas,
         ], 201);
-
     }
 
     /**

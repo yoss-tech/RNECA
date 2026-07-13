@@ -22,3 +22,13 @@ export const getProgramData = async () => {
         return null;
     }
 }
+
+export const delete_program = async (id) => {
+    try {
+        const response = await axiosInstance.delete(`/delete_program/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error en delete_program:", error);
+        return null;
+    }
+}
