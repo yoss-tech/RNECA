@@ -17,28 +17,28 @@ function Crear_ECAS({ cerrarModal }) {
                 <div className="modal-body">
                     <div className="form-group">
                         <label className="card-subtitle">Municipio:</label>
-                        <input type="text" className="form-control" placeholder="Ingresa el municipio"/>
+                        <input type="text" className="form-control" placeholder="Ingresa el municipio" title="Ingresa el municipio"/>
                     </div>
 
                     <div className="form-group">
                         <label className="card-subtitle">Instancia operativa:</label>
-                        <input type="text" className="form-control" placeholder="Ingresa el nombre de la instancia operativa"/>
+                        <input type="text" className="form-control" placeholder="Ingresa el nombre de la instancia operativa" title="Ingresa el nombre de la instancia operativa" />
                     </div>
 
                     <div className="form-group">
                         <label className="card-subtitle">Nombre:</label>
-                        <input type="text" className="form-control" placeholder="Ingresa el nombre del eca"/>
+                        <input type="text" className="form-control" placeholder="Ingresa el nombre del eca" title="Ingresa el nombre del eca" />
                     </div>
 
                     <div className="form-group">
                         <label className="card-subtitle">Correo:</label>
-                        <input type="email" className="form-control" placeholder="Ingresa el correo"/>
+                        <input type="email" className="form-control" placeholder="Ingresa el correo" title="Ingresa el correo"/>
                     </div>
 
                     <div className="form-group">
                         <label className="card-subtitle">Crear contraseña:</label>
                         <div className="input-password">
-                            <input type={mostrarPassword ? "text" : "password"} className="form-control" placeholder="Ingresa una contraseña"/>
+                            <input type={mostrarPassword ? "text" : "password"} className="form-control" placeholder="Ingresa una contraseña" title="Ingresa una contraseña"/>
                             <i className={mostrarPassword ? "bi bi-eye-slash" : "bi bi-eye"} onClick={() => setMostrarPassword(!mostrarPassword)}></i>
                         </div>
                     </div>

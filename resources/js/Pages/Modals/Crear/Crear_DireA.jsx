@@ -17,18 +17,18 @@ function Crear_DirectorArea({ cerrarModal }) {
                 <div className="modal-body">
                     <div className="form-group">
                         <label className="card-subtitle">Nombre:</label>
-                        <input type="text" className="form-control" placeholder="Ingresa el nombre del director de área"/>
+                        <input type="text" className="form-control" placeholder="Ingresa el nombre del director de área" title="Ingresa el nombre del director de área"/>
                     </div>
 
                     <div className="form-group">
                         <label className="card-subtitle">Correo:</label>
-                        <input type="email" className="form-control" placeholder="Ingresa el correo"/>
+                        <input type="email" className="form-control" placeholder="Ingresa el correo" title="Ingresa el correo"/>
                     </div>
 
                     <div className="form-group">
                         <label className="card-subtitle">Crear contraseña:</label>
                         <div className="input-password">
-                            <input type={mostrarPassword ? "text" : "password"} className="form-control" placeholder="Ingresa una contraseña"/>
+                            <input type={mostrarPassword ? "text" : "password"} className="form-control" placeholder="Ingresa una contraseña" title="Ingresa una contraseña" />
                             <i className={mostrarPassword ? "bi bi-eye-slash" : "bi bi-eye"} onClick={() => setMostrarPassword(!mostrarPassword)}></i>
                         </div>
                     </div>

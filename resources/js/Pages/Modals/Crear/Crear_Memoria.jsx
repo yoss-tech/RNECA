@@ -95,6 +95,7 @@ function Crear_Memoria({ cerrarModal, actividad }) {
                   id="descripcion"
                   value={descripcion}
                   onChange={(e) => setDescripcion(e.target.value)}
+                  title="Ingresa la descripción de la evidencia fotográfica"
                 ></textarea>
                 {errors.descripcion && <p className="error">{errors.descripcion}</p>}
               </div>
