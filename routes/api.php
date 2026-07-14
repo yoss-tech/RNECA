@@ -12,6 +12,7 @@ use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\EspacioController;
 use App\Http\Controllers\MemoriaFotoController;
 use App\Http\Controllers\ActividadMemoController;
+use App\Http\Controllers\OficiosRnecaController;
 
 
 
@@ -55,6 +56,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Actividades para la memoria fotografica
     Route::post('/create_activ', [ActividadMemoController::class, 'store']);
 
+    //Oficio RNECA
+    Route::post('/create_ofice', [OficiosRnecaController::class, 'store']);
 
     //METODOS GET
     // Informacion del espacio de cultura

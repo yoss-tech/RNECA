@@ -19,6 +19,7 @@ class EcaController extends Controller
         ->join('municipio', 'direccion.id_municipio', '=', 'municipio.id_municipio')
         ->leftJoin('usuarios as dicm', 'dicm.id_usuario', '=', 'usuarios.id_dicm') 
         ->select(
+            'eca.clave_eca',
             'eca.id_usuario',
             'eca.nombre_inst',
             'eca.nombre_inst_ope',
