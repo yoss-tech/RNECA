@@ -18,18 +18,18 @@ function Crear_SupervisorECAS({ cerrarModal }) {
                 <div className="modal-body">
                     <div className="form-group">
                         <label className="card-subtitle">Nombre:</label>
-                        <input type="text" className="form-control" placeholder="Ingresa el nombre del supervisor de eca"/>
+                        <input type="text" className="form-control" placeholder="Ingresa el nombre del supervisor de eca" title="Ingresa el nombre del supervisor de eca"/>
                     </div>
 
                     <div className="form-group">
                         <label className="card-subtitle">Correo:</label>
-                        <input type="email" className="form-control" placeholder="Ingresa el correo"/>
+                        <input type="email" className="form-control" placeholder="Ingresa el correo" title="Ingresa el correo"/>
                     </div>
 
                     <div className="form-group">
                         <label className="card-subtitle">Crear contraseña:</label>
                         <div className="input-password">
-                            <input type={mostrarPassword ? "text" : "password"} className="form-control" placeholder="Ingresa una contraseña"/>
+                            <input type={mostrarPassword ? "text" : "password"} className="form-control" placeholder="Ingresa una contraseña" title="Ingresa una conraseña"/>
                             <i className={mostrarPassword ? "bi bi-eye-slash" : "bi bi-eye"} onClick={() => setMostrarPassword(!mostrarPassword)}></i>
                         </div>
                     </div>

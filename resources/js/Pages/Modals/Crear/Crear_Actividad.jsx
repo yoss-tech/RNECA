@@ -77,6 +77,7 @@ function Crear_Actividad({ cerrarModal }) {
                     placeholder="Ingresa el municipio"
                     className="form-control"
                     onChange={(e) => setFormData({ ...formData, municipio: e.target.value })}
+                    title="Ingresa el municipio"
                   />
                 </div>
                 
@@ -89,6 +90,7 @@ function Crear_Actividad({ cerrarModal }) {
                     placeholder="Ingresa la localidad"
                     className="form-control"
                     onChange={(e) => setFormData({ ...formData, localidad: e.target.value })}
+                    title="Ingresa la localidad"
                   />
                   {errors.localidad && <p className="error">{errors.localidad}</p>}
                 </div>
@@ -127,7 +129,9 @@ function Crear_Actividad({ cerrarModal }) {
                     id="otras_activ"
                     placeholder="Ingresa las otras actividades"
                     className="form-control"
-                    onChange={(e) => setFormData({ ...formData, otras_activ: e.target.value })}>
+                    onChange={(e) => setFormData({ ...formData, otras_activ: e.target.value })}
+                    title="Ingresa las otras actividades"
+                    >
                   </textarea>
                   {errors.otras_activ && <p className="error">{errors.otras_activ}</p>}
                 </div>
