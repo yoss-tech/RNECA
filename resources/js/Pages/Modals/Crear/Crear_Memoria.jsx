@@ -3,6 +3,7 @@ import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
 import SelectorImagen from "../../../Components/SelectorImagen.jsx";
 import { create_activ } from "../../../Components/api/memoria.jsx";
+import Toast from "../../Toast.jsx";
 
 function Crear_Memoria({ cerrarModal, actividad }) {
   // Estado para la descripción de la actividad fotográfica
@@ -17,18 +18,48 @@ function Crear_Memoria({ cerrarModal, actividad }) {
     }
   };
 
+  const [alerts, setAlerts] = useState([]);
+  const showAlert = (type, message) => {
+    setAlerts([...alerts, { type, message }]);
+    setTimeout(() => {
+      setAlerts((prev) => prev.slice(1));
+    }, 3000);
+  };
+
+  const [errors, setErrors] = useState({});
+  const validateForm =() => {
+    let newErrors = {};
+
+    if (!descripcion.trim()) newErrors.descripcion = 'La descripción es requerida.';
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Llamamos a la función de la API con todos los datos que el backend necesita
-    await create_activ({
-      descripcion: descripcion,
-      id_program: actividad.id_program, // El ID viene de la actividad seleccionada
-      imagenes: imagenes, // El array de archivos de imagen
-    });
-    cerrarModal(); // Cerramos el modal después de guardar
+    if (!validateForm()) {
+      showAlert('error', 'Por favor, completa todos los campos requeridos.' );
+      return;
+    }
+    try {
+      // Llamamos a la función de la API con todos los datos que el backend necesita
+      await create_activ({
+        descripcion: descripcion,
+        id_program: actividad.id_program, // El ID viene de la actividad seleccionada
+        imagenes: imagenes, // El array de archivos de imagen
+      });
+      showAlert('success', 'Memoria fotográfica creada exitosamente.' );
+      cerrarModal(); // Cerramos el modal después de guardar
+    }
+    catch (error) {
+      showAlert('error', 'Error al crear la memoria fotográfica.' );
+    }
   };
 
   return (
+    <>
+    <Toast alerts={alerts} />
     <div className="overlay">
       <div className="modal-box">
         <div className="modal-head">
@@ -36,6 +67,11 @@ function Crear_Memoria({ cerrarModal, actividad }) {
           <p className="text-white">Ingresa la información detallada de las actividades del mes.</p>
         </div>
         <div className="modal-body">
+          {alert && (
+            <div className={`alert ${alert.type}`}>
+              {alert.message}
+            </div>
+          )}
           <form className="form-registro" onSubmit={handleSubmit}>
             <div className="form-registro">
               <div className="form-campo">
@@ -60,6 +96,7 @@ function Crear_Memoria({ cerrarModal, actividad }) {
                   value={descripcion}
                   onChange={(e) => setDescripcion(e.target.value)}
                 ></textarea>
+                {errors.descripcion && <p className="error">{errors.descripcion}</p>}
               </div>
 
               <div className="form-campo">
@@ -76,6 +113,7 @@ function Crear_Memoria({ cerrarModal, actividad }) {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

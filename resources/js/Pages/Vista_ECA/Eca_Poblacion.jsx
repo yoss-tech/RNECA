@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { create_espacio } from "../../Components/api/espacio_cult.jsx"
+import Toast from "../Toast.jsx";
 
 function VECA_Poblacion({ onComplete }) {
+
   const [poblacion, setPoblacion] = useState({
     hombres13_17: 0,
     hombres18_30: 0,
@@ -40,9 +42,42 @@ function VECA_Poblacion({ onComplete }) {
     adquirido : 0,
   });
 
+  const [alerts, setAlerts] = useState([]);
+  const showAlert = (type, message) => {
+    setAlerts([...alerts, { type, message }]);
+    setTimeout(() => {
+      setAlerts((prev) => prev.slice(1));
+    }, 3000);
+  };
+  
+  const [errors, setErrors] = useState({});
+  const validateForm = () => {
+    let newErrors = {};
+
+    if(!material.inedito && !material.reproducido && !material.adquirido) {
+      newErrors.material = 'Al menos un tipo de material didáctico debe ser ingresado.';
+    }
+    if(!poblacion.hombres13_17 && !poblacion.hombres18_30 && !poblacion.hombres30_40 && !poblacion.hombres40_50 && !poblacion.hombres50mas && !poblacion.mujeres13_17 && !poblacion.mujeres18_30 && !poblacion.mujeres30_40 && !poblacion.mujeres40_50 && !poblacion.mujeres50mas && !poblacion.ninos12) {
+      newErrors.poblacion = 'Al menos un asistente debe ser ingresado.';
+    }
+    if(!nexo.lista_asistencia && !nexo.evidencia_fotografica && !nexo.nota_periodica) {
+      newErrors.nexo = 'Al menos un anexo debe ser seleccionado.';
+    }
+    if(!comentarios.trim()) {
+      newErrors.comentarios = 'Los comentarios u observaciones son requeridos.';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      if (!validateForm()) {
+        showAlert('error', 'Por favor, completa todos los campos requeridos.');
+        return;
+      }
       // Transformamos el objeto 'poblacion' en el array 'asistentes' que el backend espera.
       const asistentes = Object.entries(poblacion)
         .filter(([, cantidad]) => cantidad > 0) // Solo enviamos los que tienen cantidad > 0
@@ -70,8 +105,10 @@ function VECA_Poblacion({ onComplete }) {
       };
       console.log(dataToSend);
       await create_espacio(dataToSend);
-      onComplete(); 
+      showAlert('success', 'Datos guardados exitosamente.');
+      onComplete();
     } catch (error) {
+      showAlert('error', 'Error al guardar los datos.');
       console.error("Error al guardar:", error);
     }
   };
@@ -89,9 +126,9 @@ function VECA_Poblacion({ onComplete }) {
     poblacion.mujeres50mas +
     poblacion.ninos12;
 
-  
-
   return (
+    <>
+    <Toast alerts={alerts} />
     <div className="page-container">
       <h1 className="page-title">Registro de participantes y beneficiarios.</h1>
       <h2 className="page-subtitle">Ingrese la información relacionada con la población participante en las actividades realizadas.</h2>
@@ -99,12 +136,15 @@ function VECA_Poblacion({ onComplete }) {
       <form className="form-registro" onSubmit={handleSubmit}>
         <div className="form-registro">
           <p className="page-text">Ingresa la información sobre la población beneficiaria del mes.</p>
+          {alert && (
+            <div className={`alert ${alert.type}`}>
+              {alert.message}
+            </div>
+          )}
           <p className="form-subtitle">Material didáctico
             <i class="bi bi-question-circle" title="Indicar el número de material didáctico que se distribuyó en el ECA según su modalidad"></i>
           </p>
-
           <div className="btn-container-horizontal">
-
             <div className="input-container-horizontal">
             <label className="form-label">Inédito
               <i class="bi bi-question-circle" title="Indicar si ha recibido algún material inedito"></i>
@@ -112,7 +152,8 @@ function VECA_Poblacion({ onComplete }) {
             <input 
               type="number" 
               placeholder="Ingresa el número de material didáctico según su modalidad" 
-              className="form-control" 
+              className="form-control"
+              min="0"
               id="inedito"
               name="inedito"
               value={material.inedito}
@@ -127,7 +168,8 @@ function VECA_Poblacion({ onComplete }) {
               <input 
               type="number" 
               placeholder="Ingresa el número de material didáctico según su modalidad" 
-              className="form-control" 
+              className="form-control"
+              min="0"
               id="reproducido"
               name="reproducido"
               value={material.reproducido}
@@ -143,6 +185,7 @@ function VECA_Poblacion({ onComplete }) {
               type="number" 
               placeholder="Ingresa el número de material didáctico según su modalidad" 
               className="form-control"
+              min="0"
               id="adquirido"
               name="adquirido"
               value={material.adquirido}
@@ -150,6 +193,7 @@ function VECA_Poblacion({ onComplete }) {
             />
             </div>
           </div>
+          {errors.material && <p className="error">{errors.material}</p>}
 
   
           <p className="form-subtitle">Asistentes
@@ -165,6 +209,7 @@ function VECA_Poblacion({ onComplete }) {
               name="hombres13_17"
               placeholder="De 13 a 17"
               className="form-control"
+              min="0"
               onChange={handleChange}
               title="Ingresa el número de asistentes de 13 a 17"
             />
@@ -174,6 +219,7 @@ function VECA_Poblacion({ onComplete }) {
               name="hombres18_30"
               placeholder="De 18 a 30"
               className="form-control"
+              min="0"
               onChange={handleChange}
               title="Ingresa el número de asistentes de 18 a 30"
             />
@@ -183,6 +229,7 @@ function VECA_Poblacion({ onComplete }) {
               name="hombres30_40"
               placeholder=" De 30 a 40"
               className="form-control"
+              min="0"
               onChange={handleChange}
               title="Ingresa el número de asistentes de 30 a 40"
             />
@@ -192,6 +239,7 @@ function VECA_Poblacion({ onComplete }) {
               name="hombres40_50"
               placeholder=" De 40 a 50"
               className="form-control"
+              min="0"
               onChange={handleChange}
               title="Ingresa el número de asistentes de 40 a 50"
             />
@@ -201,6 +249,7 @@ function VECA_Poblacion({ onComplete }) {
               name="hombres50mas"
               placeholder="De 50 o  +"
               className="form-control"
+              min="0"
               onChange={handleChange}
               title="Ingresa el número de asistentes de 50 o más"
             />
@@ -216,6 +265,7 @@ function VECA_Poblacion({ onComplete }) {
               name="mujeres13_17"
               placeholder="De 13 a 17"
               className="form-control"
+              min="0"
               onChange={handleChange}
               title="Ingresa el número de asistentes de 13 a 17"
             />
@@ -225,6 +275,7 @@ function VECA_Poblacion({ onComplete }) {
               name="mujeres18_30"
               placeholder="De 18 a 30"
               className="form-control"
+              min="0"
               onChange={handleChange}
               title="Ingresa el número de asistentes de 18 a 30"
             />
@@ -234,6 +285,7 @@ function VECA_Poblacion({ onComplete }) {
               name="mujeres30_40"
               placeholder="De 30 a 40"
               className="form-control"
+              min="0"
               onChange={handleChange}
               title="Ingresa el número de asistentes de 30 a 40"
             />
@@ -243,6 +295,7 @@ function VECA_Poblacion({ onComplete }) {
               name="mujeres40_50"
               placeholder="De 40 a 50"
               className="form-control"
+              min="0"
               onChange={handleChange}
               title="Ingresa el número de asistentes de 40 a 50"
             />
@@ -252,6 +305,7 @@ function VECA_Poblacion({ onComplete }) {
               name="mujeres50mas"
               placeholder="De 50 o  +"
               className="form-control"
+              min="0"
               onChange={handleChange}
               title="Ingresa el número de asistentes de 50 o más"
             />
@@ -266,10 +320,12 @@ function VECA_Poblacion({ onComplete }) {
               name="ninos12"
               placeholder="Ingresa el número de asistentes menores de 12"
               className="form-control"
+              min="0"
               onChange={handleChange}
               title="Ingresa el número de asistentes menores de 12"
             />
           </div>
+          {errors.poblacion && <p className="error">{errors.poblacion}</p>}
 
           <div className="btn-container-horizontal">
 
@@ -309,6 +365,7 @@ function VECA_Poblacion({ onComplete }) {
                   />Nota periodística
                 </label>
               </div>
+              {errors.nexo && <p className="error">{errors.nexo}</p>}
             </div>
 
             <div className="input-container-horizontal">
@@ -341,6 +398,7 @@ function VECA_Poblacion({ onComplete }) {
               placeholder="Ingresa algún comentario u observación"
               className="form-control">
             </textarea>
+            {errors.comentarios && <p className="error">{errors.comentarios}</p>}
           </div>
 
           <div className="page-botones">
@@ -349,6 +407,7 @@ function VECA_Poblacion({ onComplete }) {
         </div>
       </form>
     </div>
+    </>
   );
 }
 
