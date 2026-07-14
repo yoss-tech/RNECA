@@ -1,7 +1,10 @@
+import React, { useState } from "react";
 import { Select } from "@headlessui/react";
-import React from "react";
+import Revisar_Informe from "../Modals/Revisar_Informe";
 
 function CEAA_Pendientes() {
+
+    const [mostrarModal, setMostrarModal] = useState(false);
     
   return (
   <div className="page-container">
@@ -32,7 +35,14 @@ function CEAA_Pendientes() {
                 <p className="card-text">Fecha:</p>
               </div>
               <div className="botones-cards">
-                <button className="btn-primario">Revisar</button>
+                <button className="btn-primario"  onClick={() =>setMostrarModal(true)}>
+                  Revisar
+                </button>
+                 {mostrarModal && (
+                <Revisar_Informe
+                    cerrarModal={() => setMostrarModal(false)}
+                />
+            )}
               </div>
             </div>
           </div>

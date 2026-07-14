@@ -8,7 +8,7 @@ import CEAA_Observaciones from "./CEAA_Observaciones.jsx";
 import CEAA_Validados from "./CEAA_Validados.jsx";
 import CEAA_Solicitudes from "./CEAA_Solicitudes.jsx";
 import CEAA_Historial from "./CEAA_Historial.jsx";
-
+import CumplimientoInformes from "@/Components/Graficas.jsx";
 import { logoutUser } from "@/Components/api/auth.jsx";
 import Notificaciones_CEAA from "../Modals/Notificaciones/Notificacion_CEAA.jsx";
 import Avisos_CEAA from "../Modals/Avisos/Avisos_CEAA.jsx";
@@ -175,6 +175,7 @@ function CEAA_Inicio() {
                   <div className="card-grafico">
                     <h3 className="card-title">Cumplimiento de Entrega de Informes mensuales </h3>
                     <p className="card-text">Visualice el porcentaje de municipios que han cumplido con la entrega de su informe mensual y aquellos que se encuentran pendientes.</p>
+                    <CumplimientoInformes/>
                   </div>
                 </div>
               </div>
