@@ -8,6 +8,7 @@ import Lic_Registros from "./Lic_Registros.jsx";
 import Lic_ConsultaR from "./Lic_ConsultaR.jsx";
 import Notificaciones_LIC from "../Modals/Notificaciones/NotificaciónLIC.jsx";
 import Avisos_LIC from "../Modals/Avisos/AvisosLIC.jsx";
+import CumplimientoInformes from "@/Components/Graficas.jsx";
 
 function Lic_Inicio() {
 
@@ -141,7 +142,8 @@ function Lic_Inicio() {
                   <div className="card-grafico">
                     <h3 className="card-title">Cumplimiento de Entrega de Informes mensuales </h3>
                     <p className="card-text">Visualice el porcentaje de municipios que han cumplido con la entrega de su informe mensual y aquellos que se encuentran pendientes.</p>
-                  </div>
+                    <CumplimientoInformes />
+                 </div>
                 </div>
               </div>
             </div>
