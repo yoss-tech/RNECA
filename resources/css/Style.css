@@ -723,6 +723,11 @@ i {
     margin-bottom: 15px;
 }
 
+.page-container{
+    background: var(--fondo-color);
+    min-height: 100vh;
+}
+
 /* ================= TABLAS ================= */
 .tabla-registros {
     width: 100%;

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { create_espacio } from "../../Components/api/espacio_cult.jsx"
 import Toast from "../Toast.jsx";
+import Swal from "sweetalert2";
+
 
 function VECA_Poblacion({ onComplete }) {
 
@@ -75,7 +77,12 @@ function VECA_Poblacion({ onComplete }) {
     e.preventDefault();
     try {
       if (!validateForm()) {
-        showAlert('error', 'Por favor, completa todos los campos requeridos.');
+         Swal.fire({
+            title: "Información incompleta",
+            text: "Por favor, completa todos los campos obligatorios antes de guardar.",
+            icon: "warning",
+            confirmButtonText: "Aceptar"
+        });
         return;
       }
       // Transformamos el objeto 'poblacion' en el array 'asistentes' que el backend espera.
@@ -87,7 +94,7 @@ function VECA_Poblacion({ onComplete }) {
             : key.startsWith('mujeres')
             ? ['Mujer', key.replace('mujeres', '')]
             : ['Niño/Niña', key.replace('ninos', '')]; // 'ninos12'
-          
+
           return {
             genero: genero,
             rango_edad: rango_edad.replace('_', '-'), // ej: 13_17 -> 13-17
@@ -105,10 +112,20 @@ function VECA_Poblacion({ onComplete }) {
       };
       console.log(dataToSend);
       await create_espacio(dataToSend);
-      showAlert('success', 'Datos guardados exitosamente.');
+        Swal.fire({
+            title: "¡Guardado!",
+            text: "La información se guardó correctamente.",
+            icon: "success",
+            confirmButtonText: "Aceptar"
+        });
       onComplete();
     } catch (error) {
-      showAlert('error', 'Error al guardar los datos.');
+      Swal.fire({
+        title: "Error al guardar",
+        text: "Ocurrió un problema al guardar la información. Inténtalo nuevamente.",
+        icon: "error",
+        confirmButtonText: "Aceptar"
+      });
       console.error("Error al guardar:", error);
     }
   };
@@ -128,7 +145,6 @@ function VECA_Poblacion({ onComplete }) {
 
   return (
     <>
-    <Toast alerts={alerts} />
     <div className="page-container">
       <h1 className="page-title">Registro de participantes y beneficiarios.</h1>
       <h2 className="page-subtitle">Ingrese la información relacionada con la población participante en las actividades realizadas.</h2>
