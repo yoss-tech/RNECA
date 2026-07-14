@@ -4,6 +4,7 @@ import "/resources/css/Modal.css";
 import SelectorImagen from "../../../Components/SelectorImagen.jsx";
 import { create_activ } from "../../../Components/api/memoria.jsx";
 import Toast from "../../Toast.jsx";
+import Swal from "sweetalert2";
 
 function Crear_Memoria({ cerrarModal, actividad }) {
   // Estado para la descripción de la actividad fotográfica
@@ -49,11 +50,21 @@ function Crear_Memoria({ cerrarModal, actividad }) {
         id_program: actividad.id_program, // El ID viene de la actividad seleccionada
         imagenes: imagenes, // El array de archivos de imagen
       });
-      showAlert('success', 'Memoria fotográfica creada exitosamente.' );
+      Swal.fire({
+        title: "¡Guardado!",
+        text: "La información se guardó correctamente.",
+        icon: "success",
+        confirmButtonText: "Aceptar"
+      });
       cerrarModal(); // Cerramos el modal después de guardar
     }
     catch (error) {
-      showAlert('error', 'Error al crear la memoria fotográfica.' );
+      Swal.fire({
+        title: "Error al guardar",
+        text: "Ocurrió un problema al guardar la información. Inténtalo nuevamente.",
+        icon: "error",
+        confirmButtonText: "Aceptar"
+      });
     }
   };
 

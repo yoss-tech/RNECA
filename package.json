@@ -30,6 +30,7 @@
         "chart.js": "^4.5.1",
         "package.json": "^2.0.1",
         "react-chartjs-2": "^5.3.1",
-        "react-to-print": "^3.3.0"
+        "react-to-print": "^3.3.0",
+        "sweetalert2": "^11.26.25"
     }
 }

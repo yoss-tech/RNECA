@@ -3,6 +3,7 @@ import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
 import { create_program } from "../../../Components/api/program.jsx";
 import Toast from "../../Toast.jsx";
+import Swal from "sweetalert2";
 
 function Crear_Actividad({ cerrarModal }) {
   
@@ -48,12 +49,22 @@ function Crear_Actividad({ cerrarModal }) {
     }
     try {
       await create_program(formData);
-      showAlert('success', 'Actividad creada exitosamente.');
+      Swal.fire({
+         title: "¡Guardado!",
+         text: "La información se guardó correctamente.",
+         icon: "success",
+              confirmButtonText: "Aceptar"
+      });
       console.log(formData)
       cerrarModal();
     }
     catch (error) {
-      showAlert('error', 'Error al crear la actividad.');
+      Swal.fire({
+        title: "Error al guardar",
+        text: "Ocurrió un problema al guardar la información. Inténtalo nuevamente.",
+        icon: "error",
+        confirmButtonText: "Aceptar"
+      });
     }
   };
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { create_memoria, get_activ } from "../../Components/api/memoria.jsx";
 import { getProgramData } from "../../Components/api/program.jsx";
 import Mod_Memoria from "../../Pages/Modals/Modificar/Mod_Memoria.jsx";
-
+import Swal from "sweetalert2";
 
 function VECA_Memoria({ onCompletes }) {
 
@@ -15,6 +15,12 @@ function VECA_Memoria({ onCompletes }) {
     e.preventDefault();
     await create_memoria({
       descrip_gen
+    });
+    Swal.fire({
+      title: "¡Guardado!",
+      text: "La información se guardó correctamente.",
+      icon: "success",
+      confirmButtonText: "Aceptar"
     });
     onComplete();
   };
