@@ -1,7 +1,19 @@
 import { Select } from "@headlessui/react";
-import React from "react";
-
+import React, { useState, useEffect} from "react";
+import { get_municipios } from "@/Components/api/municipios";
 function Lic_Registros() {
+   const [municipios, setMunicipios] = useState([]);
+    useEffect(() => {
+      cargarMunicipios();
+    }, []);
+    const cargarMunicipios = async () => {
+      const response = await get_municipios();
+      if(response && response.status==200){
+        setMunicipios(response.body);
+        console.log(response);
+      }
+  };
+  
     
   return (
   <div className="page-container">
@@ -13,12 +25,10 @@ function Lic_Registros() {
         <div className="filtro">
           <p class="card-text">Municipio:</p>
           <select className="municipio-select">
-            <option value="">Selecciona una opción</option>
-            <option value="1">Toluca</option>
-            <option value="2">Metepec</option>
-            <option value="3">Lerma</option>
-            <option value="4">Atlacomulco</option>
-            <option value="5">Valle de Bravo</option>
+          <option value="">Selecciona una opción</option>
+            {municipios.map((municipio)=>(
+            <option>{municipio.nombre_munipio}</option>
+            ))}
           </select>
         </div>
         

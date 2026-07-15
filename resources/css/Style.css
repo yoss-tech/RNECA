@@ -451,6 +451,7 @@ p {
     display: flex;
     align-items: stretch;
     margin-bottom: 15px;
+    height: 45px;
 }
 
 .filtro {

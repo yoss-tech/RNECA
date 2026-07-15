@@ -1,7 +1,21 @@
 import { Select } from "@headlessui/react";
-import React from "react";
+import React, { useState, useEffect} from "react";
+import Revisar_Oficio from "../Modals/Revisar_Oficio";
+import { get_municipios } from "@/Components/api/municipios";
 
 function CEAA_Pendientes() {
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [municipios, setMunicipios] = useState([]);
+  useEffect(() => {
+    cargarMunicipios();
+  }, []);
+  const cargarMunicipios = async () => {
+    const response = await get_municipios();
+    if(response && response.status==200){
+      setMunicipios(response.body);
+      console.log(response);
+    }
+};
 
   return (
   <div className="page-container">
@@ -10,18 +24,16 @@ function CEAA_Pendientes() {
     
     <div className="dashboard">
       <div className="dashboard-left">
-        <div className="filtro">
+          <div className="filtro">
           <p className="card-text">Municipio:</p>
           <select className="municipio-select">
             <option value="">Selecciona una opción</option>
-            <option value="1">Toluca</option>
-            <option value="2">Metepec</option>
-            <option value="3">Lerma</option>
-            <option value="4">Atlacomulco</option>
-            <option value="5">Valle de Bravo</option>
-          </select>
+            {municipios.map((municipio)=>(
+            <option>{municipio.nombre_munipio}</option>
+            ))}
+        </select>
         </div>
-        
+
         <div className="cards-revision">
           <div className="card-municipio">
             <div class="card-body">
@@ -32,7 +44,14 @@ function CEAA_Pendientes() {
                 <p className="card-text">Fecha:</p>
               </div>
               <div className="botones-cards">
-                <button className="btn-primario">Revisar</button>
+                <button className="btn-primario"  onClick={() =>setMostrarModal(true)}>
+                  Revisar
+                </button>
+                {mostrarModal && (
+                <Revisar_Oficio
+                    cerrarModal={() => setMostrarModal(false)}
+                />
+                )}
               </div>
             </div>
           </div>

@@ -7,6 +7,7 @@ import CEAA_Pendientes from "./CEAA_Pendientes.jsx";
 import CEAA_Observaciones from "./CEAA_Observaciones.jsx";
 import CEAA_Validados from "./CEAA_Validados.jsx";
 import CEAA_Solicitudes from "./CEAA_Solicitudes.jsx";
+import CEAA_Ecas from "./CEAA_ECAS.jsx";
 import CEAA_Historial from "./CEAA_Historial.jsx";
 import CumplimientoInformes from "@/Components/Graficas.jsx";
 import { logoutUser } from "@/Components/api/auth.jsx";
@@ -139,6 +140,16 @@ function CEAA_Inicio() {
             Consulta de Registros
           </a>
         </div>
+
+        <div className="form-group">
+          <a
+            className={vistaActual === "Ecas" ? "active" : ""}
+            onClick={() => setVistaActual("Ecas")}
+            style={{ cursor: "pointer" }}>
+            <i class="bi bi-list-ul"></i>
+             Listado de ECA´S
+          </a>
+        </div>
       </div>
 
       <div className="content">
@@ -197,6 +208,9 @@ function CEAA_Inicio() {
         )}
         {vistaActual === "historial" && (
           <CEAA_Historial />
+        )}
+        {vistaActual === "Ecas" && (
+          <CEAA_Ecas/>
         )}
 
       </div>
