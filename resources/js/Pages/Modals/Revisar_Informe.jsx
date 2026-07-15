@@ -21,7 +21,7 @@ function Revisar_Informe({ cerrarModal }) {
                         </textarea>
                     </div>
 
-                    <div className="form-campo" class="mb-0">
+                    <div className="form-campo">
                         <label className="form-label">Fecha de revisión</label>
                         <input
                         type="date"
