@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "/resources/css/Style.css";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
 import Perfil_DirectorM from "../Modals/Perfiles/Perfil_DM.jsx";
@@ -11,6 +11,8 @@ import { Head } from "@inertiajs/react";
 import { logoutUser, checkAuth } from "../../Components/api/auth.jsx";
 import Notificaciones_DireMunicipal from "../Modals/Notificaciones/Notificacion_DM.jsx";
 import Avisos_DireMunicipal from "../Modals/Avisos/Avisos_DM.jsx";
+
+import { get_ofice } from "@/Components/api/oficio.jsx";
 
 function DicM_Inicio() {
   const [CerrarSesion, setCerrarSesion] = useState(false);
@@ -31,44 +33,63 @@ function DicM_Inicio() {
   }
 
 
+  const [ofice, setOfice] = useState([]);
+
+  useEffect(() => {
+    const loadInfo = async () => {
+      try {
+        const response = await get_ofice();
+        console.log(response);
+        setOfice(response || []);
+      }
+      catch (error) {
+        console.log("Error al cargar los datos del programa")
+      }
+    }
+
+    loadInfo();
+  }, [])
+
+
+
   return (
     <>
       <header className="header">
-        <div className="logo"><img src={miImagen} alt="Logo RNECA"/></div>
+        <div className="logo"><img src={miImagen} alt="Logo RNECA" /></div>
 
         <div className="acciones-header">
-           <button className="icono"  onClick={() =>setMostrarModal(true)}>
-              <i className="bi bi-envelope"></i>
-                </button>
-                {mostrarModal && (
-                <Avisos_DireMunicipal
-                    cerrarModal={() => setMostrarModal(false)}
-                />
-            )}
+          <button className="icono" onClick={() => setMostrarModal(true)}>
+            <i className="bi bi-envelope"></i>
+          </button>
+          {mostrarModal && (
+            <Avisos_DireMunicipal
+              cerrarModal={() => setMostrarModal(false)}
+            />
+          )}
 
-            <button className="icono"  onClick={() =>setMostrarModal2(true)}>
-             <i className="bi bi-bell"></i>
-                </button>
-                {mostrarModal2 && (
-                <Notificaciones_DireMunicipal
-                    cerrarModal={() => setMostrarModal2(false)}
-                />
-                )}
-                
+          <button className="icono" onClick={() => setMostrarModal2(true)}>
+            <i className="bi bi-bell"></i>
+          </button>
+          {mostrarModal2 && (
+            <Notificaciones_DireMunicipal
+              cerrarModal={() => setMostrarModal2(false)}
+            />
+          )}
+
           <div className="perfil">
             <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)}>
               <i className="bi bi-person-circle perfil-icono"></i>
             </button>
             {CerrarSesion && (
               <div className="menu-perfil">
-                <button className="btn-cerrar-sesion"  onClick={() =>setMostrarModal(true)}>
+                <button className="btn-cerrar-sesion" onClick={() => setMostrarModal(true)}>
                   Perfil
                 </button>
-                 {mostrarModal && (
-                <Perfil_DirectorM
+                {mostrarModal && (
+                  <Perfil_DirectorM
                     cerrarModal={() => setMostrarModal(false)}
-                />
-            )}
+                  />
+                )}
                 <button className="btn-cerrar-sesion" onClick={submitLogout}>
                   Cerrar sesión
                 </button>
@@ -100,16 +121,16 @@ function DicM_Inicio() {
         </div>
 
         <div className="form-group">
-           <a
+          <a
             className={vistaActual === "correciones" ? "active" : ""}
             onClick={() => setVistaActual("correciones")}
             style={{ cursor: "pointer" }}>
             <i class="bi bi-pencil"></i>
             Registros con observaciones</a>
         </div>
-        
+
         <div className="form-group">
-           <a
+          <a
             className={vistaActual === "registros_firmados" ? "active" : ""}
             onClick={() => setVistaActual("registros_firmados")}
             style={{ cursor: "pointer" }}>
@@ -121,46 +142,34 @@ function DicM_Inicio() {
 
       <div className="content">
         {vistaActual === "inicio" && (
-          <>
-            <div className="page-container">
-              <h1 className="page-title">Seguimiento de informes pendientes. </h1>
-              <h2 className="page-subtitle">Visualice los informes más recientes recibidos y el estado actual de cada registro.</h2>
-              
-              <table class="tabla-registros">
-                <thead>
-                  <tr>
-                    <th className="th-start">ECA</th>
-                    <th className="th-start">Mes</th>
-                    <th className="th-start">Fecha validación</th>
-                    <th>Estado</th>
+          <div className="page-container">
+            <h1 className="page-title">Seguimiento de informes pendientes. </h1>
+            <h2 className="page-subtitle">Visualice los informes más recientes recibidos y el estado actual de cada registro.</h2>
+
+            <table class="tabla-registros">
+              <thead>
+                <tr>
+                  <th className="th-start">ECA</th>
+                  <th className="th-start">Mes</th>
+                  <th className="th-start">Fecha validación</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {ofice.map((item, index) => (
+                  <tr key={index.id_oficio}>
+                    <td>{item.nombre_eca}</td>
+                    <td>{item.mes_oficio}</td>
+                    <td>{item.fecha_registro}</td>
+                    {/* <td className="td-center">Correcciones</td> */}
+                    <td className="td-center">{item.nombre_tipo}</td>
+
                   </tr>
-                </thead>
-                
-                <tbody>
-                  <tr>
-                    <td>Lic. Luis Garcia Contreras</td>
-                    <td>Abril</td>
-                    <td>05 de Mayo del 2026</td>
-                    <td className="td-center">Pendiente</td>
-                  </tr>
-                  
-                  <tr>
-                    <td>Lic. Luis Garcia Contreras</td>
-                    <td>Abril</td>
-                    <td>07 de Abril del 2026</td>
-                    <td className="td-center">Correcciones</td>
-                  </tr>
-                  
-                  <tr>
-                    <td>Lic. Luis Garcia Contreras</td>
-                    <td>Marzo</td>
-                    <td>03 de Marzo del 2026</td>
-                    <td className="td-center">Validado</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
 
         {vistaActual === "registros_recibidos" && (
@@ -175,7 +184,6 @@ function DicM_Inicio() {
 
       </div>
     </>
-  );
+  )
 }
-
 export default DicM_Inicio;

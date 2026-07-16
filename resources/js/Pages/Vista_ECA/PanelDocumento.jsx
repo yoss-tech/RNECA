@@ -30,24 +30,6 @@ function PanelDocumento() {
     setPaginaActual((prev) => Math.max(prev - 1, 1));
   };
 
-  const [datos, setDatos] = useState([]);
-
-  useEffect(() => {
-    const loadInfo = async () => {
-      try {
-        const response = await infoEca();
-        setDatos(response || {}); // Asigna la respuesta directamente. Si es null/undefined, usa un objeto vacío. 
-        console.log(response);
-      }
-      catch (error) {
-        console.log("Error al cargar los datos del programa")
-      }
-    }
-
-    loadInfo();
-  }, []);
-
-
   const [ruta_oficio, setRuta_oficio] = useState(null);
   const [mes_oficio, setMes_oficio] = useState(mostrarSoloMes());
 
@@ -55,8 +37,7 @@ function PanelDocumento() {
     e.preventDefault();
     await create_ofice({
       mes_oficio: mes_oficio,
-      ruta_oficio: ruta_oficio,
-      idClave_eca: datos.clave_eca
+      ruta_oficio: ruta_oficio
     });
   };
 

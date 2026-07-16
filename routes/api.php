@@ -72,6 +72,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Informacion de la actividad
     Route::get('/infoActiv', [ActividadMemoController::class, 'index']);
 
+    // Información del oficio
+    Route::get('/get_ofice', [OficiosRnecaController::class, 'index']);
+
+
 
     //METODOS DELETE
     // Eliminar una actividad de la memoria
@@ -87,6 +91,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/delete_espacio/{id}', [EspacioController::class, 'destroy']);
     
 });
+
+    // Route::get('/pdf', [OficiosRnecaController::class, 'indexPdf']);
+    // Route::get('/informe', [ProgramController::class, 'generarInforme']);
+
+    Route::get('/documents/{id}', [OficiosRnecaController::class, 'download']);
+
 
 
 // El login se maneja a través de AuthController vinculado en auth.php

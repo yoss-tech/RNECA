@@ -19,3 +19,14 @@ export const create_ofice = async (data) => {
         return null;
     }
 }   
+
+export const get_ofice = async () => {
+    try{
+        const response = await axiosInstance.get('/get_ofice');
+        return response.data;
+    }
+    catch(error){
+        console.log(error);
+        return null;
+    }
+}
