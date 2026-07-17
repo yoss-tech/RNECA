@@ -3,7 +3,6 @@ import "/resources/css/Style.css";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import VECA_VistaP from "./Eca_VistaPrevia.jsx";
-import VECA_Presente from "./Eca_Presente.jsx";
 import VECA_Actividades from "./Eca_Actividades.jsx";
 import VECA_Poblacion from "./Eca_Poblacion.jsx";
 import VECA_Memoria from "./Eca_Memoria.jsx";

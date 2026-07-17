@@ -9,3 +9,17 @@ export const get_municipios = async () => {
         return null;
     }
 }
+
+export const buscarMunicipio = async (buscar) => {
+    try {
+        const response = await axiosInstance.get("/municipios/buscar", {
+            params: {
+                buscar: buscar
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+};

@@ -19,4 +19,15 @@ class MunicipioController extends Controller
             'body'=>$municipio
         ],200);
     }
+
+    public function buscar(Request $request)
+    {
+        $buscar = $request->buscar;
+        $municipio = Municipio::where('nombre_munipio', 'like', '%' . $buscar . '%')
+        ->get();
+        return response()->json([
+        'status' => 200,
+        'body' => $municipio
+        ]);
+    }
 }

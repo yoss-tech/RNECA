@@ -53,6 +53,7 @@ const CumplimientoInformes = () => {
             position: "top",
         },
         datalabels: {
+            position:"center",
             color: "#fff",
             font: {
                 weight: "bold",
@@ -71,6 +72,7 @@ const CumplimientoInformes = () => {
     return (
         <div style={{width:"300px"}}>
             <Doughnut data={datos} options={opciones}/>
+            <br />
             <h5>Total de informes: {totalInformes}</h5>
         </div>
     );
