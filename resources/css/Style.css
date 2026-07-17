@@ -276,6 +276,16 @@ p {
   border-color: #dc3545;
 }
 
+/* Estilos para la paginación */
+.paginacion-controles {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin:10px;
+    width:100%;
+}
+
 
 /* ================= FECHAS ================= */
 .fecha-row {
@@ -299,7 +309,7 @@ p {
     flex-direction: column; 
 } 
 
-.cards-municipio,
+.container-municipios,
 .cards-revision,
 .cards-historial {
     width: 100%;
@@ -308,6 +318,11 @@ p {
     border-radius: 4px;
 }
 
+.container-municipios {
+    display: grid;
+    top:5px;
+}
+ 
 .cards-municipio {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -358,6 +373,13 @@ p {
     padding: 20px;
     border-radius: 4px;
 }
+
+.container-grafico {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    top:5px;
+} 
 
 .card-contenedor {
     width: 99%;
@@ -562,6 +584,7 @@ input[type="file"] {
 .btn-primario,
 .btn-negativo,
 .btn-neutral,
+.btn-blanco,
 .btn-acciones {
     background: transparent;
     border-radius: 3px;
@@ -571,6 +594,7 @@ input[type="file"] {
 
 .btn-primario,
 .btn-negativo,
+.btn-blanco,
 .btn-neutral {
     padding: 10px 25px;
 }
@@ -592,6 +616,18 @@ input[type="file"] {
 
 .btn-login:hover {
     background-color: var(--rojo-color);
+}
+
+.btn-blanco {
+    border: 1.6px solid var(--blanco-color);
+    background-color: var(--blanco-color);
+    color: var(--negro-color);
+}
+
+.btn-blanco:hover {
+    border: 1.6px solid var(--ginda-color);
+    background-color: var(--ginda-color);
+    color: var(--blanco-color);
 }
 
 .btn-primario {

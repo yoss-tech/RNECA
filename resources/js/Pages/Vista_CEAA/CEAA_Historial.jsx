@@ -39,7 +39,6 @@ const toggleCard = (card) => {
           <p className="card-text">Municipio:</p>
             <select className="municipio-select">
               <option value="">Selecciona una opción</option>
-            <option value="">Selecciona una opción</option>
             {municipios.map((municipio)=>(
             <option>{municipio.nombre_munipio}</option>
             ))}
