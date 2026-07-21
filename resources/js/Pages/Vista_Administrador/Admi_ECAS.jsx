@@ -1,68 +1,74 @@
-import React, { useState } from "react";
-import Modificar_ECAS from "../Modals/Modificar/Mod_ECAS";
-import Crear_ECAS from "../Modals/Crear/Crear_ECAS";
-import EliminarElemento from "../Modals/Eliminar_Elemento";
+import React, { useState, useEffect } from "react";
+import { getUserEcas } from "../../Components/api/usuario_eca.jsx"
+import Modificar_UserECA from "../Modals/Modificar/Mod_UserECAS";
 
 function Admi_ECAS() {
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [mostrarModal2, setMostrarModal2] = useState(false);
-  const [mostrarModal3, setMostrarModal3] = useState(false); 
+  const [mostrarModificar, setMostrarModificar] = useState(false);
+
+  const [ecas, setEcas] = useState([]);
+
+  useEffect (() => {
+    cargarUserEcas();
+  }, []);
+
+  const cargarUserEcas = async () => {
+    const response = await getUserEcas();
+    console.log(response);
+
+    if (response && response.status === 200) {
+      setEcas(response.body);
+    }
+  };
+
+  const [ecaSeleccionado, setEcaSeleccionado] = useState(null);
+
+  const abrirModalModificar = (eca) => {
+    setEcaSeleccionado(eca);
+    setMostrarModificar(true);
+  };
+
   return (
   <div className="page-container">
     <h1 className="page-title">Administración de usuarios ECA.</h1>
     <h2 className="page-subtitle">Consulte, actualice o elimine usuarios asignados a los Espacios de Cultura del Agua.</h2>
-    
-    <button className="btn-primario"  onClick={() =>setMostrarModal2(true)}>
-             Crear un nuevo ECA</button>
-                {mostrarModal2 && (
-                <Crear_ECAS
-                    cerrarModal={() => setMostrarModal2(false)}
-                />
-                )}
 
- 
     <table class="tabla-registros">
       <thead>
         <tr>
           <th className="th-start">ECA</th>
+          <th className="th-start">Municipio</th>
           <th className="th-start">Correo</th>
-          <th className="th-start">Contraseña</th>
           <th className="th-start">Estado</th>
           <th>Acciones</th>
         </tr>
       </thead>
       
       <tbody>
-        <tr>
-          <td>
-            <p className="form-subtitle">MUNICIPIO</p>
-            <p className="card-subtitle">INSTANCIA OPERATIVA</p>
-            <p className="card-text">NOMBRE</p>
-          </td>
-          <td>CORREO</td>
-          <td>CONTRASEÑA</td>
-          <td>ACTIVO</td>
-          <td className="btn-container-vertical">
-             <button className="btn-neutral"  onClick={() =>setMostrarModal3(true)}>
-             Eliminar</button>
-                {mostrarModal3 && (
-                <EliminarElemento
-                    cerrarModal={() => setMostrarModal3(false)}
-                />
-                )}
-            <button className="btn-negativo"  onClick={() =>setMostrarModal(true)}>
-             Modificar</button>
-                {mostrarModal && (
-                <Modificar_ECAS
-                    cerrarModal={() => setMostrarModal(false)}
-                />
-                )}
-          </td>
-        </tr>
+        {ecas.map((eca) => (
+          <tr key={eca.id_usuario}>
+            <td>{eca.nombre}</td>
+            <td>
+              <p className="form-subtitle">{eca.nombre_munipio}</p>
+              <p className="card-subtitle">{eca.nombre_inst_ope}</p>
+            </td>
+            <td>{eca.correo}</td>
+            <td>{eca.estatus}</td>
+            <td>
+              <button className="btn-negativo" onClick={() => abrirModalModificar(eca)}>Modificar</button>
+            </td>
+          </tr>
+        ))}
       </tbody>
     </table>
+    {mostrarModificar && (
+      <Modificar_UserECA
+      usuario={ecaSeleccionado}
+      cerrarModal={() => setMostrarModificar(false)}
+      actualizarLista={cargarUserEcas}
+      />
+    )}
   </div>
   );
 }
 
-export default Admi_ECAS;  
+export default Admi_ECAS;
