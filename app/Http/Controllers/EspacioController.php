@@ -38,6 +38,7 @@ class EspacioController extends Controller
                 'eca.fecha_apert',
                 'eca.fecha_forta'
             )
+            ->where('eca.id_usuario', auth()->user()->id_usuario)
             ->get();
         return response()->json($espacio);
     }

@@ -1,0 +1,44 @@
+/* Estilos clave para el efecto de selección */
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.image-card {
+  position: relative;
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+/* El truco visual: Oculto por defecto */
+.checkbox-overlay {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #ff4444;
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+/* Cuando la tarjeta tiene la clase 'selected' */
+.image-card.selected {
+  outline: 3px solid #ff4444;
+}
+
+.image-card.selected .checkbox-overlay {
+  opacity: 1;
+}
+
+.image-card.selected img {
+  filter: brightness(0.7);
+}

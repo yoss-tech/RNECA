@@ -1,32 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
-import { create_program } from "../../../Components/api/program.jsx";
+import { updateActividad } from "../../../Components/api/memoria.jsx";
 
-function Mod_Memoria({ cerrarModal, memoria }) {
-    const [descripcion, setDescripcion] = useState('');
-    const [titulo, setTitulo] = useState('');
-    const [descripcion_act, setDescripcion_act] = useState('');
-    const [imagen, setImagen] = useState(null);
-    
-    const handleImageChange = (e) => {
-      setImagen(e.target.files[0]);
-    };
-    
-    console.log(imagen);
-    
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      await create_memoria({
-        titulo,
-        descripcion,
-        descripcion_act,
-        imagen,
+function Mod_Memoria({ cerrarModal, actividad }) {
+  const [titulo, setTitulo] = useState('');
+  const [descripcion_act, setDescripcion_act] = useState('');
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const response = await updateActividad({
+      otras_activ: titulo,
+      descripcion: descripcion_act,
+      id_program: actividad.id_program,
+      id_actividad: actividad.id_actividad
     });
-    onComplete();
-    };
+  };
 
-    return (
+  return (
     <div className="overlay">
       <div className="modal-box">
         <div className="modal-head">
@@ -40,29 +32,24 @@ function Mod_Memoria({ cerrarModal, memoria }) {
                 <label className="form-label">Título</label>
                 <input
                   type="text"
-                  placeholder="Ingresa el título de la actividad"
+                  placeholder="Ingresa el nuevo título de la actividad"
                   className="form-control"
                   id="titulo"
                   onChange={(e) => setTitulo(e.target.value)}
                 />
               </div>
-              
+
               <div className="form-campo">
                 <label className="form-label">Descripción de la actividad</label>
                 <div className="form-campo">
                   <textarea
                     rows="3"
-                    placeholder="Ingresa la descripción de la actividad"
+                    placeholder="Ingresa la nueva descripción de la actividad"
                     className="form-control"
                     id="descripcion_act"
                     onChange={(e) => setDescripcion_act(e.target.value)}
                   ></textarea>
                 </div>
-              </div>
-              
-              <div className="form-campo">
-                <label className="form-label">Subir fotográfias de la actividad:</label>
-                <input type="file" accept="image/*" id="imagen" onChange={handleImageChange}/>
               </div>
             </div>
           </form >

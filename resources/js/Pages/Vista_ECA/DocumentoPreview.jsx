@@ -3,9 +3,12 @@ import '../../../css/Preview.css';
 import { mostrarSoloMes } from "../../Components/functions.jsx";
 import { get_espacio } from "../../Components/api/espacio_cult.jsx";
 import { getProgramData } from "../../Components/api/program.jsx";
+import { get_memoria, getDesc, getImgByactiv } from "../../Components/api/memoria.jsx";
 import imgceaa from "../../../img/PNG/Logotipo7.png";
 import imgconagua from "../../../img/PNG/CONAGUA.png";
 import imglogo from "../../../img/PNG/Logotipo1.png";
+import ImagenActividad from '@/Components/ImagenActividad';
+
 
 const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNumPaginas }, ref) => {
   const [programa, setPrograma] = useState(null);
@@ -13,7 +16,11 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
   const [error, setError] = useState(null);
   const [espacio, setEspacio] = useState(null);
   const [errorEspacio, setErrorEspacio] = useState(null);
+  const [memoria, setMemoria] = useState([]);
+  const [desc, setDesc] = useState(null); // Descripción general de la memoria fotográfica
+  const [imagesByActivity, setImagesByActivity] = useState({}); // Nuevo estado para almacenar imágenes por actividad
 
+  // Petición para obtener la población beneficiaria
   useEffect(() => {
     const fetchPrograma = async () => {
       try {
@@ -27,18 +34,62 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
     fetchPrograma();
   }, []);
 
+  // Petición para obtener la población beneficiaria
   useEffect(() => {
     const fetchEspacio = async () => {
       try {
         const data = await get_espacio();
         setEspacio(data);
-      } catch (err) {
+      } catch (error) {
         setErrorEspacio('Ocurrió un error al conectar con el servidor.');
       }
     };
     fetchEspacio();
   }, []);
 
+  // Petición para obtener información de las actividades que componen la memoria fotografica
+  // Y ahora también para obtener las imágenes de cada actividad
+  useEffect(() => {
+    const fetchMemoriaAndImages = async () => {
+      try {
+        const memoriaData = await get_memoria();
+        setMemoria(memoriaData);
+
+        if (memoriaData && memoriaData.length > 0) {
+          const imagesPromises = memoriaData.map(async (activity) => {
+            const images = await getImgByactiv(activity.id_actividad);
+            return { id: activity.id_actividad, images: images };
+          });
+          const results = await Promise.all(imagesPromises);
+          const newImagesByActivity = results.reduce((acc, curr) => {
+            acc[curr.id] = curr.images;
+            return acc;
+          }, {});
+          setImagesByActivity(newImagesByActivity);
+        }
+      }
+      catch {
+        setError('Ocurrió un error al conectar con el servidor.');
+      }
+    };
+    fetchMemoriaAndImages();
+  }, []);
+
+  // Petición para obtener la descripción general de la memoria fotográfica
+  useEffect(() => {
+    const fetctDesc = async () => {
+      try {
+        const data = await getDesc();
+        setDesc(data);
+      }
+      catch {
+        setError('Ocurrió un error al conectar con el servidor.');
+      }
+    };
+    fetctDesc();
+  }, []);
+
+  //Mostrar la tabla en un mejor orden
   const espacioAgrupado = useMemo(() => {
     if (!espacio || espacio.length === 0) return [];
     const agrupado = espacio.reduce((acc, item) => {
@@ -54,7 +105,7 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
   }, [espacio]);
 
   const paginas = [
-    // --- HOJA 1 ---
+    // PRESENTACIÓN DEL OFICIO
     <div className="hoja-a4" key="pagina1">
       <div className="header-logo">
         <img className="imagen" src={imgconagua} alt="Logo CONAGUA" style={{ width: '18%', height: 'auto' }} />
@@ -108,15 +159,16 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
       </div>
     </div>,
 
-    // --- HOJA 2 ---
+    // POBLACIÓN ANTENDIDA -> ACTIVIDADES
     <div className="hoja-a4 pagina-horizontal" key="pagina2">
       <div className="header-logo">
         <img className="imagen" src={imgconagua} alt="Logo CONAGUA" style={{ width: '18%', height: 'auto' }} />
         <img className='imagen' src={imgceaa} alt="Logo CEAA" style={{ width: '18%', height: 'auto' }} />
         <img className='imagen' src={imglogo} alt="Logo RNECA" style={{ width: '18%', height: 'auto' }} />
       </div>
+      <br />
       <div className="documento-header">
-        <div className="header-meta-center" style={{ textAlign: 'center', width: '100%' }}>
+        <div className="header-meta-center">
           <p>Estado HIDALGO</p>
           <p>Espacio de Cultura del Agua y Alcantarillado del Municipio de {programa?.[0]?.municipio || '...'}, Hidalgo.</p>
           <br />
@@ -124,66 +176,64 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
         </div>
       </div>
       <div className="documento-contenido">
-        {cargando ? <p>Cargando datos de la tabla...</p> : error ? <p style={{ color: 'red' }}>{error}</p> : (
-          programa && programa.length > 0 && (
-            <table className="tabla-programa" border="1" cellPadding="5" cellSpacing="0">
-              <thead>
-                <tr>
-                  <th rowSpan="2">Estado</th>
-                  <th rowSpan="2">Municipio</th>
-                  <th rowSpan="2">Localidad</th>
-                  <th colSpan="2">Plática</th>
-                  <th rowSpan="2">Otras actividades</th>
-                  <th rowSpan="2">Alumnos atendidos</th>
-                  <th rowSpan="2">Población atendida</th>
-                  <th rowSpan="2">Fecha</th>
+        {programa && programa.length > 0 && (
+          <table className="tabla-programa tablas-preview" border="1" cellPadding="5" cellSpacing="0">
+            <thead>
+              <tr>
+                <th rowSpan="2">Estado</th>
+                <th rowSpan="2">Municipio</th>
+                <th rowSpan="2">Localidad</th>
+                <th colSpan="2">Plática</th>
+                <th rowSpan="2">Otras actividades</th>
+                <th rowSpan="2">Alumnos atendidos</th>
+                <th rowSpan="2">Población atendida</th>
+                <th rowSpan="2">Fecha</th>
+              </tr>
+              <tr>
+                <th>Escolar</th>
+                <th>Comunitaria</th>
+              </tr>
+            </thead>
+            <tbody>
+              {programa.map((item, index) => (
+                <tr key={index}>
+                  <td>Hidalgo</td>
+                  <td>{item.municipio || '---'}</td>
+                  <td>{item.localidad || '---'}</td>
+                  <td>{item.tipo_platica === 'escolar' ? 'X' : ''}</td>
+                  <td>{item.tipo_platica === 'comunitaria' ? 'X' : ''}</td>
+                  <td>{item.otras_activ || '---'}</td>
+                  <td>{item.alumnos_Aten || '---'}</td>
+                  <td>{item.pobl_ate || '---'}</td>
+                  <td>{new Date(item.fecha_mes).toLocaleDateString() || '---'}</td>
                 </tr>
-                <tr>
-                  <th>Escolar</th>
-                  <th>Comunitaria</th>
-                </tr>
-              </thead>
-              <tbody>
-                {programa.map((item, index) => (
-                  <tr key={index}>
-                    <td>Hidalgo</td>
-                    <td>{item.municipio || '---'}</td>
-                    <td>{item.localidad || '---'}</td>
-                    <td>{item.tipo_platica === 'escolar' ? 'X' : ''}</td>
-                    <td>{item.tipo_platica === 'comunitaria' ? 'X' : ''}</td>
-                    <td>{item.otras_activ || '---'}</td>
-                    <td>{item.alumnos_Aten || '---'}</td>
-                    <td>{item.pobl_ate || '---'}</td>
-                    <td>{new Date(item.fecha_mes).toLocaleDateString() || '---'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
       <div className="documento-footer"></div>
     </div>,
 
-    // --- HOJA 3 ---
+    // POBLACIÓN BENEFICIARIA
     <div className="hoja-a4 pagina-horizontal" key="pagina3">
       <div className="header-logo">
         <img className="imagen" src={imgconagua} alt="Logo CONAGUA" style={{ width: '18%', height: 'auto' }} />
         <img className='imagen' src={imgceaa} alt="Logo CEAA" style={{ width: '18%', height: 'auto' }} />
         <img className='imagen' src={imglogo} alt="Logo RNECA" style={{ width: '18%', height: 'auto' }} />
       </div>
+      <br />
       <div className="documento-header">
-        <div className="header-meta-center" style={{ textAlign: 'center', width: '100%' }}>
-          <p>Estado HIDALGO</p>
-          <p>Espacio de Cultura del Agua y Alcantarillado del Municipio de {programa?.[0]?.municipio || '...'}, Hidalgo.</p>
+        <div className="header-meta-center">
+          <p>Información sobre la población beneficiera con las acciones de Cultura del Agua.</p>
           <br />
-          <p>Programa de Cultura del Agua / Informe mensual Cultura del Agua</p>
+          <p>Espacio de Cultura del Agua</p>
         </div>
       </div>
       <div className="documento-contenido">
         {cargando ? <p>Cargando datos de la tabla...</p> : errorEspacio ? <p style={{ color: 'red' }}>{errorEspacio}</p> : (
           espacioAgrupado.length > 0 && (
-            <table className="tabla-programa" border="1" cellPadding="5" cellSpacing="0">
+            <table className="tabla-espacio tablas-preview" border="1" cellPadding="5" cellSpacing="0">
               <thead>
                 <tr>
                   <th rowSpan="4">Clave del ECA</th>
@@ -242,6 +292,56 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
         )}
       </div>
       <div className="documento-footer"></div>
+    </div>,
+
+    // MEMORIA FOTOGRAFICA
+    <div className="hoja-a4" key="pagina1">
+      <div className="header-logo">
+        <img className="imagen" src={imgconagua} alt="Logo CONAGUA" style={{ width: '18%', height: 'auto' }} />
+        <img className='imagen' src={imgceaa} alt="Logo CEAA" style={{ width: '18%', height: 'auto' }} />
+        <img className='imagen' src={imglogo} alt="Logo RNECA" style={{ width: '18%', height: 'auto' }} />
+      </div>
+      <div className="documento-header">
+        <div>
+          <h1 className='seccion-titulo header-meta-center' >MEMORIA FOTOGRAFICA</h1>
+          <p className='header-meta-center'>Informes del mes de </p>
+          <br />
+          <p>{desc?.[0]?.descrip_gen || '---'}</p>
+        </div>
+      </div>
+      <div className="documento-contenido">
+        <section>
+          {memoria.map((item) => ( // Iteramos sobre cada actividad de la memoria
+            <div key={item.id_actividad}> {/* Añadimos una key única para cada actividad */}
+              <div className="descripcion-parrafo">
+                <li><h1 className="seccion-titulo">{item.otras_activ || '---'}</h1></li>
+                <p>{item.descripcion || '---'}</p>
+              </div>
+              <h2 className="seccion-titulo">Fotos de la Actividad: {item.otras_activ || '---'}</h2> {/* Usamos el título de la actividad */}
+              <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                {imagesByActivity[item.id_actividad] && imagesByActivity[item.id_actividad].length > 0 ? (
+                  imagesByActivity[item.id_actividad].map((foto) => (
+                    <ImagenActividad key={foto.id_foto} idFoto={foto.id_foto} />
+                  ))
+                ) : (
+                  <p>No hay fotos registradas para esta actividad.</p>
+                )}
+              </div>
+              <br />
+            </div>
+          ))}
+
+        </section>
+        <section>
+          <h2 className="seccion-despedida"></h2>
+          <div className="info-firma">
+          </div>
+
+        </section>
+      </div>
+      <div className="documento-footer">
+
+      </div>
     </div>
   ];
 

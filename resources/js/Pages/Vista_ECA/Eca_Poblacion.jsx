@@ -1,11 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { create_espacio } from "../../Components/api/espacio_cult.jsx"
+import { create_espacio, get_espacio } from "../../Components/api/espacio_cult.jsx"
 import Toast from "../Toast.jsx";
 import Swal from "sweetalert2";
 
 
 function VECA_Poblacion({ onComplete }) {
+
+  const [programa, serPorgrama] = useState()
+
+  useEffect(() => {
+    const fetchPrograma = async () => {
+      try {
+        const data = await get_espacio();
+        serPorgrama(data);
+      } catch (error) {
+        console.error('Error al obtener los programas:', error);
+      }
+    };
+
+    fetchPrograma();
+  }, []);
+
+  const [alert, setAlert] = useState({
+    type: '',
+    message: ''
+  })
 
   const [poblacion, setPoblacion] = useState({
     hombres13_17: 0,

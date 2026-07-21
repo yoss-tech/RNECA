@@ -5,12 +5,20 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use App\Models\memoria_foto;
 use App\Models\Eca;
 
 class MemoriaFotoController extends Controller
 {
-    public function index() {}
+    public function index()
+    {
+        $memoria = DB::table('memoria_fotografica')
+            ->join('eca', 'eca.clave_eca', '=', 'memoria_fotografica.id_claveEca')
+            ->where('eca.id_usuario', auth()->user()->id_usuario)
+            ->get();
+        return response()->json($memoria);
+    }
 
     public function store(Request $request)
     {

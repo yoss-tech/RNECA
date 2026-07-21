@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Crear_Actividad from "../Modals/Crear/Crear_Actividad.jsx";
 // El modal Crear_Memoria es el que se usa para adjuntar evidencia fotográfica.
-import Crear_Memoria from "../Modals/Crear/Crear_Memoria.jsx";
 import { getProgramData, delete_program } from "../../Components/api/program.jsx"
 import Mod_Actividad from "../../Pages/Modals/Modificar/Mod_Actividad.jsx";
 
@@ -10,7 +9,6 @@ function VECA_Actividades() {
 
   const [mostrarModal, setMostrarModal] = useState(false);
   const [mostrarModalMod, setMostrarModalMod] = useState(false);
-  const [mostrarModalEvidencia, setMostrarModalEvidencia] = useState(false);
   const [actividadSeleccionada, setActividadSeleccionada] = useState(null);
   const [opcionesAbiertas, setOpcionesAbiertas] = useState(null); // Almacena el índice de la fila con el menú abierto
 
@@ -38,11 +36,6 @@ function VECA_Actividades() {
   const toggleOpciones = (index) => {
     // Si el menú actual ya está abierto, ciérralo. Si no, ábrelo.
     setOpcionesAbiertas(opcionesAbiertas === index ? null : index);
-  };
-
-  const handleAdjuntarEvidencia = (actividad) => {
-    setActividadSeleccionada(actividad);
-    setMostrarModalEvidencia(true);
   };
 
   const handleModificarActividad = (actividad) => {
@@ -79,13 +72,6 @@ function VECA_Actividades() {
       {mostrarModal && (
         <Crear_Actividad
           cerrarModal={() => setMostrarModal(false)}
-        />
-      )}
-      {/* Modal para adjuntar evidencia */}
-      {mostrarModalEvidencia && actividadSeleccionada && (
-        <Crear_Memoria
-          cerrarModal={() => setMostrarModalEvidencia(false)}
-          actividad={actividadSeleccionada} // Pasamos la actividad seleccionada al modal
         />
       )}
       {/* Modal para modificar actividad */}
@@ -126,9 +112,6 @@ function VECA_Actividades() {
                   </button>
                   {opcionesAbiertas === index && (
                     <div className="menu-perfil" style={{ position: 'absolute', right: 0, top: '100%', zIndex: 10 }}>
-                      <button className="btn-evidencia" onClick={() => handleAdjuntarEvidencia(item)}>
-                        Adjuntar evidencia
-                      </button>
                       <button className="btn-modificar" onClick={() => handleModificarActividad(item)}>
                         Modificar
                       </button>

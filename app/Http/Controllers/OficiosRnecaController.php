@@ -18,7 +18,7 @@ class OficiosRnecaController extends Controller
      */
     public function index()
     {
-        $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
+        // $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
 
         $oficios = DB::table('oficios_rneca as ofr')
             ->join('eca', 'ofr.idClave_eca', '=', 'eca.clave_eca')
@@ -39,6 +39,26 @@ class OficiosRnecaController extends Controller
 
         return response()->json($oficios);
     }
+
+    public function OficioRneca(){
+        $oficios = DB::table('oficios_rneca as ofr')
+        ->join('eca', 'ofr.idClave_eca', '=', 'eca.clave_eca')
+            ->join('usuarios as u', 'eca.id_usuario', '=', 'u.id_usuario')
+            ->join('tipo_estatus as te', 'ofr.id_estatus', '=', 'te.id_estatus')
+            ->select(
+                'u.nombre as nombre_eca',
+                'ofr.id_oficio',
+                'ofr.mes_oficio',
+                'te.nombre_tipo',
+                'ofr.fecha_registro',
+                'eca.clave_eca'
+            )
+            ->where('eca.id_usuario', auth()->user()->id_usuario)
+            ->get();
+
+        return response()->json($oficios);
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -112,21 +132,21 @@ class OficiosRnecaController extends Controller
         $rutaAbsoluta = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $rutaAbsoluta);
 
 
-        // $rutaInterna = str_replace('documents', 'public\documents', $oficio->ruta_oficio);
+        $rutaInterna = str_replace('documents', 'app\public\documents', $oficio->ruta_oficio);
 
         $rutaAbsoluta = storage_path($rutaInterna);
 
-        // if (file_exists($rutaAbsoluta)) {
-        //     return response()->download($rutaAbsoluta, "oficio_{$id}.pdf");
-        // }
+        if (file_exists($rutaAbsoluta)) {
+            return response()->download($rutaAbsoluta, "oficio_{$id}.pdf");
+        }
 
         // ESTA LÍNEA ES PARA DEBUG:
-         return response()->json([
-           'ruta_en_base_datos' => $oficio->ruta_oficio,
-            'ruta_interna_generada' => $rutaInterna,
-           'ruta_absoluta_buscada' => $rutaAbsoluta,
-            'existe_fisicamente' => file_exists($rutaAbsoluta) ? 'SÍ' : 'NO'
-        ]);
+        //  return response()->json([
+        //    'ruta_en_base_datos' => $oficio->ruta_oficio,
+        //     'ruta_interna_generada' => $rutaInterna,
+        //    'ruta_absoluta_buscada' => $rutaAbsoluta,
+        //     'existe_fisicamente' => file_exists($rutaAbsoluta) ? 'SÍ' : 'NO'
+        // ]);
 
         // En caso de que siga sin existir, te devolverá un JSON detallado
         return response()->json([

@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
 import { create_program } from "../../../Components/api/program.jsx";
+import { create_activ } from "../../../Components/api/memoria.jsx";
 import Toast from "../../Toast.jsx";
 import Swal from "sweetalert2";
+import SelectorImagen from "../../../Components/SelectorImagen.jsx";
+
 
 function Crear_Actividad({ cerrarModal }) {
-  
+
   const [formData, setFormData] = useState({
     municipio: '',
     localidad: '',
@@ -15,9 +18,11 @@ function Crear_Actividad({ cerrarModal }) {
     alumnos_Aten: '',
     pobl_ate: '',
     fecha_mes: '',
-    // id_fecha:'18052026'
   });
-  
+
+  const [descripcionActividad, setDescripcionActividad] = useState(''); // New state for activity description
+  const [imagenes, setImagenes] = useState([]); // State for selected images
+
   const [alerts, setAlerts] = useState([]);
   const showAlert = (type, message) => {
     setAlerts([...alerts, { type, message }]);
@@ -25,9 +30,9 @@ function Crear_Actividad({ cerrarModal }) {
       setAlerts((prev) => prev.slice(1));
     }, 3000);
   };
-  
+
   const [errors, setErrors] = useState({});
-  const validateForm =() => {
+  const validateForm = () => {
     let newErrors = {};
 
     if (!formData.localidad.trim()) newErrors.localidad = 'La localidad es requerida.';
@@ -36,6 +41,8 @@ function Crear_Actividad({ cerrarModal }) {
     if (!formData.otras_activ.trim()) newErrors.otras_activ = 'Las otras actividades son requeridas.';
     if (formData.tipo_platica === 'escolar' && !formData.alumnos_Aten) newErrors.alumnos_Aten = 'El número de alumnos atendidos es requerido.';
     if (formData.tipo_platica === 'comunitaria' && !formData.pobl_ate) newErrors.pobl_ate = 'La población atendida es requerida.';
+    if (!descripcionActividad.trim()) newErrors.descripcionActividad = 'La descripción de la actividad es requerida.';
+    if (imagenes.length === 0) newErrors.imagenes = 'Debes seleccionar al menos una imagen.';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -43,17 +50,25 @@ function Crear_Actividad({ cerrarModal }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formDataToSend = {
+      programa: formData,
+      descripcion: descripcionActividad,
+      imagenes: imagenes
+    }
+
     if (!validateForm()) {
       showAlert('error', 'Por favor, completa todos los campos requeridos.');
       return;
     }
     try {
-      await create_program(formData);
+      // 1. Create the program_cult entry
+      await create_program(formDataToSend);
       Swal.fire({
-         title: "¡Guardado!",
-         text: "La información se guardó correctamente.",
-         icon: "success",
-              confirmButtonText: "Aceptar"
+        title: "¡Guardado!",
+        text: "La información se guardó correctamente.",
+        icon: "success",
+        confirmButtonText: "Aceptar"
       });
       console.log(formData)
       cerrarModal();
@@ -68,8 +83,14 @@ function Crear_Actividad({ cerrarModal }) {
     }
   };
 
-    return (
-      <>
+  const handleImageChange = (event) => {
+    if (event.target.files) {
+      setImagenes(Array.from(event.target.files));
+    }
+  };
+
+  return (
+    <>
       <Toast alerts={alerts} />
       <div className="overlay">
         <div className="modal-box">
@@ -91,7 +112,7 @@ function Crear_Actividad({ cerrarModal }) {
                     title="Ingresa el municipio"
                   />
                 </div>
-                
+
                 <div className="form-campo">
                   <label className="form-label">Localidad</label>
                   <input
@@ -131,7 +152,7 @@ function Crear_Actividad({ cerrarModal }) {
                   </div>
                   {errors.tipo_platica && <p className="error">{errors.tipo_platica}</p>}
                 </div>
-              
+
                 <div className="form-campo">
                   <label className="form-label">Otras Actividades</label>
                   <textarea
@@ -142,44 +163,40 @@ function Crear_Actividad({ cerrarModal }) {
                     className="form-control"
                     onChange={(e) => setFormData({ ...formData, otras_activ: e.target.value })}
                     title="Ingresa las otras actividades"
-                    >
+                  >
                   </textarea>
                   {errors.otras_activ && <p className="error">{errors.otras_activ}</p>}
                 </div>
-              
-                {formData.tipo_platica === "escolar" && (
-                  <div className="form-campo">
-                    <label className="form-label">Alumnos Atendidos</label>
-                    <input
-                      type="number"
-                      name='alumnos_Aten'
-                      id="alumnos_Aten"
-                      placeholder="Ingresa el número de alumnos atendidos"
-                      className="form-control"
-                      min="1"
-                      onChange={(e) => setFormData({ ...formData, alumnos_Aten: e.target.value })}
-                    />
-                    {errors.alumnos_Aten && <p className="error">{errors.alumnos_Aten}</p>}
-                  </div>
-                )}
-              
-                {formData.tipo_platica === "comunitaria" && (
-                  <div className="form-campo">
-                    <label className="form-label">Población atendida</label>
-                    <input
-                      type="number"
-                      name='pobl_ate'
-                      id="pobl_ate"
-                      placeholder="Ingresa la población atendida"
-                      className="form-control"
-                      min="1"
-                      onChange={(e) => setFormData({ ...formData, pobl_ate: e.target.value })}
-                    />
-                    {errors.pobl_ate && <p className="error">{errors.pobl_ate}</p>}
-                  </div>
-                )}
-              
-                <div className="form-campo" class="mb-0">
+
+                <div className="form-campo">
+                  <label className="form-label">Alumnos Atendidos</label>
+                  <input
+                    type="number"
+                    name='alumnos_Aten'
+                    id="alumnos_Aten"
+                    placeholder="Ingresa el número de alumnos atendidos"
+                    className="form-control"
+                    min="1"
+                    onChange={(e) => setFormData({ ...formData, alumnos_Aten: e.target.value })}
+                  />
+                  {errors.alumnos_Aten && <p className="error">{errors.alumnos_Aten}</p>}
+                </div>
+
+                <div className="form-campo">
+                  <label className="form-label">Población atendida</label>
+                  <input
+                    type="number"
+                    name='pobl_ate'
+                    id="pobl_ate"
+                    placeholder="Ingresa la población atendida"
+                    className="form-control"
+                    min="1"
+                    onChange={(e) => setFormData({ ...formData, pobl_ate: e.target.value })}
+                  />
+                  {errors.pobl_ate && <p className="error">{errors.pobl_ate}</p>}
+                </div>
+
+                <div className="form-campo">
                   <label className="form-label">Fecha de la actividad</label>
                   <input
                     type="date"
@@ -191,6 +208,29 @@ function Crear_Actividad({ cerrarModal }) {
                   />
                   {errors.fecha_mes && <p className="error">{errors.fecha_mes}</p>}
                 </div>
+
+                <div className="form-campo">
+                  <label className="form-label">Descripción de la actividad</label>
+                  <textarea
+                    rows="3"
+                    name='descripcionActividad'
+                    id="descripcionActividad"
+                    placeholder="Ingresa la descripción detallada de la actividad"
+                    className="form-control"
+                    value={descripcionActividad}
+                    onChange={(e) => setDescripcionActividad(e.target.value)}
+                    title="Ingresa la descripción detallada de la actividad"
+                  ></textarea>
+                  {errors.descripcionActividad && <p className="error">{errors.descripcionActividad}</p>}
+                </div>
+
+                <div className="form-campo">
+                  <label className="form-label">Subir fotográfias de la actividad:</label>
+                  {/* Asegúrate que SelectorImagen pase el 'multiple' al input real */}
+                  <SelectorImagen onChange={handleImageChange} multiple={true} />
+                </div>
+                {errors.imagenes && <p className="error">{errors.imagenes}</p>}
+
               </div>
             </form >
           </div>
