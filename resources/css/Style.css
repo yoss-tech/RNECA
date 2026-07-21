@@ -234,7 +234,7 @@ h3 {
 
 p {
     font-size: 18px;
-    font-weight: 500;
+    font-weight: 400;
     color: var(--negro-color);
     margin-bottom: 5px;
 }
@@ -243,9 +243,27 @@ p {
     color: var(--blanco-color);
 }
 
+.text-title{
+    font-weight: 700px;
+    margin-top: 8px;
+    color:var(--ginda-color);
+}
+
+.text-subtitle{
+    font-weight: 700px;
+    margin-top: 8px;
+    color:var(--dorado-color);
+}
+
+.text-bold{
+    font-weight: 700px;
+    margin-top: 8px;
+    color:var(--negro-color);
+}
+
+
 .error {
-    margin-top: 5px;
-    margin-bottom: 10px;
+    margin-top: 10px;
     color: var(--rojo-color);
     font-size: 14px;
 }
@@ -693,7 +711,10 @@ input[type="file"] {
     border: none;
 }
 
-.btn-cerrar-sesion, .btn-modificar, .btn-eliminar, .btn-evidencia{
+.btn-cerrar-sesion, 
+.btn-modificar,
+.btn-eliminar,
+.btn-evidencia{
     width: 100%;
     padding: 12px 16px;
     border: none;
@@ -705,22 +726,21 @@ input[type="file"] {
 .btn-cerrar-sesion:hover{
     background: var(--ginda-color);
     color: var(--blanco-color);
-
 }
 
 .btn-modificar:hover{
-    background: var(--fondo-color);
-
+     background: var(--ginda-color);
+    color: var(--blanco-color);
 }
 
 .btn-eliminar:hover{
-    background: var(--fondo-color);
-
+     background: var(--ginda-color);
+    color: var(--blanco-color);
 } 
 
 .btn-evidencia:hover{
-    background: var(--fondo-color);
-
+     background: var(--ginda-color);
+    color: var(--blanco-color);
 }
 
 /* ================= ICONOS ================= */
@@ -788,7 +808,7 @@ th {
 }
 
 td {
-    padding: 15px 10px;
+    padding: 5px 10px;
     font-size: 18px;
     border-bottom: 1px solid #d9d9d9;
     color: var(--negro-color);

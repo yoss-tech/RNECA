@@ -145,8 +145,8 @@ function Lic_Inicio() {
               
               <div className="dashboard">
                 <div className="dashboard-left">
-                  <div className="buscador">
-                     <input type="text" placeholder="Buscar..." className="buscador-control" 
+                 <div className="buscador">
+                    <input type="text" placeholder="Buscar..." className="buscador-control" 
                     title="Ingresa el municipio para realizar tu busqueda"
                     value={buscar}
                     onChange={(e) => setBuscar(e.target.value)}
@@ -177,7 +177,8 @@ function Lic_Inicio() {
                     </div>
                     ))}                   
                   </div>
-                  <div className="container-paginacion">
+                  
+                   <div className="container-paginacion">
                      {numPaginas > 1 && (
                     <div className="paginacion-controles">
                       <button onClick={irAPaginaAnterior} disabled={paginaActual === 1} className="btn-blanco">
@@ -193,7 +194,7 @@ function Lic_Inicio() {
                 </div>
               </div>
 
-                <div className="dashboard-right">
+                 <div className="dashboard-right">
                   <div className="card-grafico">
                     <h3 className="card-title">Cumplimiento de Entrega de Informes mensuales </h3>
                     <p className="card-text">Visualice el porcentaje de municipios que han cumplido con la entrega de su informe mensual y aquellos que se encuentran pendientes.</p>
