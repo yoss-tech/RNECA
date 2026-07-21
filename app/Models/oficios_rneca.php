@@ -31,6 +31,7 @@ class oficios_rneca extends Model
         'id_oficio',
         'mes_oficio',
         'ruta_oficio',
+        'ruta_oficio_firm',
         'idClave_eca',
         'id_estatus'
     ];

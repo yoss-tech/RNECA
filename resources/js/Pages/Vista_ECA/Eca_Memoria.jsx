@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { create_memoria, get_activ } from "../../Components/api/memoria.jsx";
-import { getProgramData } from "../../Components/api/program.jsx";
+import { create_memoria, get_memoria } from "../../Components/api/memoria.jsx";
 import Mod_Memoria from "../../Pages/Modals/Modificar/Mod_Memoria.jsx";
+import Mostrar_Imagenes from "../../Pages/Modals/MostrarImagen.jsx";
 import Swal from "sweetalert2";
 
 function VECA_Memoria({ onCompletes }) {
@@ -9,6 +9,7 @@ function VECA_Memoria({ onCompletes }) {
   // Crear la descripcion de la memoria
   const [descrip_gen, setDescripcion] = useState('');
   const [mostrarModalMod, setMostrarModalMod] = useState(false);
+  const [mostrar_Imagenes, setMostrar_Imagenes] = useState(false);
   const [memoriaSeleccionada, setMemoriaSeleccionada] = useState(null);
 
   const handleSubmit = async (e) => {
@@ -31,7 +32,7 @@ function VECA_Memoria({ onCompletes }) {
   useEffect (() => {
       const loadInfo = async () => {
         try {
-          const response = await get_activ();
+          const response = await get_memoria();
           setMemoria(response || []); // Asigna la respuesta directamente. Si es null/undefined, usa un array vacío.
           console.log(response);
         }
@@ -47,6 +48,11 @@ function VECA_Memoria({ onCompletes }) {
     setMemoriaSeleccionada(memoria);
     setMostrarModalMod(true);
   };
+
+  const handleVerImagenes = (memoria) => {
+    setMemoriaSeleccionada(memoria);
+    setMostrar_Imagenes(true);
+  }
 
 
   return (
@@ -89,6 +95,15 @@ function VECA_Memoria({ onCompletes }) {
             />
           )
         }
+
+        {
+          mostrar_Imagenes && (
+            <Mostrar_Imagenes
+              cerrarModal={() => setMostrar_Imagenes(false)}
+              actividad={memoriaSeleccionada}
+            />
+          )
+        }
         
         <tbody>
           {memoria.map((item, index) => (
@@ -96,7 +111,7 @@ function VECA_Memoria({ onCompletes }) {
               <td>{item.otras_activ}</td>
               <td>{item.descripcion}</td>
               <td>
-                <button type="button" className="btn-primario">Ver fotografías</button>
+                <button type="button" className="btn-primario" onClick={() => handleVerImagenes(item)}>Ver fotografías</button>
               </td>
               <td>
                 <button type="button" className="btn-negativo" onClick={() => handleModificarMemoria(item)}>Modificar</button>

@@ -1,8 +1,24 @@
 import axiosInstance from "./axiosInstance";
 
 export const create_program = async (data) =>{
+    const formData = new FormData();
+    formData.append('municipio', data.programa.municipio);
+    formData.append('localidad', data.programa.localidad);
+    formData.append('tipo_platica', data.programa.tipo_platica);
+    formData.append('otras_activ', data.programa.otras_activ);
+    formData.append('alumnos_Aten', data.programa.alumnos_Aten);
+    formData.append('pobl_ate', data.programa.pobl_ate);
+    formData.append('fecha_mes', data.programa.fecha_mes);
+    formData.append('descripcion', data.descripcion);
+    
+    if (data.imagenes && data.imagenes.length > 0) {
+        for (let i = 0; i < data.imagenes.length; i++) {
+            formData.append('imagenes[]', data.imagenes[i]);
+        }
+    }
+
     try{
-        const response = await axiosInstance.post('/create_program', data);
+        const response = await axiosInstance.post('/create_program', formData);
         return response.data;
     }
     catch(error){
@@ -29,6 +45,17 @@ export const delete_program = async (id) => {
         return response.data;
     } catch (error) {
         console.error("Error en delete_program:", error);
+        return null;
+    }
+}
+
+export const update_program = async (data) => {
+    try{
+        const response = await axiosInstance.put('/update_program', data);
+        return response.data;
+    }
+    catch(error){
+        console.log(error);
         return null;
     }
 }

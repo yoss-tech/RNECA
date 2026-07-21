@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\program;
 use App\Models\Eca;
+use App\Models\actividad_memo;
+use App\Models\foto_activ;
+use App\Models\memoria_foto;
+
 
 class ProgramController extends Controller
 {
@@ -26,6 +30,7 @@ class ProgramController extends Controller
                 'pc.fecha_mes',
                 'pc.id_program'
             )
+            ->where('eca.id_usuario', auth()->user()->id_usuario)
             ->get();
         return response()->json($programs); // Devuelve un array de objetos.
     }
@@ -46,6 +51,8 @@ class ProgramController extends Controller
             'localidad' => 'required',
             'tipo_platica' => 'required',
             'otras_activ' => 'required',
+            'alumnos_Aten' => 'required',
+            'pobl_ate' => 'required',
             'fecha_mes' => 'required',
         ]);
 
@@ -69,6 +76,38 @@ class ProgramController extends Controller
             'clave_eca' => $eca->clave_eca, // Se asigna automáticamente
             // 'id_fecha' => $fecha-> id_fecha,
         ]);
+        
+        $idProgram = $program->id_program;
+
+        // 3. Obtener la memoria fotográfica más reciente asociada a ese ECA.
+        $memoria = memoria_foto::where('id_claveEca', $eca->clave_eca)
+            ->latest('id_memoria') // Forma más limpia de ordenar por el más reciente si usas timestamps o IDs secuenciales.
+            ->first();
+
+        // 4. Crear el registro de la actividad.
+        $actividad = actividad_memo::create([
+            'descripcion' => $request->descripcion,
+            'id_memoria'  => $memoria->id_memoria,
+            'id_program'  => $idProgram
+        ]);
+
+        $imagenesGuardadas = [];
+        // 5. Procesar y guardar cada imagen.
+        if ($request->hasFile('imagenes')) {
+            foreach ($request->file('imagenes') as $archivoImagen) {
+                // Guardar el archivo y obtener la ruta.
+                $path = $archivoImagen->store('uploads', 'public');
+
+                // Crear un registro por cada imagen en la tabla 'foto_activ'.
+                $foto = foto_activ::create([
+                    'nombre'       => $archivoImagen->getClientOriginalName(),
+                    'ruta_img'     => $path,
+                    'id_actividad' => $actividad->id_actividad,
+                ]);
+                $imagenesGuardadas[] = $foto;
+            }
+        }
+
 
         if (!$program) {
             $data = [
@@ -88,7 +127,7 @@ class ProgramController extends Controller
 
     public function destroy($id)
     {
-        $program= program::find($id);
+        $program = program::find($id);
 
         if (!$program) {
             $data = [
@@ -106,11 +145,57 @@ class ProgramController extends Controller
         ];
 
         return response()->json($data, 200);
-        
     }
 
-    public function show()
+    public function update(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'id_program' => 'required',
+            'municipio' => 'required',
+            'localidad' => 'required',
+            'tipo_platica' => 'required',
+            'otras_activ' => 'required',
+            'alumnos_Aten' => 'required',
+            'pobl_ate' => 'required',
+            'fecha_mes' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $data = [
+                'message' => 'Error en la validación de datos',
+                'status' => 400,
+                'body' => $validator->errors()
+            ];
+            return response()->json($data, 400);
+        }
+
+        $validatedData = $validator->validated();
+
+        try {
+            DB::transaction(function () use ($validatedData) {
+                $Newprogram = program::findOrFail($validatedData['id_program']);
+                $Newprogram->municipio = $validatedData['municipio'];
+                $Newprogram->localidad = $validatedData['localidad'];
+                $Newprogram->tipo_platica = $validatedData['tipo_platica'];
+                $Newprogram->otras_activ = $validatedData['otras_activ'];
+                $Newprogram->alumnos_Aten = $validatedData['alumnos_Aten'];
+                $Newprogram->pobl_ate = $validatedData['pobl_ate'];
+                $Newprogram->fecha_mes = $validatedData['fecha_mes'];
+                $Newprogram->save();
+            });
+
+            $data = [
+                'message' => 'Actualización realizada correctamente',
+                'status' => 201,
+            ];
+            return response()->json($data, 201);
+        } catch (\Exception $e) {
+            $data = [
+                'message' => 'Error en la actualización',
+                'body' => $e->getMessage(),
+                'status' => 500
+            ];
+            return response()->json($data, 500);
+        }
     }
 }

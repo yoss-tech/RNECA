@@ -22,8 +22,8 @@
 
 .modal-box {
     width: 100%;
-    max-width: 550px;
-    max-height: 95vh;
+    max-width: 750px;
+    max-height: 105vh;
     background: var(--blanco-color);
     overflow: hidden;
     display: flex;

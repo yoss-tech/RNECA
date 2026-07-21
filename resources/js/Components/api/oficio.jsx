@@ -30,3 +30,14 @@ export const get_ofice = async () => {
         return null;
     }
 }
+
+export const getOficeEca = async () => {
+    try{
+        const response = await axiosInstance.get('/getOficeByEca');
+        return response.data;
+    }
+    catch(error){
+        console.log(error);
+        return null;
+    }
+}

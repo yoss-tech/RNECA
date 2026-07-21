@@ -7,6 +7,7 @@ use App\Models\actividad_memo;
 use App\Models\Eca;
 use App\Models\foto_activ;
 use App\Models\memoria_foto;
+use App\Models\program;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -23,9 +24,7 @@ class ActividadMemoController extends Controller
         $actividad_memo = DB::table('actividades_mem as am')
             ->join('program_cult as pc', 'am.id_program', '=', 'pc.id_program')
             ->join('memoria_fotografica as mf', 'am.id_memoria', '=', 'mf.id_memoria')
-            ->join('foto_activ as fa', 'am.id_actividad', '=', 'fa.id_actividad')
             ->select(
-                'mf.descrip_gen',
                 'am.descripcion',
                 'pc.otras_activ',
                 'am.id_actividad',
@@ -38,6 +37,29 @@ class ActividadMemoController extends Controller
             ->get();
 
         return response()->json($actividad_memo);
+    }
+
+    public function actividadById($id)
+    {
+        $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
+
+        $actividadById = DB::table('actividades_mem as am')
+            ->join('program_cult as pc', 'am.id_program', '=', 'pc.id_program')
+            ->join('memoria_fotografica as mf', 'am.id_memoria', '=', 'mf.id_memoria')
+            ->join('foto_activ as fa', 'am.id_actividad', '=', 'fa.id_actividad')
+            ->select(
+                'am.descripcion',
+                'pc.otras_activ',
+                'am.id_actividad',
+                'am.id_program',
+                'mf.id_claveEca'
+            )
+            ->where('mf.id_claveEca', $eca->clave_eca)
+            ->where('am.id_actividad', $id)
+            ->distinct()
+            ->get();
+
+        return response()->json($actividadById);
     }
 
     /**
@@ -129,9 +151,55 @@ class ActividadMemoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, actividad_memo $actividad_memo)
+    public function update(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'id_program' => 'required|string',
+            'id_actividad' => 'required|string',
+            'otras_activ' => 'required|string',
+            'descripcion' => 'required|string'
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Error en la validación de datos',
+                'body'    => $validator->errors(),
+            ], 400);
+        }
+
+        $memoria = $request->validate([
+            'id_program' => 'required|string',
+            'id_actividad' => 'required|string',
+            // 'otras_activ' => 'string',
+            'descripcion' => 'required|string'
+        ]);
+
+        $validatedData = $validator->validated();
+ 
+        try{
+            DB::transaction(function () use ($validatedData){
+                $programa = program::findOrFail($validatedData['id_program']);
+                $programa->otras_activ = $validatedData['otras_activ'];
+                $programa->save();  
+                
+                $actividad = actividad_memo::findOrFail($validatedData['id_actividad']);
+                $actividad->descripcion = $validatedData['descripcion'];
+                $actividad->save();
+            });
+
+            return response()->json([
+                'message' => 'Actividad y programa actualizados correctamente',
+                'status' => 'succes',
+            ], 201);
+
+        }catch(\Exception $e){
+            return response()->json([
+                'message' => 'Error',
+                'body' => $e->getMessage(),
+                'status' => 400], 
+                400);
+        }
     }
 
     /**
