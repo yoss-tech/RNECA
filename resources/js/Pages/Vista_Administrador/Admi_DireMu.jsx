@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modificar_DireMunicipal from "../Modals/Modificar/Mod_DireMu";
 import Crear_DirectorMunicipal from "../Modals/Crear/Crear_DireMu";
 import EliminarElemento from "../Modals/Eliminar_Elemento";
@@ -25,8 +25,8 @@ function Admi_DireMu() {
       <thead>
         <tr>
           <th className="th-start">Director municipal</th>
+          <th className="th-start">Municipio</th>
           <th className="th-start">Correo</th>
-          <th className="th-start">Contraseña</th>
           <th className="th-start">Estado</th>
           <th>Acciones</th>
         </tr>
@@ -34,29 +34,28 @@ function Admi_DireMu() {
       
       <tbody>
         <tr>
+          <td>Nombre</td>
           <td>
             <p className="form-subtitle">MUNICIPIO</p>
             <p className="card-subtitle">INSTANCIA OPERATIVA</p>
-            <p className="card-text">NOMBRE</p>
           </td>
           <td>CORREO</td>
-          <td>CONTRASEÑA</td>
           <td>ACTIVO</td>
           <td className="btn-container-vertical">
-             <button className="btn-neutral"  onClick={() =>setMostrarModal3(true)}>
-             Eliminar</button>
-                {mostrarModal3 && (
-                <EliminarElemento
-                    cerrarModal={() => setMostrarModal3(false)}
-                />
-                )}
             <button className="btn-negativo"  onClick={() =>setMostrarModal(true)}>
-             Modificar</button>
-                {mostrarModal && (
-                <Modificar_DireMunicipal
-                    cerrarModal={() => setMostrarModal(false)}
-                />
-                )}
+            Modificar</button>
+            {mostrarModal && (
+              <Modificar_DireMunicipal
+                cerrarModal={() => setMostrarModal(false)}
+              />
+            )}
+            <button className="btn-neutral"  onClick={() =>setMostrarModal3(true)}>
+            Eliminar</button>
+            {mostrarModal3 && (
+              <EliminarElemento
+                cerrarModal={() => setMostrarModal3(false)}
+              />
+            )}
           </td>
         </tr>
       </tbody>
@@ -65,4 +64,4 @@ function Admi_DireMu() {
   );
 }
 
-export default Admi_DireMu;   
+export default Admi_DireMu;

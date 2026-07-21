@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Users;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 // use App\Http\resource\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -15,31 +16,65 @@ class UsersController extends Controller
     // GET /api/users
     public function index()
     {
-        $users = DB::table('usuarios')
+        
+    }
+
+    public function showUserEcas()
+    {
+        $ecas = DB::table('usuarios')
             ->join('rol', 'usuarios.id_rol', '=', 'rol.id_rol')
+            ->join('eca', 'usuarios.id_usuario', '=', 'eca.id_usuario')
+            ->join('direccion', 'eca.id_direccion', '=', 'direccion.id_direccion')
+            ->join('municipio', 'direccion.id_municipio', '=', 'municipio.id_municipio')
+            ->join('tipo_estatus', 'eca.id_estatus', '=', 'tipo_estatus.id_estatus')
+            ->orderBy('municipio.nombre_munipio', 'asc')
+            ->orderBy('usuarios.nombre', 'asc')
             ->select(
-                'usuarios.id_usuario', 
+                'usuarios.id_usuario',
+                'eca.nombre_inst_ope',
+                'municipio.nombre_munipio',
                 'usuarios.nombre', 
-                'usuarios.correo', 
+                'usuarios.correo',
+                'tipo_estatus.nombre_tipo as estatus',
                 'rol.nombre_rol as rol'
             )
+            ->where('rol.id_rol', 'rol1')
             ->get();
-
-        $data = [
-            'message' => 'Usuarios obtenidos correctamente',
+        
+        return response()->json([
+            'message' => 'Usuarios ECA obtenidos correctamente',
             'status' => 200,
-            'body' => $users
-        ];
+            'body' => $ecas
+        ], 200);
+    }
 
-        if($users->isEmpty()){
-            $data = [
-                'message' => 'No se encontraron usuarios',
-                'status' => 200
-            ];
-            return response()->json($data, 404);
-        }
-
-        return response()->json($data, 200);
+    public function showUserDicMun()
+    {
+        $dicMun = DB::table('usuarios')
+            ->join('rol', 'usuarios.id_rol', '=', 'rol.id_rol')
+            //->join('director', 'usuarios.id_usuario', '=', 'director .id_usuario')
+            //->join('direccion', 'director.id_direccion', '=', 'direccion.id_direccion')
+            //->join('municipio', 'direccion.id_municipio', '=', 'municipio.id_municipio')
+            //->join('tipo_estatus', 'director.id_estatus', '=', 'tipo_estatus.id_estatus')
+            //->orderBy('municipio.nombre_munipio', 'asc')
+            ->orderBy('usuarios.nombre', 'asc')
+            ->select(
+                'usuarios.id_usuario',
+                //'director.nombre_inst_ope',
+                //'municipio.nombre_munipio',
+                'usuarios.nombre', 
+                'usuarios.correo',
+                //'tipo_estatus.nombre_tipo as estatus',
+                'rol.nombre_rol as rol'
+            )
+            ->where('rol.id_rol', 'rol2')
+            ->get();
+        
+        return response()->json([
+            'message' => 'Usuarios directores obtenidos correctamente',
+            'status' => 200,
+            'body' => $dicMun
+        ], 200);
     }
 
     /**
@@ -55,12 +90,7 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        //Crear validación de datos para el login
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-        ]);
+        //
     }
 
     /**
@@ -86,16 +116,48 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Users $users)
+    public function update(Request $request, $id)
     {
-        //
+        $usuario = DB::table('usuarios')
+            ->where('id_usuario', $id)
+            ->first();
+        
+        if (!$usuario) {
+            return response()->json([
+                'message' => 'Usuario no encontrado',
+                'status' => 404
+            ], 404);
+        }
+
+        $datos = [
+            'correo' => $request->correo
+        ];
+
+        if ($request->password) {
+            $datos['password'] = Hash::make($request->password);
+        }
+        
+        DB::table('usuarios')
+            ->where('id_usuario', $id)
+            ->update($datos);
+
+        return response()->json([
+            'message' => 'Usuario actualizado correctamente',
+            'status' => 200
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Users $users)
+    public function destroy($id)
     {
-        //
+        $usuario = Users::findOrFail($id);
+        $usuario->delete();
+
+        return response()->json([
+            'message' => 'Usuario eliminado correctamente',
+            'status' => 200
+        ], 200);
     }
 }
