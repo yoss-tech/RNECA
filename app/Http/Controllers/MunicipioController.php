@@ -30,4 +30,15 @@ class MunicipioController extends Controller
         'body' => $municipio
         ]);
     }
+
+    public function buscarSelect(Request $request)
+    {
+        $id = $request->id_municipio;
+        $municipio = Municipio::where('id_municipio', $id)
+        ->get();
+        return response()->json([
+        'status' => 200,
+        'body' => $municipio
+        ]);
+    }
 }

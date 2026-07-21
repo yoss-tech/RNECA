@@ -12,7 +12,7 @@ use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\EspacioController;
 use App\Http\Controllers\MemoriaFotoController;
 use App\Http\Controllers\ActividadMemoController;
-use App\Http\Controllers\OficiosRnecaController;
+use App\Http\Controllers\MunicipioController;
 
 
 
@@ -56,8 +56,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Actividades para la memoria fotografica
     Route::post('/create_activ', [ActividadMemoController::class, 'store']);
 
-    //Oficio RNECA
-    Route::post('/create_ofice', [OficiosRnecaController::class, 'store']);
 
     //METODOS GET
     // Informacion del espacio de cultura
@@ -72,8 +70,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Informacion de la actividad
     Route::get('/infoActiv', [ActividadMemoController::class, 'index']);
 
-    // Información del oficio
-    Route::get('/get_ofice', [OficiosRnecaController::class, 'index']);
+    //Información de municipios 
+    Route::get('/municipios', [MunicipioController::class, 'index']);
+
+    //Busqueda por municipio en texto
+    Route::get('/municipios/buscar', [MunicipioController::class, 'buscar']);
+
+    //busqueda por municipio en el select
+    Route::get('/municipios/select', [MunicipioController::class, 'buscarSelect']);
 
 
 
@@ -91,12 +95,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/delete_espacio/{id}', [EspacioController::class, 'destroy']);
     
 });
-
-    // Route::get('/pdf', [OficiosRnecaController::class, 'indexPdf']);
-    // Route::get('/informe', [ProgramController::class, 'generarInforme']);
-
-    Route::get('/documents/{id}', [OficiosRnecaController::class, 'download']);
-
 
 
 // El login se maneja a través de AuthController vinculado en auth.php

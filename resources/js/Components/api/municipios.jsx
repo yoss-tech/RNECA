@@ -23,3 +23,18 @@ export const buscarMunicipio = async (buscar) => {
         return null;
     }
 };
+
+export const buscarMunicipioSelect = async (id_municipio) => {
+    try {
+        const response = await axiosInstance.get("/municipios/select", {
+            params: {
+                id_municipio
+            }
+        });
+
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+};
