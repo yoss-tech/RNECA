@@ -21,18 +21,14 @@ class ActividadMemoController extends Controller
     {
         $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
 
-        $actividad_memo = DB::table('actividades_mem as am')
-            ->join('program_cult as pc', 'am.id_program', '=', 'pc.id_program')
-            ->join('memoria_fotografica as mf', 'am.id_memoria', '=', 'mf.id_memoria')
+        $actividad_memo = DB::table('program_cult as pc')
             ->select(
-                'am.descripcion',
+                'pc.descripcion_activ',
                 'pc.otras_activ',
-                'am.id_actividad',
-                'am.id_memoria',
-                'am.id_program',
-                'mf.id_claveEca'
+                'pc.id_program',
+                'pc.clave_eca'
             )
-            ->where('mf.id_claveEca', $eca->clave_eca)
+            ->where('pc.clave_eca', $eca->clave_eca)
             ->distinct()
             ->get();
 
@@ -43,36 +39,24 @@ class ActividadMemoController extends Controller
     {
         $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
 
-        $actividadById = DB::table('actividades_mem as am')
-            ->join('program_cult as pc', 'am.id_program', '=', 'pc.id_program')
-            ->join('memoria_fotografica as mf', 'am.id_memoria', '=', 'mf.id_memoria')
-            ->join('foto_activ as fa', 'am.id_actividad', '=', 'fa.id_actividad')
+
+        $actividadById = DB::table('program_cult as pc')
+            ->join('foto_activ as fa', 'pc.id_program', '=', 'fa.id_actividad')
             ->select(
-                'am.descripcion',
+                'pc.descripcion_activ',
                 'pc.otras_activ',
-                'am.id_actividad',
-                'am.id_program',
-                'mf.id_claveEca'
+                'pc.id_program',
+                'pc.clave_eca'
             )
-            ->where('mf.id_claveEca', $eca->clave_eca)
-            ->where('am.id_actividad', $id)
+            ->where('pc.clave_eca', $eca->clave_eca)
+            ->where('pc.id_program', $id)
             ->distinct()
             ->get();
+    
 
         return response()->json($actividadById);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         // dd($request->all(), $request->files->all());
@@ -82,7 +66,7 @@ class ActividadMemoController extends Controller
             'descripcion' => 'required|string',
             'id_program'  => 'required|string|exists:program_cult,id_program',
             'imagenes'    => 'required|array',
-            'imagenes.*'  => 'required|image|mimes:jpeg,png,jpg,gif|max:5000', // Cada imagen en el array es requerida y debe ser un archivo de imagen válido.
+            'imagenes.*'  => 'required|image|mimes:png,jpg|max:5000', // Cada imagen en el array es requerida y debe ser un archivo de imagen válido.
         ]);
 
         if ($validator->fails()) {
@@ -130,22 +114,6 @@ class ActividadMemoController extends Controller
             'actividad' => $actividad,
             'imagenes'  => $imagenesGuardadas,
         ], 201);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(actividad_memo $actividad_memo)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(actividad_memo $actividad_memo)
-    {
-        //
     }
 
     /**

@@ -9,7 +9,7 @@ export const create_program = async (data) =>{
     formData.append('alumnos_Aten', data.programa.alumnos_Aten);
     formData.append('pobl_ate', data.programa.pobl_ate);
     formData.append('fecha_mes', data.programa.fecha_mes);
-    formData.append('descripcion', data.descripcion);
+    formData.append('descripcion_activ', data.programa.descripcion_activ);
     
     if (data.imagenes && data.imagenes.length > 0) {
         for (let i = 0; i < data.imagenes.length; i++) {
@@ -24,10 +24,9 @@ export const create_program = async (data) =>{
     catch(error){
         console.log(error);
         return null;
-    }
+        }
 }
 
-// Puedes crear una función específica si el endpoint es diferente
 export const getProgramData = async () => {
     try {
         // Asumiendo que tu ruta en api.php es /get_program

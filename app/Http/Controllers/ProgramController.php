@@ -51,8 +51,9 @@ class ProgramController extends Controller
             'localidad' => 'required',
             'tipo_platica' => 'required',
             'otras_activ' => 'required',
-            'alumnos_Aten' => 'required',
-            'pobl_ate' => 'required',
+            'descripcion_activ' => 'required',
+            // 'alumnos_Aten' => 'required',
+            // 'pobl_ate' => 'required',
             'fecha_mes' => 'required',
         ]);
 
@@ -70,25 +71,11 @@ class ProgramController extends Controller
             'localidad' => $request->localidad,
             'tipo_platica' => $request->tipo_platica,
             'otras_activ' => $request->otras_activ,
+            'descripcion_activ' => $request->descripcion_activ,
             'alumnos_Aten' => $request->alumnos_Aten,
             'pobl_ate' => $request->pobl_ate,
             'fecha_mes' => $request->fecha_mes,
             'clave_eca' => $eca->clave_eca, // Se asigna automáticamente
-            // 'id_fecha' => $fecha-> id_fecha,
-        ]);
-        
-        $idProgram = $program->id_program;
-
-        // 3. Obtener la memoria fotográfica más reciente asociada a ese ECA.
-        $memoria = memoria_foto::where('id_claveEca', $eca->clave_eca)
-            ->latest('id_memoria') // Forma más limpia de ordenar por el más reciente si usas timestamps o IDs secuenciales.
-            ->first();
-
-        // 4. Crear el registro de la actividad.
-        $actividad = actividad_memo::create([
-            'descripcion' => $request->descripcion,
-            'id_memoria'  => $memoria->id_memoria,
-            'id_program'  => $idProgram
         ]);
 
         $imagenesGuardadas = [];
@@ -102,7 +89,7 @@ class ProgramController extends Controller
                 $foto = foto_activ::create([
                     'nombre'       => $archivoImagen->getClientOriginalName(),
                     'ruta_img'     => $path,
-                    'id_actividad' => $actividad->id_actividad,
+                    'id_actividad' => $program->id_program,
                 ]);
                 $imagenesGuardadas[] = $foto;
             }

@@ -15,7 +15,6 @@ class espacio extends Model
     public $timestamps = false;
     protected $keyType = 'string'; 
 
-    use HasAutoFecha;
 
     protected static function booted()
     {
@@ -24,7 +23,6 @@ class espacio extends Model
                 $espacio->id_espacio = 'ESP-' . strtoupper(Str::random(10));
             }
 
-            espacio::bootHasAutoFecha();
         });
     }
 
@@ -33,6 +31,5 @@ class espacio extends Model
         'total_pobl',
         'comentarios',
         'clave_eca',
-        'id_fecha'
     ];
 }
