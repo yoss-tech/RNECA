@@ -72,6 +72,10 @@ class EcaController extends Controller
                 'tipo_estatus.id_estatus',
                 'tipo_estatus.nombre_tipo'
             )
+            ->whereIn('id_estatus', [
+                'EST-1K2LMP4X',
+                'EST-C731KSDA'
+            ])
             ->get();
 
         return response()->json([
@@ -153,8 +157,9 @@ class EcaController extends Controller
                     'message' => 'Ya existe un ECA registrado con esa clave.'
                 ], 400);
             }
-            
-            $passwordTemporal = Str::random(10);
+
+            //$passwordTemporal = Str::random(10);
+            $passwordTemporal = 'RNECA2026';
          
             // Insertar dirección
             DB::table('direccion')->insert([
@@ -174,9 +179,9 @@ class EcaController extends Controller
                 'id_usuario' => $idUsuario,
                 'nombre' => $request->nombre,
                 'correo' => $request->correo,
+                'correoExtra' => $request->correoExtra,
                 'password' => Hash::make($passwordTemporal),
                 'fecha_registro' => now(),
-                'correoExtra' => null,
                 'id_rol' => 'rol1',
                 'id_dicm' => null,
                 'cambiar_password' => 1
