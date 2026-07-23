@@ -8,7 +8,7 @@ import { getMunicipios } from "../../../Components/api/usuario_eca.jsx"
 
 function Crear_ECAS({ cerrarModal, actualizarLista }) {
     const [formData, setFormData] = useState({
-        nombre_inst: "",
+        nombre_inst: "Comisión Estatal del Agua y Alcantarillado de Hidalgo",
         clave_eca: "",
         nombre_inst_ope: "",
         tipo_instancia: "",
@@ -23,6 +23,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
         dias_hora_aten: "",
         nombre: "",
         correo: "",
+        correoExtra: "",
         equipo_movil: "",
         equipo_electr: "",
         material_didact: "",
@@ -31,7 +32,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
         fecha_forta: "",
         fecha_cierre: "",
         motivo_cierre: "",
-        comentarios: ""
+        comentarios: "Los ECAS, generalmente atienden a la población de las cabeceras municipales y comunidades cercanas."
     });
 
     const handleChange = (e) => {
@@ -156,6 +157,11 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
             } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.correo)) {
                 newErrors.correo = "El correo no tiene un formato válido.";
             }
+            if(formData.correoExtra !== "") {
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.correoExtra)) {
+                    newErrors.correoExtra = "El correo no tiene un formato válido.";
+                }
+            }
         }
 
         if (paso === 5) {
@@ -217,7 +223,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                 <div className="modal-body">
                     {paso === 1 && (
                         <>
-                        <p className="td-title">Datos generales</p>
+                        <p className="text-title">Datos generales</p>
                         <div className="form-group">
                             <label className="card-subtitle">Nombre de la Instancia Ejecutora:
                                 <i class="bi bi-question-circle" title="Poner el nombre de la Instancia Ejecutora que aportó la contraparte del presupuesto para la instalación del ECA."></i>
@@ -284,11 +290,10 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                     )}
                     {paso === 2 && (
                         <>
-                        <p className="td-title">Población potencial</p>
+                        <p className="text-title">Población potencial</p>
+                        <p>Número de personas que han sido atendidas durante la operación de ese ECA.</p>
                         <div className="form-group">
-                            <label className="card-subtitle">Población atendida:
-                                <i class="bi bi-question-circle" title="Número de personas que han sido atendidas durante la operación de ese ECA."></i>
-                            </label>
+                            <label className="card-subtitle">Población atendida:</label>
                             <input
                                 type="number"
                                 min="0"
@@ -305,13 +310,12 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                     )}
                     {paso === 3 && (
                         <>
-                        <p className="td-title">Ubicación</p>
+                        <p className="text-title">Ubicación</p>
+                        <p>Ingrese la información correspondiente a la ubicación y datos de contacto del Espacio de Cultura del Agua (ECA).</p>
                         <div className="form-group">
-                            <label className="card-subtitle">Municipio:
-                                <i class="bi bi-question-circle" title="Municipio en el que se ubica el ECA."></i>
-                            </label>
+                            <label className="card-subtitle">Municipio:</label>
                             <select
-                                className="municipio-select"
+                                className="selector-control"
                                 name="id_municipio"
                                 value={formData.id_municipio}
                                 onChange={handleChange}
@@ -330,9 +334,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                         </div>
 
                         <div className="form-group">
-                            <label className="card-subtitle">Localidad:
-                                <i class="bi bi-question-circle" title="Localidad en la que se ubica el ECA."></i>
-                            </label>
+                            <label className="card-subtitle">Localidad:</label>
                             <input
                                 type="text"
                                 name="localidad"
@@ -346,9 +348,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                         </div>
 
                         <div className="form-group">
-                            <label className="card-subtitle">Colonia:
-                                <i class="bi bi-question-circle" title="Colonia donde esté ubicado el ECA."></i>
-                            </label>
+                            <label className="card-subtitle">Colonia:</label>
                             <input
                                 type="text"
                                 name="colonia"
@@ -362,9 +362,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                         </div>
 
                         <div className="form-group">
-                            <label className="card-subtitle">Calle / Avenida:
-                                <i class="bi bi-question-circle" title="Calle o avenida en donde esté el ECA."></i>
-                            </label>
+                            <label className="card-subtitle">Calle / Avenida:</label>
                             <input
                                 type="text"
                                 name="calle_av"
@@ -378,9 +376,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                         </div>
 
                         <div className="form-group">
-                            <label className="card-subtitle">Número de dirección:
-                                <i class="bi bi-question-circle" title="Número interior y/o exterior del ECA."></i>
-                            </label>
+                            <label className="card-subtitle">Número de dirección:</label>
                             <input
                                 type="text"
                                 name="num_direccion"
@@ -394,9 +390,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                         </div>
 
                         <div className="form-group">
-                            <label className="card-subtitle">Código Postal:
-                                <i class="bi bi-question-circle" title="Código Postal de la ubicación del ECA. (de 5 caracteres)"></i>
-                            </label>
+                            <label className="card-subtitle">Código Postal:</label>
                             <input
                                 type="number"
                                 pattern="\d{5}"
@@ -412,9 +406,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                         </div>
 
                         <div className="form-group">
-                            <label className="card-subtitle">Teléfono(lada):
-                                <i class="bi bi-question-circle" title="Número de teléfono o de contacto para el ECA. Indicar la lada."></i>
-                            </label>
+                            <label className="card-subtitle">Teléfono (lada):</label>
                             <input
                                 type="text"
                                 name="telefonos"
@@ -465,7 +457,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
 
                         <div className="form-group">
                             <label className="card-subtitle">Correo electrónico:
-                                <i class="bi bi-question-circle" title="Correo electrónico del ECA o de su responsable (Anotar un solo correo)."></i>
+                                <i class="bi bi-question-circle" title="Correo electrónico del ECA o de su responsable."></i>
                             </label>
                             <input
                                 type="email"
@@ -478,11 +470,27 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                             />
                             {errors.correo && <p className="error">{errors.correo}</p>}
                         </div>
+
+                        <div className="form-group">
+                            <label className="card-subtitle">Correo extra (opcional):
+                                <i class="bi bi-question-circle" title="Correo electrónico extra del ECA o de su responsable."></i>
+                            </label>
+                            <input
+                                type="email"
+                                name="correoExtra"
+                                className="form-control"
+                                placeholder="Ingresa el correo electrónico"
+                                title="Ingresa el correo electrónico"
+                                value={formData.correoExtra}
+                                onChange={handleChange}
+                            />
+                            {errors.correoExtra && <p className="error">{errors.correoExtra}</p>}
+                        </div>
                         </>
                     )}
                     {paso === 5 && (
                         <>
-                        <p className="td-title">Equipamiento</p>
+                        <p className="text-title">Equipamiento</p>
                         <div className="form-group">
                             <label className="card-subtitle">Equipo mobiliario:
                                 <i class="bi bi-question-circle" title="Indicar el mobiliario con el que cuenta el ECA."></i>
@@ -534,7 +542,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                     )}
                     {paso === 6 && (
                         <>
-                        <p className="td-title">Operación</p>
+                        <p className="text-title">Operación</p>
                         <div className="form-group">
                             <label className="card-subtitle">Fecha de apertura:
                                 <i class="bi bi-question-circle" title="Indicar la fecha de apertura del ECA."></i>
@@ -570,11 +578,10 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                     )}
                     {paso === 7 && (
                         <>
-                        <p className="td-title">Comentarios generales</p>
+                        <p className="text-title">Comentarios generales</p>
+                        <p>Poner comentarios generales o algún austo de relevancia para el ECA en cuestión.</p>
                         <div className="form-group">
-                            <label className="card-subtitle">Comentarios generales:
-                                <i class="bi bi-question-circle" title="Poner comentarios generales o algún austo de relevancia para el ECA en cuestión."></i>
-                            </label>
+                            <label className="card-subtitle">Comentarios generales:</label>
                             <textarea
                                 type="text"
                                 name="comentarios"

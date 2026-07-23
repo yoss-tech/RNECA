@@ -38,13 +38,13 @@ Route::middleware(['auth:sanctum', 'no-cache'])->group(function () {
         return Inertia::render('Vista_Lic_CEAA/Lic_Inicio');
     })->middleware('check.role:rol3')->name('inicio_lic');
 
-    Route::get('/inicio_admin', function () { // Esta ruta es para el rol 'rol4' (Subdi)
-        return Inertia::render('Vista_Administrador/Admi_Inicio');
-    })->middleware('check.role:rol4')->name('inicio_admin');
-
-    Route::get('/inicio_ceaa', function () { // Esta ruta es para el rol 'rol5' (CEAA)
+    Route::get('/inicio_ceaa', function () { // Esta ruta es para el rol 'rol4' (CEAA)
         return Inertia::render('Vista_CEAA/CEAA_Inicio');
-    })->middleware('check.role:rol5')->name('inicio_ceaa');
+    })->middleware('check.role:rol4')->name('inicio_ceaa');
+
+    Route::get('/inicio_admin', function () { // Esta ruta es para el rol 'rol5' (Admin)
+        return Inertia::render('Vista_Administrador/Admi_Inicio');
+    })->middleware('check.role:rol5')->name('inicio_admin');
 });
 
 

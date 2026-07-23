@@ -78,6 +78,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/get_ofice', [OficiosRnecaController::class, 'index']);  // Información del oficio para el director
     Route::get('/documents/{id}', [OficiosRnecaController::class, 'download']); // Descargar un oficio
     Route::get('/getOficeByEca', [OficiosRnecaController::class, 'OficioRneca']); // Obtener los oficios para el ECA
+    Route::get('/oficios', [OficiosRnecaController::class, 'oficios']); // Obtener los oficios
+    Route::get('/oficiosPendientes', [OficiosRnecaController::class, 'oficiosPendientes']); // Obtener los oficios pendientes
+    Route::get('/oficiosCorreccion', [OficiosRnecaController::class, 'oficiosCorreccion']); // Obtener los oficios con correcciones
+    Route::get('/oficiosValidados', [OficiosRnecaController::class, 'oficiosValidados']); // Obtener los oficios con correcciones
 
 
     //Imagenes de la memoria

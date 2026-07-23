@@ -308,7 +308,7 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
                                 <i class="bi bi-question-circle" title="En que estatus se encuentra el ECA."></i>
                             </label>
                             <select
-                                className="municipio-select"
+                                className="selector-control"
                                 name="id_estatus"
                                 value={formData.id_estatus}
                                 onChange={handleChange}

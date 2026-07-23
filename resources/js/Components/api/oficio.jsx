@@ -41,3 +41,47 @@ export const getOficeEca = async () => {
         return null;
     }
 }
+
+export const getOficio = async () => {
+    try{
+        const response = await axiosInstance.get('/oficios');
+        return response.data;
+    }
+    catch(error){
+        console.log(error);
+        return null;
+    }
+}
+
+export const getOficioPendiente = async () => {
+    try{
+        const response = await axiosInstance.get('/oficiosPendientes');
+        return response.data;
+    }
+    catch(error){
+        console.log(error);
+        return null;
+    }
+}
+
+export const getOficioCorreccion = async () => {
+    try{
+        const response = await axiosInstance.get('/oficiosCorreccion');
+        return response.data;
+    }
+    catch(error){
+        console.log(error);
+        return null;
+    }
+}
+
+export const getOficioValidado = async () => {
+    try{
+        const response = await axiosInstance.get('/oficiosValidados');
+        return response.data;
+    }
+    catch(error){
+        console.log(error);
+        return null;
+    }
+}

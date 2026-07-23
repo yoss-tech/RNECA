@@ -11,7 +11,8 @@ import CEAA_Ecas from "./CEAA_ECAS.jsx";
 import CEAA_Historial from "./CEAA_Historial.jsx";
 import CumplimientoInformes from "@/Components/Graficas.jsx";
 import { logoutUser } from "@/Components/api/auth.jsx";
-import { get_municipios,buscarMunicipio } from "@/Components/api/municipios";
+import { buscarMunicipio } from "@/Components/api/municipios";
+import { getOficio } from "@/Components/api/oficio";
 import Notificaciones_CEAA from "../Modals/Notificaciones/Notificacion_CEAA.jsx";
 import Avisos_CEAA from "../Modals/Avisos/Avisos_CEAA.jsx";
 
@@ -22,8 +23,10 @@ function CEAA_Inicio() {
   const [mostrarModal, setMostrarModal] = useState(false);
   const [mostrarModal2, setMostrarModal2] = useState(false);
   const [CerrarSesion, setCerrarSesion] = useState(false);
+
   const [paginaActual, setPaginaActual] = useState(1);
 
+  const [municipios, setMunicipios] = useState([]);  
   
   const submitLogout = async () => {
     try {
@@ -38,39 +41,41 @@ function CEAA_Inicio() {
 
   const [buscar, setBuscar] = useState("");
   const handleBuscar = async () => {
-    const response = await buscarMunicipio(buscar);
+  const response = await buscarMunicipio(buscar);
     if (response && response.status === 200) {
       setMunicipios(response.body);
       setPaginaActual(1);
     }
   };
        
-  const [municipios, setMunicipios] = useState([]);  
   useEffect(() => {
-        cargarMunicipios();
-      }, []);
-      const cargarMunicipios = async () => {
-        const response = await get_municipios();
-        if(response && response.status==200){
-          setMunicipios(response.body);
-          setPaginaActual(1);
-          console.log(response);
-        }
-    };
+    cargarMunicipios();
+  }, []);
 
-    const registrosPorPagina = 6;
-    const numPaginas = Math.ceil(municipios.length / registrosPorPagina);
-    const indiceUltimo = paginaActual * registrosPorPagina;
-    const indicePrimero = indiceUltimo - registrosPorPagina;
-    const municipiosPaginados = municipios.slice(indicePrimero, indiceUltimo);
-    const irAPaginaSiguiente = () => {
-      if (paginaActual < numPaginas) {
-        setPaginaActual(paginaActual + 1);}
-      };
-    const irAPaginaAnterior = () => {
-      if (paginaActual > 1) {
-        setPaginaActual(paginaActual - 1);}
-      };
+  const cargarMunicipios = async () => {
+    const response = await getOficio();
+    if(response && response.status==200){
+      setMunicipios(response.body);
+      setPaginaActual(1);
+      console.log(response);
+    }
+  };
+
+  const registrosPorPagina = 6;
+  const numPaginas = Math.ceil(municipios.length / registrosPorPagina);
+  const indiceUltimo = paginaActual * registrosPorPagina;
+  const indicePrimero = indiceUltimo - registrosPorPagina;
+  const oficios = municipios.slice(indicePrimero, indiceUltimo);
+  const irAPaginaSiguiente = () => {
+    if (paginaActual < numPaginas) {
+      setPaginaActual(paginaActual + 1);
+    }
+  };
+  const irAPaginaAnterior = () => {
+    if (paginaActual > 1) {
+      setPaginaActual(paginaActual - 1);
+    }
+  };
 
   return (
     <>
@@ -186,7 +191,7 @@ function CEAA_Inicio() {
             onClick={() => setVistaActual("Ecas")}
             style={{ cursor: "pointer" }}>
             <i class="bi bi-list-ul"></i>
-             Listado de ECA´S
+             Listado de ECAs
           </a>
         </div>
       </div>
@@ -194,73 +199,74 @@ function CEAA_Inicio() {
       <div className="content">
         {vistaActual === "inicio" && (
           <>
-            <div className="page-container">
-              <h1 className="page-title">Seguimiento general de informes municipales.</h1>
-              <h2 className="page-subtitle">Visualice los informes recientemente cargados y consulte el avance mensual mediante indicadores y gráficas de cumplimiento.</h2>
-              
-              <div className="dashboard">
-                <div className="dashboard-left">
-                  <div className="buscador">
-                    <input type="text" placeholder="Buscar..." className="buscador-control" 
+          <div className="page-container">
+            <h1 className="page-title">Seguimiento general de informes municipales.</h1>
+            <h2 className="page-subtitle">Visualice los informes recientemente cargados y consulte el avance mensual mediante indicadores y gráficas de cumplimiento.</h2>
+            <div className="dashboard">
+              <div className="dashboard-left">
+                <div className="buscador">
+                  <input type="text" placeholder="Buscar..." className="buscador-control" 
                     title="Ingresa el municipio para realizar tu busqueda"
                     value={buscar}
                     onChange={(e) => setBuscar(e.target.value)}
                     onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       handleBuscar();}
-                    }}/>
-
-                    <button className="buscador-button"  onClick={handleBuscar}><i className="bi bi-search"></i></button>
-                  </div>
-                  
-                  <div className="container-municipios">
-                    <div className="cards-municipio">
-                       {municipiosPaginados.map((municipio) => (
-                      <div className="card-municipio" key={municipio.id_municipio}>
-                        <div className="card-body">
-                          <div className="card-titles">
-                            <h3 className="card-title">{municipio.nombre_munipio}</h3>
-                            <h3 className="card-subtitle">INSTANCIA OPERATIVA</h3>
-                            <p className="card-text">Informes pendientes:</p>
-                            <p className="card-text">Validados:</p>
+                    }}
+                  />
+                  <button className="buscador-button"  onClick={handleBuscar}><i className="bi bi-search"></i></button>
+                </div>
+                <div className="container-municipios">
+                  {oficios.length > 0 ? (
+                    oficios.map((oficio) => (
+                      <div className="cards-municipio">
+                        <div className="card-municipio" key={oficio.id_municipio}>
+                          <div className="card-body">
+                            <div className="card-titles">
+                              <h3 className="text-title">{oficio.nombre_munipio}</h3>
+                              <h3 className="text-subtitle">{oficio.nombre_inst_ope}</h3>
+                              <p>Informes pendientes: {oficio.pendientes}</p>
+                              <p>Validados: {oficio.validados}</p>
+                            </div>
+                            
+                            <div className="botones-cards">
+                              <button className="btn-neutral">Ver detalles</button>
+                            </div>
                           </div>
-
-                        <div className="botones-cards">
-                          <button className="btn-neutral">Ver detalles</button>
                         </div>
                       </div>
-                    </div>
-                    ))}                   
-                  </div>
+                    ))
+                  ) : (
+                  <p className="text-white ">No existen informes.</p>
+                  )}
                   <div className="container-paginacion">
-                     {numPaginas > 1 && (
-                    <div className="paginacion-controles">
-                      <button onClick={irAPaginaAnterior} disabled={paginaActual === 1} className="btn-blanco">
-                        Anterior
-                      </button>
+                    {numPaginas > 1 && (
+                      <div className="paginacion-controles">
+                        <button onClick={irAPaginaAnterior} disabled={paginaActual === 1} className="btn-blanco">
+                          Anterior
+                        </button>
 
-                      <button onClick={irAPaginaSiguiente} disabled={paginaActual === numPaginas} className="btn-blanco">
-                        Siguiente
-                      </button> 
-                    </div>
-                      )}
+                        <button onClick={irAPaginaSiguiente} disabled={paginaActual === numPaginas} className="btn-blanco">
+                          Siguiente
+                        </button> 
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
-
-                <div className="dashboard-right">
-                  <div className="card-grafico">
-                    <h3 className="card-title">Cumplimiento de Entrega de Informes mensuales </h3>
-                    <p className="card-text">Visualice el porcentaje de municipios que han cumplido con la entrega de su informe mensual y aquellos que se encuentran pendientes.</p>
-                    
-                    <div className="container-grafico">
-                      <CumplimientoInformes/>
-                    </div>
+              
+              <div className="dashboard-right">
+                <div className="card-grafico">
+                  <h3 className="card-title">Cumplimiento de Entrega de Informes mensuales </h3>
+                  <p className="card-text">Visualice el porcentaje de municipios que han cumplido con la entrega de su informe mensual y aquellos que se encuentran pendientes.</p>
+              
+                  <div className="container-grafico">
+                    <CumplimientoInformes/>
                   </div>
                 </div>
-                
               </div>
             </div>
+          </div>
           </>
         )}
 

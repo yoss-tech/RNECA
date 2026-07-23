@@ -187,4 +187,127 @@ class OficiosRnecaController extends Controller
     {
         //
     }
+
+    // Traer oficios
+    public function oficios()
+    {
+        $oficio = DB::table('oficios_rneca')
+            ->join('eca', 'eca.clave_eca' , '=', 'oficios_rneca.idClave_eca')
+            ->join('direccion', 'direccion.id_direccion', '=', 'eca.id_direccion')
+            ->join('municipio', 'municipio.id_municipio', '=', 'direccion.id_municipio')
+            ->select(
+                'municipio.id_municipio',
+                'municipio.nombre_munipio',
+                'eca.nombre_inst_ope',
+                DB::raw("
+                    COUNT(
+                        CASE
+                            WHEN oficios_rneca.id_estatus = 'EST-4HJVB2C9'
+                            THEN 1
+                        END
+                    ) as pendientes
+                "),
+                DB::raw("
+                    COUNT(
+                        CASE
+                            WHEN oficios_rneca.id_estatus = 'EST-V7WQ3N8Z'
+                            THEN 1
+                        END
+                    ) as validados
+                ")
+            )
+            ->groupBy(
+                'municipio.id_municipio',
+                'municipio.nombre_munipio',
+                'eca.nombre_inst_ope'
+            )
+            ->orderBy('municipio.nombre_munipio')
+            ->get();
+
+        return response()->json([
+            'message' => 'Oficios obtenidos correctamente',
+            'status' => 200,
+            'body' => $oficio
+        ], 200);
+    }
+
+    // Traer oficios pendientes
+    public function oficiosPendientes()
+    {
+        $oficioPen = DB::table('oficios_rneca')
+            ->join('eca', 'eca.clave_eca' , '=', 'oficios_rneca.idClave_eca')
+            ->join('direccion', 'direccion.id_direccion', '=', 'eca.id_direccion')
+            ->join('municipio', 'municipio.id_municipio', '=', 'direccion.id_municipio')
+            ->select(
+                'municipio.id_municipio',
+                'municipio.nombre_munipio',
+                'eca.nombre_inst_ope',
+                DB::raw('COUNT(*) as pendientes')
+            )
+            ->where('oficios_rneca.id_estatus', 'EST-4HJVB2C9')
+            ->groupBy(
+                'municipio.id_municipio',
+                'municipio.nombre_munipio',
+                'eca.nombre_inst_ope'
+            )
+            ->orderBy('municipio.nombre_munipio')
+            ->get();
+
+        return response()->json([
+            'message' => 'Oficios pendientes obtenidos correctamente',
+            'status' => 200,
+            'body' => $oficioPen
+        ], 200);
+    }
+
+    // Traer oficios con correciones
+    public function oficiosCorreccion()
+    {
+        $oficioCor = DB::table('oficios_rneca')
+            ->join('eca', 'eca.clave_eca' , '=', 'oficios_rneca.idClave_eca')
+            ->join('direccion', 'direccion.id_direccion', '=', 'eca.id_direccion')
+            ->join('municipio', 'municipio.id_municipio', '=', 'direccion.id_municipio')
+            ->select(
+                'municipio.nombre_munipio',
+                'eca.nombre_inst_ope',
+                'oficios_rneca.id_oficio',
+                'oficios_rneca.mes_oficio',
+                'oficios_rneca.fecha_registro'
+            )
+            ->where('oficios_rneca.id_estatus', 'EST-8HCVW2C7')
+            ->orderBy('municipio.nombre_munipio')
+            ->get();
+
+        return response()->json([
+            'message' => 'Oficios con correcciones obtenidos correctamente',
+            'status' => 200,
+            'body' => $oficioCor
+        ], 200);
+    }
+
+    // Traer oficios validados
+    public function oficiosValidados()
+    {
+        $oficioVal = DB::table('oficios_rneca')
+            ->join('eca', 'eca.clave_eca' , '=', 'oficios_rneca.idClave_eca')
+            ->join('direccion', 'direccion.id_direccion', '=', 'eca.id_direccion')
+            ->join('municipio', 'municipio.id_municipio', '=', 'direccion.id_municipio')
+            ->select(
+                'municipio.id_municipio',
+                'municipio.nombre_munipio',
+                'eca.nombre_inst_ope',
+                'oficios_rneca.id_oficio',
+                'oficios_rneca.mes_oficio',
+                'oficios_rneca.fecha_registro'
+            )
+            ->where('oficios_rneca.id_estatus', 'EST-V7WQ3N8Z')
+            ->orderBy('municipio.nombre_munipio')
+            ->get();
+
+        return response()->json([
+            'message' => 'Oficios validados obtenidos correctamente',
+            'status' => 200,
+            'body' => $oficioVal
+        ], 200);
+    }
 }

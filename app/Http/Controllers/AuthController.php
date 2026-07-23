@@ -77,8 +77,8 @@ class AuthController extends Controller
             'rol1' => 'inicio_eca',
             'rol2' => 'inicio_dicm',
             'rol3' => 'inicio_lic',
-            'rol4' => 'inicio_admin',
-            'rol5' => 'inicio_ceaa',
+            'rol4' => 'inicio_ceaa',
+            'rol5' => 'inicio_admin',
             default => null,
         };
     }
