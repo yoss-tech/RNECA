@@ -4,11 +4,13 @@ import Crear_Actividad from "../Modals/Crear/Crear_Actividad.jsx";
 // El modal Crear_Memoria es el que se usa para adjuntar evidencia fotográfica.
 import { getProgramData, delete_program } from "../../Components/api/program.jsx"
 import Mod_Actividad from "../../Pages/Modals/Modificar/Mod_Actividad.jsx";
+import Mostrar_Imagenes from "../Modals/MostrarImagen.jsx"
 
 function VECA_Actividades() {
 
   const [mostrarModal, setMostrarModal] = useState(false);
   const [mostrarModalMod, setMostrarModalMod] = useState(false);
+  const [mostrar_Imagenes, setMostrar_Imagenes] = useState(false);
   const [actividadSeleccionada, setActividadSeleccionada] = useState(null);
   const [opcionesAbiertas, setOpcionesAbiertas] = useState(null); // Almacena el índice de la fila con el menú abierto
 
@@ -37,6 +39,11 @@ function VECA_Actividades() {
     // Si el menú actual ya está abierto, ciérralo. Si no, ábrelo.
     setOpcionesAbiertas(opcionesAbiertas === index ? null : index);
   };
+
+  const handleVerImagenes = (actividad) => {
+    setActividadSeleccionada(actividad);
+    setMostrar_Imagenes(true);
+  }
 
   const handleModificarActividad = (actividad) => {
     setActividadSeleccionada(actividad);
@@ -81,6 +88,12 @@ function VECA_Actividades() {
           actividad={actividadSeleccionada}
         />
       )}
+      {mostrar_Imagenes && (
+        <Mostrar_Imagenes
+          actividad={actividadSeleccionada}
+          cerrarModal={() => setMostrar_Imagenes(false)}
+        />
+      )}
 
       <table className="tabla-registros">
         <thead>
@@ -112,6 +125,9 @@ function VECA_Actividades() {
                   </button>
                   {opcionesAbiertas === index && (
                     <div className="menu-perfil" style={{ position: 'absolute', right: 0, top: '100%', zIndex: 10 }}>
+                      <button className="btn-ver" onClick={() => handleVerImagenes(item)}>
+                        Ver fotografias
+                      </button>
                       <button className="btn-modificar" onClick={() => handleModificarActividad(item)}>
                         Modificar
                       </button>

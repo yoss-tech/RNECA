@@ -24,6 +24,7 @@ class EcaController extends Controller
             'eca.id_usuario',
             'eca.nombre_inst',
             'eca.nombre_inst_ope',
+            'municipio.nombre_munipio',
             'usuarios.nombre as nombre_Responsable',
             DB::raw("IFNULL(dicm.nombre, 'Sin asignar') as director"),
             'municipio.nombre_munipio as municipio'

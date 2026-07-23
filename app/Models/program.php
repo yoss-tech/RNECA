@@ -15,17 +15,14 @@ class program extends Model
     protected $primaryKey = 'id_program';
     protected $keyType = 'string';
 
-    use HasAutoFecha;
 
     protected static function booted()
     {
         static::creating(function ($program) {
             if (empty($program->id_program)) {
                 // Genera un ID como PROG-7A2B9C (ajustable a tus necesidades)
-                $program->id_program = 'PROG-' . strtoupper(Str::random(10));
+                $program->id_program = 'Activ-' . strtoupper(Str::random(10));
             }
-
-            program::bootHasAutoFecha();
 
         });
     }
@@ -36,11 +33,11 @@ class program extends Model
         'localidad',
         'tipo_platica',
         'otras_activ',
+        'descripcion_activ',
         'alumnos_Aten',
         'pobl_ate',
         'fecha_mes',
         'clave_eca',
-        'id_fecha'
     ];
 
 }

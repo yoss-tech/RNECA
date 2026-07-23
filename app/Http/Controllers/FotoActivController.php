@@ -15,10 +15,10 @@ class FotoActivController extends Controller
 
     public function getImagenes($id_actividad)
     {
-        $fotos = DB::table('actividades_mem as am')
-            ->join('foto_activ as fa', 'fa.id_actividad', '=', 'am.id_actividad')
+        $fotos = DB::table('foto_activ as fa')
+            ->join('program_cult as pm', 'pm.id_program', '=', 'fa.id_actividad')
             ->select('fa.id_foto', 'fa.id_actividad', 'fa.ruta_img') // Traemos ruta_imagen también
-            ->where('am.id_actividad', $id_actividad)
+            ->where('pm.id_program', $id_actividad)
             ->get();
 
         return response()->json($fotos);
@@ -27,7 +27,7 @@ class FotoActivController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id_actividad'  => 'required|string|exists:actividades_mem,id_actividad',
+            'id_actividad'  => 'required|string|exists:program_cult,id_program',
             'imagenes'    => 'required|array',
             'imagenes.*'  => 'required|image|mimes:jpeg,png,jpg,gif|max:5000',
         ]);

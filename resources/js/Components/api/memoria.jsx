@@ -108,7 +108,7 @@ export const deleteImage = async (id) => {
 // Api para añadir más imagenes
 export const addImage = async (data) => {
     const formData = new FormData();
-    formData.append('id_actividad', data.id_actividad);
+    formData.append('id_actividad', data.id_program);
     
     if (data.imagenes && data.imagenes.length > 0) {
         for (let i = 0; i < data.imagenes.length; i++) {

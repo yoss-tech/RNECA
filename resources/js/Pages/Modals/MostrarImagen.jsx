@@ -13,18 +13,43 @@ function Mostrar_Imagenes({ cerrarModal, actividad }) {
   const [selectedImageIds, setSelectedImageIds] = useState(new Set());
   const [imagenesNew, setImagenesNew] = useState([]);
 
+  
+  // Petición para agregar nuevas imagenes a la actividad
+
+  const handleImageChange = (e) => {
+    // e.target.files es una lista de archivos, la convertimos a un array
+    if (e.target.files) {
+      setImagenesNew(Array.from(e.target.files));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try{
+      await addImage({
+      id_program: actividad.id_program,
+      imagenes: imagenesNew
+    });
+    }
+    catch(error){
+      console.log(error);
+    }
+    setImagenesNew([]);
+    cerrarModal();
+  }
+
   // Petición para trar las id las imgenes en base a la activida con la que estan relacionada
   useEffect(() => {
     const fetchImagenes = async () => {
       try {
-        const response = await getImgByactiv(actividad.id_actividad);
+        const response = await getImgByactiv(actividad.id_program);
         setImagenes(response);
       } catch (error) {
         console.error("Error al cargar las imágenes:", error);
       }
     };
     fetchImagenes();
-  }, [actividad.id_actividad]);
+  }, [actividad.id_program]);
 
   const handleImageToggle = (id) => {
     setSelectedImageIds(prevSelected => {
@@ -72,30 +97,6 @@ function Mostrar_Imagenes({ cerrarModal, actividad }) {
       }
     }
   };
-
-  // Petición para agregar nuevas imagenes a la actividad
-
-  const handleImageChange = (e) => {
-    // e.target.files es una lista de archivos, la convertimos a un array
-    if (e.target.files) {
-      setImagenesNew(Array.from(e.target.files));
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try{
-      await addImage({
-      id_actividad: actividad.id_actividad,
-      imagenes: imagenesNew
-    });
-    }
-    catch(error){
-      console.log(error);
-    }
-    setImagenesNew([]);
-    cerrarModal();
-  }
 
 
   return (

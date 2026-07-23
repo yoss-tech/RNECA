@@ -50,21 +50,20 @@ class EspacioController extends Controller
         if (!$eca) {
             return response()->json(['data' => null, 'message' => 'El usuario no tiene un ECA asignado'], 403);
         }
-
         $currentMonth = date('m');
         $currentYear = date('Y');
 
         $espacio = DB::table('espaciocultura as esp')
-            ->join('fecha', 'esp.id_fecha', '=', 'fecha.id_fecha')
             ->where('esp.clave_eca', $eca->clave_eca)
-            ->where('fecha.mes', $currentMonth)
-            ->where('fecha.anio', $currentYear)
-            ->exists(); // We just need to know if it exists.
+            ->whereMonth('esp.fecha_registro', $currentMonth)
+            ->whereYear('esp.fecha_registro', $currentYear)
+            ->exists();
 
         return response()->json(['registro_existente' => $espacio]);
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         // Obtener la información del ECA vinculada al usuario autenticado
         $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
 

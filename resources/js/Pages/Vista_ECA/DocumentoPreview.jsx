@@ -3,7 +3,8 @@ import '../../../css/Preview.css';
 import { mostrarSoloMes } from "../../Components/functions.jsx";
 import { get_espacio } from "../../Components/api/espacio_cult.jsx";
 import { getProgramData } from "../../Components/api/program.jsx";
-import { get_memoria, getDesc, getImgByactiv } from "../../Components/api/memoria.jsx";
+import { get_memoria, getImgByactiv } from "../../Components/api/memoria.jsx";
+import { infoEca} from "../../Components/api/infoEca.jsx";
 import imgceaa from "../../../img/PNG/Logotipo7.png";
 import imgconagua from "../../../img/PNG/CONAGUA.png";
 import imglogo from "../../../img/PNG/Logotipo1.png";
@@ -17,7 +18,7 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
   const [espacio, setEspacio] = useState(null);
   const [errorEspacio, setErrorEspacio] = useState(null);
   const [memoria, setMemoria] = useState([]);
-  const [desc, setDesc] = useState(null); // Descripción general de la memoria fotográfica
+  const [ecaInfo, setinfoEca] = useState(null); // Descripción general de la memoria fotográfica
   const [imagesByActivity, setImagesByActivity] = useState({}); // Nuevo estado para almacenar imágenes por actividad
 
   // Petición para obtener la población beneficiaria
@@ -57,8 +58,8 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
 
         if (memoriaData && memoriaData.length > 0) {
           const imagesPromises = memoriaData.map(async (activity) => {
-            const images = await getImgByactiv(activity.id_actividad);
-            return { id: activity.id_actividad, images: images };
+            const images = await getImgByactiv(activity.id_program);
+            return { id: activity.id_program, images: images };
           });
           const results = await Promise.all(imagesPromises);
           const newImagesByActivity = results.reduce((acc, curr) => {
@@ -77,16 +78,16 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
 
   // Petición para obtener la descripción general de la memoria fotográfica
   useEffect(() => {
-    const fetctDesc = async () => {
+    const fechtInfo = async () => {
       try {
-        const data = await getDesc();
-        setDesc(data);
+        const data = await infoEca();
+        setinfoEca(data);
       }
       catch {
         setError('Ocurrió un error al conectar con el servidor.');
       }
     };
-    fetctDesc();
+    fechtInfo();
   }, []);
 
   //Mostrar la tabla en un mejor orden
@@ -134,7 +135,7 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
           <div className="descripcion-parrafo">
             <p>
               Por medio del presente le saludo y me permito hacer llegar a usted el informe mensual del
-              espacio de Cultura del Agua del Municipio de {programa?.[0]?.municipio || '...'}, Hidalgo,
+              espacio de Cultura del Agua del Municipio de {ecaInfo?.[2]?.municipio || '...'}, Hidalgo,
               correspondiente al mes de {mostrarSoloMes(new Date())} del año {new Date().getFullYear()},
               con la memoria fotografica y cuadro de población atendida que sustenta el trabajo de dicho municipio.
               Sin más por el momento, quedo a sus órdenes para cualquier aclaración al respecto.
@@ -306,21 +307,21 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
           <h1 className='seccion-titulo header-meta-center' >MEMORIA FOTOGRAFICA</h1>
           <p className='header-meta-center'>Informes del mes de </p>
           <br />
-          <p>{desc?.[0]?.descrip_gen || '---'}</p>
+          {/* <p>{desc?.[0]?.descrip_gen || '---'}</p> */}
         </div>
       </div>
       <div className="documento-contenido">
         <section>
           {memoria.map((item) => ( // Iteramos sobre cada actividad de la memoria
-            <div key={item.id_actividad}> {/* Añadimos una key única para cada actividad */}
+            <div key={item.id_program}> {/* Añadimos una key única para cada actividad */}
               <div className="descripcion-parrafo">
                 <li><h1 className="seccion-titulo">{item.otras_activ || '---'}</h1></li>
                 <p>{item.descripcion || '---'}</p>
               </div>
               <h2 className="seccion-titulo">Fotos de la Actividad: {item.otras_activ || '---'}</h2> {/* Usamos el título de la actividad */}
               <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                {imagesByActivity[item.id_actividad] && imagesByActivity[item.id_actividad].length > 0 ? (
-                  imagesByActivity[item.id_actividad].map((foto) => (
+                {imagesByActivity[item.id_program] && imagesByActivity[item.id_program].length > 0 ? (
+                  imagesByActivity[item.id_program].map((foto) => (
                     <ImagenActividad key={foto.id_foto} idFoto={foto.id_foto} />
                   ))
                 ) : (
