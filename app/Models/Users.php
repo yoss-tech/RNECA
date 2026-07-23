@@ -56,14 +56,14 @@ class Users extends Authenticatable
         return $this->id_rol === 'rol3';
     }
 
-    public function esSubdi(): bool
+    public function esAdmin(): bool
     {
-        return $this->id_rol === 'rol4';
+        return $this->id_rol === 'rol5';
     }
 
     public function esCeaa(): bool
     {
-        return $this->id_rol === 'rol5';
+        return $this->id_rol === 'rol4';
     }
 }
 

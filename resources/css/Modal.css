@@ -23,7 +23,7 @@
 .modal-box {
     width: 100%;
     max-width: 750px;
-    max-height: 105vh;
+    max-height: 90vh;
     background: var(--blanco-color);
     overflow: hidden;
     display: flex;
@@ -50,7 +50,7 @@
 }
 
 .modal-body {
-    padding: 24px;
+    padding: 20px 24px;
     flex: 1;
     overflow-y: auto;
 }
@@ -101,6 +101,16 @@
 .modal-body select,
 .modal-body textarea {
     width: 100%;
+}
+
+/* Tablas */
+.modal-body table {
+    table-layout: fixed;
+    width: 100%;    
+}
+
+.modal-body td {
+    word-wrap: break-word;
 }
 
 /* Animación */

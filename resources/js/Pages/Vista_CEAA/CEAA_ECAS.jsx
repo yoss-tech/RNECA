@@ -38,7 +38,7 @@ function CEAA_Ecas() {
 
   return (
   <div className="page-container">
-    <h1 className="page-title">Información sobre ECAS.</h1>
+    <h1 className="page-title">Información sobre ECAs.</h1>
     <h2 className="page-subtitle">Visualice toda la información completa sobre los Espacios de Cultura del Agua</h2>
     
     <div className="dashboard">

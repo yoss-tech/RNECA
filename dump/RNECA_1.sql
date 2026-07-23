@@ -806,10 +806,10 @@ CREATE TABLE `rol` (
 
 INSERT INTO `rol` (`id_rol`, `nombre_rol`) VALUES
 ('rol1', 'ECA'),
-('rol2', 'Director municipio'),
-('rol3', 'Subdirector'),
-('rol4', 'Licenciado'),
-('rol5', 'CEAA');
+('rol2', 'Director municipial'),
+('rol3', 'Licenciado'),
+('rol4', 'CEAA'),
+('rol5', 'Admin');
 
 -- --------------------------------------------------------
 

@@ -244,19 +244,19 @@ p {
 }
 
 .text-title{
-    font-weight: 700px;
+    font-weight: 700;
     margin-top: 8px;
     color:var(--ginda-color);
 }
 
 .text-subtitle{
-    font-weight: 700px;
+    font-weight: 700;
     margin-top: 8px;
     color:var(--dorado-color);
 }
 
 .text-bold{
-    font-weight: 700px;
+    font-weight: 600;
     margin-top: 8px;
     color:var(--negro-color);
 }
@@ -476,17 +476,6 @@ p {
     flex: 1;
 }
 
-.municipio-select {
-    width: 220px;
-    height: 30px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 6px 0;
-    margin-left: 4px;
-    color: var(--gris-color);
-    background: var(--blanco-color);
-}
-
 .buscador {
     display: flex;
     align-items: stretch;
@@ -497,6 +486,7 @@ p {
 .filtro {
     display: flex;
     align-items: center;
+    gap: 8px;
     margin-bottom: 15px;
 }
 
@@ -541,7 +531,8 @@ p {
 }
 
 input,
-textarea {
+textarea,
+select {
     width: 100%;
     padding: 9px;
     font-size: 15px;
@@ -560,7 +551,8 @@ textarea {
     font-family: 'Montserrat', sans-serif;
 }
 
-.form-control:focus {
+.form-control:focus,
+.selector-control:focus {
     border-color: var(--ginda-color);
     box-shadow: 0 0 0 0.2rem rgba(160, 33, 66, 0.25);
 }

@@ -1,6 +1,20 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
+import { getOficioCorreccion } from "@/Components/api/oficio";
 
 function CEAA_Observaciones() {
+
+  const [oficios, setOficios] = useState([]);
+  useEffect(() => {
+    cargarCorrecciones();
+  }, []);
+      
+  const cargarCorrecciones = async () => {
+    const response = await getOficioCorreccion();
+    if(response && response.status==200){
+      setOficios(response.body);
+      console.log(response);
+    }
+  };
 
   return (
   <div className="page-container">
@@ -18,15 +32,25 @@ function CEAA_Observaciones() {
       </thead>
       
       <tbody>
-        <tr>
-          <td>
-            <p className="td-title">Municipio</p>
-            <p className="td-subtitle">Instancia operativa</p>
-          </td>
-          <td>Mes</td>
-          <td>Observaciones</td>
-          <td>Dia de Mes de Año</td>
-        </tr>
+        {oficios.length > 0 ? (
+          oficios.map((oficioCor) => (
+            <tr key={oficioCor.id_oficio}>
+              <td>
+                <p className="text-title">{oficioCor.nombre_munipio}</p>
+                <p className="text-subtitle">{oficioCor.nombre_inst_ope}</p>
+            </td>
+            <td>{oficioCor.mes_oficio}</td>
+            <td>Observaciones</td>
+            <td>{oficioCor.fecha_registro}</td>
+          </tr>
+          ))
+        ) : (
+          <tr>
+            <td colSpan="4">
+              <p className="text-bold">No existen informes devueltos para corrección.</p>
+            </td>
+          </tr>
+        )}
       </tbody>
     </table>
   </div>

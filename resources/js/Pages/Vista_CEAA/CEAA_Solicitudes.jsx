@@ -59,7 +59,7 @@ function CEAA_Pendientes() {
       <div className="dashboard-left">
           <div className="filtro">
           <p className="card-text">Municipio:</p>
-          <select className="municipio-select" value={municipioSeleccionado} onChange={buscarPorSelect}>
+          <select className="selector-control" value={municipioSeleccionado} onChange={buscarPorSelect}>
             <option value="">Todos los municipios</option>
             {listaMunicipios.map((municipio) => (
               <option key={municipio.id_municipio} value={municipio.id_municipio}>
