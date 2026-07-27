@@ -79,6 +79,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/oficiosPendientes', [OficiosRnecaController::class, 'oficiosPendientes']); // Obtener los oficios pendientes
     Route::get('/oficiosCorreccion', [OficiosRnecaController::class, 'oficiosCorreccion']); // Obtener los oficios con correcciones
     Route::get('/oficiosValidados', [OficiosRnecaController::class, 'oficiosValidados']); // Obtener los oficios con correcciones
+    Route::get('/cumplimientoOficios', [OficiosRnecaController::class, 'cumplimientoOficios']); // Obtener los oficios con correcciones
 
     //Imagenes de la memoria
     Route::get('/getIdActividad/{id}', [FotoActivController::class, 'getImagenes']);

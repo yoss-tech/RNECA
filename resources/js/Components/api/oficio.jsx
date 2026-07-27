@@ -85,3 +85,8 @@ export const getOficioValidado = async () => {
         return null;
     }
 }
+
+export const getCumplimientoOficios = async () => {
+    const response = await axiosInstance.get('/cumplimientoOficios');
+    return response.data;
+}
