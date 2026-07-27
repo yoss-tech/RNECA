@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Ver_ECA from "../Modals/Ver_ECA";
 import Crear_ECAS from "../Modals/Crear/Crear_ECAS";
 import Modificar_ECAS from "../Modals/Modificar/Mod_ECAS";
-import { getEcas } from "../../Components/api/usuario_eca.jsx";
+import { getEcas } from "../../Components/api/usuarios.jsx";
 
 function CEAA_Ecas() {
   const[mostrarEcas, setMostrarEcas] = useState(false);

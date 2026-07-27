@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "/resources/css/Style.css";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -7,12 +7,14 @@ import { mostrarSoloMes, dateLimit } from "../../Components/functions.jsx";
 import { logoutUser, checkAuth } from "../../Components/api/auth.jsx";
 import Perfil_Admi from "../Modals/Perfiles/Perfil_Admi.jsx";
 import Admi_DireA from "./Admi_DireA.jsx";
-import Admi_SupervisoresECAS from "./Admi_SEcas.jsx";
 import Admi_DireMu from "./Admi_DireMu.jsx";
 import Admi_ECAS from "./Admi_ECAS.jsx";
+import Admi_NumHab from "./Admi_NumHab.jsx";
+import Admi_SupervisoresECAS from "./Admi_SEcas.jsx";
 import Notificaciones_Admi from "../Modals/Notificaciones/Notificacion_Admi.jsx";
 import Avisos_Admi from "../Modals/Avisos/Avisos_Admi.jsx";
-
+import { getTotalUser, getTotalUserECAS, getTotalUserDic, getTotalUserInactivo } from "../../Components/api/usuarios.jsx"
+import { getTotalMunicipio } from "../../Components/api/municipios.jsx"
 
 function Admi_Inicio() {
   const [CerrarSesion, setCerrarSesion] = useState(false);
@@ -52,6 +54,49 @@ function Admi_Inicio() {
       setMenuOpen(false);
     }
   });
+
+  const [totalUser, setTotalUser] = useState(0);
+  const cargarTotalUser = async () => {
+    const response = await getTotalUser();
+    if (response && response.status === 200) {
+      setTotalUser(response.body);
+    }
+  };
+  const [totalUserECAS, setTotalUserECAS] = useState(0);
+  const cargarTotalUserECAS = async () => {
+    const response = await getTotalUserECAS();
+    if (response && response.status === 200) {
+      setTotalUserECAS(response.body);
+    }
+  };
+  const [totalUserDic, setTotalUserDic] = useState(0);
+  const cargarTotalUserDic = async () => {
+    const response = await getTotalUserDic();
+    if (response && response.status === 200) {
+      setTotalUserDic(response.body);
+    }
+  };
+  const [totalUserInactivo, setTotalUserInactivo] = useState(0);
+  const cargarTotalUserInactivo = async () => {
+    const response = await getTotalUserInactivo();
+    if (response && response.status === 200) {
+      setTotalUserInactivo(response.body);
+    }
+  };
+  const [totalMunicipio, setTotalMunicipio] = useState(0);
+  const cargarTotalMunicipio = async () => {
+    const response = await getTotalMunicipio();
+    if (response && response.status === 200) {
+      setTotalMunicipio(response.body);
+    }
+  };
+  useEffect (() => {
+    cargarTotalUser();
+    cargarTotalUserECAS();
+    cargarTotalUserDic();
+    cargarTotalUserInactivo();
+    cargarTotalMunicipio();
+  }, []);
 
 
   return (
@@ -113,6 +158,16 @@ function Admi_Inicio() {
             style={{ cursor: "pointer" }}>
             <i className="bi bi-house"></i>
             Inicio
+          </a>
+        </div>
+
+        <div className="form-group">
+          <a
+            className={vistaActual === "habitantes" ? "active" : ""}
+            onClick={() => setVistaActual("habitantes")}
+            style={{ cursor: "pointer" }}>
+            <i className="bi bi-person-add"></i>
+            Habitantes
           </a>
         </div>
 
@@ -180,30 +235,48 @@ function Admi_Inicio() {
               <h1 className="page-title">Administración general de usuarios.</h1>
               <h2 className="page-subtitle">Consulte información general sobre los usuarios registrados y gestione el acceso a la plataforma.</h2>
               
-              <div className="dashboard">
-                <div className="card-number">
-                  <div class="card-body">
-                    <h3 className="card-subtitle">Total de usuarios</h3>
-                    <h1 className="number">Numero</h1>
+              <div className="dashboard-cards">
+                <div className="fila-cards">
+                  <div className="card-number">
+                    <div class="card-body">
+                      <h3 className="card-subtitle">Espacios de cultura del agua</h3>
+                      <h1 className="number">{totalUserECAS}</h1>
+                    </div>
+                  </div>
+                  <div className="card-number">
+                    <div class="card-body">
+                      <h3 className="card-subtitle">Directores municipales</h3>
+                      <h1 className="number">{totalUserDic}</h1>
+                    </div>
+                  </div>
+                  <div className="card-number">
+                    <div className="card-body">
+                      <h3 className="card-subtitle">Municipios</h3>
+                      <h1 className="number">{totalMunicipio}</h1>
+                    </div>
                   </div>
                 </div>
-                <div className="card-number">
-                  <div class="card-body">
-                    <h3 className="card-subtitle">Total de municipios</h3>
-                    <h1 className="number">Numero</h1>
+                <div className="fila-cards">
+                  <div className="card-number">
+                    <div className="card-body">
+                      <h3 className="card-subtitle">Total de usuarios</h3>
+                      <h1 className="number">{totalUser}</h1>
+                    </div>
                   </div>
-                </div>
-                <div className="card-number">
-                  <div class="card-body">
-                    <h3 className="card-subtitle">Total de usuarios inactivos</h3>
-                    <h1 className="number">Numero</h1>
+                  <div className="card-number">
+                    <div class="card-body">
+                      <h3 className="card-subtitle">Usuarios inactivos</h3>
+                      <h1 className="number">{totalUserInactivo}</h1>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </>
         )}
-
+        {vistaActual === "habitantes" && (
+          <Admi_NumHab />
+        )}
         {vistaActual === "director" && (
           <Admi_DireA />
         )}

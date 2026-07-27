@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { getUserEcas } from "../../Components/api/usuario_eca.jsx"
-import Modificar_UserECA from "../Modals/Modificar/Mod_UserECAS";
+import { getUserEcas } from "../../Components/api/usuarios.jsx"
+import Modificar_UserECA from "../Modals/Modificar/Mod_User";
 
 function Admi_ECAS() {
   const [mostrarModificar, setMostrarModificar] = useState(false);
-
+  
   const [ecas, setEcas] = useState([]);
-
-  useEffect (() => {
-    cargarUserEcas();
-  }, []);
-
   const cargarUserEcas = async () => {
     const response = await getUserEcas();
     console.log(response);
@@ -20,8 +15,11 @@ function Admi_ECAS() {
     }
   };
 
-  const [ecaSeleccionado, setEcaSeleccionado] = useState(null);
+  useEffect (() => {
+    cargarUserEcas();
+  }, []);
 
+  const [ecaSeleccionado, setEcaSeleccionado] = useState(null);
   const abrirModalModificar = (eca) => {
     setEcaSeleccionado(eca);
     setMostrarModificar(true);
@@ -30,7 +28,7 @@ function Admi_ECAS() {
   return (
   <div className="page-container">
     <h1 className="page-title">Administración de usuarios ECA.</h1>
-    <h2 className="page-subtitle">Consulte, actualice o elimine usuarios asignados a los Espacios de Cultura del Agua.</h2>
+    <h2 className="page-subtitle">Consulte y actualice usuarios asignados a los Espacios de Cultura del Agua.</h2>
 
     <table class="tabla-registros">
       <thead>
@@ -48,8 +46,8 @@ function Admi_ECAS() {
           <tr key={eca.id_usuario}>
             <td>{eca.nombre}</td>
             <td>
-              <p className="form-subtitle">{eca.nombre_munipio}</p>
-              <p className="card-subtitle">{eca.nombre_inst_ope}</p>
+              <p className="text-subtitle">{eca.nombre_munipio}</p>
+              <p className="text-bold">{eca.nombre_inst_ope}</p>
             </td>
             <td>{eca.correo}</td>
             <td>{eca.estatus}</td>

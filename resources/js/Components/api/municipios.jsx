@@ -1,11 +1,26 @@
 import axiosInstance from "./axiosInstance";
 
-export const get_municipios = async () => {
+export const getTotalMunicipio = async () => {
+    const response = await axiosInstance.get('/municipios/total');
+    return response.data;
+}
+
+export const getMunicipios = async () => {
     try {
-        const response = await axiosInstance.get('/municipios');
+        const response = await axiosInstance.get('/municipio');
         return response.data;
     } catch (error) {
-        console.log(error);
+        console.error("Error en getMunicipios:", error);
+        return null;
+    }
+}
+
+export const updateMunicipio = async (id, data) => {
+    try {
+        const response = await axiosInstance.put(`/municipio/${id}`, data);
+        return response.data;
+    } catch (error) {
+        console.error("Error en updateMunicipio:", error);
         return null;
     }
 }

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
 import Swal from "sweetalert2";
-import { updateEca } from "../../../Components/api/usuario_eca.jsx"
-import { getEstatus } from "../../../Components/api/usuario_eca.jsx"
+import { updateEca } from "../../../Components/api/usuarios.jsx"
+import { getEstatus } from "../../../Components/api/usuarios.jsx"
 
 function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
     const [formData, setFormData] = useState({
@@ -14,6 +14,7 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
         dias_hora_aten: "",
         nombre: "",
         correo: "",
+        correoExtra: "",
         equipo_movil: "",
         equipo_electr: "",
         material_didact: "",
@@ -81,6 +82,11 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
             if (!formData.dias_hora_aten.trim()) newErrors.dias_hora_aten = 'El horario es requerido.';
             if (!formData.nombre.trim()) newErrors.nombre = 'El responsable es requerido.';
             if (!formData.correo.trim()) newErrors.correo = 'El correo es requerido.';
+            if (formData.correoExtra !== "") {
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.correoExtra)) {
+                    newErrors.correoExtra = "El correo no tiene un formato válido.";
+                }
+            }
             if (!formData.telefonos) newErrors.telefonos = 'Debe ingresar al menos un teléfono.';
         }
 
@@ -213,6 +219,22 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
                                 onChange={(handleChange)}
                             />
                             {errors.correo && <p className="error">{errors.correo}</p>}
+                        </div>
+
+                        <div className="form-group">
+                            <label className="card-subtitle">Correo extra (opcional):
+                                <i class="bi bi-question-circle" title="Correo electrónico extra del ECA o de su responsable."></i>
+                            </label>
+                            <input
+                                type="email"
+                                name="correoExtra"
+                                className="form-control"
+                                placeholder="Ingresa el correo electrónico"
+                                title="Ingresa el correo electrónico"
+                                value={formData.correoExtra}
+                                onChange={handleChange}
+                            />
+                            {errors.correoExtra && <p className="error">{errors.correoExtra}</p>}
                         </div>
 
                         <div className="form-group">

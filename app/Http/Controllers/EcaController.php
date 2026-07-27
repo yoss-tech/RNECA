@@ -47,24 +47,6 @@ class EcaController extends Controller
         ], 200);
     }
 
-    public function municipios()
-    {
-        $municipio = DB::table('municipio')
-            ->orderBy('municipio.nombre_munipio', 'asc')
-            ->select(
-                'municipio.id_municipio',
-                'municipio.nombre_munipio',
-                'municipio.num_habitan'
-            )
-            ->get();
-
-        return response()->json([
-            'message' => 'Municipios obtenidos correctamente',
-            'status' => 200,
-            'body' => $municipio
-        ], 200);
-    }
-
     public function estatus()
     {
         $estatu = DB::table('tipo_estatus')
@@ -296,6 +278,38 @@ class EcaController extends Controller
             'message' => 'Usuarios ECA obtenidos correctamente',
             'status' => 200,
             'body' => $eca
+        ], 200);
+    }
+
+    public function showInstancia()
+    {
+        $instancia = DB::table('eca')
+            ->join('direccion', 'eca.id_direccion', '=', 'direccion.id_direccion')
+            ->join('municipio', 'direccion.id_municipio', '=', 'municipio.id_municipio')
+            ->join('usuarios', 'eca.id_usuario', '=', 'usuarios.id_usuario')
+            ->join('rol', 'usuarios.id_rol', '=', 'rol.id_rol')
+            ->orderBy('municipio.nombre_munipio', 'asc')
+            ->select(
+                'direccion.id_direccion',
+                'municipio.id_municipio',
+                'eca.clave_eca',
+                'eca.nombre_inst_ope',
+                'direccion.tipo_instancia',
+                'direccion.calle_av',
+                'direccion.num_direccion',
+                'direccion.colonia',
+                'municipio.nombre_munipio',
+                'direccion.localidad',
+                'direccion.cod_postal',
+                'eca.fecha_apert',
+            )
+            ->where('rol.id_rol', 'rol1')
+            ->get();
+        
+        return response()->json([
+            'message' => 'Instancias obtenidos correctamente',
+            'status' => 200,
+            'body' => $instancia
         ], 200);
     }
 

@@ -3,24 +3,27 @@ import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
 import Swal from "sweetalert2";
 import Toast from "../../Toast.jsx";
-import { updateUserEca } from "../../../Components/api/usuario_eca.jsx"
+import { updateUser } from "../../../Components/api/usuarios.jsx"
 
-function Modificar_UserECA({ usuario, cerrarModal, actualizarLista }) {
+function Modificar_User({ usuario, cerrarModal, actualizarLista }) {
     const [mostrarPassword, setMostrarPassword] = useState(false);
     const [mostrarPasswordConfirm, setMostrarPasswordConfirm] = useState(false);
 
-    const [correo, setCorreo] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+    const [formData, setFormData] = useState({
+        id_rol: "",
+        nombre: "",
+        correo: "",
+        password: "",
+        confirmPassword: ""
+    })
 
-    useEffect(() => {
-        if (usuario) {
-            setCorreo(usuario.correo);
-
-            setPassword("");
-        }
-    }, [usuario]);
-
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    };
+    
     const [alerts, setAlerts] = useState([]);
     const showAlert = (type, message) => {
         setAlerts([...alerts, { type, message }]);
@@ -29,21 +32,54 @@ function Modificar_UserECA({ usuario, cerrarModal, actualizarLista }) {
         }, 3000);
     };
 
+    const handleSubmit = async () => {
+        if (!validateForm()) {
+            showAlert('error', 'Por favor, completa todos los campos requeridos.');
+            return;
+        }
+        try {
+            await updateUser(
+                formData.id_usuario,
+                formData
+            );
+            await actualizarLista();
+            cerrarModal();
+            Swal.fire({
+                title: "¡Actualizado!",
+                text: "La información se actualizo correctamente.",
+                icon: "success",
+                confirmButtonText: "Aceptar"
+            });
+        }
+        catch (error) {
+            showAlert('error', 'Error al actualizar.');
+            return;
+        }
+    }
+
+    useEffect(() => {
+        if (usuario) {
+            setFormData(usuario);
+        }
+    }, [usuario]);
+
+
     const [errors, setErrors] = useState({});
     const validateForm =() => {
         let newErrors = {};
     
-        if (!correo.trim()) {
+        if (!formData.nombre.trim()) newErrors.nombre = 'El nombre es requerido.';
+        if (!formData.correo.trim()) {
             newErrors.correo = 'El correo es requerido.';
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.correo)) {
             newErrors.correo = 'El correo no tiene un formato válido.';
         }
 
-        if (password !== "") {
-            if (confirmPassword === "") {
+        if (formData.password !== "") {
+            if (formData.confirmPassword === "") {
                 newErrors.password = 'Confirma la contraseña.';
             }
-            if (password !== confirmPassword) {
+            if (formData.password !== formData.confirmPassword) {
                 newErrors.confirmPassword = 'Las contraseñas no coinciden.';
             }
         }
@@ -51,40 +87,6 @@ function Modificar_UserECA({ usuario, cerrarModal, actualizarLista }) {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
-
-    const handleSubmit = async () => {
-        if (!validateForm()) {
-            showAlert('error', 'Por favor, completa todos los campos requeridos.');
-            return;
-        }
-        try {
-            const datos = {
-                correo: correo,
-                password: password
-            };
-    
-            const response = await updateUserEca(
-                usuario.id_usuario,
-                datos
-            );
-
-            if (response && response.status === 200) {
-                await actualizarLista();
-                cerrarModal();
-                
-                Swal.fire({
-                    title: "¡Actualizado!",
-                    text: "La información se actualizo correctamente.",
-                    icon: "success",
-                    confirmButtonText: "Aceptar"
-                });
-            }
-        }
-        catch (error) {
-            showAlert('error', 'Error al actualizar.');
-            return;
-        }
-    }
 
     return (
         <>
@@ -96,15 +98,31 @@ function Modificar_UserECA({ usuario, cerrarModal, actualizarLista }) {
                 </div>
 
                 <div className="modal-body">
+                    {(formData.id_rol === "rol3" || formData.id_rol === "rol4") && (
+                        <div className="form-group">
+                            <label className="card-subtitle">Nombre del usuario:</label>
+                            <input
+                                type="text"
+                                name="nombre"
+                                className="form-control"
+                                placeholder="Ingresa el nombre del usuario"
+                                title="Ingresa el nombre del usuario"
+                                value={formData.nombre}
+                                onChange={handleChange}
+                            />
+                            {errors.nombre && <p className="error">{errors.nombre}</p>}
+                        </div>
+                    )}
                     <div className="form-group">
                         <label className="card-subtitle">Correo del usuario:</label>
                         <input
-                            type="text"
+                            type="email"
+                            name="correo"
                             className="form-control"
                             placeholder="Ingresa el correo del usuario"
                             title="Ingresa el correo del usuario"
-                            value={correo}
-                            onChange={(e) => setCorreo(e.target.value)}
+                            value={formData.correo}
+                            onChange={handleChange}
                         />
                         {errors.correo && <p className="error">{errors.correo}</p>}
                     </div>
@@ -114,11 +132,12 @@ function Modificar_UserECA({ usuario, cerrarModal, actualizarLista }) {
                         <div className="input-password">
                             <input
                                 type={mostrarPassword ? "text" : "password"}
+                                name="password"
                                 className="form-control"
                                 placeholder="Dejar vacío para no cambiar"
                                 title="Dejar vacío para no cambiar"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                value={formData.password}
+                                onChange={handleChange}
                             />
                             <i className={mostrarPassword ? "bi bi-eye-slash" : "bi bi-eye"} onClick={() => setMostrarPassword(!mostrarPassword)}></i>
                         </div>
@@ -130,11 +149,12 @@ function Modificar_UserECA({ usuario, cerrarModal, actualizarLista }) {
                         <div className="input-password">
                             <input
                                 type={mostrarPasswordConfirm ? "text" : "password"}
+                                name="confirmPassword"
                                 className="form-control"
                                 placeholder="Confirmar nueva contraseña"
                                 title="Confirmar nueva contraseña"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                value={formData.confirmPassword}
+                                onChange={handleChange}
                             />
                             <i className={mostrarPasswordConfirm ? "bi bi-eye-slash" : "bi bi-eye"} onClick={() => setMostrarPasswordConfirm(!mostrarPasswordConfirm)}></i>
                         </div>
@@ -156,4 +176,4 @@ function Modificar_UserECA({ usuario, cerrarModal, actualizarLista }) {
     );
 }
 
-export default Modificar_UserECA;
+export default Modificar_User;

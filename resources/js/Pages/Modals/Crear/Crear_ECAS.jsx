@@ -3,8 +3,8 @@ import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
 import Swal from "sweetalert2";
 import Toast from "../../Toast.jsx";
-import { createEca } from "../../../Components/api/usuario_eca.jsx"
-import { getMunicipios } from "../../../Components/api/usuario_eca.jsx"
+import { createEca } from "../../../Components/api/usuarios.jsx"
+import { getMunicipios } from "../../../Components/api/municipios.jsx"
 
 function Crear_ECAS({ cerrarModal, actualizarLista }) {
     const [formData, setFormData] = useState({
@@ -157,7 +157,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
             } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.correo)) {
                 newErrors.correo = "El correo no tiene un formato válido.";
             }
-            if(formData.correoExtra !== "") {
+            if (formData.correoExtra !== "") {
                 if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.correoExtra)) {
                     newErrors.correoExtra = "El correo no tiene un formato válido.";
                 }
