@@ -1,25 +1,36 @@
 import React, { useState, useEffect } from "react";
-import Modificar_DireMunicipal from "../Modals/Modificar/Mod_DireMu";
-import Crear_DirectorMunicipal from "../Modals/Crear/Crear_DireMu";
-import EliminarElemento from "../Modals/Eliminar_Elemento";
+import { getUserDic } from "../../Components/api/usuarios.jsx"
+import Modificar_UserDic from "../Modals/Modificar/Mod_User";
 
 function Admi_DireMu() {
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [mostrarModal2, setMostrarModal2] = useState(false);
-  const [mostrarModal3, setMostrarModal3] = useState(false);
+  const [mostrarModificar, setMostrarModificar] = useState(false);
+  
+  const [directores, setDirectores] = useState([]);
+
+  useEffect (() => {
+    cargarUserDic();
+  }, []);
+
+  const cargarUserDic = async () => {
+    const response = await getUserDic();
+    console.log(response);
+
+    if (response && response.status === 200) {
+      setDirectores(response.body);
+    }
+  };
+
+  const [directorSeleccionado, setDirectorSeleccionado] = useState(null);
+
+  const abrirModalModificar = (director) => {
+    setDirectorSeleccionado(director);
+    setMostrarModificar(true);
+  };
 
   return (
   <div className="page-container">
     <h1 className="page-title">Administración de usuarios directivos.</h1>
     <h2 className="page-subtitle">Gestione las cuentas de los directores municipales responsables de la validación de informes.</h2>
-  
-    <button className="btn-primario"  onClick={() =>setMostrarModal2(true)}>
-             Crear un nuevo director municipal</button>
-                {mostrarModal2 && (
-                <Crear_DirectorMunicipal
-                    cerrarModal={() => setMostrarModal2(false)}
-                />
-                )}
 
     <table class="tabla-registros">
       <thead>
@@ -33,33 +44,29 @@ function Admi_DireMu() {
       </thead>
       
       <tbody>
-        <tr>
-          <td>Nombre</td>
-          <td>
-            <p className="form-subtitle">MUNICIPIO</p>
-            <p className="card-subtitle">INSTANCIA OPERATIVA</p>
-          </td>
-          <td>CORREO</td>
-          <td>ACTIVO</td>
-          <td className="btn-container-vertical">
-            <button className="btn-negativo"  onClick={() =>setMostrarModal(true)}>
-            Modificar</button>
-            {mostrarModal && (
-              <Modificar_DireMunicipal
-                cerrarModal={() => setMostrarModal(false)}
-              />
-            )}
-            <button className="btn-neutral"  onClick={() =>setMostrarModal3(true)}>
-            Eliminar</button>
-            {mostrarModal3 && (
-              <EliminarElemento
-                cerrarModal={() => setMostrarModal3(false)}
-              />
-            )}
-          </td>
-        </tr>
+        {directores.map((director) => (
+          <tr key={director.id_usuario}>
+            <td>{director.nombre}</td>
+            <td>
+              <p className="text-subtitle">{director.nombre_munipio}</p>
+              <p className="text-bold">{director.nombre_inst_ope}</p>
+            </td>
+            <td>{director.correo}</td>
+            <td>{director.estatus}</td>
+            <td>
+              <button className="btn-negativo" onClick={() =>abrirModalModificar(director)}>Modificar</button>
+            </td>
+          </tr>
+        ))}
       </tbody>
     </table>
+    {mostrarModificar && (
+      <Modificar_UserDic
+      usuario={directorSeleccionado}
+      cerrarModal={() => setMostrarModificar(false)}
+      actualizarLista={cargarUserDic}
+      />
+    )}
   </div>
   );
 }

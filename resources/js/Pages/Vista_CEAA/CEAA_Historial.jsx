@@ -1,6 +1,6 @@
 import { Select } from "@headlessui/react";
 import React, { useState, useEffect} from "react";
-import { get_municipios,buscarMunicipioSelect} from "@/Components/api/municipios";
+import { getMunicipios, buscarMunicipioSelect } from "@/Components/api/municipios";
 
 function CEAA_Historial() {
   const [cardAbierta, setCardAbierta] = useState(null);
@@ -20,7 +20,7 @@ function CEAA_Historial() {
     cargarMunicipios();
   }, []);
   const cargarMunicipios = async () => {
-    const response = await get_municipios();
+    const response = await getMunicipios();
     if(response && response.status==200){
       setMunicipios(response.body);
       setListaMunicipios(response.body);

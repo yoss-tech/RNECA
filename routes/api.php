@@ -47,7 +47,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/eca');
     Route::post('/usuarios/eca', [EcaController::class, 'create']); // Crear espacios de culturas
     Route::get('/ecas', [EcaController::class, 'show']); // Información de los  ecas
-    Route::get('/municipio', [EcaController::class, 'municipios']); // Información de los municipios
     Route::get('/estatu', [EcaController::class, 'estatus']); // Información de los estatus
     Route::put('/usuarios/eca/{id}', [EcaController::class, 'update']); // Modificar ecas
 
@@ -61,7 +60,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/espacio/check', [EspacioController::class, 'checkRegistroActual']);
     Route::get('/infoEspacio', [EspacioController::class, 'index']); // Informacion del espacio de cultura
 
-
     // Memoria fotografica
     Route::post('/create_memoria', [MemoriaFotoController::class, 'store']); // Crear una memoria
     Route::get('/getDesc', [MemoriaFotoController::class, 'index']); // Obtener la descripcion general de la memoria
@@ -71,7 +69,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/getActivityById/{id}', [ActividadMemoController::class, 'actividadById']); // Obtener la inforamción de la actividad por su id
     Route::post('/create_activ', [ActividadMemoController::class, 'store']); // Crear una actividad
     Route::put('/update_activ', [ActividadMemoController::class, 'update']); // Actualizar una actividad
-
 
     //Oficio RNECA
     Route::post('/create_ofice', [OficiosRnecaController::class, 'store']); // Crear un oficio
@@ -83,21 +80,28 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/oficiosCorreccion', [OficiosRnecaController::class, 'oficiosCorreccion']); // Obtener los oficios con correcciones
     Route::get('/oficiosValidados', [OficiosRnecaController::class, 'oficiosValidados']); // Obtener los oficios con correcciones
 
-
     //Imagenes de la memoria
     Route::get('/getIdActividad/{id}', [FotoActivController::class, 'getImagenes']);
     Route::get('/fotos/{id}/archivo', [FotoActivController::class, 'ServirImg']);
     Route::delete('/delete_foto/{id}', [FotoActivController::class, 'destroy']);
     Route::post('/add_image', [FotoActivController::class, 'store']);
 
-
     // Usuarios
+    Route::post('/usuarios/create', [UsersController::class, 'create']); // Crear supervisores de culturas
+    Route::get('/usuarios/total', [UsersController::class, 'totalUser']); // Total de los usuarios
+    Route::get('/usuarios/totalECAS', [UsersController::class, 'totalUserECAS']); // Total de los usuarios ecas
+    Route::get('/usuarios/totalDic', [UsersController::class, 'totalUserDic']); // Total de los usuarios directores
+    Route::get('/usuarios/totalInactivo', [UsersController::class, 'totalUserInactivo']); // Total de los usuarios inactivos
     Route::get('/usuarios/eca', [UsersController::class, 'showUserEcas']); // Información de los usuarios ecas
-    Route::get('/usuarios/dicmun', [UsersController::class, 'showUserDicMun']); // Información de los directores de municipio
+    Route::get('/usuarios/dic', [UsersController::class, 'showUserDic']); // Información de los directores de municipio
+    Route::get('/usuarios/ceaa', [UsersController::class, 'showUserCeaa']); // Información de los usuarios del ceaa
+    Route::get('/usuarios/lic', [UsersController::class, 'showUserLic']); // Información del licenciado
     Route::put('/usuarios/{id}', [UsersController::class, 'update']); // Modificar usuarios
 
     //Municipios
-    Route::get('/municipios', [MunicipioController::class, 'index']); //Información de municipios
+    Route::get('/municipio', [MunicipioController::class, 'municipios']); // Información de los municipios
+    Route::get('/municipios/total', [MunicipioController::class, 'totalMunicipio']); // Información de los usuarios ecas
+    Route::put('/municipio/{id}', [MunicipioController::class, 'update']); // Modificar usuarios
     Route::get('/municipios/buscar', [MunicipioController::class, 'buscar']); //Busqueda por municipio en texto
     Route::get('/municipios/select', [MunicipioController::class, 'buscarSelect']); //busqueda por municipio en el select
 

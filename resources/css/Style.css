@@ -378,11 +378,27 @@ p {
     display: block;
 }
 
+.dashboard-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.fila-cards {
+    margin-bottom: 20px;
+    display: flex;
+    width: 100%;
+    gap: 20px;
+}
+
 .card-number {
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+    flex: 1 1 0;
+    min-width: 0;
 }
 
 .card-grafico {
@@ -396,7 +412,7 @@ p {
     display: flex;
     width: 100%;
     justify-content: center;
-    top:5px;
+    top: 5px;
 } 
 
 .card-contenedor {
@@ -463,9 +479,9 @@ p {
 
 /* ================= FORMULARIOS ================= */
 .dashboard {
+    align-items: flex-start;
     display: flex;
     gap: 20px;
-    align-items: flex-start;
 }
 
 .dashboard-left {

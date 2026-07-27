@@ -1,7 +1,7 @@
 import { Select } from "@headlessui/react";
 import React, { useState, useEffect} from "react";
 import Revisar_Oficio from "../Modals/Revisar_Oficio";
-import { get_municipios,buscarMunicipioSelect} from "@/Components/api/municipios";
+import { getMunicipios, buscarMunicipioSelect } from "@/Components/api/municipios";
 
 function CEAA_Pendientes() {
   const [mostrarModal, setMostrarModal] = useState(false);
@@ -12,7 +12,7 @@ function CEAA_Pendientes() {
     cargarMunicipios();
   }, []);
   const cargarMunicipios = async () => {
-    const response = await get_municipios();
+    const response = await getMunicipios();
     if(response && response.status==200){
       setMunicipios(response.body);
       setListaMunicipios(response.body);

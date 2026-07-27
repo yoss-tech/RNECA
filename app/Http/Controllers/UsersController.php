@@ -19,6 +19,54 @@ class UsersController extends Controller
         
     }
 
+    public function totalUser()
+    {
+        $totalUsuarios = DB::table('usuarios')->count();
+
+        return response()->json([
+            'status' => 200,
+            'body' => $totalUsuarios
+        ]);
+    }
+
+    public function totalUserInactivo()
+    {
+        $totalUsuariosInactivos = DB::table('usuarios')
+            ->join('eca', 'eca.id_usuario', '=', 'usuarios.id_usuario')
+            ->join('tipo_estatus', 'tipo_estatus.id_estatus', '=', 'eca.id_estatus')
+            ->where('eca.id_estatus', 'EST-C731KSDA')
+            ->count();
+
+        return response()->json([
+            'status' => 200,
+            'body' => $totalUsuariosInactivos
+        ]);
+    }
+
+    public function totalUserECAS()
+    {
+        $totalUsuariosECAS = DB::table('usuarios')
+            ->where('usuarios.id_rol', 'rol1')
+            ->count();
+
+        return response()->json([
+            'status' => 200,
+            'body' => $totalUsuariosECAS
+        ]);
+    }
+
+    public function totalUserDic()
+    {
+        $totalUsuariosDic = DB::table('usuarios')
+            ->where('usuarios.id_rol', 'rol2')
+            ->count();
+
+        return response()->json([
+            'status' => 200,
+            'body' => $totalUsuariosDic
+        ]);
+    }
+
     public function showUserEcas()
     {
         $ecas = DB::table('usuarios')
@@ -48,41 +96,143 @@ class UsersController extends Controller
         ], 200);
     }
 
-    public function showUserDicMun()
+    public function showUserDic()
     {
-        $dicMun = DB::table('usuarios')
-            ->join('rol', 'usuarios.id_rol', '=', 'rol.id_rol')
-            //->join('director', 'usuarios.id_usuario', '=', 'director .id_usuario')
-            //->join('direccion', 'director.id_direccion', '=', 'direccion.id_direccion')
-            //->join('municipio', 'direccion.id_municipio', '=', 'municipio.id_municipio')
-            //->join('tipo_estatus', 'director.id_estatus', '=', 'tipo_estatus.id_estatus')
-            //->orderBy('municipio.nombre_munipio', 'asc')
-            ->orderBy('usuarios.nombre', 'asc')
+        $director = DB::table('usuarios as ecas')
+            ->join('usuarios as director', 'ecas.id_dicm', '=', 'director.id_usuario')
+            ->join('eca', 'ecas.id_usuario', '=', 'eca.id_usuario')
+            ->join('rol', 'director.id_rol', '=', 'rol.id_rol')
+            ->join('direccion', 'eca.id_direccion', '=', 'direccion.id_direccion')
+            ->join('municipio', 'direccion.id_municipio', '=', 'municipio.id_municipio')
+            ->join('tipo_estatus', 'eca.id_estatus', '=', 'tipo_estatus.id_estatus')
+            ->orderBy('municipio.nombre_munipio', 'asc')
+            ->orderBy('director.nombre', 'asc')
             ->select(
-                'usuarios.id_usuario',
-                //'director.nombre_inst_ope',
-                //'municipio.nombre_munipio',
-                'usuarios.nombre', 
-                'usuarios.correo',
-                //'tipo_estatus.nombre_tipo as estatus',
-                'rol.nombre_rol as rol'
+                'director.id_usuario',
+                'director.nombre', 
+                'director.correo',
+                'rol.nombre_rol as rol',
+                'eca.nombre_inst_ope',
+                'municipio.nombre_munipio',
+                'tipo_estatus.nombre_tipo as estatus',
             )
-            ->where('rol.id_rol', 'rol2')
+            ->where('director.id_rol', 'rol2')
             ->get();
         
         return response()->json([
             'message' => 'Usuarios directores obtenidos correctamente',
             'status' => 200,
-            'body' => $dicMun
+            'body' => $director
         ], 200);
+    }
+
+    public function showUserCeaa()
+    {
+        $ceaas = DB::table('usuarios')
+            ->select(
+                'usuarios.id_usuario',
+                'usuarios.nombre', 
+                'usuarios.correo',
+                'usuarios.id_rol'
+            )
+            ->where('usuarios.id_rol', 'rol4')
+            ->get();
+        
+        return response()->json([
+            'message' => 'Usuarios del ceaa obtenidos correctamente',
+            'status' => 200,
+            'body' => $ceaas
+        ], 200);
+    }
+
+    public function showUserLic()
+    {
+        $licenciado = DB::table('usuarios')
+            ->select(
+                'usuarios.id_usuario',
+                'usuarios.nombre', 
+                'usuarios.correo',
+                'usuarios.id_rol'
+            )
+            ->where('usuarios.id_rol', 'rol3')
+            ->get();
+        
+        return response()->json([
+            'message' => 'Usuario del licenciado obtenido correctamente',
+            'status' => 200,
+            'body' => $licenciado
+        ], 200);
+    }
+
+    public function generarId($tabla, $campo, $prefijo)
+    {
+        $ultimoRegistro = DB::table($tabla)
+            ->where($campo,'like', $prefijo .'-%')
+            ->orderByRaw("CAST(SUBSTRING($campo, " . (strlen($prefijo) + 2) . ") AS UNSIGNED) DESC")
+            ->first();
+
+        if ($ultimoRegistro) {
+            $numero = (int) str_replace($prefijo . '-', '', $ultimoRegistro->$campo);
+            return $prefijo . '-' . ($numero + 1);
+        }
+        
+        return $prefijo . '-1';
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required',
+            'correo' => 'required|email|unique:usuarios,correo',
+            'password' => 'required',
+        ]);
+
+        $idUsuario = $this->generarId(
+            'usuarios',
+            'id_usuario',
+            'USER'
+        );
+
+        DB::beginTransaction();
+
+        try {
+            //$passwordTemporal = Str::random(10);
+            $passwordTemporal = 'RNECA2026';
+
+            DB::table('usuarios')->insert([
+                'id_usuario' => $idUsuario,
+                'nombre' => $request->nombre,
+                'correo' => $request->correo,
+                'password' => Hash::make($request->password),
+                'fecha_registro' => now(),
+                'id_rol' => 'rol4',
+                'id_dicm' => null,
+                'cambiar_password' => 1
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Usuario creado correctamente',
+                'usuario' => $request->correo,
+                'password_temporal' => $request->password
+            ]);
+
+        } catch(\Exception $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'status' => 500,
+                'message' => $e->getMessage()
+            ],500);
+        }
+
+
     }
 
     /**
@@ -130,6 +280,7 @@ class UsersController extends Controller
         }
 
         $datos = [
+            'nombre' => $request->nombre,
             'correo' => $request->correo
         ];
 

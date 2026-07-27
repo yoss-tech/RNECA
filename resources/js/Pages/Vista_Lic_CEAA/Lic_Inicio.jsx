@@ -8,7 +8,7 @@ import Lic_Registros from "./Lic_Registros.jsx";
 import Notificaciones_LIC from "../Modals/Notificaciones/NotificaciónLIC.jsx";
 import Avisos_LIC from "../Modals/Avisos/AvisosLIC.jsx";
 import CumplimientoInformes from "@/Components/Graficas.jsx";
-import { get_municipios,buscarMunicipio } from "@/Components/api/municipios";
+import { getMunicipios, buscarMunicipio } from "@/Components/api/municipios";
 
 function Lic_Inicio() {
 
@@ -44,7 +44,7 @@ function Lic_Inicio() {
           cargarMunicipios();
         }, []);
         const cargarMunicipios = async () => {
-          const response = await get_municipios();
+          const response = await getMunicipios();
           if(response && response.status==200){
             setMunicipios(response.body);
             setPaginaActual(1);

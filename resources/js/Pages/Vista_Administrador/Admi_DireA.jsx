@@ -1,62 +1,63 @@
-import React, { useState } from "react";
-import Modificar_DireA from "../Modals/Modificar/Mod_DireA";
-import Crear_DirectorArea from "../Modals/Crear/Crear_DireA";
-import EliminarElemento from "../Modals/Eliminar_Elemento";
+import React, { useState, useEffect } from "react";
+import { getUserLic } from "../../Components/api/usuarios.jsx"
+import Modificar_DireA from "../Modals/Modificar/Mod_User";
 
 function Admi_DireA() {
-   const [mostrarModal, setMostrarModal] = useState(false);
-   const [mostrarModal2, setMostrarModal2] = useState(false);
-   const [mostrarModal3, setMostrarModal3] = useState(false);
+  const [mostrarModificar, setMostrarModificar] = useState(false);
+
+  const [licenciado, setLicenciado] = useState([]);
+  const cargarUserLic = async () => {
+    const response = await getUserLic();
+    console.log(response);
+
+    if (response && response.status === 200) {
+      setLicenciado(response.body);
+    }
+  };
+
+  useEffect (() => {
+    cargarUserLic();
+  }, []);
+
+  const [licSeleccionado, setLicSeleccionado] = useState(null);
+  const abrirModalModificar = (lic) => {
+    setLicSeleccionado(lic);
+    setMostrarModificar(true);
+  };
    
   return (
   <div className="page-container">
     <h1 className="page-title">Administración de usuarios supervisores.</h1>
-    <h2 className="page-subtitle">Gestione las cuentas con acceso a la supervisión y consulta general de los informes.</h2>
-    
-    <button className="btn-primario"  onClick={() =>setMostrarModal2(true)}>
-             Crear un nuevo director de área</button>
-                {mostrarModal2 && (
-                <Crear_DirectorArea
-                    cerrarModal={() => setMostrarModal2(false)}
-                />
-                )}
+    <h2 className="page-subtitle">Gestione las cuentas con acceso a la supervisión.</h2>
 
     <table class="tabla-registros">
       <thead>
         <tr>
           <th className="th-start">Nombre</th>
           <th className="th-start">Correo</th>
-          <th className="th-start">Contraseña</th>
-          <th className="th-start">Estado</th>
           <th>Acciones</th>
         </tr>
       </thead>
       
       <tbody>
-        <tr>
-          <td>NOMBRE</td>
-          <td>CORREO</td>
-          <td>CONTRASEÑA</td>
-          <td>ACTIVO</td>
-          <td className="btn-container-horizontal">
-            <button className="btn-neutral"  onClick={() =>setMostrarModal3(true)}>
-             Eliminar</button>
-                {mostrarModal3 && (
-                <EliminarElemento
-                    cerrarModal={() => setMostrarModal3(false)}
-                />
-                )}
-            <button className="btn-negativo"  onClick={() =>setMostrarModal(true)}>
-             Modificar</button>
-                {mostrarModal && (
-                <Modificar_DireA
-                    cerrarModal={() => setMostrarModal(false)}
-                />
-                )}
+        {licenciado.map((lic) => (
+          <tr key={lic.id_usuario}>
+            <td>{lic.nombre}</td>
+            <td>{lic.correo}</td>
+            <td>
+              <button className="btn-negativo"  onClick={() => abrirModalModificar(lic)}>Modificar</button>
             </td>
-        </tr>
+          </tr>
+        ))}
       </tbody>
     </table>
+    {mostrarModificar && (
+      <Modificar_DireA
+      usuario={licSeleccionado}
+      cerrarModal={() => setMostrarModificar(false)}
+      actualizarLista={cargarUserLic}
+      />
+    )}
   </div>
   );
 }
