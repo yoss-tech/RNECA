@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import { getCumplimientoOficios } from "./api/oficio";
 
 import {
     Chart as ChartJS,
@@ -10,7 +11,6 @@ import {
 
 import { Doughnut } from "react-chartjs-2";
 
-
 ChartJS.register(
     ArcElement,
     Tooltip,
@@ -18,7 +18,25 @@ ChartJS.register(
     ChartDataLabels
 );
 
+
 const CumplimientoInformes = () => {
+    const [estadisticas, setEstadisticas] = useState({
+        validados: 0,
+        pendientes: 0,
+        noEntregados: 0
+    });
+    
+    useEffect (() => {
+        const cargarDatos = async () => {
+            const response = await getCumplimientoOficios();
+    
+            if (response.status === 200) {
+                setEstadisticas(response.body);
+            }
+        };
+    
+        cargarDatos();
+    }, []);
 
     const datos = {
         labels: [
@@ -27,16 +45,18 @@ const CumplimientoInformes = () => {
             "No Entregados",
         ],
 
-       datasets: [
-        {
-            data: [60, 10, 30],
+        datasets: [{
+            data: [
+                estadisticas.validados,
+                estadisticas.pendientes,
+                estadisticas.noEntregados
+            ],
             backgroundColor: [
                 "#2952A3",
                 "#CC7A00",
                 "#B02E0E"
             ]
-        }
-        ]
+        }]
     };
 
     const totalInformes = datos.datasets[0].data.reduce((a, b) => a + b, 0);

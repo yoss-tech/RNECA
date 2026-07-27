@@ -260,6 +260,44 @@ class OficiosRnecaController extends Controller
         ], 200);
     }
 
+    // Traer oficios pendientes
+    public function cumplimientoOficios()
+    {
+        $pendientes = DB::table('oficios_rneca')
+            ->where('id_estatus', 'EST-4HJVB2C9')
+            ->whereMonth('fecha_registro', now()->subMonth()->month)
+            ->whereYear('fecha_registro', now()->subMonth()->year)
+            ->count();
+
+        $validados = DB::table('oficios_rneca')
+            ->where('id_estatus', 'EST-V7WQ3N8Z')
+            ->whereMonth('fecha_registro', now()->subMonth()->month)
+            ->whereYear('fecha_registro', now()->subMonth()->year)
+            ->count();
+
+        $noEntregados = DB::table('eca')
+            ->whereNotExists(function ($query){
+                $query->select(DB::raw(1))
+                    ->from('oficios_rneca')
+                    ->whereColumn(
+                        'oficios_rneca.idClave_eca',
+                        'eca.clave_eca'
+                    )
+                    ->whereMonth('fecha_registro', now()->subMonth()->month)
+                    ->whereYear('fecha_registro', now()->subMonth()->year);
+            })
+            ->count();
+
+        return response()->json([
+            'status' => 200,
+            'body' => [
+                'validados' => $validados,
+                'pendientes' => $pendientes,
+                'noEntregados' => $noEntregados
+            ]
+        ]);
+    }
+
     // Traer oficios con correciones
     public function oficiosCorreccion()
     {
@@ -301,6 +339,8 @@ class OficiosRnecaController extends Controller
                 'oficios_rneca.fecha_registro'
             )
             ->where('oficios_rneca.id_estatus', 'EST-V7WQ3N8Z')
+            ->whereMonth('oficios_rneca.fecha_registro', now()->subMonth()->month)
+            ->whereYear('oficios_rneca.fecha_registro', now()->subMonth()->year)
             ->orderBy('municipio.nombre_munipio')
             ->get();
 
