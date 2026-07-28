@@ -1,66 +1,31 @@
-import React, { useState,useEffect} from "react";
-import "/resources/css/Style.css";
-import miImagen from "/resources/img/PNG/Logotipo1.png";
-import Perfil_CEAA from "../Modals/Perfiles/Perfil_CEAA.jsx";
-import "bootstrap-icons/font/bootstrap-icons.css";
+import React, { useState, useEffect } from "react";
+import { getOficio } from "@/Components/api/oficio";
+import { buscarMunicipio } from "@/Components/api/municipios";
+import { logoutUser } from "@/Components/api/auth.jsx";
+import CumplimientoInformes from "@/Components/Graficas.jsx";
 import CEAA_Pendientes from "./CEAA_Pendientes.jsx";
 import CEAA_Observaciones from "./CEAA_Observaciones.jsx";
 import CEAA_Validados from "./CEAA_Validados.jsx";
 import CEAA_Solicitudes from "./CEAA_Solicitudes.jsx";
-import CEAA_Ecas from "./CEAA_ECAS.jsx";
 import CEAA_Historial from "./CEAA_Historial.jsx";
-import CumplimientoInformes from "@/Components/Graficas.jsx";
-import { logoutUser } from "@/Components/api/auth.jsx";
-import { buscarMunicipio } from "@/Components/api/municipios";
-import { getOficio } from "@/Components/api/oficio";
+import CEAA_Ecas from "./CEAA_ECAS.jsx";
+import Perfil_CEAA from "../Modals/Perfiles/Perfil_CEAA.jsx";
 import Notificaciones_CEAA from "../Modals/Notificaciones/Notificacion_CEAA.jsx";
 import Avisos_CEAA from "../Modals/Avisos/Avisos_CEAA.jsx";
+import miImagen from "/resources/img/PNG/Logotipo1.png";
+import "/resources/css/Style.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 function CEAA_Inicio() {
-
   const [menuOpen, setMenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [mostrarModal2, setMostrarModal2] = useState(false);
+  const [mostrarPerfil, setMostrarPerfil] = useState(false);
+  const [mostrarNoti, setMostrarNoti] = useState(false);
+  const [mostrarAvisos, setMostrarAvisos] = useState(false);
   const [CerrarSesion, setCerrarSesion] = useState(false);
-
-  const [paginaActual, setPaginaActual] = useState(1);
-
-  const [municipios, setMunicipios] = useState([]);  
   
-  const submitLogout = async () => {
-    try {
-      const response = await logoutUser();
-      if (response.status === 'success') {
-        window.location.href = "/"; // Redirige al login después de cerrar sesión
-      }
-    } catch (error) {
-      console.error('Error al cerrar sesión:', error);
-    }
-  }
-
-  const [buscar, setBuscar] = useState("");
-  const handleBuscar = async () => {
-  const response = await buscarMunicipio(buscar);
-    if (response && response.status === 200) {
-      setMunicipios(response.body);
-      setPaginaActual(1);
-    }
-  };
-       
-  useEffect(() => {
-    cargarMunicipios();
-  }, []);
-
-  const cargarMunicipios = async () => {
-    const response = await getOficio();
-    if(response && response.status==200){
-      setMunicipios(response.body);
-      setPaginaActual(1);
-      console.log(response);
-    }
-  };
-
+  const [municipios, setMunicipios] = useState([]);
+  const [paginaActual, setPaginaActual] = useState(1);
   const registrosPorPagina = 6;
   const numPaginas = Math.ceil(municipios.length / registrosPorPagina);
   const indiceUltimo = paginaActual * registrosPorPagina;
@@ -76,6 +41,39 @@ function CEAA_Inicio() {
       setPaginaActual(paginaActual - 1);
     }
   };
+  
+  const [loading, setLoading] = useState(true);
+  const cargarMunicipios = async () => {
+    const response = await getOficio();
+    if(response && response.status==200){
+      setMunicipios(response.body);
+      setPaginaActual(1);
+      console.log(response);
+      setLoading(false);
+    }
+  };
+  const [buscar, setBuscar] = useState("");
+  const handleBuscar = async () => {
+  const response = await buscarMunicipio(buscar);
+    if (response && response.status === 200) {
+      setMunicipios(response.body);
+      setPaginaActual(1);
+    }
+  };
+  useEffect(() => {
+    cargarMunicipios();
+  }, []);
+
+  const submitLogout = async () => {
+    try {
+      const response = await logoutUser();
+      if (response.status === 'success') {
+        window.location.href = "/"; // Redirige al login después de cerrar sesión
+      }
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
+  }
 
   return (
     <>
@@ -83,38 +81,37 @@ function CEAA_Inicio() {
         <div className="logo"><img src={miImagen} alt="Logo RNECA"/></div>
 
         <div className="acciones-header">
-            <button className="icono"  onClick={() =>setMostrarModal(true)}>
-              <i className="bi bi-envelope"></i>
-                </button>
-                {mostrarModal && (
-                <Avisos_CEAA
-                    cerrarModal={() => setMostrarModal(false)}
-                />
-            )}
-
-            <button className="icono"  onClick={() =>setMostrarModal2(true)}>
-             <i className="bi bi-bell"></i>
-                </button>
-                {mostrarModal2 && (
-                <Notificaciones_CEAA
-                    cerrarModal={() => setMostrarModal2(false)}
-                />
-                )}
-                
+          <button className="icono"  onClick={() =>setMostrarAvisos(true)}>
+            <i className="bi bi-envelope"></i>
+          </button>
+          {mostrarAvisos && (
+            <Avisos_CEAA
+              cerrarModal={() => setMostrarAvisos(false)}
+            />
+          )}
+          <button className="icono"  onClick={() =>setMostrarNoti(true)}>
+            <i className="bi bi-bell"></i>
+          </button>
+          {mostrarNoti && (
+            <Notificaciones_CEAA
+              cerrarModal={() => setMostrarNoti(false)}
+            />
+          )}
+          
           <div className="perfil">
             <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)}>
               <i className="bi bi-person-circle perfil-icono"></i>
             </button>
             {CerrarSesion && (
               <div className="menu-perfil">
-                <button className="btn-cerrar-sesion"  onClick={() =>setMostrarModal(true)}>
+                <button className="btn-cerrar-sesion" onClick={() =>setMostrarPerfil(true)}>
                   Perfil
                 </button>
-                 {mostrarModal && (
-                <Perfil_CEAA
-                    cerrarModal={() => setMostrarModal(false)}
-                />
-            )}
+                {mostrarPerfil && (
+                  <Perfil_CEAA
+                    cerrarModal={() => setMostrarPerfil(false)}
+                  />
+                )}
                 <button className="btn-cerrar-sesion" onClick={submitLogout}>
                   Cerrar sesión
                 </button>
@@ -217,7 +214,9 @@ function CEAA_Inicio() {
                   <button className="buscador-button"  onClick={handleBuscar}><i className="bi bi-search"></i></button>
                 </div>
                 <div className="container-municipios">
-                  {oficios.length > 0 ? (
+                  {loading ? (
+                    <p className="text-white">Cargando datos...</p> 
+                  ) : oficios.length > 0 ? (
                     oficios.map((oficio) => (
                       <div className="cards-municipio">
                         <div className="card-municipio" key={oficio.id_municipio}>
@@ -225,8 +224,8 @@ function CEAA_Inicio() {
                             <div className="card-titles">
                               <h3 className="text-title">{oficio.nombre_munipio}</h3>
                               <h3 className="text-subtitle">{oficio.nombre_inst_ope}</h3>
-                              <p>Informes pendientes: {oficio.pendientes}</p>
-                              <p>Validados: {oficio.validados}</p>
+                              <p className="text-bold">Informes pendientes: {oficio.pendientes}</p>
+                              <p className="text-bold">Validados: {oficio.validados}</p>
                             </div>
                             
                             <div className="botones-cards">
@@ -237,7 +236,7 @@ function CEAA_Inicio() {
                       </div>
                     ))
                   ) : (
-                  <p className="text-white ">No existen informes.</p>
+                    <p className="text-white ">No existen informes.</p>
                   )}
                   <div className="container-paginacion">
                     {numPaginas > 1 && (
@@ -259,7 +258,6 @@ function CEAA_Inicio() {
                 <div className="card-grafico">
                   <h3 className="card-title">Cumplimiento de Entrega de Informes mensuales </h3>
                   <p className="card-text">Visualice el porcentaje de municipios que han cumplido con la entrega de su informe mensual y aquellos que se encuentran pendientes.</p>
-              
                   <div className="container-grafico">
                     <CumplimientoInformes/>
                   </div>

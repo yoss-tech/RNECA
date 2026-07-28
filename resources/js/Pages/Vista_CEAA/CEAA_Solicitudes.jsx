@@ -1,26 +1,41 @@
-import { Select } from "@headlessui/react";
 import React, { useState, useEffect} from "react";
-import Revisar_Oficio from "../Modals/Revisar_Oficio";
 import { getMunicipios, buscarMunicipioSelect } from "@/Components/api/municipios";
+import Revisar_Oficio from "../Modals/Revisar_Oficio";
 
 function CEAA_Pendientes() {
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [listaMunicipios, setListaMunicipios] = useState([]);
-  const [paginaActual, setPaginaActual] = useState(1);
+  const [mostrarRevisar, setMostrarRevisar] = useState(false);
+
   const [municipios, setMunicipios] = useState([]);
-  useEffect(() => {
-    cargarMunicipios();
-  }, []);
+  const [paginaActual, setPaginaActual] = useState(1);
+  const registrosPorPagina = 9;
+  const numPaginas = Math.ceil(municipios.length / registrosPorPagina);
+  const indiceUltimo = paginaActual * registrosPorPagina;
+  const indicePrimero = indiceUltimo - registrosPorPagina;
+  const municipiosPaginados = municipios.slice(indicePrimero, indiceUltimo);
+  const irAPaginaSiguiente = () => {
+    if (paginaActual < numPaginas) {
+      setPaginaActual(paginaActual + 1);
+    }
+  };
+  const irAPaginaAnterior = () => {
+    if (paginaActual > 1) {
+      setPaginaActual(paginaActual - 1);
+    }
+  };
+
+  const [municipioSeleccionado, setMunicipioSeleccionado] = useState("");
+  const [listaMunicipios, setListaMunicipios] = useState([]);
+  const [loading, setLoading] = useState(true);
   const cargarMunicipios = async () => {
     const response = await getMunicipios();
-    if(response && response.status==200){
+    if(response && response.status==200) {
       setMunicipios(response.body);
       setListaMunicipios(response.body);
       console.log(response);
+      setLoading(false);
     }
-};
-    
-    const buscarPorSelect = async (e) => {
+  };
+  const buscarPorSelect = async (e) => {
     const id = e.target.value;
     setMunicipioSeleccionado(id);
     if (id === "") {
@@ -32,23 +47,10 @@ function CEAA_Pendientes() {
       setMunicipios(response.body);
       setPaginaActual(1);
     }
-    };
-
-    const registrosPorPagina = 9;
-    const numPaginas = Math.ceil(municipios.length / registrosPorPagina);
-    const indiceUltimo = paginaActual * registrosPorPagina;
-    const indicePrimero = indiceUltimo - registrosPorPagina;
-    const municipiosPaginados = municipios.slice(indicePrimero, indiceUltimo);
-    const irAPaginaSiguiente = () => {
-      if (paginaActual < numPaginas) {
-        setPaginaActual(paginaActual + 1);}
-      };
-    const irAPaginaAnterior = () => {
-      if (paginaActual > 1) {
-        setPaginaActual(paginaActual - 1);}
-      };
-
-    const [municipioSeleccionado, setMunicipioSeleccionado] = useState("");
+  };
+  useEffect(() => {
+    cargarMunicipios();
+  }, []);
 
   return (
   <div className="page-container">
@@ -88,25 +90,24 @@ function CEAA_Pendientes() {
               <div className="card-municipio" key={municipio.id_municipio}>
                 <div className="card-body">
                   <div className="card-titles">
-                    <h3 className="card-title">{municipio.nombre_munipio}</h3>
-                    <h3 className="card-subtitle">Instancia Operativa:</h3>
-                    <p className="card-text">Mes:</p>
-                    <p className="card-text">Fecha:</p>
+                    <h3 className="text-title">{municipio.nombre_munipio}</h3>
+                    <h3 className="text-subtitle">Instancia Operativa:</h3>
+                    <p className="text-bold">Mes:</p>
+                    <p className="text-bold">Fecha:</p>
                   </div>
                   
                   <div className="botones-cards">
-                    <button className="btn-primario"  onClick={() =>setMostrarModal(true)}>
+                    <button className="btn-primario" onClick={() =>setMostrarRevisar(true)}>
                      Revisar
                     </button>
-                    {mostrarModal && (
-                      <Revisar_Oficio cerrarModal={() => setMostrarModal(false)}/>
+                    {mostrarRevisar && (
+                      <Revisar_Oficio cerrarModal={() => setMostrarRevisar(false)}/>
                     )}
                   </div>
                 </div>
               </div>
             ))}
           </div>
-    
         </div>  
       </div>
     </div>

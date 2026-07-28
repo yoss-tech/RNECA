@@ -7,21 +7,22 @@ function Lic_Registros() {
 
   const [paginaActual, setPaginaActual] = useState(1);
   const [listaMunicipios, setListaMunicipios] = useState([]);
-  
   const [municipios, setMunicipios] = useState([]);
   const [municipioSeleccionado, setMunicipioSeleccionado] = useState("");
+  const [loading, setLoading] = useState(true);
   
-  useEffect(() => {
-    cargarMunicipios();
-  }, []);
   const cargarMunicipios = async () => {
     const response = await getOficioValidado();
-    if(response && response.status==200) {
+    if(response && response.status == 200) {
       setMunicipios(response.body);
       setListaMunicipios(response.body);
       console.log(response);
+      setLoading(false);
     }
   };
+  useEffect(() => {
+    cargarMunicipios();
+  }, []);
   
   const buscarPorSelect = async (e) => {
     const id = e.target.value;
@@ -86,7 +87,9 @@ function Lic_Registros() {
             )}
           </div>
           
-          {oficios.length > 0 ? (
+          {loading ? (
+            <p className="text-white">Cargando datos...</p> 
+          ) : oficios.length > 0 ? (
             oficios.map((oficioVal) => (
               <div className="cards-revision">
                 <div className="card-municipio" key={oficioVal.id_municipio}>
@@ -94,8 +97,8 @@ function Lic_Registros() {
                     <div className="card-titles">
                       <h3 className="text-title">{oficioVal.nombre_munipio}</h3>
                       <h3 class="text-subtitle">{oficioVal.nombre_inst_ope}</h3>
-                      <p class="card-text">Mes: {oficioVal.mes_oficio}</p>
-                      <p class="card-text">Fecha: {oficioVal.fecha_registro}</p>
+                      <p class="text-bold">Mes: {oficioVal.mes_oficio}</p>
+                      <p class="text-bold">Fecha: {oficioVal.fecha_registro}</p>
                     </div>
                     
                     <div className="botones-cards">
@@ -106,7 +109,7 @@ function Lic_Registros() {
               </div>
             ))
           ) : (
-          <p className="text-white ">No existen informes del mes actual.</p>
+          <p className="text-white">No existen informes del mes actual.</p>
           )}
         </div>
       </div>

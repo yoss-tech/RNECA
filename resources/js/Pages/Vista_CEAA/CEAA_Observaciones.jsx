@@ -2,19 +2,19 @@ import React, {useState, useEffect} from "react";
 import { getOficioCorreccion } from "@/Components/api/oficio";
 
 function CEAA_Observaciones() {
-
   const [oficios, setOficios] = useState([]);
-  useEffect(() => {
-    cargarCorrecciones();
-  }, []);
-      
+  const [loading, setLoading] = useState(true);
   const cargarCorrecciones = async () => {
     const response = await getOficioCorreccion();
     if(response && response.status==200){
       setOficios(response.body);
       console.log(response);
+      setLoading(false);
     }
   };
+  useEffect(() => {
+    cargarCorrecciones();
+  }, []);
 
   return (
   <div className="page-container">
@@ -32,7 +32,13 @@ function CEAA_Observaciones() {
       </thead>
       
       <tbody>
-        {oficios.length > 0 ? (
+        {loading ? (
+          <tr>
+            <td colSpan="4">
+              <p className="text-bold">Cargando datos...</p> 
+            </td>
+          </tr>
+        ) : oficios.length > 0 ? (
           oficios.map((oficioCor) => (
             <tr key={oficioCor.id_oficio}>
               <td>
