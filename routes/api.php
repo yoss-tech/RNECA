@@ -54,11 +54,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/create_program', [ProgramController::class, 'store']);
     Route::get('/infoProgram', [ProgramController::class, 'index']); // Informacion del programa de cultura
     Route::put('/update_program', [ProgramController::class, 'update']); // Actualizar un programa de cultura :)
+    Route::get('/checkActividad', [ProgramController::class, 'checkActividad']);
 
     // Espacio de cultura
     Route::post('/create_espacio', [EspacioController::class, 'store']);
     Route::get('/espacio/check', [EspacioController::class, 'checkRegistroActual']);
     Route::get('/infoEspacio', [EspacioController::class, 'index']); // Informacion del espacio de cultura
+    Route::get('/idEspacio', [EspacioController::class, 'getIdEspacio']);
+    Route::put('/updateEspacio', [EspacioController::class, 'update']); 
 
     // Memoria fotografica
     Route::post('/create_memoria', [MemoriaFotoController::class, 'store']); // Crear una memoria
@@ -80,6 +83,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/oficiosCorreccion', [OficiosRnecaController::class, 'oficiosCorreccion']); // Obtener los oficios con correcciones
     Route::get('/oficiosValidados', [OficiosRnecaController::class, 'oficiosValidados']); // Obtener los oficios con correcciones
     Route::get('/cumplimientoOficios', [OficiosRnecaController::class, 'cumplimientoOficios']); // Obtener los oficios con correcciones
+    Route::get('/view_ofice/{id}', [OficiosRnecaController::class, 'view']); // Visualizar un oficio
+    Route::post('/subirOficioFirm', [OficiosRnecaController::class, 'update']); // Subir el oficio escaneado
+    Route::get('/checkOficio', [OficiosRnecaController::class, 'checkRegistroOficio']);  // validación para evitar registros de oficios doble por un ECA
+    Route::get('/oficiosFirm', [OficiosRnecaController::class, 'oficiosFirmados']);
+    Route::put('/observacionesOficio', [OficiosRnecaController::class, 'observaOficios']);
+    Route::get('/getEstatusOficios', [OficiosRnecaController::class, 'estatusOficios']);
 
     //Imagenes de la memoria
     Route::get('/getIdActividad/{id}', [FotoActivController::class, 'getImagenes']);

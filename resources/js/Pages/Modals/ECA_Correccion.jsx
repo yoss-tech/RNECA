@@ -2,7 +2,10 @@ import React from "react";
 import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
 
-function ECA_Correccion({ cerrarModal }) {
+function ECA_Correccion({ cerrarModal, oficioCorregir }) {
+
+    console.log(oficioCorregir);
+
     return (
         <div className="overlay">
 
@@ -14,7 +17,7 @@ function ECA_Correccion({ cerrarModal }) {
 
                 <div className="modal-body">
                     <div className="form-group">
-                        <p>CORRECCIONES</p>
+                        <p>{oficioCorregir}</p>
                     </div>
                 </div>
 
