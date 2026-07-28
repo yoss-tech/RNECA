@@ -114,7 +114,7 @@ class ProgramController extends Controller
 
     public function destroy($id)
     {
-        $program = program::find($id);
+        $program = program::findOrFail($id);
 
         if (!$program) {
             $data = [
@@ -184,5 +184,20 @@ class ProgramController extends Controller
             ];
             return response()->json($data, 500);
         }
+    }
+
+    public function checkActividad()
+    {
+        $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+
+        $program = DB::table('program_cult as pc')
+            ->where('pc.clave_eca', $eca->clave_eca)
+            ->whereMonth('pc.fecha_registro', $currentMonth)
+            ->whereYear('pc.fecha_registro', $currentYear)
+            ->exists();
+
+        return response()->json(['registro existente: ' => $program]);
     }
 }

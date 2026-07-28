@@ -9,7 +9,7 @@ import SelectorImagen from "../../../Components/SelectorImagen.jsx";
 import { infoEca } from "../../../Components/api/infoEca.jsx"
 
 
-function Crear_Actividad({ cerrarModal }) {
+function Crear_Actividad({ cerrarModal, actividades }) {
 
   const [municipio, setMunicipio] = useState('');
 
@@ -72,6 +72,8 @@ function Crear_Actividad({ cerrarModal }) {
     }
     try {
       await create_program(formDataToSend);
+
+      await actividades();
       Swal.fire({
         title: "¡Guardado!",
         text: "La información se guardó correctamente.",
@@ -103,7 +105,7 @@ function Crear_Actividad({ cerrarModal }) {
 
   const [paso, setPaso] = useState(1);
 
-  const validateStep = (paso) => {
+  const validateForm = (paso) => {
     let newErrors = {};
     if (paso == 1) {
       if (!formData.localidad.trim()) newErrors.localidad = 'La localidad es requerida.';
@@ -123,7 +125,7 @@ function Crear_Actividad({ cerrarModal }) {
   };
 
   const siguientePaso = () => {
-    if (validateStep(paso)) {
+    if (validateForm(paso)) {
       setPaso(paso + 1);
     }
   };
@@ -146,8 +148,8 @@ function Crear_Actividad({ cerrarModal }) {
             </p>
           </div>
           <div className="modal-body">
-            <form onSubmit={handleSubmit}>
-              {paso == 1 && (
+            <form onSubmit={handleSubmit} >
+              {paso === 1 && (
                 <>
                   <div className="form-group">
                     <div className="form-campo">
@@ -222,7 +224,7 @@ function Crear_Actividad({ cerrarModal }) {
                   </div>
                 </>
               )}
-              {paso == 2 && (
+              {paso === 2 && (
                 <>
                   <div className="form-group">
                     <div className="form-campo">
@@ -279,8 +281,7 @@ function Crear_Actividad({ cerrarModal }) {
                         id="descripcionActividad"
                         placeholder="Ingresa la descripción detallada de la actividad"
                         className="form-control"
-                        onChange={handleChange}
-                        value={formData.descripcion_activ}
+                        onChange={(e) => setFormData({ ...formData, descripcion_activ: e.target.value })}
                         title="Ingresa la descripción detallada de la actividad"
                       ></textarea>
                       {errors.descripcion_activ && <p className="error">{errors.descripcion_activ}</p>}

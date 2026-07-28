@@ -3,100 +3,230 @@
     padding: 1rem;
     background-color: #f3f4f6;
     border-radius: 0.5rem;
-    align-items: center;
-    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
     overflow: auto;
 }
 
-/* Simula la hoja física A4 */
+/* Hoja física en pantalla */
 .hoja-a4 {
     background-color: #ffffff;
-    padding: 15px;
+    padding: 20px;
     border-radius: 0.5rem;
-    box-shadow: 0 10px 15px -3px rgb(0, 0, 0), 0 4px 6px -2px rgb(0, 0, 0);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
     color: #000000;
     width: 210mm;
-    min-height: 277mm;
-    /* page-break-after: always; Asegura saltos de página en la impresión */
+    min-height: 297mm;
+    margin: 0 auto 2rem auto;
+    box-sizing: border-box;
 }
 
-/* Modificador para la hoja horizontal */
+/* Hoja horizontal solo en pantalla */
 .pagina-horizontal {
     width: 297mm;
-    height: 210mm;
     min-height: 210mm;
+}
+
+.pagina-activa {
+    display: block;
+}
+
+.pagina-oculta-pantalla {
+    display: none;
+}
+
+/* Encabezados y logotipos */
+.header-logo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.header-meta-center {
+    text-align: center;
+    width: 100%;
+}
+
+.imagen {
+    height: auto;
+}
+
+.documento-header {
+    border-bottom: 2px solid #d1d5db;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-meta {
+    text-align: right;
+    font-size: 0.875rem;
+    color: #4b5563;
+}
+
+.documento-contenido {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.seccion-titulo,
+.seccion-despedida {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.descripcion-parrafo {
+    color: #4b5563;
+    line-height: 1.6;
+    text-align: justify;
+}
+
+.info-firma {
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.documento-footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+    text-align: center;
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+/* Tablas */
+.tablas-preview {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.tabla-programa td,
+.tabla-programa th {
+    border: 1px solid #9ca3af;
+    padding: 4px;
+    font-size: 8pt;
+    text-align: center;
+}
+
+.tabla-espacio td,
+.tabla-espacio th {
+    border: 1px solid #9ca3af;
+    padding: 2px;
+    font-size: 6.5pt;
+    text-align: center;
 }
 
 /* Estilos de impresión para la hoja */
 @media print {
-
-    body, html {
-        background: #fff;
+    /* Configuración de la hoja A4 */
+    @page {
+        size: A4 portrait;
+        margin: 8mm;
     }
 
-    .no-print {
+    body, html {
+        background: #ffffff !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 210mm !important;
+    }
+
+    .no-print, 
+    .paginacion-controles {
         display: none !important;
     }
 
-    .paginacion-controles {
-        display: none;
-    }
-
-    .pagina-oculta-pantalla {
+    /* 1. OBLIGATORIO: Muestra TODAS las páginas independientemente 
+       de la paginación activa en la pantalla */
+    .pagina-oculta-pantalla,
+    .pagina-activa {
         display: block !important;
+        visibility: visible !important;
+        position: relative !important;
     }
 
     .documento-preview-container {
-        padding: 0;
-        background-color: transparent;
-        border-radius: 0;
-        box-shadow: none;
-        overflow: visible;
+        padding: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        overflow: visible !important; 
     }
 
+    /* 2. Estructura base de cada hoja A4 */
     .hoja-a4 {
-        box-shadow: none;
-        margin: 0;
-        width: 100%;
-        height: auto;
-        min-height: unset;
-        background: transparent;
-        /* transform: scale(1) !important; */
-        font-size: 2pt;
-        padding: 0.5cm;
-        border: none;
-        page-break-after: always;
-        page: vertical;
-        box-sizing: border-box;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        background: #ffffff !important;
+        box-sizing: border-box !important;
+        
+        /* Dimensiones fijas para hoja vertical en impresión */
+        width: 210mm !important;
+       /* max-width: 190mm !important; A4 (210mm) menos márgenes */
+        height: 275mm !important;    /* A4 (297mm) menos márgenes */
+        
+        /* FUERZA UN SALTO DE PÁGINA DESPUÉS DE CADA .hoja-a4 */
+        page-break-after: always !important;
+        break-after: page !important;
+        
+        position: relative !important;
+        overflow: hidden !important;
     }
 
-    @page horizontal {
-        size: A4 landscape;
-        margin: 0.5cm;
+    /* 3. TRUCO DE ROTACIÓN PARA LAS PÁGINAS HORIZONTALES (Tablas) */
+    .hoja-a4.pagina-horizontal {
+        /* Para encajar en A4 rotado, redefinimos sus dimensiones */
+        width: 270mm !important;  
+        height: 180mm !important; 
+        
+        /* Rotación centrada sobre su origen */
+        transform: rotate(-90deg) translate(-100%, 0);
+        transform-origin: top left;
+
+        /* Mantenemos el flujo para que no se encima con otras páginas */
+        position: absolute !important; 
+        /* Con esto evitamos que ocupe espacio vertical "fantasma" */
+        margin: 0 !important;
+
+        top: 20mm !important; /* Desplaza el eje vertical al fondo del A4 (297mm - 12mm margen) */
+        left: 12mm !important; /* Alinea al margen izquierdo exacto */
     }
 
-    @page vertical {
-        size: A4 portrait;
-        margin: 0.5cm;
+    /* Contenedor que ayuda a reservar el espacio de la hoja rotada */
+    .pagina-oculta-pantalla:has(.pagina-horizontal),
+    .pagina-activa:has(.pagina-horizontal) {
+        height: 295mm !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        position: relative !important;
+        display: block !important;
     }
 
-    .hoja-a4:not(.pagina-horizontal) {
-        page-break-after: always;
-        page: vertical;
-    }
-
-    .pagina-horizontal {
-        page-break-after: always;
-        page: horizontal;
-        padding: 2px;
-        border-radius: 0.5px;
-    }
-
-    /* Reduce font size for tables on horizontal pages to minimum */
+    /* Reducción de escala en las tablas para que no se salgan del marco */
     .pagina-horizontal .tabla-programa,
     .pagina-horizontal .tabla-espacio {
-        font-size: 5pt; /* Reduced from 8pt to 5pt */
+        width: auto !important;
+        table-layout: auto !important;
     }
+
+    /* .pagina-horizontal .tabla-programa td,
+    .pagina-horizontal .tabla-programa th {
+        font-size: 6pt !important;
+        padding: 2px !important;
+    }
+
+    .pagina-horizontal .tabla-espacio td,
+    .pagina-horizontal .tabla-espacio th {
+        font-size: 5.5pt !important;
+        padding: 1px !important;
+    } */
 }
 
 /* Encabezado del documento */
@@ -106,7 +236,7 @@
     align-items: center;
 }
 
-.header-meta-center{
+.header-meta-center {
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -294,13 +424,15 @@
     border-collapse: collapse;
 }
 
-.tabla-programa td,.tabla-programa th {
+.tabla-programa td,
+.tabla-programa th {
     border: 1px solid #d1d5db;
-    font-size:small;
+    font-size: small;
 }
 
 
-.tabla-espacio td, .tabla-espacio th {
+.tabla-espacio td,
+.tabla-espacio th {
     border: 1px solid #d1d5db;
     font-size: xx-small;
 }
@@ -326,5 +458,3 @@
 .pagina-oculta-pantalla {
     display: none;
 }
-
-

@@ -23,3 +23,25 @@ export const get_espacio = async () => {
         return null;
     }
 }
+
+export const getIdEspacio = async () => {
+    try{
+        const response = await axiosInstance.get('/idEspacio');
+        return response.data;
+    }
+    catch(error){
+        console.log(error);
+        return null;
+    }
+}
+
+export const updatePoblacion = async (data) =>{
+    try{
+        const response = await axiosInstance.put('/updateEspacio', data)
+        return response.data;
+    }
+    catch(error){
+        console.log(error);
+        return error;
+    }
+}

@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import ECA_Correccion from "../Modals/ECA_Correccion.jsx";
 import { getOficeEca } from "@/Components/api/oficio.jsx";
 import { dowloadOfice } from "@/Components/api/dowload_ofice.js";
+import Ver_Informe from '../Modals/Ver_informe.jsx'
 
 function VECA_ConsultaReg() {
 
   const [mostrarCorreccion, setMostrarCorreccion] = useState(false);
+  const [verInforme, setVerInforme] = useState(null);
+  const [informeSeleccinado, setInformeSeleccionado] = useState(null);
 
   const [oficios, setOficios] = useState([]);
 
@@ -22,17 +25,21 @@ function VECA_ConsultaReg() {
     fetchOficios();
   }, []);
 
+  const handleVerCorrecciones = (oficio) => {
+    setInformeSeleccionado(oficio);
+    setMostrarCorreccion(true);
+  }
+
 
   const handleDownloadPdf = async (id_oficio) => {
 
     try {
-      // 1. Llamamos a la petición Axios que está en el otro JS
+      // petición Axios que está en el otro JS
       const pdfBlob = await dowloadOfice(id_oficio);
 
-      // 2. Creamos el objeto URL temporal a partir del Blob recibido
+      // objeto URL temporal a partir del Blob recibido
       const blobUrl = window.URL.createObjectURL(new Blob([pdfBlob], { type: 'application/pdf' }));
 
-      // 3. Creamos un enlace invisible, simulamos click y lo removemos
       const link = document.createElement('a');
       link.href = blobUrl;
       link.setAttribute('download', `oficio_${id_oficio}.pdf`);
@@ -65,52 +72,47 @@ function VECA_ConsultaReg() {
         </thead>
 
         <tbody>
-          {oficios.map((item, index) => (
-            <tr key={index.id_oficio}>
+          {oficios.map((item) => (
+            <tr key={item.id_oficio}>
               <td>{item.mes_oficio}</td>
               <td>{item.nombre_tipo}</td>
               <td>{item.fecha_registro}</td>
               <td className="btn-container-horizontal">
-                <button type="button" className="btn-neutral" onClick={() => handleDownloadPdf(item.id_oficio)}>Descargar PDF</button>
+                {item.nombre_tipo === 'Pendiente' && (
+                  <button type="button" className="btn-neutral" onClick={() => handleDownloadPdf(item.id_oficio)}>Descargar PDF</button>
+                )}
+                {item.nombre_tipo === 'Firmado' && (
+                  <button type="button" className="btn-neutral" onClick={() => setVerInforme(item.id_oficio)}>Ver documento</button>
+                )}
+                {item.nombre_tipo === 'Correcciones' && (
+                  <button type="button" className="btn-negativo" onClick={() => handleVerCorrecciones(item.observacion)}>
+                    Ver correcciones
+                  </button>
+                )}
+                {item.nombre_tipo === 'Validado' && (
+                  <>
+                    <button type="button" className="btn-neutral" onClick={() => setVerInforme(item.id_oficio)}>Ver documento</button>
+                    <button type="button" className="btn-neutral" onClick={() => handleDownloadPdf(item.id_oficio)}>Descargar PDF</button>
+                  </>
+                )}
               </td>
             </tr>
           ))}
-
-          <tr>
-            <td>Marzo</td>
-            <td class="estado correcciones">Correcciones</td>
-            <td>DIA de MES del AÑO</td>
-            <td className="btn-container-horizontal">
-              <button type="button" className="btn-negativo" onClick={() => setMostrarCorreccion(true)}>
-                Ver correcciones
-              </button>
-              {mostrarCorreccion && (
-                <ECA_Correccion
-                  cerrarModal={() => setMostrarCorreccion(false)}
-                />
-              )}
-            </td>
-          </tr>
-
-          <tr>
-            <td>Febrero</td>
-            <td class="estado enviado">Enviado</td>
-            <td>DIA de MES del AÑO</td>
-            <td className="btn-container-horizontal">
-              <button type="button" className="btn-neutral">Leer documento</button>
-            </td>
-          </tr>
-
-          <tr>
-            <td>Enero</td>
-            <td class="estado pendiente">Pendiente</td>
-            <td>DIA de MES del AÑO</td>
-            <td className="btn-container-horizontal">
-              <button type="button" className="btn-primario">Completar registro pendiente</button>
-            </td>
-          </tr>
         </tbody>
       </table>
+
+      {mostrarCorreccion && (
+        <ECA_Correccion
+          oficioCorregir={informeSeleccinado}
+          cerrarModal={() => setMostrarCorreccion(false)}
+        />
+      )}
+      {verInforme && (
+        <Ver_Informe
+          idOficio={verInforme}
+          cerrarModal={() => setVerInforme(false)}
+        />
+      )}
     </div>
   );
 }

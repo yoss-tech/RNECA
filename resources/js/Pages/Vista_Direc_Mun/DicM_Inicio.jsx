@@ -6,7 +6,6 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import DICRegistros_Recibidos from "./Dic_RegistrosR.jsx";
 import DIC_Correcciones from "./Dic_Correcciones.jsx";
 import DIC_Firmados from "./Dic_Firmados.jsx";
-
 import { Head } from "@inertiajs/react";
 import { logoutUser, checkAuth } from "../../Components/api/auth.jsx";
 import Notificaciones_DireMunicipal from "../Modals/Notificaciones/Notificacion_DM.jsx";

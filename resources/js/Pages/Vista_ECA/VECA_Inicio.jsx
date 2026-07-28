@@ -11,6 +11,8 @@ import { Head } from "@inertiajs/react";
 import { mostrarSoloMes, dateLimit } from "../../Components/functions.jsx";
 import { logoutUser, checkAuth } from "../../Components/api/auth.jsx";
 import { checkEspacioRegistro } from "../../Components/api/espacio.jsx";
+import { checkActividadesRegistro } from "../../Components/api/program.jsx"
+import { checkOficio } from "../../Components/api/oficio.jsx"; // Importar checkOficio
 import Notificaciones_Eca from "../Modals/Notificaciones/NoticacionECA.jsx";
 import PerfilECA from "../Modals/Perfiles/PerfilECA.jsx";
 import Avisos_eca from "../Modals/Avisos/AvisosECA.jsx";
@@ -22,20 +24,33 @@ function VECA_Inicio() {
   const [submenuOpen, setSubmenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
   const [currentStep, setCurrentStep] = useState(1);
+  const [hasPoblacionRegistration, setHasPoblacionRegistration] = useState(null);
+  const [hasActivitiesRegistration, setHasActivitiesRegistration] = useState(null);
+  const [hasOficioSent, setHasOficioSent] = useState(null);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [mostrarModal2, setMostrarModal2] = useState(false);
+  const menuItems = document.querySelectorAll('.sidebar .form-group a');
 
   useEffect(() => {
-    const checkRegistro = async () => {
-      const data = await checkEspacioRegistro();
-      if (data.registro_existente) {
-        setCurrentStep(4);
+    const fetchAllRegistrationStatuses = async () => {
+      try {
+        const poblacionData = await checkEspacioRegistro();
+        setHasPoblacionRegistration(poblacionData);
+        const actividadesData = await checkActividadesRegistro();
+        setHasActivitiesRegistration(actividadesData);
+        const oficioData = await checkOficio();
+        setHasOficioSent(oficioData);
+      } catch (error) {
+        console.error("Error fetching registration statuses:", error);
+        // Handle error state, maybe set all to false or show an error message
+        setHasPoblacionRegistration(false);
+        setHasActivitiesRegistration(false);
+        setHasOficioSent(false);
       }
     };
-    checkRegistro();
+    fetchAllRegistrationStatuses();
   }, []);
 
-  const menuItems = document.querySelectorAll('.sidebar .form-group a');
 
   const submitLogout = async () => {
     try {
@@ -66,9 +81,33 @@ function VECA_Inicio() {
     }
   });
 
+  const handleCompletePending = () => {
+    if (hasPoblacionRegistration === null || hasActivitiesRegistration === null || hasOficioSent === null) {
+      return;
+    }
+
+    if (!hasPoblacionRegistration) {
+      setVistaActual("poblacion");
+      setCurrentStep(1);
+    } else if (!hasActivitiesRegistration) {
+      setVistaActual("actividades");
+      setCurrentStep(2);
+    } else if (!hasOficioSent) {
+      setVistaActual("vista_previa");
+      setCurrentStep(4);
+    } else {
+      Swal.fire({
+        title: 'Registro del mes completado',
+        text: 'Ya has completado todos los pasos para el registro de este mes.',
+        icon: 'success',
+        confirmButtonText: 'Entendido',
+      });
+    }
+  };
 
   return (
     <>
+      <title>RNECA | Menu</title>
       <header className="header">
         <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} >
           <i className="bi bi-list"></i>
@@ -160,14 +199,14 @@ function VECA_Inicio() {
               </li>
 
               <li>
-                <div className="submenu-item">
+                {/* <div className="submenu-item">
                   <a
                     className={vistaActual === "memoria" ? "active" : ""}
                     onClick={() => setVistaActual("memoria")}
                     style={{ cursor: "pointer" }}>
                     <i className="bi bi-clock"></i>
                     Memoria Fotográfica</a>
-                </div>
+                </div> */}
               </li>
             </ul>
           )}
@@ -216,12 +255,35 @@ function VECA_Inicio() {
                     <p className="card-text">ESTADO</p>
                   </div>
 
+                  {(() => {
+                    let buttonText = 'Completar registro pendiente';
+                    let isDisabled = true; 
+
+                    if (hasPoblacionRegistration !== null && hasActivitiesRegistration !== null && hasOficioSent !== null) {
+                      if (!hasPoblacionRegistration) {
+                        buttonText = 'Completar Población Beneficiaria';
+                        isDisabled = false;
+                      } else if (!hasActivitiesRegistration) {
+                        buttonText = 'Completar Actividades del mes';
+                        isDisabled = false;
+                      } else if (!hasOficioSent) {
+                        buttonText = 'Enviar Oficio a revisión';
+                        isDisabled = false;
+                      } else {
+                        buttonText = 'Registro del mes completado';
+                        isDisabled = true;
+                      }
+                    }
+                    return (
                   <div className="botones-cards">
-                    <button type="button" className="btn-primario">Completar registro pendiente</button>
+                    <button type="button" className="btn-primario" onClick={handleCompletePending} disabled={isDisabled}>
+                      {buttonText}
+                    </button>
                   </div>
+                    );
+                  })()}
                 </div>
               </div>
-
               <h3 className="form-subtitle">Último Registro</h3>
               <div className="card-contenedor">
                 <p className="card-header">Informe del mes de MES</p>
@@ -259,7 +321,7 @@ function VECA_Inicio() {
           />
         )}
         {vistaActual === "vista_previa" && (
-           //<VECA_VistaP />
+          //<VECA_VistaP />
           <PanelDocumento />
         )}
         {vistaActual === "consulta_registros" && (

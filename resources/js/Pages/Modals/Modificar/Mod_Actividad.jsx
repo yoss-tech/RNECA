@@ -5,7 +5,7 @@ import { update_program } from "../../../Components/api/program.jsx";
 import Toast from "../../Toast.jsx";
 import Swal from "sweetalert2";
 
-function Mod_Actividad({ cerrarModal, actividad }) {
+function Mod_Actividad({ cerrarModal, actividad, actualizarActiv }) {
 
   const [formData, setFormData] = useState({
     id_program: actividad.id_program,
@@ -50,6 +50,7 @@ function Mod_Actividad({ cerrarModal, actividad }) {
     }
     try {
       await update_program(formData);
+      await actualizarActiv();
       Swal.fire({
         title: "¡Guardado!",
         text: "La información se actualizo correctamente.",

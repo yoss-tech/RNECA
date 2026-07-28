@@ -21,7 +21,7 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
   const [ecaInfo, setinfoEca] = useState(null); // Descripción general de la memoria fotográfica
   const [imagesByActivity, setImagesByActivity] = useState({}); // Nuevo estado para almacenar imágenes por actividad
 
-  // Petición para obtener la población beneficiaria
+  // Petición para obtener las actividades del mes
   useEffect(() => {
     const fetchPrograma = async () => {
       try {
@@ -48,8 +48,7 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
     fetchEspacio();
   }, []);
 
-  // Petición para obtener información de las actividades que componen la memoria fotografica
-  // Y ahora también para obtener las imágenes de cada actividad
+  // Obtener las imágenes de cada actividad
   useEffect(() => {
     const fetchMemoriaAndImages = async () => {
       try {
@@ -115,7 +114,7 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
       </div>
       <div className="documento-header">
         <div className="header-meta-left">
-          <p>M.A.P. Juan</p>
+          <p>M.A.P. </p>
           <p>Director General de la Comisión Estatal</p>
           <p>del Agua y Alcantarillado del Estado de Hidalgo</p>
         </div>
@@ -124,7 +123,7 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
           <p>Expediente: Cultura del agua</p>
           <p>Asunto: Reporte de actividades</p>
           <br /> <br />
-          <p>Atención: Lic. Javier</p>
+          <p>Atención:</p>
           <p>Director de Orfanismos Operadores y</p>
           <p>Atención a Usuarios de la CEAA</p>
         </div>
@@ -296,7 +295,7 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
     </div>,
 
     // MEMORIA FOTOGRAFICA
-    <div className="hoja-a4" key="pagina1">
+    <div className="hoja-a4" key="pagina4">
       <div className="header-logo">
         <img className="imagen" src={imgconagua} alt="Logo CONAGUA" style={{ width: '18%', height: 'auto' }} />
         <img className='imagen' src={imgceaa} alt="Logo CEAA" style={{ width: '18%', height: 'auto' }} />
@@ -305,20 +304,18 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
       <div className="documento-header">
         <div>
           <h1 className='seccion-titulo header-meta-center' >MEMORIA FOTOGRAFICA</h1>
-          <p className='header-meta-center'>Informes del mes de </p>
-          <br />
-          {/* <p>{desc?.[0]?.descrip_gen || '---'}</p> */}
+          <p className='header-meta-center'>Informes del mes de {mostrarSoloMes(new Date())}</p>
         </div>
       </div>
       <div className="documento-contenido">
         <section>
-          {memoria.map((item) => ( // Iteramos sobre cada actividad de la memoria
-            <div key={item.id_program}> {/* Añadimos una key única para cada actividad */}
+          {memoria.map((item) => ( // Iteración de cada actividad de la memoria
+            <div key={item.id_program}>
               <div className="descripcion-parrafo">
-                <li><h1 className="seccion-titulo">{item.otras_activ || '---'}</h1></li>
-                <p>{item.descripcion || '---'}</p>
+                <h1 className="seccion-titulo">{item.otras_activ || '---'}</h1>
+                {/* <p>{item.descripcion_activ || '---'}</p> */}
               </div>
-              <h2 className="seccion-titulo">Fotos de la Actividad: {item.otras_activ || '---'}</h2> {/* Usamos el título de la actividad */}
+              <h2 className="seccion-titulo">Evidencia fotografica: {item.otras_activ || '---'}</h2> {/* Usamos el título de la actividad */}
               <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                 {imagesByActivity[item.id_program] && imagesByActivity[item.id_program].length > 0 ? (
                   imagesByActivity[item.id_program].map((foto) => (
@@ -351,7 +348,7 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
   }, [paginas.length, setNumPaginas]);
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className='documento-preview-container'>
       {paginas.map((pagina, index) => (
         <div key={index} className={paginaActual === index + 1 ? 'pagina-activa' : 'pagina-oculta-pantalla'}>
           {pagina}

@@ -22,6 +22,7 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
         });
     };
 
+    // Limpiar el object URL cuando el modal se cierra o el PDF se oculta
     useEffect(() => {
         return () => {
             if (pdfSrc) {
@@ -104,7 +105,7 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
         <div className="overlay">
             <div className="modal-box modal-grid" style={{ width: showPdf ? '85%' : '500px', height: showPdf ? '90vh' : 'auto', transition: 'width 0.3s ease, height 0.3s ease' }}>
                 <div className="modal-head">
-                    <h4>Revisión de informes</h4>
+                    <h4>Vista del informe</h4>
                 </div>
 
                 <div className="modal-body">
@@ -118,50 +119,6 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
                                         style={{ width: '100%', height: '100%', border: 'none' }}
                                     />
                                 </div>
-                                <div className="dashboard-right">
-                                    <div className="form-group">
-                                        <label className="card-subtitle">Observaciones:</label>
-                                        <textarea 
-                                            name="observacion"
-                                            value={formData.observacion}
-                                            onChange={handleChange}
-                                            className="form-control" 
-                                            placeholder="Ingresa las observaciones del sobre el informe" 
-                                            title="Ingresa las observaciones del sobre el informe"
-                                        />
-                                    </div>
-
-                                    <div className="form-campo">
-                                        <label className="form-label">Fecha de revisión</label>
-                                        <input
-                                            type="date"
-                                            name='fecha_obser'
-                                            value={formData.fecha_obser}
-                                            onChange={handleChange}
-                                            id="fecha_obser"
-                                            placeholder="Ingresa la fecha de revisión"
-                                            className="form-control"
-                                        />
-                                    </div>
-
-                                    <div className="form-campo">
-                                        <label className="form-label">Estatus</label>
-                                        <select 
-                                            name="id_estatus"
-                                            value={formData.id_estatus}
-                                            onChange={handleChange}
-                                            className="form-control"
-                                        >
-                                            <option value="" disabled>--Selecciona un estatus--</option>
-                                            {estatus && estatus.map((est) => (
-                                                <option key={est.id_estatus} value={est.id_estatus}>
-                                                    {est.nombre_tipo}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-
                             </div>
                         </>
                     ) : (
@@ -178,7 +135,6 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
 
                 <div className="modal-foot">
                     <button type="button" className="btn-neutral" onClick={cerrarModal}>Cerrar</button>
-                    <button type="button" className="btn-primario" onClick={hableSubmit}>Guardar</button>
                 </div>
             </div>
         </div>

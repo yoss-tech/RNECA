@@ -1,10 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import DocumentoPreview from './DocumentoPreview';
-import { create_ofice } from "../../Components/api/oficio.jsx";
+import { create_ofice, checkOficio } from "../../Components/api/oficio.jsx";
 import { mostrarSoloMes } from "../../Components/functions.jsx"
 import '../../../css/Preview.css';
-import { infoEca } from '../../Components/api/infoEca.jsx';
 import SelectorArchivo from '../../Components/SelectorArchivo';
 import Swal from "sweetalert2";
 
@@ -13,6 +12,37 @@ function PanelDocumento() {
   const [paginaActual, setPaginaActual] = useState(1);
   const [numPaginas, setNumPaginas] = useState(0);
   const [inputId, setInputId] = useState();
+  const [resultado, setResultado] = useState(null)
+  const [hasShownAlert, setHasShownAlert] = useState(false);
+
+  useEffect(() => {
+    const checkRegistro = async () => {
+      try {
+        const data = await checkOficio()
+        setResultado(data.registro_existente);
+      }
+      catch (error) {
+        console.error('Sin registros aún', error);
+        setResultado(false); 
+      }
+    };
+
+    checkRegistro();
+  }, []);
+
+  useEffect(() => {
+    if (resultado === true && !hasShownAlert) {
+      Swal.fire({
+        title: '¡Registro existente!',
+        text: 'Actualmente el oficio ya fue enviado y esta en proceso de validación, espera a que finalice todo el proceso',
+        icon: 'info',
+        confirmButtonText: 'Entendido',
+        timer: 10000,
+        timerProgressBar: true,
+      });
+      setHasShownAlert(true);
+    }
+  }, [resultado, hasShownAlert]); 
 
   // Ejemplo de estado.
   const [datosFormulario, setDatosFormulario] = useState({
@@ -52,7 +82,7 @@ function PanelDocumento() {
   };
 
   const handleFileChange = (e) => {
-    setRuta_oficio(e.target.files[0]); // Assuming single file selection for ruta_oficio
+    setRuta_oficio(e.target.files[0]);
   };
 
 
@@ -97,13 +127,13 @@ function PanelDocumento() {
           </div>
           {/* <h2 className="panel-controles-titulo">Modificar Datos</h2> */}
           <button onClick={handlePrint} className="btn-primario" style={{ marginTop: '1rem', fontSize: '15px' }} >
-          <i class="bi bi-filetype-pdf"></i>
+            <i class="bi bi-filetype-pdf"></i>
             Generar PDF
           </button>
-          <button type="submit" className="btn-primario" onClick={handleSubmit} style={{ marginTop: '1', fontSize: '15px'}}>
-          <i class="bi bi-clipboard2-check"></i>
+          <button type="submit" className="btn-primario" onClick={handleSubmit} disabled={resultado}>
+            <i class="bi bi-clipboard2-check"></i>
             Enviar a revisión
-            </button>
+          </button>
         </div>
 
         {/* SECCIÓN DERECHA: Vista Previa */}
