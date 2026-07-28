@@ -245,19 +245,19 @@ p {
 
 .text-title{
     font-weight: 700;
-    margin-top: 8px;
+    margin-top: 4px;
     color:var(--ginda-color);
 }
 
 .text-subtitle{
     font-weight: 700;
-    margin-top: 8px;
+    margin-top: 4px;
     color:var(--dorado-color);
 }
 
 .text-bold{
     font-weight: 600;
-    margin-top: 8px;
+    margin-top: 4px;
     color:var(--negro-color);
 }
 

@@ -1,24 +1,63 @@
 import React, { useState,useEffect } from "react";
-import "/resources/css/Style.css";
-import miImagen from "/resources/img/PNG/Logotipo1.png";
-import "bootstrap-icons/font/bootstrap-icons.css";
+import { getMunicipios, buscarMunicipio } from "@/Components/api/municipios";
 import { logoutUser } from "@/Components/api/auth.jsx";
-import Perfil_LIC from "../Modals/Perfiles/PerfilLIC.jsx";
+import CumplimientoInformes from "@/Components/Graficas.jsx";
 import Lic_Registros from "./Lic_Registros.jsx";
+import Perfil_LIC from "../Modals/Perfiles/PerfilLIC.jsx";
 import Notificaciones_LIC from "../Modals/Notificaciones/NotificaciónLIC.jsx";
 import Avisos_LIC from "../Modals/Avisos/AvisosLIC.jsx";
-import CumplimientoInformes from "@/Components/Graficas.jsx";
-import { getMunicipios, buscarMunicipio } from "@/Components/api/municipios";
+import miImagen from "/resources/img/PNG/Logotipo1.png";
+import "/resources/css/Style.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 function Lic_Inicio() {
-
   const [menuOpen, setMenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [mostrarModal2, setMostrarModal2] = useState(false);
+  const [mostrarPerfil, setMostrarPerfil] = useState(false);
+  const [mostrarNoti, setMostrarNoti] = useState(false);
+  const [mostrarAvisos, setMostrarAvisos] = useState(false);
   const [CerrarSesion, setCerrarSesion] = useState(false);
+
+  const [municipios, setMunicipios] = useState([]);
   const [paginaActual, setPaginaActual] = useState(1);
-  
+  const registrosPorPagina = 6;
+  const numPaginas = Math.ceil(municipios.length / registrosPorPagina);
+  const indiceUltimo = paginaActual * registrosPorPagina;
+  const indicePrimero = indiceUltimo - registrosPorPagina;
+  const municipiosPaginados = municipios.slice(indicePrimero, indiceUltimo);
+  const irAPaginaSiguiente = () => {
+    if (paginaActual < numPaginas) {
+      setPaginaActual(paginaActual + 1);
+    }
+  };
+  const irAPaginaAnterior = () => {
+    if (paginaActual > 1) {
+      setPaginaActual(paginaActual - 1);
+    }
+  };
+
+  const [loading, setLoading] = useState(true);
+  const cargarMunicipios = async () => {
+    const response = await getMunicipios();
+    if(response && response.status==200) {
+      setMunicipios(response.body);
+      setPaginaActual(1);
+      console.log(response);
+      setLoading(false);
+    }
+  };
+  const [buscar, setBuscar] = useState("");
+  const handleBuscar = async () => {
+    const response = await buscarMunicipio(buscar);
+    if (response && response.status === 200) {
+      setMunicipios(response.body); 
+      setPaginaActual(1);
+    }
+  };
+  useEffect(() => {
+    cargarMunicipios();
+  }, []);
+
   const submitLogout = async () => {
     try {
       const response = await logoutUser();
@@ -30,81 +69,43 @@ function Lic_Inicio() {
     }
   }
 
-    const [buscar, setBuscar] = useState("");
-    const handleBuscar = async () => {
-      const response = await buscarMunicipio(buscar);
-      if (response && response.status === 200) {
-        setMunicipios(response.body); 
-        setPaginaActual(1);
-      }
-    };
-         
-    const [municipios, setMunicipios] = useState([]);  
-    useEffect(() => {
-          cargarMunicipios();
-        }, []);
-        const cargarMunicipios = async () => {
-          const response = await getMunicipios();
-          if(response && response.status==200){
-            setMunicipios(response.body);
-            setPaginaActual(1);
-            console.log(response);
-          }
-      };
-  
-      const registrosPorPagina = 6;
-      const numPaginas = Math.ceil(municipios.length / registrosPorPagina);
-      const indiceUltimo = paginaActual * registrosPorPagina;
-      const indicePrimero = indiceUltimo - registrosPorPagina;
-      const municipiosPaginados = municipios.slice(indicePrimero, indiceUltimo);
-      const irAPaginaSiguiente = () => {
-        if (paginaActual < numPaginas) {
-          setPaginaActual(paginaActual + 1);}
-        };
-      const irAPaginaAnterior = () => {
-        if (paginaActual > 1) {
-          setPaginaActual(paginaActual - 1);}
-        };
-  
-
   return (
     <>
       <header className="header">
         <div className="logo"><img src={miImagen} alt="Logo RNECA"/></div>
 
         <div className="acciones-header">
-           <button className="icono"  onClick={() =>setMostrarModal(true)}>
-              <i className="bi bi-envelope"></i>
-                </button>
-                {mostrarModal && (
-                <Avisos_LIC
-                    cerrarModal={() => setMostrarModal(false)}
-                />
-            )}
-
-            <button className="icono"  onClick={() =>setMostrarModal2(true)}>
-             <i className="bi bi-bell"></i>
-                </button>
-                {mostrarModal2 && (
-                <Notificaciones_LIC
-                    cerrarModal={() => setMostrarModal2(false)}
-                />
-                )}
-
+          <button className="icono"  onClick={() =>setMostrarAvisos(true)}>
+            <i className="bi bi-envelope"></i>
+          </button>
+          {mostrarAvisos && (
+            <Avisos_LIC
+              cerrarModal={() => setMostrarAvisos(false)}
+            />
+          )}
+          <button className="icono"  onClick={() =>setMostrarNoti(true)}>
+            <i className="bi bi-bell"></i>
+          </button>
+          {mostrarNoti && (
+            <Notificaciones_LIC
+              cerrarModal={() => setMostrarNoti(false)}
+            />
+          )}
+            
           <div className="perfil">
             <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)}>
               <i className="bi bi-person-circle perfil-icono"></i>
             </button>
             {CerrarSesion && (
               <div className="menu-perfil">
-                <button className="btn-cerrar-sesion"  onClick={() =>setMostrarModal(true)}>
+                <button className="btn-cerrar-sesion"  onClick={() =>setMostrarPerfil(true)}>
                   Perfil
                 </button>
-                 {mostrarModal && (
-                <Perfil_LIC
-                    cerrarModal={() => setMostrarModal(false)}
-                />
-            )}
+                {mostrarPerfil && (
+                  <Perfil_LIC
+                    cerrarModal={() => setMostrarPerfil(false)}
+                  />
+                )}
                 <button className="btn-cerrar-sesion" onClick={submitLogout}>
                   Cerrar sesión
                 </button>
@@ -160,41 +161,40 @@ function Lic_Inicio() {
                   
                  <div className="container-municipios">
                     <div className="cards-municipio">
-                       {municipiosPaginados.map((municipio) => (
-                      <div className="card-municipio" key={municipio.id_municipio}>
-                        <div className="card-body">
-                          <div className="card-titles">
-                            <h3 className="card-title">{municipio.nombre_munipio}</h3>
-                            <h3 className="card-subtitle">INSTANCIA OPERATIVA</h3>
-                            <p className="card-text">Informes pendientes:</p>
-                            <p className="card-text">Validados:</p>
+                      {municipiosPaginados.map((municipio) => (
+                        <div className="card-municipio" key={municipio.id_municipio}>
+                          <div className="card-body">
+                            <div className="card-titles">
+                              <h3 className="text-title">{municipio.nombre_munipio}</h3>
+                              <h3 className="text-subtitle">INSTANCIA OPERATIVA</h3>
+                              <p className="text-bold">Informes pendientes:</p>
+                              <p className="text-bold">Validados:</p>
+                            </div>
+                            <div className="botones-cards">
+                              <button className="btn-neutral">Ver detalles</button>
+                            </div>
                           </div>
-
-                        <div className="botones-cards">
-                          <button className="btn-neutral">Ver detalles</button>
                         </div>
-                      </div>
+                      ))}
                     </div>
-                    ))}                   
-                  </div>
                   
-                   <div className="container-paginacion">
-                     {numPaginas > 1 && (
-                    <div className="paginacion-controles">
-                      <button onClick={irAPaginaAnterior} disabled={paginaActual === 1} className="btn-blanco">
-                        Anterior
-                      </button>
+                    <div className="container-paginacion">
+                      {numPaginas > 1 && (
+                        <div className="paginacion-controles">
+                          <button onClick={irAPaginaAnterior} disabled={paginaActual === 1} className="btn-blanco">
+                            Anterior
+                          </button>
 
-                      <button onClick={irAPaginaSiguiente} disabled={paginaActual === numPaginas} className="btn-blanco">
-                        Siguiente
-                      </button> 
-                    </div>
+                          <button onClick={irAPaginaSiguiente} disabled={paginaActual === numPaginas} className="btn-blanco">
+                            Siguiente
+                          </button> 
+                        </div>
                       )}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-                 <div className="dashboard-right">
+                <div className="dashboard-right">
                   <div className="card-grafico">
                     <h3 className="card-title">Cumplimiento de Entrega de Informes mensuales </h3>
                     <p className="card-text">Visualice el porcentaje de municipios que han cumplido con la entrega de su informe mensual y aquellos que se encuentran pendientes.</p>
@@ -204,7 +204,6 @@ function Lic_Inicio() {
                     </div>
                   </div>
                 </div>
-
               </div>
             </div>
           </>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { getEcas } from "../../Components/api/usuarios.jsx";
 import Ver_ECA from "../Modals/Ver_ECA";
 import Crear_ECAS from "../Modals/Crear/Crear_ECAS";
 import Modificar_ECAS from "../Modals/Modificar/Mod_ECAS";
-import { getEcas } from "../../Components/api/usuarios.jsx";
 
 function CEAA_Ecas() {
   const[mostrarEcas, setMostrarEcas] = useState(false);
@@ -10,19 +10,18 @@ function CEAA_Ecas() {
   const[mostrarModificar, setMostrarModificar] = useState(false);
 
   const[ecas, setEcas] = useState([]);
-
-  useEffect (() => {
-    cargarEcas();
-  }, []);
-
+  const [loading, setLoading] = useState(true);
   const cargarEcas = async () => {
     const response = await getEcas();
     console.log(response);
-
     if (response && response.status === 200) {
       setEcas(response.body);
+      setLoading(false);
     }
   };
+  useEffect (() => {
+    cargarEcas();
+  }, []);
 
   const [ecaSeleccionado, setEcaSeleccionado] = useState(null);
   const abrirVerEcas = (eca) => {
@@ -75,29 +74,43 @@ function CEAA_Ecas() {
       </thead>
       
       <tbody>
-        {ecas.map((eca) => (
-          <tr key={eca.clave_eca}>
-            <td>
-              <p>{eca.clave_eca}</p>
-            </td>
-            <td>
-              <p className="td-title">{eca.nombre_munipio}</p>
-            </td>
-            <td>
-              <p className="form-subtitle">{eca.nombre_inst_ope}</p>
-              <p className="td-subtitle">{eca.tipo_instancia}</p>
-            </td>
-            <td>
-              <p>{eca.nombre}</p>
-            </td>
-            <td>
-              <p>{eca.nombre_tipo}</p>
-            </td>
-            <td>
-              <button className="btn-neutral" onClick={() => abrirVerEcas(eca)}>Detalles</button>
+        {loading ? (
+          <tr>
+            <td colSpan="6">
+              <p className="text-bold">Cargando datos...</p> 
             </td>
           </tr>
-        ))}
+        ) : ecas.length > 0 ? (
+          ecas.map((eca) => (
+            <tr key={eca.clave_eca}>
+              <td>
+                <p>{eca.clave_eca}</p>
+              </td>
+              <td>
+                <p className="text-title">{eca.nombre_munipio}</p>
+              </td>
+              <td>
+                <p className="text-subtitle">{eca.nombre_inst_ope}</p>
+                <p className="text-bold">{eca.tipo_instancia}</p>
+              </td>
+              <td>
+                <p>{eca.nombre}</p>
+              </td>
+              <td>
+                <p>{eca.nombre_tipo}</p>
+              </td>
+              <td>
+                <button className="btn-neutral" onClick={() => abrirVerEcas(eca)}>Detalles</button>
+              </td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td colSpan="6">
+              <p className="text-bold">No existen Espacios de Cultura del Agua creados.</p> 
+            </td>
+          </tr>
+        )}
       </tbody>
     </table>
     {mostrarEcas && (
