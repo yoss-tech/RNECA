@@ -58,3 +58,14 @@ export const update_program = async (data) => {
         return null;
     }
 }
+
+export const checkActividadesRegistro = async () => {
+    try{
+        const response = await axiosInstance.get('/checkActividad');
+        return response.data;
+    }
+    catch(error){
+        console.log(error);
+        return null;
+    }
+}

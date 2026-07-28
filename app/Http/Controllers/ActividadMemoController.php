@@ -136,13 +136,6 @@ class ActividadMemoController extends Controller
             ], 400);
         }
 
-        $memoria = $request->validate([
-            'id_program' => 'required|string',
-            'id_actividad' => 'required|string',
-            // 'otras_activ' => 'string',
-            'descripcion' => 'required|string'
-        ]);
-
         $validatedData = $validator->validated();
  
         try{
@@ -175,6 +168,19 @@ class ActividadMemoController extends Controller
      */
     public function destroy(actividad_memo $actividad_memo)
     {
-        //
+        try {
+            $actividad_memo->delete();
+
+            return response()->json([
+                'message' => 'Actividad eliminada correctamente con todas sus imágenes.',
+                'status' => 'success',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al eliminar la actividad.',
+                'body' => $e->getMessage(),
+                'status' => 500
+            ], 500);
+        }
     }
 }

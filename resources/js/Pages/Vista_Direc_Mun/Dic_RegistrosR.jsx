@@ -7,43 +7,48 @@ import { dowloadOfice } from "@/Components/api/dowload_ofice.js";
 function DICRegistros_Recibidos() {
   const [mostrarModal, setMostrarModal] = useState(false);
   const [ofice, setOfice] = useState([]);
+  const [idOficioSeleccionado, setIdOficioSeleccionado] = useState(null);
+
+  const handlerSubirOficio = (idOficio) => {
+    setIdOficioSeleccionado(idOficio);
+    setMostrarModal(true);
+  }
 
   useEffect(() => {
-    const loadInfo = async () => {
-      try {
-        const response = await get_ofice();
-        console.log(response);
-        setOfice(response || []);
-      }
-      catch (error) {
-        console.log("Error al cargar los datos del programa")
-      }
-    }
-
-    loadInfo();
+    cargarOficios();
   }, [])
+
+  const cargarOficios = async () => {
+    try {
+      const response = await get_ofice();
+      console.log(response);
+      setOfice(response || []);
+    }
+    catch (error) {
+      console.log("Error al cargar los datos del programa")
+    }
+  }
 
   const handleDownloadPdf = async (id_oficio) => {
 
-    try{
-      // 1. Llamamos a la petición Axios que está en el otro JS
+    try {
       const pdfBlob = await dowloadOfice(id_oficio);
 
-      // 2. Creamos el objeto URL temporal a partir del Blob recibido
+      //objeto URL temporal a partir del Blob
       const blobUrl = window.URL.createObjectURL(new Blob([pdfBlob], { type: 'application/pdf' }));
 
-      // 3. Creamos un enlace invisible, simulamos click y lo removemos
+      // enlace invisible, simulamos click y lo removemos
       const link = document.createElement('a');
       link.href = blobUrl;
       link.setAttribute('download', `oficio_${id_oficio}.pdf`);
       document.body.appendChild(link);
-      
+
       link.click();
-      
+
       link.remove();
-      // window.URL.revokeObjectURL(blobUrl); // Liberamos memoria del navegador
+      // window.URL.revokeObjectURL(blobUrl);
     }
-    catch(error){
+    catch (error) {
       console.log(error);
     }
 
@@ -72,11 +77,13 @@ function DICRegistros_Recibidos() {
               <td>{item.fecha_registro}</td>
               <td className="btn-container-horizontal">
                 <button type="button" className="btn-neutral" onClick={() => handleDownloadPdf(item.id_oficio)}>Descargar PDF</button>
-                <button className="btn-primario" onClick={() => setMostrarModal(true)}>
+                <button type="button" className="btn-primario" onClick={() => handlerSubirOficio(item.id_oficio)}>
                   Subir Firmado</button>
                 {mostrarModal && (
                   <SubirArchivo
                     cerrarModal={() => setMostrarModal(false)}
+                    idOficio={idOficioSeleccionado}
+                    oficios={cargarOficios}
                   />
                 )}
               </td>

@@ -45,7 +45,7 @@ const ImagenActividad = ({ idFoto, isSelected, onSelect }) => {
         <img
           src={imageUrl}
           alt="Foto de actividad"
-          style={{ width: '160px', height: '160px', objectFit: 'cover', margin: '5px', borderRadius: '4px' }}
+          style={{ width: '340px', height: '240px', objectFit: 'cover', margin: '5px', borderRadius: '4px' }}
         />
         {isSelected && <div className="selected-overlay"></div>}
       </div >

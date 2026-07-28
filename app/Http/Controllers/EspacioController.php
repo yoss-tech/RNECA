@@ -74,8 +74,8 @@ class EspacioController extends Controller
         $validator = Validator::make($request->all(), [
             'total_pobl' => 'required',
             'comentarios' => 'required',
-            'asistentes' => 'required|array', // 'asistentes' debe ser un arreglo.
-            'nexo' => 'required|array', // En el frontend es un objeto, Laravel lo trata como array asociativo.
+            'asistentes' => 'required|array',
+            'nexo' => 'required|array',
             'material' => 'required|array'
         ]);
 
@@ -91,7 +91,7 @@ class EspacioController extends Controller
         $espacio = espacio::create([
             'total_pobl' => $request->total_pobl,
             'comentarios' => $request->comentarios,
-            'clave_eca' => $eca->clave_eca, // Se asigna automáticamente
+            'clave_eca' => $eca->clave_eca
         ]);
 
         if (!$espacio) {
@@ -102,10 +102,9 @@ class EspacioController extends Controller
             return response()->json($data, 500);
         }
 
-        // Una vez creado el espacio de cultura, obtenemos su ID para los detalles.
         $idEspacio = $espacio->id_espacio;
 
-        // Ahora, registramos los detalles de los asistentes si existen en la petición.
+        // Dtalles de los asistentes
         if ($request->has('asistentes')) {
             foreach ($request->asistentes as $asistente) {
                 detail_asist::create([
@@ -117,7 +116,7 @@ class EspacioController extends Controller
             }
         }
 
-        // Para los nexos, ya no es un bucle. Recibimos un solo objeto.
+        // Para los nexos
         if ($request->has('nexo')) {
             $nexoData = $request->nexo;
             detail_nex::create([
@@ -145,5 +144,112 @@ class EspacioController extends Controller
         ];
 
         return response()->json($data, 201);
+    }
+
+    public function getIdEspacio(Request $request)
+    {
+
+        $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
+
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+
+        $idEspacio = DB::table('espaciocultura as ec')
+            ->join('eca', 'eca.clave_eca', '=', 'ec.clave_eca')
+            ->join('detalle_asistente as da', 'ec.id_espacio','=','da.id_espacio')
+            ->join('detalle_nexo as dn', 'ec.id_espacio','=','dn.id_espacio')
+            ->join('material_didact as mat', 'ec.id_espacio','=','mat.id_espacio')
+            ->select(
+                'ec.id_espacio',
+                'dn.id_nexo',
+                'mat.id_material'
+            )
+            ->whereMonth('ec.fecha_registro', $currentMonth)
+            ->whereYear('ec.fecha_registro', $currentYear)
+            ->where('ec.clave_eca', $eca->clave_eca)
+            ->distinct()
+            ->get();
+
+        return response()->json($idEspacio);
+    }
+
+    public function update(Request $request)
+    {
+        // dd($request->all(), $request->files->all());
+
+        $validator = Validator::make($request->all(), [
+            'id_espacio' => 'required|exists:espaciocultura,id_espacio',
+            'id_nexo' => 'required|exists:detalle_nexo,id_nexo',
+            'id_material' => 'required|exists:material_didact,id_material',
+            'total_pobl' => 'required|integer',
+            'comentarios' => 'required|string',
+            'asistentes' => 'required|array',
+            'asistentes.*.genero' => 'required|string',
+            'asistentes.*.rango_edad' => 'required|string',
+            'asistentes.*.cantidad' => 'required|integer',
+            'nexo' => 'required|array',
+            'nexo.lista_asistencia' => 'required|boolean',
+            'nexo.evidencia_fotografica' => 'required|boolean',
+            'nexo.nota_periodica' => 'required|boolean',
+            'material' => 'required|array',
+            'material.inedito' => 'required',
+            'material.reproducido' => 'required',
+            'material.adquirido' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Error en la validación de datos',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $validatedData = $validator->validated();
+
+        try {
+            DB::transaction(function () use ($validatedData) {
+                // 1. Update espacio
+                $espacio = espacio::findOrFail($validatedData['id_espacio']);
+                $espacio->total_pobl = $validatedData['total_pobl'];
+                $espacio->comentarios = $validatedData['comentarios'];
+                $espacio->save();
+
+                // 2. Update nexo
+                $nexoData = $validatedData['nexo'];
+                $nexo = detail_nex::findOrFail($validatedData['id_nexo']);
+                $nexo->list_asist = $nexoData['lista_asistencia'] ? 'sí' : 'no';
+                $nexo->evi_foto = $nexoData['evidencia_fotografica'] ? 'sí' : 'no';
+                $nexo->nota_period = $nexoData['nota_periodica'] ? 'sí' : 'no';
+                $nexo->save();
+
+                // 3. Update material
+                $materialData = $validatedData['material'];
+                $material = material_didact::findOrFail($validatedData['id_material']);
+                $material->inedito = $materialData['inedito'];
+                $material->reproducido = $materialData['reproducido'];
+                $material->adquirido = $materialData['adquirido'];
+                $material->save();
+
+                // 4. Delete old asistentes and create new ones
+                detail_asist::where('id_espacio', $validatedData['id_espacio'])->delete();
+
+                foreach ($validatedData['asistentes'] as $asistente) {
+                    detail_asist::create([
+                        'genero' => $asistente['genero'],
+                        'rango_edad' => $asistente['rango_edad'],
+                        'cantidad' => $asistente['cantidad'],
+                        'id_espacio' => $validatedData['id_espacio'],
+                    ]);
+                }
+            });
+
+            return response()->json(['message' => 'Espacio de cultura actualizado correctamente'], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al actualizar el espacio de cultura',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

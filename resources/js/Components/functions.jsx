@@ -34,8 +34,7 @@ export function dateLimit() {
     return fechaLimite;
 }
 
-export function dateNow(){
-    const fecha = new Date();
-    
-    return fecha;
+export function dateShortNow(){
+    const fechaCorta = new Date().toISOString().split('T')[0];
+    return fechaCorta;
 }

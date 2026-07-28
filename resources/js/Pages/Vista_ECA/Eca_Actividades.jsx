@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Crear_Actividad from "../Modals/Crear/Crear_Actividad.jsx";
-// El modal Crear_Memoria es el que se usa para adjuntar evidencia fotográfica.
 import { getProgramData, delete_program } from "../../Components/api/program.jsx"
 import Mod_Actividad from "../../Pages/Modals/Modificar/Mod_Actividad.jsx";
 import Mostrar_Imagenes from "../Modals/MostrarImagen.jsx"
+import Swal from "sweetalert2";
 
 function VECA_Actividades() {
 
@@ -12,31 +12,26 @@ function VECA_Actividades() {
   const [mostrarModalMod, setMostrarModalMod] = useState(false);
   const [mostrar_Imagenes, setMostrar_Imagenes] = useState(false);
   const [actividadSeleccionada, setActividadSeleccionada] = useState(null);
-  const [opcionesAbiertas, setOpcionesAbiertas] = useState(null); // Almacena el índice de la fila con el menú abierto
+  const [opcionesAbiertas, setOpcionesAbiertas] = useState(null);
 
   const [actvidades, setActividades] = useState([]);
   const [cargando, setCargando] = useState(true);
-  // const [CerrarSesion, setCerrarSesion] = useState(false); // Esta variable no se usa, se puede eliminar.
 
   useEffect(() => {
-    const loadInfo = async () => {
-      try {
-        const response = await getProgramData();
-        setActividades(response || []); // Asigna la respuesta directamente. Si es null/undefined, usa un array vacío.
-      }
-      catch (error) {
-        console.log("Error al cargar los datos del programa")
-      }
-      finally {
-        setCargando(false);
-      }
-    }
-
-    loadInfo();
+    cargarActividades();
   }, []);
 
+  const cargarActividades = async () => {
+    try {
+      const response = await getProgramData();
+      setActividades(response || []);
+    }
+    catch (error) {
+      console.log("Error al cargar los datos del programa")
+    }
+  }
+
   const toggleOpciones = (index) => {
-    // Si el menú actual ya está abierto, ciérralo. Si no, ábrelo.
     setOpcionesAbiertas(opcionesAbiertas === index ? null : index);
   };
 
@@ -51,22 +46,33 @@ function VECA_Actividades() {
   };
 
   const handleDelete = async (id_program) => {
-    // Pedir confirmación al usuario
-    if (window.confirm("¿Estás seguro de que deseas eliminar esta actividad?")) {
+    const result = Swal.fire({
+      title: 'Advertencia!',
+      text: '¿Estas seguro de que deseas eimininar la actividad y todos sus elementos?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar"
+    })
+
+    if ((await result).isConfirmed)
       try {
         const response = await delete_program(id_program);
-        if (response) { // Asumiendo que una respuesta exitosa no es null
-          // Actualizar el estado para remover la actividad eliminada de la UI
+        if (response) {
           setActividades(actvidades.filter(act => act.id_program !== id_program));
         }
       } catch (error) {
-        console.error("Error al eliminar la actividad:", error);
+        Swal.fire({
+          title: 'Error',
+          text: 'Ops, ocurrio un error inesperado!',
+          icon: 'error',
+          timer: 5000,
+          timerProgressBar: true,
+        })
       }
-    }
   };
-  // if (cargando) {
-  //   return <p>Cargando datos...</p>
-  // }
 
   return (
     <div className="page-container">
@@ -79,13 +85,14 @@ function VECA_Actividades() {
       {mostrarModal && (
         <Crear_Actividad
           cerrarModal={() => setMostrarModal(false)}
+          actividades={cargarActividades}
         />
       )}
-      {/* Modal para modificar actividad */}
       {mostrarModalMod && (
         <Mod_Actividad
           cerrarModal={() => setMostrarModalMod(false)}
           actividad={actividadSeleccionada}
+          actualizarActiv={cargarActividades}
         />
       )}
       {mostrar_Imagenes && (
@@ -118,7 +125,7 @@ function VECA_Actividades() {
               <td>{item.otras_activ}</td>
               <td>{item.pobl_ate}</td>
               <td>{new Date(item.fecha_mes).toLocaleDateString()}</td>
-              <td style={{ position: 'relative' }}> {/* Contenedor relativo para el menú */}
+              <td style={{ position: 'relative' }}>
                 <div>
                   <button className="btn-acciones" onClick={() => toggleOpciones(index)}>
                     <i className="bi bi-gear"></i>
