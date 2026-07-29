@@ -1,6 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { getOficioCorreccion } from "@/Components/api/oficio";
 
 function DIC_Correcciones() {
+  const [oficios, setOficios] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const cargarCorrecciones = async () => {
+    const response = await getOficioCorreccion();
+    if (response && response.status === 200) {
+      setOficios(response.body);
+      console.log(response);
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    cargarCorrecciones();
+  }, []);
 
   return (
   <div className="page-container">
@@ -18,12 +32,28 @@ function DIC_Correcciones() {
       </thead>
 
       <tbody>
-        <tr>
-          <td>Lic. Luis Garcia Contreras</td>
-          <td>Abril</td>
-          <td>Favor de agregar actividades faltantes del día 15</td>
-          <td>03 de Marzo del 2026</td>
-        </tr>
+        {loading ? (
+          <tr>
+            <td colSpan="4">
+              <p className="text-bold">Cargando datos...</p> 
+            </td>
+          </tr>
+        ) : oficios.length > 0 ? (
+          oficios.map((oficioCor) => (
+            <tr key={oficioCor.id_oficio}>
+              <td>{oficioCor.nombre}</td>
+              <td>{oficioCor.mes_oficio}</td>
+              <td>{oficioCor.observacion}</td>
+              <td>{oficioCor.fecha_registro}</td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td colSpan="4">
+              <p className="text-bold">No existen informes devueltos para corrección.</p> 
+            </td>
+          </tr>
+        )}
       </tbody>
     </table>
   </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect} from "react";
 import { getMunicipios, buscarMunicipioSelect } from "@/Components/api/municipios";
 import Revisar_Oficio from "../Modals/Revisar_Oficio";
 
-function CEAA_Pendientes() {
+function CEAA_Solicitudes() {
   const [mostrarRevisar, setMostrarRevisar] = useState(false);
 
   const [municipios, setMunicipios] = useState([]);
@@ -114,4 +114,4 @@ function CEAA_Pendientes() {
   </div>
   );
 }
-export default CEAA_Pendientes;
+export default CEAA_Solicitudes;

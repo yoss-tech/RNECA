@@ -6,7 +6,7 @@ function CEAA_Observaciones() {
   const [loading, setLoading] = useState(true);
   const cargarCorrecciones = async () => {
     const response = await getOficioCorreccion();
-    if(response && response.status==200){
+    if (response && response.status === 200) {
       setOficios(response.body);
       console.log(response);
       setLoading(false);
@@ -44,11 +44,11 @@ function CEAA_Observaciones() {
               <td>
                 <p className="text-title">{oficioCor.nombre_munipio}</p>
                 <p className="text-subtitle">{oficioCor.nombre_inst_ope}</p>
-            </td>
-            <td>{oficioCor.mes_oficio}</td>
-            <td>Observaciones</td>
-            <td>{oficioCor.fecha_registro}</td>
-          </tr>
+              </td>
+              <td>{oficioCor.mes_oficio}</td>
+              <td>{oficioCor.observacion}</td>
+              <td>{oficioCor.fecha_registro}</td>
+            </tr>
           ))
         ) : (
           <tr>

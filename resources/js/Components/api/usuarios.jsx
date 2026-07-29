@@ -20,6 +20,36 @@ export const getTotalUserInactivo = async () => {
     return response.data;
 }
 
+export const getInfoPerfil = async () => {
+    try {
+        const response = await axiosInstance.get('/user/perfil');
+        return response.data;
+    } catch (error) {
+        console.error("Error en getInfoPerfil:", error);
+        return null;
+    }
+}
+
+export const getInfoDic = async () => {
+    try {
+        const response = await axiosInstance.get('/user/dic');
+        return response.data;
+    } catch (error) {
+        console.error("Error en getInfoDic:", error);
+        return null;
+    }
+}
+
+export const getInfoEca = async () => {
+    try {
+        const response = await axiosInstance.get('/user/eca');
+        return response.data;
+    } catch (error) {
+        console.error("Error en getInfoEca:", error);
+        return null;
+    }
+}
+
 export const getUserDic = async () => {
     try {
         const response = await axiosInstance.get('/usuarios/dic');
@@ -86,6 +116,16 @@ export const updateUser = async (id, data) => {
         return response.data;
     } catch (error) {
         console.error("Error en updateUser:", error);
+        return null;
+    }
+}
+
+export const updateUserPerfil = async (data) => {
+    try {
+        const response = await axiosInstance.put('/usuarios/perfil', data);
+        return response.data;
+    } catch (error) {
+        console.error("Error en updateUserPerfil:", error);
         return null;
     }
 }
