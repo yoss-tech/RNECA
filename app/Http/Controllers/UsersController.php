@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 // use App\Http\resource\UserResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
@@ -17,6 +18,68 @@ class UsersController extends Controller
     public function index()
     {
         
+    }
+
+    public function infoDic()
+    {
+        $user = Auth::user();
+        $datos = DB::table('usuarios as espacio')
+            ->join('usuarios as director', 'espacio.id_dicm', '=', 'director.id_usuario')
+            ->join('eca', 'eca.id_usuario', '=', 'espacio.id_usuario')
+            ->join('direccion', 'eca.id_direccion', '=', 'direccion.id_direccion')
+            ->join('municipio', 'direccion.id_municipio', '=', 'municipio.id_municipio')
+            ->where('director.id_usuario', $user->id_usuario)
+            ->select(
+                'director.nombre',
+                'director.correo',
+                'municipio.nombre_munipio',
+                'eca.nombre_inst_ope'
+            )
+            ->first();
+        
+        return response()->json([
+            'status' => 200,
+            'body' => $datos
+        ]);
+    }
+
+    public function infoEca()
+    {
+        $user = Auth::user();
+        $datos = DB::table('usuarios')
+            ->join('eca', 'eca.id_usuario', '=', 'usuarios.id_usuario')
+            ->join('direccion', 'eca.id_direccion', '=', 'direccion.id_direccion')
+            ->join('municipio', 'direccion.id_municipio', '=', 'municipio.id_municipio')
+            ->where('usuarios.id_usuario', $user->id_usuario)
+            ->select(
+                'usuarios.nombre',
+                'usuarios.correo',
+                'municipio.nombre_munipio',
+                'eca.nombre_inst_ope'
+            )
+            ->first();
+        
+        return response()->json([
+            'status' => 200,
+            'body' => $datos
+        ]);
+    }
+
+    public function infoPerfil()
+    {
+        $user = Auth::user();
+        $datos = DB::table('usuarios')
+            ->where('usuarios.id_usuario', $user->id_usuario)
+            ->select(
+                'usuarios.nombre',
+                'usuarios.correo'
+            )
+            ->first();
+        
+        return response()->json([
+            'status' => 200,
+            'body' => $datos
+        ]);
     }
 
     public function totalUser()
@@ -284,7 +347,7 @@ class UsersController extends Controller
             'correo' => $request->correo
         ];
 
-        if ($request->password) {
+        if ($request->filled('password')) {
             $datos['password'] = Hash::make($request->password);
         }
         
@@ -298,17 +361,33 @@ class UsersController extends Controller
         ]);
     }
 
+    public function updatePerfil(Request $request)
+    {
+        $user = Auth::user();
+        $datos = [
+            'nombre' => $request->nombre,
+            'correo' => $request->correo
+        ];
+
+        if ($request->filled('password')) {
+            $datos['password'] = Hash::make($request->password);
+        }
+        
+        DB::table('usuarios')
+            ->where('id_usuario', $user->id_usuario)
+            ->update($datos);
+
+        return response()->json([
+            'message' => 'Usuario actualizado correctamente',
+            'status' => 200
+        ]);
+    }
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)
     {
-        $usuario = Users::findOrFail($id);
-        $usuario->delete();
-
-        return response()->json([
-            'message' => 'Usuario eliminado correctamente',
-            'status' => 200
-        ], 200);
+        //
     }
 }

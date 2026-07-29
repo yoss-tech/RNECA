@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getOficio } from "@/Components/api/oficio";
 import { buscarMunicipio } from "@/Components/api/municipios";
+import { getInfoPerfil } from "@/Components/api/usuarios.jsx";
 import { logoutUser } from "@/Components/api/auth.jsx";
 import CumplimientoInformes from "@/Components/Graficas.jsx";
 import CEAA_Pendientes from "./CEAA_Pendientes.jsx";
@@ -9,7 +10,7 @@ import CEAA_Validados from "./CEAA_Validados.jsx";
 import CEAA_Solicitudes from "./CEAA_Solicitudes.jsx";
 import CEAA_Historial from "./CEAA_Historial.jsx";
 import CEAA_Ecas from "./CEAA_ECAS.jsx";
-import Perfil_CEAA from "../Modals/Perfiles/Perfil_CEAA.jsx";
+import Perfil_CEAA from "../Modals/Perfiles/Perfil.jsx";
 import Notificaciones_CEAA from "../Modals/Notificaciones/Notificacion_CEAA.jsx";
 import Avisos_CEAA from "../Modals/Avisos/Avisos_CEAA.jsx";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
@@ -110,6 +111,8 @@ function CEAA_Inicio() {
                 {mostrarPerfil && (
                   <Perfil_CEAA
                     cerrarModal={() => setMostrarPerfil(false)}
+                    obtenerPerfil={getInfoPerfil}
+                    mostrarInformacion={false}
                   />
                 )}
                 <button className="btn-cerrar-sesion" onClick={submitLogout}>

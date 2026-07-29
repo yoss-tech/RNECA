@@ -4,7 +4,6 @@ import { buscarMunicipioSelect } from "@/Components/api/municipios";
 import { getOficioValidado } from "@/Components/api/oficio";
 
 function Lic_Registros() {
-
   const [paginaActual, setPaginaActual] = useState(1);
   const [listaMunicipios, setListaMunicipios] = useState([]);
   const [municipios, setMunicipios] = useState([]);

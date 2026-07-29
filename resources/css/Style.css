@@ -245,22 +245,21 @@ p {
 
 .text-title{
     font-weight: 700;
-    margin-top: 4px;
+    margin-top: 2px;
     color:var(--ginda-color);
 }
 
 .text-subtitle{
     font-weight: 700;
-    margin-top: 4px;
+    margin-top: 2px;
     color:var(--dorado-color);
 }
 
 .text-bold{
     font-weight: 600;
-    margin-top: 4px;
+    margin-top: 2px;
     color:var(--negro-color);
 }
-
 
 .error {
     margin-top: 10px;

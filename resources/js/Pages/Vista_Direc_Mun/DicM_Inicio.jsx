@@ -1,24 +1,42 @@
 import React, { useEffect, useState } from "react";
-import "/resources/css/Style.css";
-import miImagen from "/resources/img/PNG/Logotipo1.png";
-import Perfil_DirectorM from "../Modals/Perfiles/Perfil_DM.jsx";
-import "bootstrap-icons/font/bootstrap-icons.css";
-import DICRegistros_Recibidos from "./Dic_RegistrosR.jsx";
+import { logoutUser } from "../../Components/api/auth.jsx";
+import { get_ofice } from "@/Components/api/oficio.jsx";
+import { getInfoDic } from "@/Components/api/usuarios.jsx";
 import DIC_Correcciones from "./Dic_Correcciones.jsx";
 import DIC_Firmados from "./Dic_Firmados.jsx";
-import { Head } from "@inertiajs/react";
-import { logoutUser, checkAuth } from "../../Components/api/auth.jsx";
+import DICRegistros_Recibidos from "./Dic_RegistrosR.jsx";
+import Perfil_DirectorM from "../Modals/Perfiles/Perfil.jsx";
 import Notificaciones_DireMunicipal from "../Modals/Notificaciones/Notificacion_DM.jsx";
 import Avisos_DireMunicipal from "../Modals/Avisos/Avisos_DM.jsx";
-
-import { get_ofice } from "@/Components/api/oficio.jsx";
+import miImagen from "/resources/img/PNG/Logotipo1.png";
+import "/resources/css/Style.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 function DicM_Inicio() {
-  const [CerrarSesion, setCerrarSesion] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [mostrarModal2, setMostrarModal2] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
+  const [mostrarPerfil, setMostrarPerfil] = useState(false);
+  const [mostrarNoti, setMostrarNoti] = useState(false);
+  const [mostrarAvisos, setMostrarAvisos] = useState(false);
+  const [CerrarSesion, setCerrarSesion] = useState(false);
+
+  const [ofice, setOfice] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const loadInfo = async () => {
+      try {
+        const response = await get_ofice();
+        console.log(response);
+        setOfice(response || []);
+        setLoading(false);
+      }
+      catch (error) {
+        console.log("Error al cargar los datos del programa");
+        setLoading(false);
+      }
+    }
+    loadInfo();
+  }, []);
 
   const submitLogout = async () => {
     try {
@@ -31,47 +49,26 @@ function DicM_Inicio() {
     }
   }
 
-
-  const [ofice, setOfice] = useState([]);
-
-  useEffect(() => {
-    const loadInfo = async () => {
-      try {
-        const response = await get_ofice();
-        console.log(response);
-        setOfice(response || []);
-      }
-      catch (error) {
-        console.log("Error al cargar los datos del programa")
-      }
-    }
-
-    loadInfo();
-  }, [])
-
-
-
   return (
     <>
       <header className="header">
         <div className="logo"><img src={miImagen} alt="Logo RNECA" /></div>
 
         <div className="acciones-header">
-          <button className="icono" onClick={() => setMostrarModal(true)}>
+          <button className="icono" onClick={() => setMostrarAvisos(true)}>
             <i className="bi bi-envelope"></i>
           </button>
-          {mostrarModal && (
+          {mostrarAvisos && (
             <Avisos_DireMunicipal
-              cerrarModal={() => setMostrarModal(false)}
+              cerrarModal={() => setMostrarAvisos(false)}
             />
           )}
-
-          <button className="icono" onClick={() => setMostrarModal2(true)}>
+          <button className="icono" onClick={() => setMostrarNoti(true)}>
             <i className="bi bi-bell"></i>
           </button>
-          {mostrarModal2 && (
+          {mostrarNoti && (
             <Notificaciones_DireMunicipal
-              cerrarModal={() => setMostrarModal2(false)}
+              cerrarModal={() => setMostrarNoti(false)}
             />
           )}
 
@@ -81,12 +78,14 @@ function DicM_Inicio() {
             </button>
             {CerrarSesion && (
               <div className="menu-perfil">
-                <button className="btn-cerrar-sesion" onClick={() => setMostrarModal(true)}>
+                <button className="btn-cerrar-sesion" onClick={() => setMostrarPerfil(true)}>
                   Perfil
                 </button>
-                {mostrarModal && (
+                {mostrarPerfil && (
                   <Perfil_DirectorM
-                    cerrarModal={() => setMostrarModal(false)}
+                    cerrarModal={() => setMostrarPerfil(false)}
+                    obtenerPerfil={getInfoDic}
+                    mostrarInformacion={true}
                   />
                 )}
                 <button className="btn-cerrar-sesion" onClick={submitLogout}>
@@ -156,16 +155,29 @@ function DicM_Inicio() {
               </thead>
 
               <tbody>
-                {ofice.map((item, index) => (
-                  <tr key={index.id_oficio}>
-                    <td>{item.nombre_eca}</td>
-                    <td>{item.mes_oficio}</td>
-                    <td>{item.fecha_registro}</td>
-                    {/* <td className="td-center">Correcciones</td> */}
-                    <td className="td-center">{item.nombre_tipo}</td>
-
+                {loading ? (
+                  <tr>
+                    <td colSpan="4">
+                      <p className="text-bold">Cargando datos...</p> 
+                    </td>
                   </tr>
-                ))}
+                ) : ofice.length > 0 ? (
+                  ofice.map((item, index) => (
+                    <tr key={index.id_oficio}>
+                      <td>{item.nombre_eca}</td>
+                      <td>{item.mes_oficio}</td>
+                      <td>{item.fecha_registro}</td>
+                      {/* <td className="td-center">Correcciones</td> */}
+                      <td className="td-center">{item.nombre_tipo}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4">
+                      <p className="text-bold">No existen informes recibidos.</p>
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

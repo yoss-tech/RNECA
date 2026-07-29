@@ -1,29 +1,30 @@
 import React, { useState, useEffect } from "react";
-import "/resources/css/Style.css";
-import miImagen from "/resources/img/PNG/Logotipo1.png";
-import "bootstrap-icons/font/bootstrap-icons.css";
+import { mostrarSoloMes, dateLimit } from "../../Components/functions.jsx";
+import { logoutUser } from "../../Components/api/auth.jsx";
+import { checkEspacioRegistro } from "../../Components/api/espacio.jsx";
+import { getInfoEca } from "@/Components/api/usuarios.jsx";
 import VECA_VistaP from "./Eca_VistaPrevia.jsx";
 import VECA_Actividades from "./Eca_Actividades.jsx";
 import VECA_Poblacion from "./Eca_Poblacion.jsx";
 import VECA_Memoria from "./Eca_Memoria.jsx";
 import VECA_ConsultaReg from "./Eca_ConsultaRegistros.jsx";
-import { Head } from "@inertiajs/react";
-import { mostrarSoloMes, dateLimit } from "../../Components/functions.jsx";
-import { logoutUser, checkAuth } from "../../Components/api/auth.jsx";
-import { checkEspacioRegistro } from "../../Components/api/espacio.jsx";
-import Notificaciones_Eca from "../Modals/Notificaciones/NoticacionECA.jsx";
-import PerfilECA from "../Modals/Perfiles/PerfilECA.jsx";
-import Avisos_eca from "../Modals/Avisos/AvisosECA.jsx";
 import PanelDocumento from "./PanelDocumento.jsx";
+import Notificaciones_Eca from "../Modals/Notificaciones/NoticacionECA.jsx";
+import PerfilECA from "../Modals/Perfiles/Perfil.jsx";
+import Avisos_eca from "../Modals/Avisos/AvisosECA.jsx";
+import miImagen from "/resources/img/PNG/Logotipo1.png";
+import "/resources/css/Style.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 function VECA_Inicio() {
-  const [CerrarSesion, setCerrarSesion] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [submenuOpen, setSubmenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
+  const [mostrarPerfil, setMostrarPerfil] = useState(false);
+  const [mostrarNoti, setMostrarNoti] = useState(false);
+  const [mostrarAvisos, setMostrarAvisos] = useState(false);
+  const [CerrarSesion, setCerrarSesion] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [mostrarModal2, setMostrarModal2] = useState(false);
 
   useEffect(() => {
     const checkRegistro = async () => {
@@ -76,22 +77,20 @@ function VECA_Inicio() {
 
         <div className="logo"><img src={miImagen} alt="Logo RNECA" /></div>
         <div className="acciones-header">
-          <button className="icono" onClick={() => setMostrarModal(true)}>
+          <button className="icono" onClick={() => setMostrarAvisos(true)}>
             <i className="bi bi-envelope"></i>
           </button>
-
-          {mostrarModal && (
+          {mostrarAvisos && (
             <Avisos_eca
-              cerrarModal={() => setMostrarModal(false)}
+              cerrarModal={() => setMostrarAvisos(false)}
             />
           )}
-
-          <button className="icono" onClick={() => setMostrarModal2(true)}>
+          <button className="icono" onClick={() => setMostrarNoti(true)}>
             <i className="bi bi-bell"></i>
           </button>
-          {mostrarModal2 && (
+          {mostrarNoti && (
             <Notificaciones_Eca
-              cerrarModal={() => setMostrarModal2(false)}
+              cerrarModal={() => setMostrarNoti(false)}
             />
           )}
 
@@ -101,12 +100,14 @@ function VECA_Inicio() {
             </button>
             {CerrarSesion && (
               <div className="menu-perfil">
-                <button className="btn-cerrar-sesion" onClick={() => setMostrarModal(true)}>
+                <button className="btn-cerrar-sesion" onClick={() => setMostrarPerfil(true)}>
                   Perfil
                 </button>
-                {mostrarModal && (
+                {mostrarPerfil && (
                   <PerfilECA
-                    cerrarModal={() => setMostrarModal(false)}
+                    cerrarModal={() => setMostrarPerfil(false)}
+                    obtenerPerfil={getInfoEca}
+                    mostrarInformacion={true}
                   />
                 )}
                 <button className="btn-cerrar-sesion" onClick={submitLogout}>

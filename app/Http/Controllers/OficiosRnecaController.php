@@ -450,12 +450,15 @@ class OficiosRnecaController extends Controller
     {
         $oficioCor = DB::table('oficios_rneca')
             ->join('eca', 'eca.clave_eca' , '=', 'oficios_rneca.idClave_eca')
+            ->join('usuarios', 'usuarios.id_usuario', '=', 'eca.id_usuario')
             ->join('direccion', 'direccion.id_direccion', '=', 'eca.id_direccion')
             ->join('municipio', 'municipio.id_municipio', '=', 'direccion.id_municipio')
             ->select(
                 'municipio.nombre_munipio',
+                'usuarios.nombre',
                 'eca.nombre_inst_ope',
                 'oficios_rneca.id_oficio',
+                'oficios_rneca.observacion',
                 'oficios_rneca.mes_oficio',
                 'oficios_rneca.fecha_registro'
             )

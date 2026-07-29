@@ -1,28 +1,27 @@
 import React, { useState, useEffect } from "react";
-import "/resources/css/Style.css";
-import miImagen from "/resources/img/PNG/Logotipo1.png";
-import "bootstrap-icons/font/bootstrap-icons.css";
-import { Head } from "@inertiajs/react";
-import { mostrarSoloMes, dateLimit } from "../../Components/functions.jsx";
-import { logoutUser, checkAuth } from "../../Components/api/auth.jsx";
-import Perfil_Admi from "../Modals/Perfiles/Perfil_Admi.jsx";
+import { getTotalUser, getTotalUserECAS, getTotalUserDic, getTotalUserInactivo, getInfoPerfil } from "../../Components/api/usuarios.jsx"
+import { getTotalMunicipio } from "../../Components/api/municipios.jsx"
+import { logoutUser } from "../../Components/api/auth.jsx";
 import Admi_DireA from "./Admi_DireA.jsx";
 import Admi_DireMu from "./Admi_DireMu.jsx";
 import Admi_ECAS from "./Admi_ECAS.jsx";
 import Admi_NumHab from "./Admi_NumHab.jsx";
 import Admi_SupervisoresECAS from "./Admi_SEcas.jsx";
+import Perfil_Admi from "../Modals/Perfiles/Perfil.jsx";
 import Notificaciones_Admi from "../Modals/Notificaciones/Notificacion_Admi.jsx";
 import Avisos_Admi from "../Modals/Avisos/Avisos_Admi.jsx";
-import { getTotalUser, getTotalUserECAS, getTotalUserDic, getTotalUserInactivo } from "../../Components/api/usuarios.jsx"
-import { getTotalMunicipio } from "../../Components/api/municipios.jsx"
+import miImagen from "/resources/img/PNG/Logotipo1.png";
+import "/resources/css/Style.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 function Admi_Inicio() {
-  const [CerrarSesion, setCerrarSesion] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [mostrarModal2, setMostrarModal2] = useState(false);
   const [submenuOpen, setSubmenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
+  const [mostrarPerfil, setMostrarPerfil] = useState(false);
+  const [mostrarNoti, setMostrarNoti] = useState(false);
+  const [mostrarAvisos, setMostrAvisos] = useState(false);
+  const [CerrarSesion, setCerrarSesion] = useState(false);
 
   const menuItems = document.querySelectorAll('.sidebar .form-group a');
 
@@ -98,7 +97,6 @@ function Admi_Inicio() {
     cargarTotalMunicipio();
   }, []);
 
-
   return (
     <>
       <header className="header">
@@ -109,23 +107,22 @@ function Admi_Inicio() {
         <div className="logo"><img src={miImagen} alt="Logo RNECA"/></div>
 
         <div className="acciones-header">
-          <button className="icono"  onClick={() =>setMostrarModal(true)}>
-              <i className="bi bi-envelope"></i>
-                </button>
-                {mostrarModal && (
-                <Avisos_Admi
-                    cerrarModal={() => setMostrarModal(false)}
-                />
-            )}
-
-            <button className="icono"  onClick={() =>setMostrarModal2(true)}>
-             <i className="bi bi-bell"></i>
-                </button>
-                {mostrarModal2 && (
-                <Notificaciones_Admi
-                    cerrarModal={() => setMostrarModal2(false)}
-                />
-                )}
+          <button className="icono"  onClick={() =>setMostrarAvisos(true)}>
+            <i className="bi bi-envelope"></i>
+          </button>
+          {mostrarAvisos && (
+            <Avisos_Admi
+              cerrarModal={() => setMostrarAvisos(false)}
+            />
+          )}
+          <button className="icono"  onClick={() =>setMostrarNoti(true)}>
+            <i className="bi bi-bell"></i>
+          </button>
+          {mostrarNoti && (
+            <Notificaciones_Admi
+              cerrarModal={() => setMostrarNoti(false)}
+            />
+          )}
 
           <div className="perfil">
             <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)}>
@@ -133,14 +130,16 @@ function Admi_Inicio() {
             </button>
             {CerrarSesion && (
               <div className="menu-perfil">
-                <button className="btn-cerrar-sesion"  onClick={() =>setMostrarModal(true)}>
+                <button className="btn-cerrar-sesion"  onClick={() =>setMostrarPerfil(true)}>
                   Perfil
                 </button>
-                 {mostrarModal && (
-                <Perfil_Admi
-                    cerrarModal={() => setMostrarModal(false)}
-                />
-            )}
+                {mostrarPerfil && (
+                  <Perfil_Admi
+                    cerrarModal={() => setMostrarPerfil(false)}
+                    obtenerPerfil={getInfoPerfil}
+                    mostrarInformacion={false}
+                  />
+                )}
                 <button className="btn-cerrar-sesion" onClick={submitLogout}>
                   Cerrar sesión
                 </button>

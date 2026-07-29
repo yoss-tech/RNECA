@@ -1,9 +1,10 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { getMunicipios, buscarMunicipio } from "@/Components/api/municipios";
 import { logoutUser } from "@/Components/api/auth.jsx";
+import { getInfoPerfil } from "@/Components/api/usuarios.jsx";
 import CumplimientoInformes from "@/Components/Graficas.jsx";
 import Lic_Registros from "./Lic_Registros.jsx";
-import Perfil_LIC from "../Modals/Perfiles/PerfilLIC.jsx";
+import Perfil_LIC from "../Modals/Perfiles/Perfil.jsx";
 import Notificaciones_LIC from "../Modals/Notificaciones/NotificaciónLIC.jsx";
 import Avisos_LIC from "../Modals/Avisos/AvisosLIC.jsx";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
@@ -104,6 +105,8 @@ function Lic_Inicio() {
                 {mostrarPerfil && (
                   <Perfil_LIC
                     cerrarModal={() => setMostrarPerfil(false)}
+                    obtenerPerfil={getInfoPerfil}
+                    mostrarInformacion={false}
                   />
                 )}
                 <button className="btn-cerrar-sesion" onClick={submitLogout}>
