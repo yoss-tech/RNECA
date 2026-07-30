@@ -85,8 +85,6 @@ function PanelDocumento() {
     setRuta_oficio(e.target.files[0]);
   };
 
-
-
   return (
     <div className="page-container">
       <h1 className="page-title">Consulta y revisión del avance del informe.</h1>

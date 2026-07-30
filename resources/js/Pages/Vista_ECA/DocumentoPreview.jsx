@@ -4,7 +4,7 @@ import { mostrarSoloMes } from "../../Components/functions.jsx";
 import { get_espacio } from "../../Components/api/espacio_cult.jsx";
 import { getProgramData } from "../../Components/api/program.jsx";
 import { get_memoria, getImgByactiv } from "../../Components/api/memoria.jsx";
-import { infoEca} from "../../Components/api/infoEca.jsx";
+import { infoEca } from "../../Components/api/infoEca.jsx";
 import imgceaa from "../../../img/PNG/Logotipo7.png";
 import imgconagua from "../../../img/PNG/CONAGUA.png";
 import imglogo from "../../../img/PNG/Logotipo1.png";
@@ -13,24 +13,31 @@ import ImagenActividad from '@/Components/ImagenActividad';
 
 const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNumPaginas }, ref) => {
   const [programa, setPrograma] = useState(null);
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState(null);
+  const [programaCargando, setProgramaCargando] = useState(true);
+  const [programaError, setProgramaError] = useState(null);
+
   const [espacio, setEspacio] = useState(null);
-  const [errorEspacio, setErrorEspacio] = useState(null);
+  const [espacioCargando, setEspacioCargando] = useState(true);
+  const [espacioError, setEspacioError] = useState(null);
+
   const [memoria, setMemoria] = useState([]);
+  const [memoriaCargando, setMemoriaCargando] = useState(true);
+  const [memoriaError, setMemoriaError] = useState(null);
+
   const [ecaInfo, setinfoEca] = useState(null); // Descripción general de la memoria fotográfica
   const [imagesByActivity, setImagesByActivity] = useState({}); // Nuevo estado para almacenar imágenes por actividad
 
   // Petición para obtener las actividades del mes
   useEffect(() => {
     const fetchPrograma = async () => {
+      setProgramaCargando(true);
       try {
         const data = await getProgramData();
-        setPrograma(data || null);
+        setPrograma(data || []);
       } catch (err) {
-        setError('Ocurrió un error al conectar con el servidor.');
+        setProgramaError('Ocurrió un error al cargar las actividades del mes.');
       }
-      setCargando(false);
+      setProgramaCargando(false);
     };
     fetchPrograma();
   }, []);
@@ -38,12 +45,14 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
   // Petición para obtener la población beneficiaria
   useEffect(() => {
     const fetchEspacio = async () => {
+      setEspacioCargando(true);
       try {
         const data = await get_espacio();
         setEspacio(data);
       } catch (error) {
-        setErrorEspacio('Ocurrió un error al conectar con el servidor.');
+        setEspacioError('Ocurrió un error al cargar la información de población.');
       }
+      setEspacioCargando(false);
     };
     fetchEspacio();
   }, []);
@@ -51,9 +60,10 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
   // Obtener las imágenes de cada actividad
   useEffect(() => {
     const fetchMemoriaAndImages = async () => {
+      setMemoriaCargando(true);
       try {
         const memoriaData = await get_memoria();
-        setMemoria(memoriaData);
+        setMemoria(memoriaData || []);
 
         if (memoriaData && memoriaData.length > 0) {
           const imagesPromises = memoriaData.map(async (activity) => {
@@ -69,8 +79,9 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
         }
       }
       catch {
-        setError('Ocurrió un error al conectar con el servidor.');
+        setMemoriaError('Ocurrió un error al cargar la memoria fotográfica.');
       }
+      setMemoriaCargando(false);
     };
     fetchMemoriaAndImages();
   }, []);
@@ -83,7 +94,8 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
         setinfoEca(data);
       }
       catch {
-        setError('Ocurrió un error al conectar con el servidor.');
+        // No hay un manejo de error específico para ecaInfo, se podría agregar si fuera necesario.
+        console.error('Ocurrió un error al conectar con el servidor para obtener info ECA.');
       }
     };
     fechtInfo();
@@ -176,7 +188,11 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
         </div>
       </div>
       <div className="documento-contenido">
-        {programa && programa.length > 0 && (
+        {programaCargando ? (
+          <p>Cargando actividades del mes...</p>
+        ) : programaError ? (
+          <p style={{ color: 'red' }}>{programaError}</p>
+        ) : programa && programa.length > 0 ? (
           <table className="tabla-programa tablas-preview" border="1" cellPadding="5" cellSpacing="0">
             <thead>
               <tr>
@@ -210,9 +226,24 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
               ))}
             </tbody>
           </table>
+        ) : (
+          <p>No hay actividades registradas para este mes.</p>
         )}
       </div>
-      <div className="documento-footer"></div>
+      <div className="documento-footer">
+        <div className='dashboard'>
+          <div class="firmas">
+            <div class="firma dashboard-left">
+              <div class="linea-firma">Director General de la comisión de Agua y Alcantarillado edl Municipio de , Hidalgo</div>
+            </div>
+          </div>
+          <div className='firmas'>
+            <div class="firma dashboard-right">
+              <div class="linea-firma">Coordinador del Espacio de Cultura del Agua de la </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>,
 
     // POBLACIÓN BENEFICIARIA
@@ -231,13 +262,14 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
         </div>
       </div>
       <div className="documento-contenido">
-        {cargando ? <p>Cargando datos de la tabla...</p> : errorEspacio ? <p style={{ color: 'red' }}>{errorEspacio}</p> : (
-          espacioAgrupado.length > 0 && (
+        {espacioCargando ? <p>Cargando datos de población...</p> : espacioError ? <p style={{ color: 'red' }}>{espacioError}</p> : (
+          espacioAgrupado.length > 0 ? (
             <table className="tabla-espacio tablas-preview" border="1" cellPadding="5" cellSpacing="0">
               <thead>
                 <tr>
                   <th rowSpan="4">Clave del ECA</th>
-                  <th rowSpan="4">Fechas</th>
+                  <th rowSpan="4">Fecha de apertura</th>
+                  <th rowSpan="4">Fecha de fortalecimiento</th>
                   <th colSpan="3" rowSpan="3">Material didactico</th>
                   <th colSpan="11">Asistentes</th>
                   <th rowSpan="4">Total de población atendida</th>
@@ -264,7 +296,8 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
                 {espacioAgrupado.map((item, index) => (
                   <tr key={index}>
                     <td>{item.clave_eca || '---'}</td>
-                    <td>Apertura: {item.fecha_apert ? new Date(item.fecha_apert).toLocaleDateString() : '---'}<br />Fortalecimiento: {item.fecha_forta ? new Date(item.fecha_forta).toLocaleDateString() : '---'}</td>
+                    <td>{item.fecha_apert || '---'}</td>
+                    <td>{item.fecha_forta || '---'}</td>
                     <td>{item.inedito || '---'}</td>
                     <td>{item.reproducido || '---'}</td>
                     <td>{item.adquirido || '---'}</td>
@@ -288,10 +321,25 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
                 ))}
               </tbody>
             </table>
+          ) : (
+            <p>No hay datos de población beneficiaria para mostrar.</p>
           )
         )}
       </div>
-      <div className="documento-footer"></div>
+      <div className="documento-footer">
+        <div className='dashboard'>
+          <div class="firmas">
+            <div class="firma dashboard-left">
+              <div class="linea-firma">Director General de la comisión de Agua y Alcantarillado edl Municipio de , Hidalgo</div>
+            </div>
+          </div>
+          <div className='firmas'>
+            <div class="firma dashboard-right">
+              <div class="linea-firma">Coordinador del Espacio de Cultura del Agua de la </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>,
 
     // MEMORIA FOTOGRAFICA
@@ -309,25 +357,33 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
       </div>
       <div className="documento-contenido">
         <section>
-          {memoria.map((item) => ( // Iteración de cada actividad de la memoria
-            <div key={item.id_program}>
-              <div className="descripcion-parrafo">
-                <h1 className="seccion-titulo">{item.otras_activ || '---'}</h1>
-                {/* <p>{item.descripcion_activ || '---'}</p> */}
+          {memoriaCargando ? (
+            <p>Cargando memoria fotográfica...</p>
+          ) : memoriaError ? (
+            <p style={{ color: 'red' }}>{memoriaError}</p>
+          ) : memoria.length > 0 ? (
+            memoria.map((item) => ( // Iteración de cada actividad de la memoria
+              <div key={item.id_program}>
+                <div className="descripcion-parrafo">
+                  <h1 className="seccion-titulo">{item.otras_activ || '---'}</h1>
+                  {/* <p>{item.descripcion_activ || '---'}</p> */}
+                </div>
+                <h2 className="seccion-titulo">Evidencia fotografica: {item.otras_activ || '---'}</h2> {/* Usamos el título de la actividad */}
+                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                  {imagesByActivity[item.id_program] && imagesByActivity[item.id_program].length > 0 ? (
+                    imagesByActivity[item.id_program].map((foto) => (
+                      <ImagenActividad key={foto.id_foto} idFoto={foto.id_foto} />
+                    ))
+                  ) : (
+                    <p>No hay fotos registradas para esta actividad.</p>
+                  )}
+                </div>
+                <br />
               </div>
-              <h2 className="seccion-titulo">Evidencia fotografica: {item.otras_activ || '---'}</h2> {/* Usamos el título de la actividad */}
-              <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                {imagesByActivity[item.id_program] && imagesByActivity[item.id_program].length > 0 ? (
-                  imagesByActivity[item.id_program].map((foto) => (
-                    <ImagenActividad key={foto.id_foto} idFoto={foto.id_foto} />
-                  ))
-                ) : (
-                  <p>No hay fotos registradas para esta actividad.</p>
-                )}
-              </div>
-              <br />
-            </div>
-          ))}
+            ))
+          ) : (
+            <p>No hay memoria fotográfica registrada para este mes.</p>
+          )}
 
         </section>
         <section>

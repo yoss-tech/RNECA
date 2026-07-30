@@ -4,7 +4,7 @@ import Mod_Memoria from "../../Pages/Modals/Modificar/Mod_Memoria.jsx";
 import Mostrar_Imagenes from "../../Pages/Modals/MostrarImagen.jsx";
 import Swal from "sweetalert2";
 
-function VECA_Memoria({ onCompletes }) {
+function VECA_Memoria({ onComplete }) {
 
   // Crear la descripcion de la memoria
   const [descrip_gen, setDescripcion] = useState('');

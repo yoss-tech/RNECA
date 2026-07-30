@@ -50,6 +50,7 @@ class EspacioController extends Controller
         if (!$eca) {
             return response()->json(['data' => null, 'message' => 'El usuario no tiene un ECA asignado'], 403);
         }
+        
         $currentMonth = date('m');
         $currentYear = date('Y');
 
@@ -251,5 +252,33 @@ class EspacioController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function show(Request $request, $id)
+    {
+        $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
+
+        $actividad = DB::table('espaciocultura as esp')
+            ->join('detalle_nexo as dn', 'dn.id_espacio', '=', 'esp.id_espacio')
+            ->join('material_didact as md', 'md.id_espacio', '=', 'esp.id_espacio')
+            ->join('detalle_asistente as da', 'da.id_espacio', '=', 'esp.id_espacio')
+            ->select(
+                'esp.clave_eca',
+                'esp.total_pobl',
+                'esp.comentarios',
+                'md.inedito',
+                'md.reproducido',
+                'md.adquirido',
+                'da.genero',
+                'da.rango_edad',
+                'da.cantidad',
+                'dn.list_asist',
+                'dn.evi_foto',
+                'dn.nota_period',
+            )
+            ->where('esp.id_espacio', $id)
+            ->where('esp.clave_eca', $eca->clave_eca)
+            ->get();
+        return response()->json($actividad);
     }
 }

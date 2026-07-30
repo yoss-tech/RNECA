@@ -69,6 +69,7 @@ function Mostrar_Imagenes({ cerrarModal, actividad }) {
       return;
     }
 
+    cerrarModal();
     const result = await Swal.fire({
       title: "¿Estás seguro?",
       text: `¿Quieres eliminar ${selectedImageIds.size} imagen(es) seleccionada(s)? Esta acción no se puede deshacer.`,

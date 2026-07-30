@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
 import Toast from "../../Toast.jsx";
 import Swal from "sweetalert2";
-import { updatePoblacion } from "../../../Components/api/espacio_cult.jsx"
+import { updatePoblacion, getDataEspacio } from "../../../Components/api/espacio_cult.jsx"
+import { data } from "autoprefixer";
 
 function Mod_Poblacion({ cerrarModal, espacioId }) {
+
+    const [poblData, setPoblData] = useState(null);
 
     const [poblacion, setPoblacion] = useState({
         hombres13_17: 0,
@@ -25,11 +28,9 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
         const { name, value } = e.target;
         setPoblacion({
             ...poblacion,
-            [name]: Number(value),
+            [name]: Math.max(0, Number(value)), // Asegura que el valor no sea negativo
         });
     };
-
-    console.log(espacioId)
 
     const [comentarios, setComentarios] = useState('');
 
@@ -58,23 +59,39 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
 
     const [paso, setPaso] = useState(1);
 
+    const total =
+        poblacion.hombres13_17 +
+        poblacion.hombres18_30 +
+        poblacion.hombres30_40 +
+        poblacion.hombres40_50 +
+        poblacion.hombres50mas +
+        poblacion.mujeres13_17 +
+        poblacion.mujeres18_30 +
+        poblacion.mujeres30_40 +
+        poblacion.mujeres40_50 +
+        poblacion.mujeres50mas +
+        poblacion.ninos12;
+
     const validateForm = (paso) => {
         let newErrors = {};
 
         if (paso == 1) {
-            if (!material.inedito && !material.reproducido && !material.adquirido) {
+            const totalMaterial = Number(material.inedito) + Number(material.reproducido) + Number(material.adquirido);
+            if (totalMaterial === 0) {
                 newErrors.material = 'Al menos un tipo de material didáctico debe ser ingresado.';
             }
-        }
-        if (paso == 2) {
-            if (!poblacion.hombres13_17 && !poblacion.hombres18_30 && !poblacion.hombres30_40 && !poblacion.hombres40_50 && !poblacion.hombres50mas && !poblacion.mujeres13_17 && !poblacion.mujeres18_30 && !poblacion.mujeres30_40 && !poblacion.mujeres40_50 && !poblacion.mujeres50mas && !poblacion.ninos12) {
+            if (total === 0) {
                 newErrors.poblacion = 'Al menos un asistente debe ser ingresado.';
             }
         }
-        if (paso == 3) {
-            if (!comentarios.trim()) {
-                newErrors.comentarios = 'Los comentarios u observaciones son requeridos';
+
+        if (paso == 2) {
+            if (!nexo.evidencia_fotografica && !nexo.lista_asistencia && !nexo.nota_periodica) {
+                newErrors.nexo = 'Al menos debes tener un anexo de la lista '
             }
+        }
+        if (paso == 3) {
+            if (!comentarios.trim()) newErrors.comentarios = 'Los comentarios u observaciones son requeridos.';
         }
 
         setErrors(newErrors);
@@ -99,7 +116,7 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
         if (!validateForm(3)) {
             Swal.fire({
                 title: "Información incompleta",
-                text: "Por favor, completa todos los campos obligatorios antes de guardar.",
+                text: "Por favor, selecciona al menos un Anexo.",
                 icon: "warning",
                 confirmButtonText: "Aceptar"
             });
@@ -139,19 +156,7 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                         cantidad: cantidad,
                     };
                 });
-            
-            if (asistentes.length === 0) {
-                if (!validateForm(2)) { // Re-validar el paso de población si no hay asistentes
-                    Swal.fire({
-                        title: "Información incompleta",
-                        text: "Debes ingresar al menos un asistente.",
-                        icon: "warning",
-                        confirmButtonText: "Aceptar"
-                    });
-                    return
-                }
-            }
-            
+
             // Construimos el objeto de datos final
             const dataToSend = {
                 id_espacio: firstDetail.id_espacio,
@@ -163,7 +168,7 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                 nexo: nexo,
                 material: material,
             };
-            
+
             await updatePoblacion(dataToSend);
 
             Swal.fire({
@@ -186,18 +191,76 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
         }
     };
 
-    const total =
-        poblacion.hombres13_17 +
-        poblacion.hombres18_30 +
-        poblacion.hombres30_40 +
-        poblacion.hombres40_50 +
-        poblacion.hombres50mas +
-        poblacion.mujeres13_17 +
-        poblacion.mujeres18_30 +
-        poblacion.mujeres30_40 +
-        poblacion.mujeres40_50 +
-        poblacion.mujeres50mas +
-        poblacion.ninos12;
+    useEffect(() => {
+        const getPobla = async () => {
+            if (espacioId && espacioId.length > 0 && espacioId[0].id_espacio) {
+                try {
+                    const response = await getDataEspacio(espacioId[0].id_espacio);
+                    setPoblData(response);
+                    // Agrupar la información del array en uno solo
+                    if (!response || response.length === 0) {
+                        setPoblData(null);
+                        return;
+                    }
+
+                    // La primera entrada de la respuesta contiene la información general (material, anexos, comentarios)
+                    const baseData = response[0];
+
+                    const newPoblacion = {
+                        hombres13_17: 0, hombres18_30: 0, hombres30_40: 0, hombres40_50: 0, hombres50mas: 0,
+                        mujeres13_17: 0, mujeres18_30: 0, mujeres30_40: 0, mujeres40_50: 0, mujeres50mas: 0,
+                        ninos12: 0,
+                    };
+
+                    response.forEach(item => {
+                        let key = "";
+                        if (item.genero === 'Hombre') key += 'hombres';
+                        else if (item.genero === 'Mujer') key += 'mujeres';
+                        else if (item.genero === 'Niño/Niña') key += 'ninos';
+
+                        let rango_edad_key = item.rango_edad;
+                        if (rango_edad_key === '13-17') rango_edad_key = '13_17';
+                        else if (rango_edad_key === '18-30') rango_edad_key = '18_30';
+                        else if (rango_edad_key === '31-40') rango_edad_key = '30_40'; // Mapea 31-40 a 30_40 para la clave
+                        else if (rango_edad_key === '41-50') rango_edad_key = '40_50';
+                        else if (rango_edad_key === '50 o más') rango_edad_key = '50mas';
+                        else if (rango_edad_key === 'Menor a 12') rango_edad_key = '12';
+
+                        const fullKey = key + rango_edad_key;
+
+                        if (newPoblacion.hasOwnProperty(fullKey)) {
+                            newPoblacion[fullKey] = item.cantidad;
+                        }
+                    });
+                    setPoblacion(newPoblacion);
+
+                    //  Material
+                    setMaterial({
+                        inedito: baseData.inedito || 0,
+                        adquirido: baseData.adquirido || 0,
+                        reproducido: baseData.reproducido || 0
+                    });
+
+                    //  Anexos
+                    setNexo({
+                        lista_asistencia: baseData.list_asist === 'sí',
+                        evidencia_fotografica: baseData.evi_foto === 'sí',
+                        nota_periodica: baseData.nota_period === 'sí'
+                    })
+
+                    setComentarios({
+                        
+                    })
+                }
+                catch (error) {
+                    console.error("Error al obtener datos de la población: ", error)
+                }
+            }
+        }
+        getPobla();
+    }, [espacioId]);
+
+    // console.log(espacioId && espacioId.length > 0 ? espacioId[0].id_espacio : 'espacioId no disponible');
 
     return (
         <>
@@ -217,12 +280,12 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                                     <div className="form-group">
                                         <div className="form-campo">
                                             <p className="form-subtitle">Material didáctico
-                                                <i class="bi bi-question-circle" title="Indicar el número de material didáctico que se distribuyó en el ECA según su modalidad"></i>
+                                                <i className="bi bi-question-circle" title="Indicar el número de material didáctico que se distribuyó en el ECA según su modalidad"></i>
                                             </p>
                                             <div className="btn-container-horizontal">
                                                 <div className="input-container-horizontal">
                                                     <label className="form-label">Inédito
-                                                        <i class="bi bi-question-circle" title="Indicar si ha recibido algún material inedito"></i>
+                                                        <i className="bi bi-question-circle" title="Indicar si ha recibido algún material inedito"></i>
                                                     </label>
                                                     <input
                                                         type="number"
@@ -231,8 +294,8 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                                                         min="0"
                                                         id="inedito"
                                                         name="inedito"
-                                                        value={material.inedito}
-                                                        onChange={(e) => setMaterial({ ...material, inedito: e.target.value })}
+                                                        value={material.inedito} // El valor se muestra tal cual está en el estado
+                                                        onChange={(e) => setMaterial({ ...material, inedito: Math.max(0, Number(e.target.value)) })} // Asegura que el valor no sea negativo
                                                     />
                                                 </div>
 
@@ -247,8 +310,8 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                                                         min="0"
                                                         id="reproducido"
                                                         name="reproducido"
-                                                        value={material.reproducido}
-                                                        onChange={(e) => setMaterial({ ...material, reproducido: e.target.value })}
+                                                        value={material.reproducido} // El valor se muestra tal cual está en el estado
+                                                        onChange={(e) => setMaterial({ ...material, reproducido: Math.max(0, Number(e.target.value)) })} // Asegura que el valor no sea negativo
                                                     />
                                                 </div>
 
@@ -263,8 +326,8 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                                                         min="0"
                                                         id="adquirido"
                                                         name="adquirido"
-                                                        value={material.adquirido}
-                                                        onChange={(e) => setMaterial({ ...material, adquirido: e.target.value })}
+                                                        value={material.adquirido} // El valor se muestra tal cual está en el estado
+                                                        onChange={(e) => setMaterial({ ...material, adquirido: Math.max(0, Number(e.target.value)) })} // Asegura que el valor no sea negativo
                                                     />
                                                 </div>
                                             </div>
@@ -286,6 +349,7 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                                                         placeholder="De 13 a 17"
                                                         className="form-control"
                                                         min="0"
+                                                        value={poblacion.hombres13_17}
                                                         onChange={handleChange}
                                                         title="Ingresa el número de asistentes de 13 a 17"
                                                     />
@@ -296,6 +360,7 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                                                         placeholder="De 18 a 30"
                                                         className="form-control"
                                                         min="0"
+                                                        value={poblacion.hombres18_30}
                                                         onChange={handleChange}
                                                         title="Ingresa el número de asistentes de 18 a 30"
                                                     />
@@ -306,6 +371,7 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                                                         placeholder=" De 30 a 40"
                                                         className="form-control"
                                                         min="0"
+                                                        value={poblacion.hombres30_40}
                                                         onChange={handleChange}
                                                         title="Ingresa el número de asistentes de 30 a 40"
                                                     />
@@ -316,6 +382,7 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                                                         placeholder=" De 40 a 50"
                                                         className="form-control"
                                                         min="0"
+                                                        value={poblacion.hombres40_50}
                                                         onChange={handleChange}
                                                         title="Ingresa el número de asistentes de 40 a 50"
                                                     />
@@ -326,6 +393,7 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                                                         placeholder="De 50 o  +"
                                                         className="form-control"
                                                         min="0"
+                                                        value={poblacion.hombres50mas}
                                                         onChange={handleChange}
                                                         title="Ingresa el número de asistentes de 50 o más"
                                                     />
@@ -342,6 +410,7 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                                                         placeholder="De 13 a 17"
                                                         className="form-control"
                                                         min="0"
+                                                        value={poblacion.mujeres13_17}
                                                         onChange={handleChange}
                                                         title="Ingresa el número de asistentes de 13 a 17"
                                                     />
@@ -352,6 +421,7 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                                                         placeholder="De 18 a 30"
                                                         className="form-control"
                                                         min="0"
+                                                        value={poblacion.mujeres18_30}
                                                         onChange={handleChange}
                                                         title="Ingresa el número de asistentes de 18 a 30"
                                                     />
@@ -362,6 +432,7 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                                                         placeholder="De 30 a 40"
                                                         className="form-control"
                                                         min="0"
+                                                        value={poblacion.mujeres30_40}
                                                         onChange={handleChange}
                                                         title="Ingresa el número de asistentes de 30 a 40"
                                                     />
@@ -372,6 +443,7 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                                                         placeholder="De 40 a 50"
                                                         className="form-control"
                                                         min="0"
+                                                        value={poblacion.mujeres40_50}
                                                         onChange={handleChange}
                                                         title="Ingresa el número de asistentes de 40 a 50"
                                                     />
@@ -382,6 +454,7 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                                                         placeholder="De 50 o  +"
                                                         className="form-control"
                                                         min="0"
+                                                        value={poblacion.mujeres50mas}
                                                         onChange={handleChange}
                                                         title="Ingresa el número de asistentes de 50 o más"
                                                     />
@@ -397,6 +470,7 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                                                     placeholder="Ingresa el número de asistentes menores de 12"
                                                     className="form-control"
                                                     min="0"
+                                                    value={poblacion.ninos12}
                                                     onChange={handleChange}
                                                     title="Ingresa el número de asistentes menores de 12"
                                                 />
@@ -466,15 +540,83 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                                             className="form-control"
                                         />
                                     </div>
+
+                                    <p className="form-subtitle">Comentarios
+                                        <i class="bi bi-question-circle" title="Comentarios u observación"></i>
+                                    </p>
                                     <div className="form-campo">
                                         <textarea rows="3"
                                             name='comentarios'
                                             id="comentarios"
+                                            value={comentarios}
                                             onChange={(e) => setComentarios(e.target.value)}
                                             placeholder="Ingresa algún comentario u observación"
                                             className="form-control">
                                         </textarea>
                                         {errors.comentarios && <p className="error">{errors.comentarios}</p>}
+                                    </div>
+                                </div>
+                            )}
+                            {paso === 4 && (
+                                <div className="input-container-horizontal dashboard">
+                                    <div className="dashboard">
+                                        <div className="dashboard-left">
+                                            <p className="form-subtitle">Por favor revisa que la información sea correcta
+                                                <i class="bi bi-question-circle" title="Sumatoria de los asistentes"></i>
+                                            </p>
+                                            <p className="form-subtitle">Rango de edades</p>
+                                            <p>Hombres de 13 a 17 años: {poblacion.hombres13_17}</p>
+                                            <p>Hombres de 18 a 17 años: {poblacion.hombres18_30}</p>
+                                            <p>Hombres de 13 a 17 años: {poblacion.hombres30_40}</p>
+                                            <p>Hombres de 13 a 17 años: {poblacion.hombres40_50}</p>
+                                            <p>Hombres de 13 a 17 años: {poblacion.hombres50mas}</p>
+                                            <p>Mujeres de 13 a 17 años: {poblacion.mujeres13_17}</p>
+                                            <p>Mujeres de 13 a 17 años: {poblacion.mujeres18_30}</p>
+                                            <p>Mujeres de 13 a 17 años: {poblacion.mujeres30_40}</p>
+                                            <p>Mujeres de 13 a 17 años: {poblacion.mujeres40_50}</p>
+                                            <p>Mujeres de 13 a 17 años: {poblacion.mujeres50mas}</p>
+                                            <p>Niños de 12 años o menos: {poblacion.ninos12}</p>
+                                            <p className="form-subtitle">Total</p>
+                                            <p>Total población atendida: {total}</p>
+                                        </div>
+                                        <div className="dashboard-right">
+                                            <p className="form-subtitle">Material didactico</p>
+                                            <p>Adquirido: {material.adquirido}</p>
+                                            <p>Inedito: {material.inedito}</p>
+                                            <p>Reproducido: {material.reproducido}</p>
+                                            <p className="form-subtitle">Anexos</p>
+                                            <label className="check-item">
+                                                <input
+                                                    type="checkbox"
+                                                    name="lista_asistencia"
+                                                    id="lista_asistencia"
+                                                    checked={nexo.lista_asistencia}
+                                                />Lista de asistencia
+                                            </label>
+                                            <label className="check-item">
+                                                <input
+                                                    type="checkbox"
+                                                    id='nota_periodica'
+                                                    name='nota_periodica'
+                                                    checked={nexo.nota_periodica}
+                                                />Nota periodística
+                                            </label>
+                                            <label className="check-item">
+                                                <input
+                                                    type="checkbox"
+                                                    id='evidencia_fotografica'
+                                                    name='evidencia_fotografica'
+                                                    checked={nexo.evidencia_fotografica}
+                                                />Evidencia fotográfica
+                                            </label>
+                                            <textarea rows="3"
+                                                name='comentarios'
+                                                id="comentarios"
+                                                value={comentarios}
+                                                placeholder="Ingresa algún comentario u observación"
+                                                className="form-control">
+                                            </textarea>
+                                        </div>
                                     </div>
                                 </div>
                             )}
@@ -487,7 +629,7 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                         {paso > 1 && (
                             <button type="button" className="btn-neutral" onClick={anteriorPaso}>Anterior</button>
                         )}
-                        {paso < 3 ? (
+                        {paso < 4 ? (
                             <button type="button" className="btn-primario" onClick={siguientePaso}>Siguiente</button>
                         ) : (
                             <button type="button" className="btn-primario" onClick={handleSubmit}>Guardar</button>

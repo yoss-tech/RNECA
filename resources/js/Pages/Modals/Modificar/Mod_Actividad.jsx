@@ -8,15 +8,14 @@ import Swal from "sweetalert2";
 function Mod_Actividad({ cerrarModal, actividad, actualizarActiv }) {
 
   const [formData, setFormData] = useState({
-    id_program: actividad.id_program,
-    municipio: actividad.municipio,
-    localidad: '',
-    tipo_platica: '',
-    otras_activ: '',
-    alumnos_Aten: '',
-    pobl_ate: '',
-    fecha_mes: '',
-    // id_fecha:'18052026'
+    id_program: actividad?.id_program || '',
+    municipio: actividad?.municipio || '',
+    localidad: actividad?.localidad || '',
+    tipo_platica: actividad?.tipo_platica || '',
+    otras_activ: actividad?.otras_activ || '',
+    alumnos_Aten: actividad?.alumnos_Aten || '',
+    pobl_ate: actividad?.pobl_ate || '',
+    fecha_mes: actividad?.fecha_mes || '',
   });
 
   const [alerts, setAlerts] = useState([]);
@@ -69,14 +68,14 @@ function Mod_Actividad({ cerrarModal, actividad, actualizarActiv }) {
       });
     }
   };
-
+  
   return (
     <>
       <Toast alerts={alerts} />
       <div className="overlay">
         <div className="modal-box">
           <div className="modal-head">
-            <h4>Completa los siguientes datos</h4>
+            <h4>Modifica los siguientes datos</h4>
           </div>
           <div className="modal-body">
             <form className="form-registro">
@@ -89,7 +88,7 @@ function Mod_Actividad({ cerrarModal, actividad, actualizarActiv }) {
                     id="municipio"
                     placeholder="Ingresa el municipio"
                     className="form-control"
-                    value={actividad.municipio}
+                    value={formData.municipio}
                     onChange={(e) => setFormData({ ...formData, municipio: e.target.value })}
                   />
                 </div>
@@ -102,6 +101,7 @@ function Mod_Actividad({ cerrarModal, actividad, actualizarActiv }) {
                     id="localidad"
                     placeholder="Ingresa la localidad"
                     className="form-control"
+                    value={formData.localidad}
                     onChange={(e) => setFormData({ ...formData, localidad: e.target.value })}
                   />
                 </div>
@@ -114,6 +114,7 @@ function Mod_Actividad({ cerrarModal, actividad, actualizarActiv }) {
                         name='tipo_platica'
                         id='platica_escolar'
                         value={'escolar'}
+                        checked={formData.tipo_platica === 'escolar'}
                         onChange={(e) => setFormData({ ...formData, tipo_platica: e.target.value })}
                       />
                       Escolar
@@ -124,6 +125,7 @@ function Mod_Actividad({ cerrarModal, actividad, actualizarActiv }) {
                         name='tipo_platica'
                         id='platica_comunitaria'
                         value={'comunitaria'}
+                        checked={formData.tipo_platica === 'comunitaria'}
                         onChange={(e) => setFormData({ ...formData, tipo_platica: e.target.value })}
                       />
                       Comunitaria
@@ -139,6 +141,7 @@ function Mod_Actividad({ cerrarModal, actividad, actualizarActiv }) {
                     id="otras_activ"
                     placeholder="Ingresa las otras actividades"
                     className="form-control"
+                    value={formData.otras_activ}
                     onChange={(e) => setFormData({ ...formData, otras_activ: e.target.value })}
                   >
                   </textarea>
@@ -153,6 +156,7 @@ function Mod_Actividad({ cerrarModal, actividad, actualizarActiv }) {
                     id="alumnos_Aten"
                     placeholder="Ingresa el número de alumnos atendidos"
                     className="form-control"
+                    value={formData.alumnos_Aten}
                     onChange={(e) => setFormData({ ...formData, alumnos_Aten: e.target.value })}
                   />
                 </div>
@@ -167,6 +171,7 @@ function Mod_Actividad({ cerrarModal, actividad, actualizarActiv }) {
                     id="pobl_ate"
                     placeholder="Ingresa la población atendida"
                     className="form-control"
+                    value={formData.pobl_ate}
                     onChange={(e) => setFormData({ ...formData, pobl_ate: e.target.value })}
                   />
                 </div>
@@ -180,6 +185,7 @@ function Mod_Actividad({ cerrarModal, actividad, actualizarActiv }) {
                     id="fecha_mes"
                     placeholder="Ingresa la fecha de la actividad"
                     className="form-control"
+                    value={formData.fecha_mes}
                     onChange={(e) => setFormData({ ...formData, fecha_mes: e.target.value })}
                   />
                 </div>
