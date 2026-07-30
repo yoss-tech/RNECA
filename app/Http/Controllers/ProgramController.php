@@ -11,6 +11,7 @@ use App\Models\Eca;
 use App\Models\actividad_memo;
 use App\Models\foto_activ;
 use App\Models\memoria_foto;
+use Illuminate\Support\Facades\Storage;
 
 
 class ProgramController extends Controller
@@ -124,13 +125,25 @@ class ProgramController extends Controller
             return response()->json($data, 404);
         }
 
+        $actividades = program::where('id_program', $program->id_program)->get();
+
+        foreach ($actividades as $actividad) {
+            $fotos = foto_activ::where('id_actividad', $actividad->id_actividad)->get();
+            foreach ($fotos as $foto) {
+                if (Storage::disk('public')->exists($foto->ruta_img)) {
+                    Storage::disk('public')->delete($foto->ruta_img);
+                }
+            }
+            foto_activ::where('id_actividad', $actividad->id_actividad)->delete();
+            $actividad->delete();
+        }
+        
         $program->delete();
 
         $data = [
-            'message' => 'Programa de cultura eliminado correctamente',
+            'message' => 'Programa de cultura y sus actividades/imágenes asociadas eliminados correctamente',
             'status' => 200
         ];
-
         return response()->json($data, 200);
     }
 
@@ -186,7 +199,7 @@ class ProgramController extends Controller
         }
     }
 
-    public function checkActividad()
+    public function checkActividad(Request $request)
     {
         $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
         $currentMonth = date('m');
@@ -198,6 +211,22 @@ class ProgramController extends Controller
             ->whereYear('pc.fecha_registro', $currentYear)
             ->exists();
 
-        return response()->json(['registro existente: ' => $program]);
+        return response()->json(['registro_existente' => $program]);
+    }
+
+    public function show(Request $request, $id)
+    {
+        $actividad = DB::table('program_cult as pc')
+            ->select(
+                'pc.localidad',
+                'pc.tipo_platica',
+                'pc.otras_activ',
+                'pc.alumnos_Atend',
+                'pc.pobl_atend',
+                'pc.fecha_mes'
+            )
+            ->where('pc.id_program', $id)
+            ->get();
+        return response()->json($actividad);
     }
 }

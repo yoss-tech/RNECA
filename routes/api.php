@@ -62,6 +62,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/infoEspacio', [EspacioController::class, 'index']); // Informacion del espacio de cultura
     Route::get('/idEspacio', [EspacioController::class, 'getIdEspacio']);
     Route::put('/updateEspacio', [EspacioController::class, 'update']); 
+    Route::get('/infoPoblacion/{id}', [EspacioController::class, 'show']);
 
     // Memoria fotografica
     Route::post('/create_memoria', [MemoriaFotoController::class, 'store']); // Crear una memoria

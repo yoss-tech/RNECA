@@ -9,6 +9,7 @@ function VECA_ConsultaReg() {
   const [mostrarCorreccion, setMostrarCorreccion] = useState(false);
   const [verInforme, setVerInforme] = useState(null);
   const [informeSeleccinado, setInformeSeleccionado] = useState(null);
+  const [cargando, setCargando] = useState(true)
 
   const [oficios, setOficios] = useState([]);
 
@@ -17,6 +18,7 @@ function VECA_ConsultaReg() {
       try {
         const data = await getOficeEca();
         setOficios(data);
+        setCargando(false)
       } catch (error) {
         console.error('Error al obtener los oficios:', error);
       }
@@ -32,7 +34,6 @@ function VECA_ConsultaReg() {
 
 
   const handleDownloadPdf = async (id_oficio) => {
-
     try {
       // petición Axios que está en el otro JS
       const pdfBlob = await dowloadOfice(id_oficio);
@@ -72,32 +73,38 @@ function VECA_ConsultaReg() {
         </thead>
 
         <tbody>
-          {oficios.map((item) => (
-            <tr key={item.id_oficio}>
-              <td>{item.mes_oficio}</td>
-              <td>{item.nombre_tipo}</td>
-              <td>{item.fecha_registro}</td>
-              <td className="btn-container-horizontal">
-                {item.nombre_tipo === 'Pendiente' && (
-                  <button type="button" className="btn-neutral" onClick={() => handleDownloadPdf(item.id_oficio)}>Descargar PDF</button>
-                )}
-                {item.nombre_tipo === 'Firmado' && (
-                  <button type="button" className="btn-neutral" onClick={() => setVerInforme(item.id_oficio)}>Ver documento</button>
-                )}
-                {item.nombre_tipo === 'Correcciones' && (
-                  <button type="button" className="btn-negativo" onClick={() => handleVerCorrecciones(item.observacion)}>
-                    Ver correcciones
-                  </button>
-                )}
-                {item.nombre_tipo === 'Validado' && (
-                  <>
-                    <button type="button" className="btn-neutral" onClick={() => setVerInforme(item.id_oficio)}>Ver documento</button>
+          {cargando ? (
+            <p>Cargando oficios ...</p>
+          ) : oficios && oficios.length > 0 ? (
+            oficios.map((item) => (
+              <tr key={item.id_oficio}>
+                <td>{item.mes_oficio}</td>
+                <td>{item.nombre_tipo}</td>
+                <td>{item.fecha_registro}</td>
+                <td className="btn-container-horizontal">
+                  {item.nombre_tipo === 'Pendiente' && (
                     <button type="button" className="btn-neutral" onClick={() => handleDownloadPdf(item.id_oficio)}>Descargar PDF</button>
-                  </>
-                )}
-              </td>
-            </tr>
-          ))}
+                  )}
+                  {item.nombre_tipo === 'Firmado' && (
+                    <button type="button" className="btn-neutral" onClick={() => setVerInforme(item.id_oficio)}>Ver documento</button>
+                  )}
+                  {item.nombre_tipo === 'Correcciones' && (
+                    <button type="button" className="btn-negativo" onClick={() => handleVerCorrecciones(item.observacion)}>
+                      Ver correcciones
+                    </button>
+                  )}
+                  {item.nombre_tipo === 'Validado' && (
+                    <>
+                      <button type="button" className="btn-neutral" onClick={() => setVerInforme(item.id_oficio)}>Ver documento</button>
+                      <button type="button" className="btn-neutral" onClick={() => handleDownloadPdf(item.id_oficio)}>Descargar PDF</button>
+                    </>
+                  )}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <p style={{alignItems: 'center'}}>No hay oficios registrados</p>
+          )}
         </tbody>
       </table>
 

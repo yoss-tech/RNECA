@@ -45,3 +45,14 @@ export const updatePoblacion = async (data) =>{
         return error;
     }
 }
+
+export const getDataEspacio = async (id) => {
+    try{
+        const response = await axiosInstance.get(`/infoPoblacion/${id}`);
+        return response.data;
+    }
+    catch(error){
+        console.log(error);
+        return error;
+    }
+}

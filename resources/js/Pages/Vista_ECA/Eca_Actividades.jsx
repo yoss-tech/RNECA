@@ -4,6 +4,7 @@ import Crear_Actividad from "../Modals/Crear/Crear_Actividad.jsx";
 import { getProgramData, delete_program } from "../../Components/api/program.jsx"
 import Mod_Actividad from "../../Pages/Modals/Modificar/Mod_Actividad.jsx";
 import Mostrar_Imagenes from "../Modals/MostrarImagen.jsx"
+import ImageGallery from "../Modals/prueba.jsx"
 import Swal from "sweetalert2";
 
 function VECA_Actividades() {
@@ -25,6 +26,7 @@ function VECA_Actividades() {
     try {
       const response = await getProgramData();
       setActividades(response || []);
+      setCargando(false);
     }
     catch (error) {
       console.log("Error al cargar los datos del programa")
@@ -115,38 +117,44 @@ function VECA_Actividades() {
         </thead>
 
         <tbody>
-          {actvidades.map((item, index) => (
-            <tr key={index}>
-              <td>
-                <p className="form-subtitle">{item.municipio}</p>
-                <p className="card-text">{item.localidad}</p>
-              </td>
-              <td>{item.tipo_platica}</td>
-              <td>{item.otras_activ}</td>
-              <td>{item.pobl_ate}</td>
-              <td>{new Date(item.fecha_mes).toLocaleDateString()}</td>
-              <td style={{ position: 'relative' }}>
-                <div>
-                  <button className="btn-acciones" onClick={() => toggleOpciones(index)}>
-                    <i className="bi bi-gear"></i>
-                  </button>
-                  {opcionesAbiertas === index && (
-                    <div className="menu-perfil" style={{ position: 'absolute', right: 0, top: '100%', zIndex: 10 }}>
-                      <button className="btn-ver" onClick={() => handleVerImagenes(item)}>
-                        Ver fotografias
-                      </button>
-                      <button className="btn-modificar" onClick={() => handleModificarActividad(item)}>
-                        Modificar
-                      </button>
-                      <button className="btn-eliminar" onClick={() => handleDelete(item.id_program)}>
-                        Eliminar
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </td>
-            </tr>
-          ))}
+          {cargando ? (
+            <p>Cargando actividades...</p>
+          ) : actvidades && actvidades.length > 0 ? (
+            actvidades.map((item, index) => (
+              <tr key={index}>
+                <td>
+                  <p className="form-subtitle">{item.municipio}</p>
+                  <p className="card-text">{item.localidad}</p>
+                </td>
+                <td>{item.tipo_platica}</td>
+                <td>{item.otras_activ}</td>
+                <td>{item.pobl_ate}</td>
+                <td>{new Date(item.fecha_mes).toLocaleDateString()}</td>
+                <td style={{ position: 'relative' }}>
+                  <div>
+                    <button className="btn-acciones" onClick={() => toggleOpciones(index)}>
+                      <i className="bi bi-gear"></i>
+                    </button>
+                    {opcionesAbiertas === index && (
+                      <div className="menu-perfil" style={{ position: 'absolute', right: 0, top: '100%', zIndex: 10 }}>
+                        <button className="btn-ver" onClick={() => handleVerImagenes(item)}>
+                          Ver fotografias
+                        </button>
+                        <button className="btn-modificar" onClick={() => handleModificarActividad(item)}>
+                          Modificar
+                        </button>
+                        <button className="btn-eliminar" onClick={() => handleDelete(item.id_program)}>
+                          Eliminar
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <p>No hay actividades registradas</p>
+          )}
         </tbody>
       </table>
     </div >

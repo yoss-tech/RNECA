@@ -479,9 +479,10 @@ p {
 
 /* ================= FORMULARIOS ================= */
 .dashboard {
-    align-items: flex-start;
     display: flex;
     gap: 20px;
+    height: 100%;
+    align-items: flex-start;
 }
 
 .dashboard-left {
@@ -722,6 +723,7 @@ input[type="file"] {
 .btn-cerrar-sesion, 
 .btn-modificar,
 .btn-eliminar,
+.btn-ver,
 .btn-evidencia{
     width: 100%;
     padding: 12px 16px;
@@ -737,6 +739,11 @@ input[type="file"] {
 }
 
 .btn-modificar:hover{
+     background: var(--ginda-color);
+    color: var(--blanco-color);
+}
+
+.btn-ver:hover{
      background: var(--ginda-color);
     color: var(--blanco-color);
 }

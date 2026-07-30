@@ -101,6 +101,7 @@ function Crear_Actividad({ cerrarModal, actividades }) {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    Math.max(0, Number(e.target.value))
   };
 
   const [paso, setPaso] = useState(1);
@@ -134,6 +135,20 @@ function Crear_Actividad({ cerrarModal, actividades }) {
     if (paso > 1) {
       setPaso(paso - 1);
     }
+  };
+
+  const fechaActividades = () => {
+    const day = new Date();
+    const diaPrimeroMes = new Date(day.getFullYear(), day.getMonth(), 1);
+
+    diaPrimeroMes = new Date(diaPrimeroMes.getDate() - 1);
+
+    const anio = diaPrimeroMes.getFullYear();
+    const mes = String(diaPrimeroMes.getMonth() + 1).padStart(2, '0');
+    const dia = String(diaPrimeroMes.getDate()).padStart(2, '0');
+
+    const fechaMaximaString = `${anio}-${mes}-${dia}`;
+    return fechaMaximaString;
   };
 
   return (
@@ -218,6 +233,7 @@ function Crear_Actividad({ cerrarModal, actividades }) {
                         className="form-control"
                         value={formData.fecha_mes}
                         onChange={handleChange}
+                        max={fechaActividades}
                       />
                       {errors.fecha_mes && <p className="error">{errors.fecha_mes}</p>}
                     </div>
@@ -228,7 +244,7 @@ function Crear_Actividad({ cerrarModal, actividades }) {
                 <>
                   <div className="form-group">
                     <div className="form-campo">
-                      <label className="form-label">Otras Actividades</label>
+                      <label className="form-label">Nombre de la Actividad</label>
                       <textarea
                         rows="3"
                         name='otras_activ'
@@ -253,7 +269,7 @@ function Crear_Actividad({ cerrarModal, actividades }) {
                         className="form-control"
                         min="1"
                         value={formData.alumnos_Aten}
-                        onChange={handleChange}
+                        onChange={(e) => setFormData({ ...formData, alumnos_Aten: Math.max(0, Number(e.target.value))})}
                       />
                       {errors.alumnos_Aten && <p className="error">{errors.alumnos_Aten}</p>}
                     </div>
@@ -268,7 +284,7 @@ function Crear_Actividad({ cerrarModal, actividades }) {
                         className="form-control"
                         min="1"
                         value={formData.pobl_ate}
-                        onChange={handleChange}
+                        onChange={(e) => setFormData({ ...formData, pobl_ate: Math.max(0, Number(e.target.value))})}
                       />
                       {errors.pobl_ate && <p className="error">{errors.pobl_ate}</p>}
                     </div>

@@ -37,7 +37,7 @@ function VECA_Poblacion({ onComplete }) {
     if (registro === true && !hasShownAlert) {
       Swal.fire({
         title: '¡Registro existente!',
-        text: 'Actualmente ya existe un registro para la población en este mes.',
+        text: 'Actualmente ya existe un registro para la población beneficiaria de este mes, unicamente lo puedes editar',
         icon: 'info', // Usa un ícono apropiado
         confirmButtonText: 'Entendido',
         timer: 5000,
@@ -62,11 +62,11 @@ function VECA_Poblacion({ onComplete }) {
 
   useEffect(() => {
     const espacio = async () => {
-      try{
+      try {
         const data = await getIdEspacio()
         setIdEspacio(data)
       }
-      catch(error){
+      catch (error) {
         console.error('Sin registro', error);
         setIdEspacio(false)
       }
@@ -105,7 +105,7 @@ function VECA_Poblacion({ onComplete }) {
     const { name, value } = e.target;
     setPoblacion({
       ...poblacion,
-      [name]: Number(value),
+      [name]: Math.max(0, Number(value)),
     });
   };
 
@@ -123,6 +123,19 @@ function VECA_Poblacion({ onComplete }) {
     reproducido: 0,
     adquirido: 0,
   });
+  
+  const total =
+        poblacion.hombres13_17 +
+        poblacion.hombres18_30 +
+        poblacion.hombres30_40 +
+        poblacion.hombres40_50 +
+        poblacion.hombres50mas +
+        poblacion.mujeres13_17 +
+        poblacion.mujeres18_30 +
+        poblacion.mujeres30_40 +
+        poblacion.mujeres40_50 +
+        poblacion.mujeres50mas +
+        poblacion.ninos12;
 
   const [alerts, setAlerts] = useState([]);
   const showAlert = (type, message) => {
@@ -210,19 +223,6 @@ function VECA_Poblacion({ onComplete }) {
     }
   };
 
-  const total =
-    poblacion.hombres13_17 +
-    poblacion.hombres18_30 +
-    poblacion.hombres30_40 +
-    poblacion.hombres40_50 +
-    poblacion.hombres50mas +
-    poblacion.mujeres13_17 +
-    poblacion.mujeres18_30 +
-    poblacion.mujeres30_40 +
-    poblacion.mujeres40_50 +
-    poblacion.mujeres50mas +
-    poblacion.ninos12;
-
   return (
     <>
       <div className="page-container">
@@ -253,7 +253,7 @@ function VECA_Poblacion({ onComplete }) {
                   id="inedito"
                   name="inedito"
                   value={material.inedito}
-                  onChange={(e) => setMaterial({ ...material, inedito: e.target.value })}
+                  onChange={(e) => setMaterial({ ...material, inedito: Math.max(0, Number(e.target.value)) })}
                 />
               </div>
 
@@ -269,7 +269,7 @@ function VECA_Poblacion({ onComplete }) {
                   id="reproducido"
                   name="reproducido"
                   value={material.reproducido}
-                  onChange={(e) => setMaterial({ ...material, reproducido: e.target.value })}
+                  onChange={(e) => setMaterial({ ...material, reproducido: Math.max(0, Number(e.target.value)) })}
                 />
               </div>
 
@@ -285,7 +285,7 @@ function VECA_Poblacion({ onComplete }) {
                   id="adquirido"
                   name="adquirido"
                   value={material.adquirido}
-                  onChange={(e) => setMaterial({ ...material, adquirido: e.target.value })}
+                  onChange={(e) => setMaterial({ ...material, adquirido: Math.max(0, Number(e.target.value)) })}
                 />
               </div>
             </div>
@@ -509,7 +509,7 @@ function VECA_Poblacion({ onComplete }) {
               {mostrarModal && (
                 <Mod_Poblacion
                   cerrarModal={() => setMostrarModal(false)}
-                  espacioId ={editarPoblacion}
+                  espacioId={editarPoblacion}
                 />
               )}
             </div>
