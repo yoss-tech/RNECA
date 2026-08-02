@@ -1,3 +1,4 @@
+import axios from "axios";
 import axiosInstance from "./axiosInstance";
 
 export const create_ofice = async (data) => {
@@ -10,77 +11,99 @@ export const create_ofice = async (data) => {
         formData.append('ruta_oficio', data.ruta_oficio);
     }
 
-    try{
+    try {
         const response = await axiosInstance.post('/create_ofice', formData);
         return response.data;
     }
-    catch(error){
+    catch (error) {
         console.log(error);
         return null;
     }
-}   
+}
 
 export const get_ofice = async () => {
-    try{
+    try {
         const response = await axiosInstance.get('/get_ofice');
         return response.data;
     }
-    catch(error){
+    catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+export const get_oficeCorrecion = async () => {
+    try {
+        const response = await axiosInstance.get('/oficiosCorrecion');
+        return response.data;
+    }
+    catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+export const getOficeCompletos = async () => {
+    try {
+        const response = await axiosInstance.get('/oficiosCompletos');
+        return response.data;
+    }
+    catch (error) {
         console.log(error);
         return null;
     }
 }
 
 export const getOficeEca = async () => {
-    try{
+    try {
         const response = await axiosInstance.get('/getOficeByEca');
         return response.data;
     }
-    catch(error){
+    catch (error) {
         console.log(error);
         return null;
     }
 }
 
 export const getOficio = async () => {
-    try{
+    try {
         const response = await axiosInstance.get('/oficios');
         return response.data;
     }
-    catch(error){
+    catch (error) {
         console.log(error);
         return null;
     }
 }
 
 export const getOficioPendiente = async () => {
-    try{
+    try {
         const response = await axiosInstance.get('/oficiosPendientes');
         return response.data;
     }
-    catch(error){
+    catch (error) {
         console.log(error);
         return null;
     }
 }
 
 export const getOficioCorreccion = async () => {
-    try{
+    try {
         const response = await axiosInstance.get('/oficiosCorreccion');
         return response.data;
     }
-    catch(error){
+    catch (error) {
         console.log(error);
         return null;
     }
 }
 
 export const getOficioValidado = async () => {
-    try{
+    try {
         const response = await axiosInstance.get('/oficiosValidados');
         return response.data;
     }
-    catch(error){
+    catch (error) {
         console.log(error);
         return null;
     }
@@ -146,26 +169,26 @@ export const viewOficio = async (id) => {
     }
     catch (error) {
         console.log('Error al obtener la vista del documento', error);
-        throw error; 
+        throw error;
     }
 }
 
 export const observacionOficio = async (data) => {
-    try{
+    try {
         const response = await axiosInstance.put('/observacionesOficio', data);
         return response.data;
     }
-    catch(error){
+    catch (error) {
         console.log('Error al realizar la validación del documento');
     }
 }
 
 export const getEstatus = async () => {
-    try{
+    try {
         const response = await axiosInstance.get('/getEstatusOficios');
         return response.data;
     }
-    catch(error){
+    catch (error) {
         console.log('Error al realizar la validación del documento');
     }
 }
