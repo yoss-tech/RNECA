@@ -316,7 +316,7 @@
     text-align: center;
     font-size: 0.75rem;
     color: #9ca3af;
-    align-items: center;
+    /* align-items: center; */
 }
 
 /* --- Estilos para PanelDocumento.jsx --- */

@@ -16,8 +16,12 @@ use Illuminate\Support\Facades\Storage;
 
 class ProgramController extends Controller
 {
+    // Obtener todos los programas de cultura asociados al usuario autenticado en base a la fecha
     public function index()
     {
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+
         $programs = DB::table('eca')
             ->join('program_cult as pc', 'pc.clave_eca', '=', 'eca.clave_eca')
             ->select(
@@ -32,11 +36,14 @@ class ProgramController extends Controller
                 'pc.id_program'
             )
             ->where('eca.id_usuario', auth()->user()->id_usuario)
+            ->whereMonth('pc.fecha_registro', $currentMonth)
+            ->whereYear('pc.fecha_registro', $currentYear)
             ->get();
         return response()->json($programs); // Devuelve un array de objetos.
     }
 
-    public function store(Request $request)
+    // Crear un nuevo programa de cultura (lista de actividades)
+    public function store(Request $request) 
     {
 
         // Obtener la información del ECA vinculada al usuario autenticado
@@ -113,6 +120,7 @@ class ProgramController extends Controller
         return response()->json($data, 201);
     }
 
+    // Eliminar un programa de cultura y sus actividades asociadas
     public function destroy($id)
     {
         $program = program::findOrFail($id);
@@ -147,6 +155,7 @@ class ProgramController extends Controller
         return response()->json($data, 200);
     }
 
+    // Actualizar un programa de cultura (lista de actividades)
     public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -199,6 +208,7 @@ class ProgramController extends Controller
         }
     }
 
+    // Validación para evitar registros de actividades doble por un ECA
     public function checkActividad(Request $request)
     {
         $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
@@ -214,6 +224,7 @@ class ProgramController extends Controller
         return response()->json(['registro_existente' => $program]);
     }
 
+    // Obtener información de un programa de cultura específico
     public function show(Request $request, $id)
     {
         $actividad = DB::table('program_cult as pc')

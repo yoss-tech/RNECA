@@ -12,12 +12,10 @@
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.45);
-
     display: flex;
     justify-content: center;
     align-items: center;
-
-    z-index: 9999;
+    z-index: 1000;
 }
 
 .modal-box {
@@ -124,4 +122,9 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Permite que algunos sweet alert se vean sobre los modaless*/
+.swal2-popup.custom-swal-zindex {
+    z-index: 99999 !important;
 }

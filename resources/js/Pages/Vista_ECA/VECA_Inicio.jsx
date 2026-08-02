@@ -9,6 +9,11 @@ import VECA_Poblacion from "./Eca_Poblacion.jsx";
 import VECA_Memoria from "./Eca_Memoria.jsx";
 import VECA_ConsultaReg from "./Eca_ConsultaRegistros.jsx";
 import PanelDocumento from "./PanelDocumento.jsx";
+import { Head } from "@inertiajs/react";
+import { checkActividadesRegistro } from "../../Components/api/program.jsx"
+import { checkOficio } from "../../Components/api/oficio.jsx";
+import { getLastOficio } from "../../Components/api/dowload_ofice.js";
+import Swal from "sweetalert2";
 import Notificaciones_Eca from "../Modals/Notificaciones/NoticacionECA.jsx";
 import PerfilECA from "../Modals/Perfiles/Perfil.jsx";
 import Avisos_eca from "../Modals/Avisos/AvisosECA.jsx";
@@ -25,18 +30,67 @@ function VECA_Inicio() {
   const [mostrarAvisos, setMostrarAvisos] = useState(false);
   const [CerrarSesion, setCerrarSesion] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const [hasPoblacionRegistration, setHasPoblacionRegistration] = useState(null);
+  const [hasActivitiesRegistration, setHasActivitiesRegistration] = useState(null);
+  const [hasOficioSent, setHasOficioSent] = useState(null);
+  const menuItems = document.querySelectorAll('.sidebar .form-group a');
 
   useEffect(() => {
-    const checkRegistro = async () => {
-      const data = await checkEspacioRegistro();
-      if (data.registro_existente) {
-        setCurrentStep(4);
+    const fetchRegistrationStatus = async () => {
+      try {
+        const [poblacionData, actividadesData, oficioData] = await Promise.all([
+          checkEspacioRegistro(),
+          checkActividadesRegistro(),
+          checkOficio()
+        ]);
+
+        const hasActividades = actividadesData.registro_existente;
+        const hasPoblacion = poblacionData.registro_existente;
+        const hasOficio = oficioData.registro_existente;
+
+        setHasActivitiesRegistration(hasActividades);
+        setHasPoblacionRegistration(hasPoblacion);
+        setHasOficioSent(hasOficio);
+
+        if (!hasActividades) {
+          setCurrentStep(1);
+        } else if (!hasPoblacion) {
+          setCurrentStep(2);
+        } else if (!hasOficio) {
+          setCurrentStep(3);
+        }
+      } catch (error) {
+        console.error("Error al verificar el estado de registro:", error);
+        setHasPoblacionRegistration(false);
+        setHasActivitiesRegistration(false);
+        setHasOficioSent(false);
+        setCurrentStep(1);
       }
     };
-    checkRegistro();
+
+    fetchRegistrationStatus();
   }, []);
 
-  const menuItems = document.querySelectorAll('.sidebar .form-group a');
+
+  const downloadLastOficio = async () => {
+    try {
+      const pdfBlob = await getLastOficio();
+      const blobUrl = window.URL.createObjectURL(new Blob([pdfBlob], { type: 'application/pdf' }));
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.setAttribute('download', `oficio_ultimo.pdf`);
+      document.body.appendChild(link);
+
+      link.click();
+
+      link.remove();
+      window.URL.revokeObjectURL(blobUrl);
+    }
+    catch (error) {
+      console.log(error);
+    }
+  };
+
 
   const submitLogout = async () => {
     try {
@@ -61,12 +115,47 @@ function VECA_Inicio() {
     const sidebar = document.querySelector('.sidebar');
     const toggleButton = document.querySelector('.menu-toggle');
 
-    if (!sidebar.contains(event.target) && !toggleButton.contains(event.target)) {
+    if (sidebar && toggleButton && !sidebar.contains(event.target) && !toggleButton.contains(event.target)) {
       sidebar.classList.remove('active');
       setMenuOpen(false);
     }
   });
 
+  const handleCompletePending = () => {
+    if (hasActivitiesRegistration === null || hasPoblacionRegistration === null || hasOficioSent === null) {
+      return;
+    }
+
+    if (!hasActivitiesRegistration) {
+      setVistaActual("actividades");
+      setCurrentStep(1);
+    } else if (!hasPoblacionRegistration) {
+      setVistaActual("poblacion");
+      setCurrentStep(2);
+    } else if (!hasOficioSent) {
+      setVistaActual("vista_previa");
+      setCurrentStep(3);
+    } else {
+      Swal.fire({
+        title: 'Registro del mes completado',
+        text: 'Ya has completado todos los pasos para el registro de este mes.',
+        icon: 'success',
+        confirmButtonText: 'Entendido',
+      });
+    }
+  };
+
+  const onCompleteActivity = () => {
+    setHasActivitiesRegistration(true);
+    setCurrentStep(3);
+    setVistaActual("poblacion");
+  };
+
+  const onCompletePopulation = () => {
+    setHasPoblacionRegistration(true);
+    setCurrentStep(3);
+    setVistaActual("vista_previa");
+  };
 
   return (
     <>
@@ -141,17 +230,6 @@ function VECA_Inicio() {
               <li>
                 <div className="submenu-item">
                   <a
-                    className={vistaActual === "poblacion" ? "active" : ""}
-                    onClick={() => setVistaActual("poblacion")}
-                    style={{ cursor: "pointer" }}>
-                    <i className="bi bi-clock"></i>
-                    Población Beneficiaria</a>
-                </div>
-              </li>
-
-              <li>
-                <div className="submenu-item">
-                  <a
                     className={vistaActual === "actividades" ? "active" : ""}
                     onClick={() => setVistaActual("actividades")}
                     style={{ cursor: "pointer" }}>
@@ -161,14 +239,14 @@ function VECA_Inicio() {
               </li>
 
               <li>
-                {/* <div className="submenu-item">
+                <div className="submenu-item">
                   <a
-                    className={vistaActual === "memoria" ? "active" : ""}
-                    onClick={() => setVistaActual("memoria")}
+                    className={vistaActual === "poblacion" ? "active" : ""}
+                    onClick={() => setVistaActual("poblacion")}
                     style={{ cursor: "pointer" }}>
                     <i className="bi bi-clock"></i>
-                    Memoria Fotográfica</a>
-                </div> */}
+                    Población Beneficiaria</a>
+                </div>
               </li>
             </ul>
           )}
@@ -214,12 +292,51 @@ function VECA_Inicio() {
 
                   <div className="fecha-row">
                     <p className="card-subtitle">Estado:</p>
-                    <p className="card-text">ESTADO</p>
+                    {(() => {
+                      let text = 'Cargando estado...';
+                      if (hasActivitiesRegistration !== null && hasPoblacionRegistration !== null && hasOficioSent !== null) {
+                        if (!hasActivitiesRegistration) {
+                          text = 'Aún no has hecho ningun registro.';
+                        } else if (!hasPoblacionRegistration) {
+                          text = 'Registrar la población beneficiaria.';
+                        } else if (!hasOficioSent) {
+                          text = 'Enviar el oficio a revisión.';
+                        } else {
+                          text = 'Registro del mes completado, revisa el estado del oficio en el apartado de Consultas.';
+                        }
+                      }
+                      return <p className="card-text">{text}</p>;
+                    })()}
                   </div>
 
-                  <div className="botones-cards">
-                    <button type="button" className="btn-primario">Completar registro pendiente</button>
-                  </div>
+                  {(() => {
+                    let buttonText = 'Completar registro pendiente';
+                    let isDisabled = true;
+
+                    if (hasActivitiesRegistration !== null && hasPoblacionRegistration !== null && hasOficioSent !== null) {
+                      // Logic reordered to match the new flow
+                      if (!hasActivitiesRegistration) {
+                        buttonText = 'Completar Actividades del mes';
+                        isDisabled = false;
+                      } else if (!hasPoblacionRegistration) {
+                        buttonText = 'Completar Población Beneficiaria';
+                        isDisabled = false;
+                      } else if (!hasOficioSent) {
+                        buttonText = 'Enviar Oficio a revisión';
+                        isDisabled = false;
+                      } else {
+                        buttonText = 'Registro del mes completado';
+                        isDisabled = true;
+                      }
+                    }
+                    return (
+                      <div className="botones-cards">
+                        <button type="button" className="btn-primario" onClick={handleCompletePending} disabled={isDisabled}>
+                          {buttonText}
+                        </button>
+                      </div>
+                    );
+                  })()}
                 </div>
               </div>
 
@@ -233,7 +350,9 @@ function VECA_Inicio() {
                     <p className="card-text">ESTADO</p>
                   </div>
                   <div className="botones-cards">
-                    <button type="button" className="btn-neutral">Descargar PDF</button>
+                    <button type="button" className="btn-neutral" onClick={downloadLastOficio}>
+                      Descargar PDF
+                    </button>
                   </div>
                 </div>
               </div>
@@ -241,27 +360,22 @@ function VECA_Inicio() {
           </>
         )}
 
-        {vistaActual === "poblacion" && currentStep >= 1 && (
-          <VECA_Poblacion
-            onComplete={() => {
-              setCurrentStep(2);
-            }}
-          />
-        )}
-        {vistaActual === "actividades" && currentStep >= 2 && (
+        {vistaActual === "actividades" && currentStep >= 1 && (
           <VECA_Actividades
+            onComplete={onCompleteActivity}
+          />
+        )}
+        {vistaActual === "poblacion" && currentStep >= 2 && (
+          <VECA_Poblacion
+            onComplete={onCompletePopulation}
+          />
+        )}
+        {vistaActual === "vista_previa" && currentStep >= 3 && (
+          <PanelDocumento
             onComplete={() => {
-              setCurrentStep(3);
+              setHasOficioSent(true);
             }}
           />
-        )}
-        {vistaActual === "memoria" && currentStep >= 3 && (
-          <VECA_Memoria
-          />
-        )}
-        {vistaActual === "vista_previa" && (
-           //<VECA_VistaP />
-          <PanelDocumento />
         )}
         {vistaActual === "consulta_registros" && (
           <VECA_ConsultaReg />

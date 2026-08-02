@@ -6,16 +6,17 @@ import Swal from "sweetalert2";
 import Mod_Poblacion from "../Modals/Modificar/Mod_Poblacion.jsx";
 import { checkEspacioRegistro } from "../../Components/api/espacio.jsx"
 import { getIdEspacio } from "../../Components/api/espacio_cult.jsx";
-
+import { getProgramData } from "../../Components/api/program.jsx";
 
 function VECA_Poblacion({ onComplete }) {
 
-  const [programa, serPorgrama] = useState();
+  const [espacio, setEspacio] = useState();
   const [registro, setRegistro] = useState(null); // Inicializa con null o false
   const [hasShownAlert, setHasShownAlert] = useState(false); // Nuevo estado para evitar múltiples alertas
   const [editarPoblacion, setEditarPoblacion] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [idEspacio, setIdEspacio] = useState(false);
+  const [actividad, setActividad] = useState([]);
 
 
   useEffect(() => {
@@ -31,6 +32,18 @@ function VECA_Poblacion({ onComplete }) {
     };
 
     checkRegistro();
+  }, []);
+
+  useEffect(() => {
+    const fetchPrograma = async () => {
+      try {
+        const data = await getProgramData();
+        setActividad(data);
+      } catch (error) {
+        console.error('Error al obtener los programas:', error);
+      }
+    };
+    fetchPrograma();
   }, []);
 
   useEffect(() => {
@@ -51,7 +64,7 @@ function VECA_Poblacion({ onComplete }) {
     const fetchPrograma = async () => {
       try {
         const data = await get_espacio();
-        serPorgrama(data);
+        setEspacio(data);
       } catch (error) {
         console.error('Error al obtener los programas:', error);
       }
@@ -74,8 +87,6 @@ function VECA_Poblacion({ onComplete }) {
 
     espacio()
   }, []);
-
-  // console.log(idEspacio)
 
   const handleEditar = (espacio) => {
     setEditarPoblacion(espacio);
@@ -168,6 +179,21 @@ function VECA_Poblacion({ onComplete }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const totalActividad = actividad.reduce((acc, item) => {
+        return acc + (Number(item.pobl_ate) || 0) + (Number(item.alumnos_Aten) || 0);
+    }, 0);
+
+    if (total !== totalActividad) {
+        Swal.fire({
+            title: "Error de validación",
+            text: `El total de la población atendida (${total}) no coincide con la suma de la población de las actividades (${totalActividad}).`,
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return;
+    }
+
     try {
       if (!validateForm()) {
         Swal.fire({
