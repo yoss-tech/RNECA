@@ -72,7 +72,6 @@ function Crear_Actividad({ cerrarModal, actividades }) {
     }
     try {
       await create_program(formDataToSend);
-
       await actividades();
       Swal.fire({
         title: "¡Guardado!",
@@ -137,19 +136,26 @@ function Crear_Actividad({ cerrarModal, actividades }) {
     }
   };
 
-  const fechaActividades = () => {
-    const day = new Date();
-    const diaPrimeroMes = new Date(day.getFullYear(), day.getMonth(), 1);
+  const getPreviousMonthDateRange = () => {
+    const today = new Date();
+    const firstDayOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const lastDayOfPreviousMonth = new Date(firstDayOfCurrentMonth);
+    lastDayOfPreviousMonth.setDate(firstDayOfCurrentMonth.getDate() - 1);
+    const firstDayOfPreviousMonth = new Date(lastDayOfPreviousMonth.getFullYear(), lastDayOfPreviousMonth.getMonth(), 1);
 
-    diaPrimeroMes = new Date(diaPrimeroMes.getDate() - 1);
+    const format = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
 
-    const anio = diaPrimeroMes.getFullYear();
-    const mes = String(diaPrimeroMes.getMonth() + 1).padStart(2, '0');
-    const dia = String(diaPrimeroMes.getDate()).padStart(2, '0');
-
-    const fechaMaximaString = `${anio}-${mes}-${dia}`;
-    return fechaMaximaString;
+    return {
+        minDate: format(firstDayOfPreviousMonth),
+        maxDate: format(lastDayOfPreviousMonth)
+    };
   };
+
 
   return (
     <>
@@ -233,7 +239,8 @@ function Crear_Actividad({ cerrarModal, actividades }) {
                         className="form-control"
                         value={formData.fecha_mes}
                         onChange={handleChange}
-                        max={fechaActividades}
+                        min={getPreviousMonthDateRange().minDate}
+                        max={getPreviousMonthDateRange().maxDate}
                       />
                       {errors.fecha_mes && <p className="error">{errors.fecha_mes}</p>}
                     </div>

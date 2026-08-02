@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { cargarImg } from '../Components/api/memoria.jsx';
 import { data } from 'autoprefixer';
 
-const ImagenActividad = ({ idFoto, isSelected, onSelect, onZoom }) => {
+const ImagenActividadOf = ({ idFoto, isSelected, onSelect }) => {
   const [imageUrl, setImageUrl] = useState('');
   const [cargando, setCargando] = useState(true);
 
@@ -39,30 +39,17 @@ const ImagenActividad = ({ idFoto, isSelected, onSelect, onZoom }) => {
       <div
         className={`image-card ${isSelected ? 'selected' : ''}`}
         data-idFoto={idFoto}
-        style={{ position: 'relative', display: 'inline-block' }}
+        
       >
         <img
           src={imageUrl}
           alt="Foto de actividad"
-          style={{ width: '340px', height: '240px', objectFit: 'cover', margin: '5px', borderRadius: '4px', cursor: 'zoom-in' }}
-          onClick={onZoom}
+          style={{ width: '340px', height: '240px', objectFit: 'cover', margin: '5px', borderRadius: '4px' }}
         />
-        <input 
-          type="checkbox"
-          checked={isSelected}
-          onChange={() => onSelect(idFoto)}
-          style={{
-            position: 'absolute',
-            top: '10px',
-            right: '10px',
-            width: '20px',
-            height: '20px',
-            cursor: 'pointer'
-          }}
-        />
+        {isSelected && <div className="selected-overlay"></div>}
       </div >
     )
   );
 };
 
-export default ImagenActividad;
+export default ImagenActividadOf;

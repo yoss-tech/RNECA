@@ -29,7 +29,7 @@ class FotoActivController extends Controller
         $validator = Validator::make($request->all(), [
             'id_actividad'  => 'required|string|exists:program_cult,id_program',
             'imagenes'    => 'required|array',
-            'imagenes.*'  => 'required|image|mimes:jpeg,png,jpg,gif|max:5000',
+            'imagenes.*'  => 'required|image|mimes:jpeg,png,jpg|max:500',
         ]);
 
         if($validator->fails()){

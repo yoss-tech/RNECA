@@ -31,24 +31,37 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
         };
     }, [pdfSrc]);
 
-    const hableSubmit = async (e) => {
-        e.preventDefault();
-        const dataToSend = {
-            ...formData,
-            id_oficio: idOficio
+    useEffect(() => {
+        const handleViewPdf = async () => {
+            if (idOficio) {
+                setLoadingPdf(true);
+                try {
+                    const pdfBlob = await viewOficio(idOficio);
+                    const url = URL.createObjectURL(pdfBlob);
+                    setPdfSrc(url);
+                    setShowPdf(true);
+                } catch (error) {
+                    console.error("Error al cargar el PDF:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo cargar el documento PDF. Por favor, intente de nuevo más tarde.',
+                    });
+                } finally {
+                    setLoadingPdf(false);
+                }
+            } else {
+                console.error("No se ha proporcionado un ID de oficio para visualizar el PDF.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Faltan datos',
+                    text: 'No se puede mostrar el documento porque no se encontró el identificador.',
+                });
+            }
         };
-        await observacionOficio(dataToSend);
-        await cargarLista();
-        Swal.fire({
-            title: "Enviado!",
-            text: "Las revisiones y correcciones fueron enviadas",
-            icon: "success",
-            confirmButtonText: "Aceptar"
-        }).then(() => {
-            cerrarModal();
-        });
-    };
-
+        handleViewPdf();
+    }, []);
+    
     useEffect(() => {
         const fetchEstatus = async () => {
             try {
@@ -109,7 +122,7 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
                 </div>
 
                 <div className="modal-body">
-                    {showPdf ? (
+                    {showPdf && (
                         <>
                             <div className="dashboard">
                                 <div className="dashboard-left" style={{ width: '60%', height: 'calc(100%)' }}>
@@ -121,18 +134,8 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
                                 </div>
                             </div>
                         </>
-                    ) : (
-                        <>
-                            <div className="form-group">
-                                <label className="card-subtitle">Visualizar el documento:</label>
-                                <button type="button" className="btn-neutral" onClick={handleViewPdf} disabled={loadingPdf}>
-                                    {loadingPdf ? 'Cargando...' : 'Ver'}
-                                </button>
-                            </div>
-                        </>
                     )}
                 </div>
-
                 <div className="modal-foot">
                     <button type="button" className="btn-neutral" onClick={cerrarModal}>Cerrar</button>
                 </div>

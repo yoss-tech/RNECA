@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
 import { observacionOficio, viewOficio, getEstatus } from "@/Components/api/oficio";
@@ -64,33 +64,36 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
         fetchEstatus();
     }, []);
 
-    const handleViewPdf = async () => {
-        if (idOficio) {
-            setLoadingPdf(true);
-            try {
-                const pdfBlob = await viewOficio(idOficio);
-                const url = URL.createObjectURL(pdfBlob);
-                setPdfSrc(url);
-                setShowPdf(true);
-            } catch (error) {
-                console.error("Error al cargar el PDF:", error);
+    useEffect(() => {
+        const handleViewPdf = async () => {
+            if (idOficio) {
+                setLoadingPdf(true);
+                try {
+                    const pdfBlob = await viewOficio(idOficio);
+                    const url = URL.createObjectURL(pdfBlob);
+                    setPdfSrc(url);
+                    setShowPdf(true);
+                } catch (error) {
+                    console.error("Error al cargar el PDF:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo cargar el documento PDF. Por favor, intente de nuevo más tarde.',
+                    });
+                } finally {
+                    setLoadingPdf(false);
+                }
+            } else {
+                console.error("No se ha proporcionado un ID de oficio para visualizar el PDF.");
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'No se pudo cargar el documento PDF. Por favor, intente de nuevo más tarde.',
+                    icon: 'warning',
+                    title: 'Faltan datos',
+                    text: 'No se puede mostrar el documento porque no se encontró el identificador.',
                 });
-            } finally {
-                setLoadingPdf(false);
             }
-        } else {
-            console.error("No se ha proporcionado un ID de oficio para visualizar el PDF.");
-            Swal.fire({
-                icon: 'warning',
-                title: 'Faltan datos',
-                text: 'No se puede mostrar el documento porque no se encontró el identificador.',
-            });
-        }
-    };
+        };
+        handleViewPdf();
+    }, []);
 
     const handleHidePdf = () => {
         setShowPdf(false);
@@ -108,7 +111,12 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
                 </div>
 
                 <div className="modal-body">
-                    {showPdf ? (
+                    {loadingPdf ? (
+                        <div class="loader">
+                            <label className="component-cargando">Cargando...</label>
+                            <div class="loading"></div>
+                        </div>
+                    ) : showPdf && (
                         <>
                             <div className="dashboard">
                                 <div className="dashboard-left" style={{ width: '60%', height: 'calc(100%)' }}>
@@ -121,12 +129,12 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
                                 <div className="dashboard-right">
                                     <div className="form-group">
                                         <label className="card-subtitle">Observaciones:</label>
-                                        <textarea 
+                                        <textarea
                                             name="observacion"
                                             value={formData.observacion}
                                             onChange={handleChange}
-                                            className="form-control" 
-                                            placeholder="Ingresa las observaciones del sobre el informe" 
+                                            className="form-control"
+                                            placeholder="Ingresa las observaciones del sobre el informe"
                                             title="Ingresa las observaciones del sobre el informe"
                                         />
                                     </div>
@@ -146,7 +154,7 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
 
                                     <div className="form-campo">
                                         <label className="form-label">Estatus</label>
-                                        <select 
+                                        <select
                                             name="id_estatus"
                                             value={formData.id_estatus}
                                             onChange={handleChange}
@@ -162,15 +170,6 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
                                     </div>
                                 </div>
 
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <div className="form-group">
-                                <label className="card-subtitle">Visualizar el documento:</label>
-                                <button type="button" className="btn-neutral" onClick={handleViewPdf} disabled={loadingPdf}>
-                                    {loadingPdf ? 'Cargando...' : 'Ver'}
-                                </button>
                             </div>
                         </>
                     )}

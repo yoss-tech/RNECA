@@ -34,7 +34,7 @@ function PanelDocumento() {
     if (resultado === true && !hasShownAlert) {
       Swal.fire({
         title: '¡Registro existente!',
-        text: 'Actualmente el oficio ya fue enviado y esta en proceso de validación, espera a que finalice todo el proceso',
+        text: 'Actualmente el oficio ya fue enviado y esta en proceso de validación, espera a que finalice el proceso de revición',
         icon: 'info',
         confirmButtonText: 'Entendido',
         timer: 10000,
@@ -128,7 +128,7 @@ function PanelDocumento() {
             <i class="bi bi-filetype-pdf"></i>
             Generar PDF
           </button>
-          <button type="submit" className="btn-primario" onClick={handleSubmit} disabled={resultado}>
+          <button type="submit" className="btn-primario" onClick={handleSubmit}>
             <i class="bi bi-clipboard2-check"></i>
             Enviar a revisión
           </button>

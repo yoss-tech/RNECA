@@ -5,19 +5,28 @@ import "../../../css/image.css"
 import { getImgByactiv, deleteImage, addImage } from '../../Components/api/memoria.jsx';
 import ImagenActividad from "@/Components/ImagenActividad.jsx";
 import Swal from "sweetalert2";
-import SelectorImagen from "@/Components/SelectorImagen";
+import SubirImagenes from "./SubirImagenes";
 
 function Mostrar_Imagenes({ cerrarModal, actividad }) {
-
   const [imagenes, setImagenes] = useState([]);
   const [selectedImageIds, setSelectedImageIds] = useState(new Set());
   const [imagenesNew, setImagenesNew] = useState([]);
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
-  
+  useEffect(() => {
+    document.body.style.overflow = selectedImage ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selectedImage]);
+
+  const handleAgregarImg = () => {
+    setMostrarModal(true)
+  }
+
   // Petición para agregar nuevas imagenes a la actividad
-
   const handleImageChange = (e) => {
-    // e.target.files es una lista de archivos, la convertimos a un array
     if (e.target.files) {
       setImagenesNew(Array.from(e.target.files));
     }
@@ -25,13 +34,13 @@ function Mostrar_Imagenes({ cerrarModal, actividad }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try{
+    try {
       await addImage({
-      id_program: actividad.id_program,
-      imagenes: imagenesNew
-    });
+        id_program: actividad.id_program,
+        imagenes: imagenesNew
+      });
     }
-    catch(error){
+    catch (error) {
       console.log(error);
     }
     setImagenesNew([]);
@@ -40,16 +49,23 @@ function Mostrar_Imagenes({ cerrarModal, actividad }) {
 
   // Petición para trar las id las imgenes en base a la activida con la que estan relacionada
   useEffect(() => {
-    const fetchImagenes = async () => {
-      try {
-        const response = await getImgByactiv(actividad.id_program);
-        setImagenes(response);
-      } catch (error) {
-        console.error("Error al cargar las imágenes:", error);
-      }
-    };
-    fetchImagenes();
+    CargarImagenes();
   }, [actividad.id_program]);
+
+  const CargarImagenes = async () => {
+    try {
+      const response = await getImgByactiv(actividad.id_program);
+      // Map the response to include 'full' and 'alt' properties for the modal viewer
+      const formattedImages = response.map(img => ({
+        ...img,
+        full: `/api/fotos/${img.id_foto}/archivo`, // Construct the full URL for the modal
+        alt: img.nombre || `Imagen de actividad ${actividad.id_program}` // Use 'nombre' or a default alt text
+      }));
+      setImagenes(formattedImages);
+    } catch (error) {
+      console.error("Error al cargar las imágenes:", error);
+    }
+  };
 
   const handleImageToggle = (id) => {
     setSelectedImageIds(prevSelected => {
@@ -107,19 +123,10 @@ function Mostrar_Imagenes({ cerrarModal, actividad }) {
           <h4>Visualiza y gestiona las imágenes</h4>
         </div>
         <div className="modal-body">
+          {imagenes.length === 0 &&(
+            <p>No hay fotos registradas para esta actividad. ¿Deseas agregar alguna?</p>
+          )}
           <div className="image-grid">
-            {imagenes.length === 0 &&
-              <div>
-                <p>No hay fotos registradas para esta actividad. ¿Deseas agregar alguna?</p>
-                <form onSubmit={handleSubmit}>
-                  {
-                    <SelectorImagen onChange={handleImageChange} multiple={true} />
-                  }
-                </form>
-                <br />
-                <button type="button" className="btn-primario" onClick={handleSubmit}>Guardar</button>
-              </div>
-            }
             {imagenes.length > 0 && (
               imagenes.map((foto) => (
                 <ImagenActividad
@@ -127,9 +134,59 @@ function Mostrar_Imagenes({ cerrarModal, actividad }) {
                   idFoto={foto.id_foto}
                   isSelected={selectedImageIds.has(foto.id_foto)}
                   onSelect={handleImageToggle}
+                  onZoom={() => setSelectedImage(foto)}
                 />
               )))
             }
+            {selectedImage && (
+              <div
+                style={{
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundColor: "rgba(0, 0, 0, 0.8)",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  zIndex: 1000
+                }}
+                onClick={() => setSelectedImage(null)}
+              >
+                <button
+                  style={{
+                    position: "absolute",
+                    top: "15px",
+                    right: "15px",
+                    background: "none",
+                    border: "none",
+                    color: "white",
+                    fontSize: "30px",
+                    cursor: "pointer"
+                  }}
+                  onClick={() => setSelectedImage(null)}
+                >
+                  &times;
+                </button>
+                <img
+                  src={selectedImage.full}
+                  alt="Vista ampliada"
+                  style={{
+                    maxWidth: "90%",
+                    maxHeight: "90%",
+                    objectFit: "contain"
+                  }}
+                />
+              </div>
+            )}
+            {mostrarModal && (
+              <SubirImagenes
+                cerrarModal={() => setMostrarModal(false)}
+                Infoactividad={actividad}
+                cargarImg={CargarImagenes}
+              />
+            )}
           </div>
         </div>
         <div className="modal-foot">
@@ -147,6 +204,7 @@ function Mostrar_Imagenes({ cerrarModal, actividad }) {
               >
                 Eliminar seleccionadas
               </button>
+              <button type="button" className="btn-primario" onClick={handleAgregarImg} style={{ marginRight: '10px' }}>Agregar imagenes</button>
               <button type="button" className="btn-neutral" onClick={cerrarModal}>Cerrar</button>
             </div>
           </div>
