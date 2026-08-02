@@ -15,8 +15,12 @@ use App\Models\material_didact;
 
 class EspacioController extends Controller
 {
+    // Obtener todos los espacios de cultura asociados al usuario autenticado en base a la fecha
     public function index()
     {
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+
         $espacio = DB::table('eca')
             ->join('espaciocultura as esp', 'eca.clave_eca', '=', 'esp.clave_eca')
             ->join('detalle_asistente as da', 'esp.id_espacio', '=', 'da.id_espacio')
@@ -39,10 +43,13 @@ class EspacioController extends Controller
                 'eca.fecha_forta'
             )
             ->where('eca.id_usuario', auth()->user()->id_usuario)
+            ->whereMonth('esp.fecha_registro', $currentMonth)
+            ->whereYear('esp.fecha_registro', $currentYear)
             ->get();
         return response()->json($espacio);
     }
 
+    // Revisar si ya existe un registro de espacio de cultura para el ECA del usuario autenticado en el mes y año actual
     public function checkRegistroActual(Request $request)
     {
         $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
@@ -63,6 +70,7 @@ class EspacioController extends Controller
         return response()->json(['registro_existente' => $espacio]);
     }
 
+    // Crear un nuevo espacio de cultura y sus detalles asociados
     public function store(Request $request)
     {
         // Obtener la información del ECA vinculada al usuario autenticado
@@ -147,6 +155,7 @@ class EspacioController extends Controller
         return response()->json($data, 201);
     }
 
+    // Obtener el ID del espacio de cultura para el ECA
     public function getIdEspacio(Request $request)
     {
 
@@ -174,6 +183,7 @@ class EspacioController extends Controller
         return response()->json($idEspacio);
     }
 
+    // Actualizar un espacio de cultura y sus detalles
     public function update(Request $request)
     {
         // dd($request->all(), $request->files->all());
@@ -254,6 +264,7 @@ class EspacioController extends Controller
         }
     }
 
+    // Obtener información detallada de un espacio de cultura específico
     public function show(Request $request, $id)
     {
         $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();

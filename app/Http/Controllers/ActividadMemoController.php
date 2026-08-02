@@ -20,7 +20,8 @@ class ActividadMemoController extends Controller
     public function index()
     {
         $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
-
+        $currentMonth = date('m');
+        $currentYear = date('Y');
         $actividad_memo = DB::table('program_cult as pc')
             ->select(
                 'pc.descripcion_activ',
@@ -29,6 +30,8 @@ class ActividadMemoController extends Controller
                 'pc.clave_eca'
             )
             ->where('pc.clave_eca', $eca->clave_eca)
+            ->whereMonth('pc.fecha_registro', $currentMonth)
+            ->whereYear('pc.fecha_registro', $currentYear)
             ->distinct()
             ->get();
 

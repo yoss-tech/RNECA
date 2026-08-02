@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import "../../../css/Style.css"
 import Crear_Actividad from "../Modals/Crear/Crear_Actividad.jsx";
-import { getProgramData, delete_program } from "../../Components/api/program.jsx"
+import { getProgramData, delete_program, checkActividadesRegistro } from "../../Components/api/program.jsx"
 import Mod_Actividad from "../../Pages/Modals/Modificar/Mod_Actividad.jsx";
 import Mostrar_Imagenes from "../Modals/MostrarImagen.jsx"
-import ImageGallery from "../Modals/prueba.jsx"
 import Swal from "sweetalert2";
 
-function VECA_Actividades() {
+function VECA_Actividades({ onComplete }) {
 
   const [mostrarModal, setMostrarModal] = useState(false);
   const [mostrarModalMod, setMostrarModalMod] = useState(false);
@@ -17,6 +17,7 @@ function VECA_Actividades() {
 
   const [actvidades, setActividades] = useState([]);
   const [cargando, setCargando] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   useEffect(() => {
     cargarActividades();
@@ -27,6 +28,10 @@ function VECA_Actividades() {
       const response = await getProgramData();
       setActividades(response || []);
       setCargando(false);
+      if (!isInitialLoad) {
+        onComplete();
+      }
+      setIsInitialLoad(false);
     }
     catch (error) {
       console.log("Error al cargar los datos del programa")
@@ -118,7 +123,11 @@ function VECA_Actividades() {
 
         <tbody>
           {cargando ? (
-            <p>Cargando actividades...</p>
+            <tr>
+              <td colSpan="6">
+                <p className="text-bold">Cargando actividades...</p>
+              </td>
+            </tr>
           ) : actvidades && actvidades.length > 0 ? (
             actvidades.map((item, index) => (
               <tr key={index}>
@@ -153,7 +162,11 @@ function VECA_Actividades() {
               </tr>
             ))
           ) : (
-            <p>No hay actividades registradas</p>
+            <tr>
+              <td colSpan="6">
+                <p className="text-bold">No hay actividades registradas.</p>
+              </td>
+            </tr>
           )}
         </tbody>
       </table>

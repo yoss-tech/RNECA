@@ -51,10 +51,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/usuarios/eca/{id}', [EcaController::class, 'update']); // Modificar ecas
 
     // Programa_cultura
-    Route::post('/create_program', [ProgramController::class, 'store']);
+    Route::post('/create_program', [ProgramController::class, 'store']); // Registrat las actividades de un programa de cultura
     Route::get('/infoProgram', [ProgramController::class, 'index']); // Informacion del programa de cultura
     Route::put('/update_program', [ProgramController::class, 'update']); // Actualizar un programa de cultura :)
-    Route::get('/checkActividad', [ProgramController::class, 'checkActividad']);
+    Route::get('/checkActividad', [ProgramController::class, 'checkActividad']); // Validación para evitar registros de actividades doble por un ECA
 
     // Espacio de cultura
     Route::post('/create_espacio', [EspacioController::class, 'store']);
@@ -87,9 +87,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/view_ofice/{id}', [OficiosRnecaController::class, 'view']); // Visualizar un oficio
     Route::post('/subirOficioFirm', [OficiosRnecaController::class, 'update']); // Subir el oficio escaneado
     Route::get('/checkOficio', [OficiosRnecaController::class, 'checkRegistroOficio']);  // validación para evitar registros de oficios doble por un ECA
-    Route::get('/oficiosFirm', [OficiosRnecaController::class, 'oficiosFirmados']);
-    Route::put('/observacionesOficio', [OficiosRnecaController::class, 'observaOficios']);
-    Route::get('/getEstatusOficios', [OficiosRnecaController::class, 'estatusOficios']);
+    Route::get('/oficiosFirm', [OficiosRnecaController::class, 'oficiosFirmados']); // Obtener los oficios firmados para el director
+    Route::put('/observacionesOficio', [OficiosRnecaController::class, 'observaOficios']); // Obtener los oficios con observaciones para el director
+    Route::get('/getEstatusOficios', [OficiosRnecaController::class, 'estatusOficios']); // Obtener los estatus necesarios para los oficios para el director
+    Route::get('/oficiosCorrecion', [OficiosRnecaController::class, 'oficiosCorrecciones']); // Obtener los oficios que requieren corrección para el director
+    Route::get('/oficiosCompletos', [OficiosRnecaController::class, 'oficiosCompletos']); // Obtener todos los oficios para el director
+    Route::get('/getLastOficio', [OficiosRnecaController::class, 'ultimoOficio']); // Obtener el ultimo oficio registrado para cada ECA
 
     //Imagenes de la memoria
     Route::get('/getIdActividad/{id}', [FotoActivController::class, 'getImagenes']);

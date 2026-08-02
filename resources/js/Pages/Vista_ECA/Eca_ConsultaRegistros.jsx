@@ -3,6 +3,7 @@ import ECA_Correccion from "../Modals/ECA_Correccion.jsx";
 import { getOficeEca } from "@/Components/api/oficio.jsx";
 import { dowloadOfice } from "@/Components/api/dowload_ofice.js";
 import Ver_Informe from '../Modals/Ver_informe.jsx'
+import '../../../css/Style.css'
 
 function VECA_ConsultaReg() {
 
@@ -74,7 +75,15 @@ function VECA_ConsultaReg() {
 
         <tbody>
           {cargando ? (
-            <p>Cargando oficios ...</p>
+            <tr>
+              <td colSpan="6">
+                <p className="text-bold">Cargando...</p>
+              </td>
+            </tr>
+            // <div class="loader">
+            //   <label className="component-cargando">Cargando...</label>
+            //   <div class="loading"></div>
+            // </div>
           ) : oficios && oficios.length > 0 ? (
             oficios.map((item) => (
               <tr key={item.id_oficio}>
@@ -103,7 +112,11 @@ function VECA_ConsultaReg() {
               </tr>
             ))
           ) : (
-            <p style={{alignItems: 'center'}}>No hay oficios registrados</p>
+            <tr>
+              <td colSpan="6">
+                <p className="text-bold">No hay actividades registradas.</p>
+              </td>
+            </tr>
           )}
         </tbody>
       </table>

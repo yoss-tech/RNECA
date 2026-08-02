@@ -16,6 +16,7 @@ class OficiosRnecaController extends Controller
     /**
      * Display a listing of the resource.
      */
+    // Traer la lista de oficios pendientes
     public function index()
     {
         $oficios = DB::table('oficios_rneca as ofr')
@@ -32,13 +33,58 @@ class OficiosRnecaController extends Controller
                 'eca.clave_eca'
             )
             ->where('u.id_dicm', auth()->user()->id_usuario)
-            ->where('te.nombre_tipo', 'Pendiente')
-            ->where('te.nombre_tipo', 'Correcciones')
+            ->whereIn('te.nombre_tipo', ['Pendiente'])
             ->get();
 
         return response()->json($oficios);
     }
 
+    // Traer la lista de oficios con correcciones
+    public function oficiosCorrecciones()
+    {
+        $oficios = DB::table('oficios_rneca as ofr')
+            ->join('eca', 'ofr.idClave_eca', '=', 'eca.clave_eca')
+            ->join('usuarios as u', 'eca.id_usuario', '=', 'u.id_usuario')
+            ->join('tipo_estatus as te', 'ofr.id_estatus', '=', 'te.id_estatus')
+            ->select(
+                'u.nombre as nombre_eca',
+                'ofr.id_oficio',
+                'ofr.mes_oficio',
+                'ofr.ruta_oficio',
+                'te.nombre_tipo',
+                'ofr.fecha_registro',
+                'eca.clave_eca',
+                'ofr.observacion'
+            )
+            ->where('u.id_dicm', auth()->user()->id_usuario)
+            ->whereIn('te.nombre_tipo', ['Correcciones'])
+            ->get();
+
+        return response()->json($oficios);
+    }
+
+    // Traer la lista completa de oficios
+    public function oficiosCompletos()
+    {
+        $oficios = DB::table('oficios_rneca as ofr')
+            ->join('eca', 'ofr.idClave_eca', '=', 'eca.clave_eca')
+            ->join('usuarios as u', 'eca.id_usuario', '=', 'u.id_usuario')
+            ->join('tipo_estatus as te', 'ofr.id_estatus', '=', 'te.id_estatus')
+            ->select(
+                'u.nombre as nombre_eca',
+                'ofr.id_oficio',
+                'ofr.mes_oficio',
+                'te.nombre_tipo',
+                'ofr.fecha_registro',
+            )
+            ->where('u.id_dicm', auth()->user()->id_usuario)
+            ->whereIn('te.nombre_tipo', ['Validado', 'Pendiente', 'Correciones'])
+            ->get();
+
+        return response()->json($oficios);
+    }
+
+    // Lista de oficios firmados por eca
     public function oficiosFirmados()
     {
         // $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
@@ -57,7 +103,7 @@ class OficiosRnecaController extends Controller
                 'eca.clave_eca'
             )
             ->where('u.id_dicm', auth()->user()->id_usuario)
-            ->where('te.nombre_tipo', 'Firmado')
+            ->whereIn('te.nombre_tipo', ['Firmado', 'Validado'])
 
             ->get();
 
@@ -65,7 +111,7 @@ class OficiosRnecaController extends Controller
     }
 
 
-
+    // Lista de oficios registrados por el eca
     public function OficioRneca()
     {
         $oficios = DB::table('oficios_rneca as ofr')
@@ -87,6 +133,28 @@ class OficiosRnecaController extends Controller
         return response()->json($oficios);
     }
 
+    // Traer el último oficio registrado
+    public function ultimoOficio()
+    {
+        $id = DB::table('oficios_rneca')->latest()->first();
+
+        $oficio = oficios_rneca::findOrFail($id);
+        $rutaBD = $oficio->ruta_pdf;
+        $rutaInterna = 'app/public/' . $rutaBD;
+        $rutaAbsoluta = storage_path($rutaBD);
+        $rutaAbsoluta = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $rutaAbsoluta);
+        $rutaInterna = str_replace('documents', 'app\public\documents', $oficio->ruta_oficio);
+        $rutaAbsoluta = storage_path($rutaInterna);
+        if (file_exists($rutaAbsoluta)) {
+            return response()->download($rutaAbsoluta, "oficio_{$id}.pdf");
+        }
+
+        return response()->json([
+            'error' => 'Archivo no encontrado físicamente',
+            'ruta_buscada_final' => $rutaAbsoluta, 
+            '¿existe?' => 'NO'
+        ], 404);
+    }
 
 
     /**
@@ -97,9 +165,7 @@ class OficiosRnecaController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Registrar un nuevo oficio para el ECA
     public function store(Request $request)
     {
         $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
@@ -122,7 +188,7 @@ class OficiosRnecaController extends Controller
             return response()->json($data, 400);
         }
 
-        // Guardamos el PDF en una carpeta llamada 'documentos' dentro del disco público
+        // Guardamos el PDF en una carpeta llamada 'documents' dentro del disco público
         $rutaPdf = $request->file('ruta_oficio')->store('documents', 'public');
 
         $oficio = oficios_rneca::create([
@@ -149,22 +215,13 @@ class OficiosRnecaController extends Controller
 
     public function download($id)
     {
-
         $oficio = oficios_rneca::findOrFail($id);
-        
         $rutaBD = $oficio->ruta_pdf; // ej: "documents/Ix0470A00YgNMFukH...pdf"
-
         $rutaInterna = 'app/public/' . $rutaBD;
-
         $rutaAbsoluta = storage_path($rutaBD);
-
         $rutaAbsoluta = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $rutaAbsoluta);
-
-
         $rutaInterna = str_replace('documents', 'app\public\documents', $oficio->ruta_oficio);
-
         $rutaAbsoluta = storage_path($rutaInterna);
-
         if (file_exists($rutaAbsoluta)) {
             return response()->download($rutaAbsoluta, "oficio_{$id}.pdf");
         }
@@ -201,9 +258,7 @@ class OficiosRnecaController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    // Actualizar un oficio existente con un nuevo PDF firmado y cambiar su estatus a "Firmado"
     public function update(Request $request)
     {
         // Validación de los datos recibidos en la petición.
@@ -246,6 +301,7 @@ class OficiosRnecaController extends Controller
         ], 200);
     }
 
+    // Permite visualizar un oficio en el navegador, en lugar de descargarlo.
     public function view($id)
     {
         // Busca el oficio por su ID.
@@ -267,14 +323,15 @@ class OficiosRnecaController extends Controller
         return response()->file($fullPath);
     }
 
-     public function checkRegistroOficio(Request $request)
+    // Permite verificar si el ECA ya ha registrado un oficio en el mes correaspondiente
+    public function checkRegistroOficio(Request $request)
     {
         $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
 
         if (!$eca) {
             return response()->json(['data' => null, 'message' => 'El usuario no tiene un ECA asignado'], 403);
         }
-        
+
         $currentMonth = date('m');
         $currentYear = date('Y');
 
@@ -289,6 +346,7 @@ class OficiosRnecaController extends Controller
         return response()->json(['registro_existente' => $oficio]);
     }
 
+    //Registrar observaciones de los oficios y cambiar su estatus a "Correcciones"
     public function observaOficios(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -318,8 +376,10 @@ class OficiosRnecaController extends Controller
             'status' => 200
         ], 200);
     }
-
-    public function estatusOficios(Request $request){
+ 
+    // lista de estatus para los oficios que pueden ser asignados a un oficio
+    public function estatusOficios(Request $request)
+    {
         $estatusOfic = DB::table('tipo_estatus')
             ->select('id_estatus', 'nombre_tipo')
             ->whereIn('nombre_tipo', ['Correcciones', 'Validado', 'Rechazado'])
@@ -339,7 +399,7 @@ class OficiosRnecaController extends Controller
     public function oficios()
     {
         $oficio = DB::table('oficios_rneca')
-            ->join('eca', 'eca.clave_eca' , '=', 'oficios_rneca.idClave_eca')
+            ->join('eca', 'eca.clave_eca', '=', 'oficios_rneca.idClave_eca')
             ->join('direccion', 'direccion.id_direccion', '=', 'eca.id_direccion')
             ->join('municipio', 'municipio.id_municipio', '=', 'direccion.id_municipio')
             ->select(
@@ -382,10 +442,11 @@ class OficiosRnecaController extends Controller
     public function oficiosPendientes()
     {
         $oficioPen = DB::table('oficios_rneca')
-            ->join('eca', 'eca.clave_eca' , '=', 'oficios_rneca.idClave_eca')
+            ->join('eca', 'eca.clave_eca', '=', 'oficios_rneca.idClave_eca')
             ->join('direccion', 'direccion.id_direccion', '=', 'eca.id_direccion')
             ->join('municipio', 'municipio.id_municipio', '=', 'direccion.id_municipio')
             ->select(
+                'oficios_rneca.id_oficio',
                 'municipio.id_municipio',
                 'municipio.nombre_munipio',
                 'eca.nombre_inst_ope',
@@ -393,6 +454,7 @@ class OficiosRnecaController extends Controller
             )
             ->where('oficios_rneca.id_estatus', 'EST-4HJVB2C9')
             ->groupBy(
+                'oficios_rneca.id_oficio',
                 'municipio.id_municipio',
                 'municipio.nombre_munipio',
                 'eca.nombre_inst_ope'
@@ -423,7 +485,7 @@ class OficiosRnecaController extends Controller
             ->count();
 
         $noEntregados = DB::table('eca')
-            ->whereNotExists(function ($query){
+            ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('oficios_rneca')
                     ->whereColumn(
@@ -449,16 +511,13 @@ class OficiosRnecaController extends Controller
     public function oficiosCorreccion()
     {
         $oficioCor = DB::table('oficios_rneca')
-            ->join('eca', 'eca.clave_eca' , '=', 'oficios_rneca.idClave_eca')
-            ->join('usuarios', 'usuarios.id_usuario', '=', 'eca.id_usuario')
+            ->join('eca', 'eca.clave_eca', '=', 'oficios_rneca.idClave_eca')
             ->join('direccion', 'direccion.id_direccion', '=', 'eca.id_direccion')
             ->join('municipio', 'municipio.id_municipio', '=', 'direccion.id_municipio')
             ->select(
                 'municipio.nombre_munipio',
-                'usuarios.nombre',
                 'eca.nombre_inst_ope',
                 'oficios_rneca.id_oficio',
-                'oficios_rneca.observacion',
                 'oficios_rneca.mes_oficio',
                 'oficios_rneca.fecha_registro'
             )
@@ -477,7 +536,7 @@ class OficiosRnecaController extends Controller
     public function oficiosValidados()
     {
         $oficioVal = DB::table('oficios_rneca')
-            ->join('eca', 'eca.clave_eca' , '=', 'oficios_rneca.idClave_eca')
+            ->join('eca', 'eca.clave_eca', '=', 'oficios_rneca.idClave_eca')
             ->join('direccion', 'direccion.id_direccion', '=', 'eca.id_direccion')
             ->join('municipio', 'municipio.id_municipio', '=', 'direccion.id_municipio')
             ->select(
@@ -489,8 +548,8 @@ class OficiosRnecaController extends Controller
                 'oficios_rneca.fecha_registro'
             )
             ->where('oficios_rneca.id_estatus', 'EST-V7WQ3N8Z')
-            ->whereMonth('oficios_rneca.fecha_registro', now()->subMonth()->month)
-            ->whereYear('oficios_rneca.fecha_registro', now()->subMonth()->year)
+            // ->whereMonth('oficios_rneca.fecha_registro', now()->subMonth()->month)
+            // ->whereYear('oficios_rneca.fecha_registro', now()->subMonth()->year)
             ->orderBy('municipio.nombre_munipio')
             ->get();
 
