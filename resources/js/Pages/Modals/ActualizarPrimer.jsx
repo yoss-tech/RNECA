@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { actualizarPrimerAcceso } from "@/Components/api/auth.jsx";
-import { getInfoEca } from "@/Components/api/usuarios.jsx";
+import { getInfoPerfil, getInfoEca } from "@/Components/api/usuarios.jsx";
 import Swal from "sweetalert2";
 import Toast from "../Toast.jsx";
 import "/resources/css/Style.css";
@@ -20,16 +20,27 @@ function ActualizarPrimerAcceso() {
         password_confirmation: ""
     });
     const cargarDatos = async () => {
-        const response = await getInfoEca();
-        if (response?.status === 200) {
-            setDatos({
-                nombre: response.body.nombre || "",
-                nombre_inst_ope: response.body.nombre_inst_ope || "",
-                nombre_jefe: response.body.nombre_jefe || "",
-                correo: response.body.correo || "",
-                password: "",
-                password_confirmation: ""
-            });
+        try {
+            const rol = localStorage.getItem('rol');
+            let response;
+            if (rol === 'rol1') {
+                response = await getInfoEca();
+            } else {
+                response = await getInfoPerfil();
+            }
+            if (response?.status === 200) {
+                setDatos({
+                    nombre: response.body.nombre || "",
+                    correo: response.body.correo || "",
+                    nombre_inst_ope: response.body.nombre_inst_ope || "",
+                    nombre_jefe: response.body.nombre_jefe || "",
+                    password: "",
+                    password_confirmation: ""
+                });
+            }
+        } catch (error) {
+            console.error("Error al cargar datos:", error);
+        } finally {
             setLoading(false);
         }
     };
@@ -37,6 +48,9 @@ function ActualizarPrimerAcceso() {
         cargarDatos();
     }, []);
 
+    const rol = localStorage.getItem('rol');
+    const rolEca = 'rol1';
+    const esEca = rol === rolEca;
     const [errors, setErrors] = useState({});
     const [alerts, setAlerts] = useState([]);
     const showAlert = (type, message) => {
@@ -60,15 +74,18 @@ function ActualizarPrimerAcceso() {
         try {
             const response = await actualizarPrimerAcceso(datos);
             if (response.status === 200) {
-
-                Swal.fire({
+                const resultado =  await Swal.fire({
                     title: "¡Actualizado!",
                     text: response.message,
                     icon: "success",
-                    confirmButtonText: "Continuar"
+                    confirmButtonText: "Continuar",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
                 });
-
-                window.location.replace(response.redirect_to);
+ 
+                if(resultado.isConfirmed) {
+                    window.location.replace(response.redirect_to);
+                }
             }
         } catch (error) {
             if (error.response && error.response.status === 422) {
@@ -107,33 +124,37 @@ function ActualizarPrimerAcceso() {
                             />
                             {errors.nombre && (<p className="error">{errors.nombre[0]}</p>)}
                         </div>
-                        <div className="form-group">
-                            <label className="card-subtitle">Nombre de la institución operadora:</label>
+                        {esEca && (
+                            <>
+                            <div className="form-group">
+                                <label className="card-subtitle">Nombre de la institución operadora:</label>
                             <input
-                                type="text"
-                                name="nombre_inst_ope"
-                                className="form-control"
-                                placeholder="Ingresa el nombre de la institución operadora"
-                                title="Ingresa el nombre de la institución operadora"
-                                value={datos.nombre_inst_ope}
-                                onChange={handleChange}
-                            />
-                            {errors.nombre_inst_ope && (<p className="error">{errors.nombre_inst_ope[0]}</p>)}
-                        </div>
-                        <div className="form-group">
-                            <label className="card-subtitle">Nombre y cargo del jefe inmediato :</label>
-                            <p className="text-small">Ejemplo: <br /> L.C. Angelica Zamudio Barrera <br /> Directora General de la CAAMAH</p>
-                            <textarea
-                                type="text"
-                                name="nombre_jefe"
-                                className="form-control"
-                                placeholder="Ingresa el nombre y cargo del jefe inmediato"
-                                title="Ingresa el nombre y cargo del jefe inmediato"
-                                value={datos.nombre_jefe}
-                                onChange={handleChange}
-                            />
-                            {errors.nombre_jefe && (<p className="error">{errors.nombre_jefe[0]}</p>)}
-                        </div>
+                                    type="text"
+                                    name="nombre_inst_ope"
+                                    className="form-control"
+                                    placeholder="Ingresa el nombre de la institución operadora"
+                                    title="Ingresa el nombre de la institución operadora"
+                                    value={datos.nombre_inst_ope}
+                                    onChange={handleChange}
+                                />
+                                {errors.nombre_inst_ope && (<p className="error">{errors.nombre_inst_ope[0]}</p>)}
+                            </div>
+                            <div className="form-group">
+                                <label className="card-subtitle">Nombre y cargo del jefe inmediato :</label>
+                                <p className="text-small">Ejemplo: <br /> L.C. Angelica Zamudio Barrera <br /> Directora General de la CAAMAH</p>
+                                <textarea
+                                    type="text"
+                                    name="nombre_jefe"
+                                    className="form-control"
+                                    placeholder="Ingresa el nombre y cargo del jefe inmediato"
+                                    title="Ingresa el nombre y cargo del jefe inmediato"
+                                    value={datos.nombre_jefe}
+                                    onChange={handleChange}
+                                />
+                                {errors.nombre_jefe && (<p className="error">{errors.nombre_jefe[0]}</p>)}
+                            </div>
+                            </>
+                        )}
                         <div className="form-group">
                             <label className="card-subtitle">Correo electrónico:</label>
                             <input
