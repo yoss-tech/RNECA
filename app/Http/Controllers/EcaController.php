@@ -216,7 +216,7 @@ class EcaController extends Controller
                 'password' => Hash::make($passwordTemporal),
                 'fecha_registro' => now(),
                 'id_rol' => 'rol1',
-                'id_dicm' => null,
+                'nombre_jefe' => null,
                 'cambiar_password' => 1
             ]);
 

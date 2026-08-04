@@ -258,8 +258,8 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
         <div className="overlay">
             <div className="modal-box">
                 <div className="modal-head">
-                    <h4>Completa los siguientes datos</h4>
-                    <p className="text-white">
+                    <h3>Completa los siguientes datos</h3>
+                    <p className="text-small text-white">
                         Paso {paso} de 7
                     </p>
                 </div>
@@ -335,7 +335,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                     {paso === 2 && (
                         <>
                         <p className="text-title">Población potencial</p>
-                        <p>Número de personas que han sido atendidas durante la operación de ese ECA.</p>
+                        <p className="text-small">Número de personas que han sido atendidas durante la operación de ese ECA.</p>
                         <div className="form-group">
                             <label className="card-subtitle">Población atendida:</label>
                             <input
@@ -355,7 +355,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                     {paso === 3 && (
                         <>
                         <p className="text-title">Ubicación</p>
-                        <p>Ingrese la información correspondiente a la ubicación y datos de contacto del Espacio de Cultura del Agua (ECA).</p>
+                        <p className="text-small">Ingrese la información correspondiente a la ubicación y datos de contacto del Espacio de Cultura del Agua (ECA).</p>
                         <div className="form-group">
                             <label className="card-subtitle">Municipio:</label>
                             <select
@@ -623,7 +623,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                     {paso === 7 && (
                         <>
                         <p className="text-title">Comentarios generales</p>
-                        <p>Poner comentarios generales o algún austo de relevancia para el ECA en cuestión.</p>
+                        <p className="text-small">Poner comentarios generales o algún austo de relevancia para el ECA en cuestión.</p>
                         <div className="form-group">
                             <label className="card-subtitle">Comentarios generales:</label>
                             <textarea

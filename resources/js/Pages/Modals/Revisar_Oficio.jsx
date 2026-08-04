@@ -10,9 +10,8 @@ function Revisar_Oficio({ cerrarModal }) {
             <div className="modal-box">
 
                 <div className="modal-head">
-                    <h4>Revisión de Oficios</h4>
-                     <p className="text-white">Oficio para la habilitación de plataforma</p>
-       
+                    <h3>Revisión de Oficios</h3>
+                    <p className="text-small text-white">Oficio para la habilitación de plataforma</p>
                 </div>
 
                 <div className="modal-body">

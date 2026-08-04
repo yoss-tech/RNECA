@@ -39,7 +39,7 @@ function SubirArchivo({ cerrarModal, idOficio, oficios }) {
             <div className="modal-box">
 
                 <div className="modal-head">
-                    <h4>Subir archivo firmado</h4>
+                    <h3>Subir archivo firmado</h3>
                 </div>
 
                 <div className="modal-body">

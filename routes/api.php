@@ -39,7 +39,7 @@ Route::post('/users', [UsersController::class, 'store']);
 
 // Agregamos el middleware para asegurar que auth()->user() no sea null
 Route::middleware(['auth:sanctum'])->group(function () {
-
+    Route::put('/actualizarPrimerAcceso', [AuthController::class, 'updatePrimerAcceso']);
 
     //ECA    
     Route::get('/infoEca', [EcaController::class, 'index']);
@@ -93,6 +93,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/oficiosCorrecion', [OficiosRnecaController::class, 'oficiosCorrecciones']); // Obtener los oficios que requieren corrección para el director
     Route::get('/oficiosCompletos', [OficiosRnecaController::class, 'oficiosCompletos']); // Obtener todos los oficios para el director
     Route::get('/getLastOficio', [OficiosRnecaController::class, 'ultimoOficio']); // Obtener el ultimo oficio registrado para cada ECA
+    Route::get('/user/perfil', [UsersController::class, 'infoPerfil']); // Información del perfil
+    Route::get('/user/eca', [UsersController::class, 'infoEca']); // Información del director
+    Route::put('/usuarios/perfil', [UsersController::class, 'updatePerfil']); // Modificar usuarios desde su perfil
 
     //Imagenes de la memoria
     Route::get('/getIdActividad/{id}', [FotoActivController::class, 'getImagenes']);
@@ -104,10 +107,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/usuarios/create', [UsersController::class, 'create']); // Crear supervisores de culturas
     Route::get('/usuarios/total', [UsersController::class, 'totalUser']); // Total de los usuarios
     Route::get('/usuarios/totalECAS', [UsersController::class, 'totalUserECAS']); // Total de los usuarios ecas
-    Route::get('/usuarios/totalDic', [UsersController::class, 'totalUserDic']); // Total de los usuarios directores
     Route::get('/usuarios/totalInactivo', [UsersController::class, 'totalUserInactivo']); // Total de los usuarios inactivos
     Route::get('/usuarios/eca', [UsersController::class, 'showUserEcas']); // Información de los usuarios ecas
-    Route::get('/usuarios/dic', [UsersController::class, 'showUserDic']); // Información de los directores de municipio
     Route::get('/usuarios/ceaa', [UsersController::class, 'showUserCeaa']); // Información de los usuarios del ceaa
     Route::get('/usuarios/lic', [UsersController::class, 'showUserLic']); // Información del licenciado
     Route::put('/usuarios/{id}', [UsersController::class, 'update']); // Modificar usuarios

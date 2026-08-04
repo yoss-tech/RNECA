@@ -71,7 +71,7 @@ function Modificar_NumHab({ municipio, cerrarModal, actualizarLista }) {
         <div className="overlay">
             <div className="modal-box">
                 <div className="modal-head">
-                    <h4>Modificar el número de habitantes de {municipio.nombre_munipio}</h4>
+                    <h3>Modificar el número de habitantes de {municipio.nombre_munipio}</h3>
                 </div>
 
                 <div className="modal-body">

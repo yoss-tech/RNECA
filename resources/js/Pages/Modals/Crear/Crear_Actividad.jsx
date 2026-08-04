@@ -163,8 +163,8 @@ function Crear_Actividad({ cerrarModal, actividades }) {
       <div className="overlay">
         <div className="modal-box">
           <div className="modal-head">
-            <h4>Completa los siguientes datos</h4>
-            <p className="text-white">
+            <h3>Completa los siguientes datos</h3>
+            <p className="text-small text-white">
               Paso {paso} de 2
             </p>
           </div>

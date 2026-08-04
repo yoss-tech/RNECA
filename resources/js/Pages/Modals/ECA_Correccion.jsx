@@ -12,7 +12,7 @@ function ECA_Correccion({ cerrarModal, oficioCorregir }) {
             <div className="modal-box">
 
                 <div className="modal-head">
-                    <h4>Lee las correcciones</h4>
+                    <h3>Lee las correcciones</h3>
                 </div>
 
                 <div className="modal-body">

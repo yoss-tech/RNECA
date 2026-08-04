@@ -9,7 +9,7 @@ function Ver_ECA({ eca, cerrarModal, abrirModalModificar }) {
     <div className="overlay">
         <div className="modal-box">
             <div className="modal-head">
-              <h4>Espacio de cultura del agua {eca.nombre_munipio}</h4>
+              <h3>Espacio de cultura del agua {eca.nombre_munipio}</h3>
             </div>
             <div className="modal-body">
               <p className="text-title">Datos generales</p>

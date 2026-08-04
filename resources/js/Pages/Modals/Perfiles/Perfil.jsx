@@ -116,7 +116,7 @@ function Perfil({ cerrarModal, obtenerPerfil, mostrarInformacion = false}) {
         <div className="overlay">
             <div className="modal-box">
                 <div className="modal-head">
-                    <h4>Perfil</h4>
+                    <h3>Perfil</h3>
                 </div>
 
                 <div className="modal-body">

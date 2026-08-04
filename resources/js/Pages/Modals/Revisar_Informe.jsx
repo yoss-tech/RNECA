@@ -107,7 +107,7 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
         <div className="overlay">
             <div className="modal-box modal-grid" style={{ width: showPdf ? '85%' : '500px', height: showPdf ? '90vh' : 'auto', transition: 'width 0.3s ease, height 0.3s ease' }}>
                 <div className="modal-head">
-                    <h4>Revisión de informes</h4>
+                    <h3>Revisión de informes</h3>
                 </div>
 
                 <div className="modal-body">

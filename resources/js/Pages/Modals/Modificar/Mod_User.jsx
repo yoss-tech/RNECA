@@ -94,7 +94,7 @@ function Modificar_User({ usuario, cerrarModal, actualizarLista }) {
         <div className="overlay">
             <div className="modal-box">
                 <div className="modal-head">
-                    <h4>Modifica los siguientes datos</h4>
+                    <h3>Modifica los siguientes datos</h3>
                 </div>
 
                 <div className="modal-body">

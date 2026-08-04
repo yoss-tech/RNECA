@@ -74,8 +74,8 @@ function Crear_Memoria({ cerrarModal, actividad }) {
     <div className="overlay">
       <div className="modal-box">
         <div className="modal-head">
-          <h4>Completa los siguientes datos</h4>
-          <p className="text-white">Ingresa la información detallada de las actividades del mes.</p>
+          <h3>Completa los siguientes datos</h3>
+          <p className="text-small text-white">Ingresa la información detallada de las actividades del mes.</p>
         </div>
         <div className="modal-body">
           {alert && (
