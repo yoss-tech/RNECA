@@ -6,6 +6,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 
@@ -113,16 +114,23 @@ class AuthController extends Controller
     public function updatePrimerAcceso(Request $request)
     {
         $user = Auth::user();
-        $request->validate([
+        $rol_eca = 'rol1';
+
+        $reglas = [
             'nombre' => 'required|string|max:255',
-            'nombre_inst_ope' => 'required|string|max:1000',
-            'nombre_jefe' => 'required|string|max:200',
             'correo' => 'required|email|max:100|unique:usuarios,correo,' . $user->id_usuario . ',id_usuario',
             'password' => 'required|string|min:8|confirmed'
-        ], [
+        ];
+
+        if ($user->id_rol === $rol_eca) {
+            $reglas['nombre_inst_ope'] = 'required|string|max:1000';
+            $reglas['nombre_jefe'] = 'required|string|max:200';
+        }
+
+        $request->validate($reglas, [
             'nombre.required' => 'El nombre es obligatorio.',
             'nombre_inst_ope.required' => 'El nombre de la institución operadora es obligatorio.',
-            'nombre_jefe' => 'El nombre y cargo del jefe inmediato es obligatorio.',
+            'nombre_jefe.required' => 'El nombre y cargo del jefe inmediato es obligatorio.',
             'correo.required' => 'El correo es obligatorio.',
             'correo.email' => 'Ingresa un correo electronico válido.',
             'correo.unique' => 'El correo ya esta registrado.',
@@ -133,12 +141,20 @@ class AuthController extends Controller
 
         $user->update([
             'nombre' => $request->nombre,
-            'nombre_inst_ope' => $request->nombre_inst_ope,
-            'nombre_jefe' => $request->nombre_jefe,
             'correo' => $request->correo,
             'password' => Hash::make($request->password),
             'cambiar_password' => 0,
         ]);
+
+        if ($user->id_rol === $rol_eca) {
+            DB::table('eca')
+                ->join('usuarios', 'eca.id_usuario', '=', 'usuarios.id_usuario')
+                ->where('usuarios.id_usuario', $user->id_usuario)
+                ->update([
+                    'eca.nombre_inst_ope' => $request->nombre_inst_ope,
+                    'usuarios.nombre_jefe' => $request->nombre_jefe,
+                ]);
+        }
 
         $dashboardRoute = $this->dashboardRouteByRole($user->id_rol);
 

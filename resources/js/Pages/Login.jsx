@@ -35,6 +35,7 @@ function Login() {
       const result = await loginUser(data.correo, data.password);
 
       if (result?.status === 'success') {
+        localStorage.setItem('rol', result.rol);
         window.location.replace(result?.redirect_to || '/inicio');
       } else {
         setError('correo', result.message || 'Error desconocido.');
