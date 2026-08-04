@@ -131,7 +131,7 @@ class UsersController extends Controller
                 'password' => Hash::make($request->password),
                 'fecha_registro' => now(),
                 'id_rol' => 'rol4',
-                'id_dicm' => null,
+                'nombre_jefe' => null,
                 'cambiar_password' => 1
             ]);
 

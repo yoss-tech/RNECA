@@ -268,8 +268,8 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
             <div className="overlay">
                 <div className="modal-box">
                     <div className="modal-head">
-                        <h4>Completa los siguientes datos</h4>
-                        <p className="text-white">
+                        <h3>Completa los siguientes datos</h3>
+                        <p className="text-small text-white">
                             Paso {paso} de 3
                         </p>
                     </div>

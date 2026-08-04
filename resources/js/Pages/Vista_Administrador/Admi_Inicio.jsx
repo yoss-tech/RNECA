@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { getTotalUser, getTotalUserECAS, getTotalUserDic, getTotalUserInactivo, getInfoPerfil } from "../../Components/api/usuarios.jsx"
+import { getTotalUser, getTotalUserECAS, getTotalUserInactivo, getInfoPerfil } from "../../Components/api/usuarios.jsx"
 import { getTotalMunicipio } from "../../Components/api/municipios.jsx"
 import { logoutUser } from "../../Components/api/auth.jsx";
 import Admi_DireA from "./Admi_DireA.jsx";
-import Admi_DireMu from "./Admi_DireMu.jsx";
 import Admi_ECAS from "./Admi_ECAS.jsx";
 import Admi_NumHab from "./Admi_NumHab.jsx";
 import Admi_SupervisoresECAS from "./Admi_SEcas.jsx";
@@ -20,7 +19,7 @@ function Admi_Inicio() {
   const [vistaActual, setVistaActual] = useState("inicio");
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
   const [mostrarNoti, setMostrarNoti] = useState(false);
-  const [mostrarAvisos, setMostrAvisos] = useState(false);
+  const [mostrarAvisos, setMostrarAvisos] = useState(false);
   const [CerrarSesion, setCerrarSesion] = useState(false);
 
   const menuItems = document.querySelectorAll('.sidebar .form-group a');
@@ -68,13 +67,6 @@ function Admi_Inicio() {
       setTotalUserECAS(response.body);
     }
   };
-  const [totalUserDic, setTotalUserDic] = useState(0);
-  const cargarTotalUserDic = async () => {
-    const response = await getTotalUserDic();
-    if (response && response.status === 200) {
-      setTotalUserDic(response.body);
-    }
-  };
   const [totalUserInactivo, setTotalUserInactivo] = useState(0);
   const cargarTotalUserInactivo = async () => {
     const response = await getTotalUserInactivo();
@@ -92,7 +84,6 @@ function Admi_Inicio() {
   useEffect (() => {
     cargarTotalUser();
     cargarTotalUserECAS();
-    cargarTotalUserDic();
     cargarTotalUserInactivo();
     cargarTotalMunicipio();
   }, []);
@@ -204,17 +195,6 @@ function Admi_Inicio() {
               <li>
                 <div className="submenu-item">
                   <a
-                    className={vistaActual === "director_municipal" ? "active" : ""}
-                    onClick={() => setVistaActual("director_municipal")}
-                    style={{ cursor: "pointer" }}>
-                    <i class="bi bi-person"></i>
-                    Directores municipales</a>
-                </div>
-              </li>
-
-              <li>
-                <div className="submenu-item">
-                  <a
                     className={vistaActual === "ecas" ? "active" : ""}
                     onClick={() => setVistaActual("ecas")}
                     style={{ cursor: "pointer" }}>
@@ -240,12 +220,6 @@ function Admi_Inicio() {
                     <div class="card-body">
                       <h3 className="card-subtitle">Espacios de cultura del agua</h3>
                       <h1 className="number">{totalUserECAS}</h1>
-                    </div>
-                  </div>
-                  <div className="card-number">
-                    <div class="card-body">
-                      <h3 className="card-subtitle">Directores municipales</h3>
-                      <h1 className="number">{totalUserDic}</h1>
                     </div>
                   </div>
                   <div className="card-number">
@@ -281,9 +255,6 @@ function Admi_Inicio() {
         )}
         {vistaActual === "supervisores_ecas" && (
           <Admi_SupervisoresECAS />
-        )}
-        {vistaActual === "director_municipal" && (
-          <Admi_DireMu />
         )}
         {vistaActual === "ecas" && (
           <Admi_ECAS />

@@ -120,7 +120,7 @@ function Mostrar_Imagenes({ cerrarModal, actividad }) {
     <div className="overlay">
       <div className="modal-box">
         <div className="modal-head">
-          <h4>Visualiza y gestiona las imágenes</h4>
+          <h3>Visualiza y gestiona las imágenes</h3>
         </div>
         <div className="modal-body">
           {imagenes.length === 0 &&(

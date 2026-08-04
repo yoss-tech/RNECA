@@ -239,6 +239,11 @@ p {
     margin-bottom: 5px;
 }
 
+.text-small {
+    font-style: italic;
+    font-size: 16px;
+}
+
 .text-white {
     color: var(--blanco-color);
 }
