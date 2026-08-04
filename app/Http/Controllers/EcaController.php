@@ -88,22 +88,73 @@ class EcaController extends Controller
     public function create(Request $request)
     {
         $request->validate([
-            'clave_eca' => 'required',
-            'nombre_inst' => 'required',
-            'nombre_inst_ope' => 'required',
+            'cod_postal' => 'required|string|regex:/^[0-9]{5}$/',
+            'localidad' => 'required|string|max:50',
+            'colonia' => 'required|string|max:50',
+            'calle_av' => 'required|string|max:50',
+            'num_direccion' => 'required|string|max:10',
+            'tipo_instancia' => 'required|string|max:100',
 
-            'nombre' => 'required',
-            'correo' => 'required|email|unique:usuarios,correo',
+            'nombre' => 'required|string|max:60',
+            'correo' => 'required|email|max:100|unique:usuarios,correo',
+            'correoExtra' => 'nullable|email|max:100|unique:usuarios,correoExtra',
 
-            'id_municipio' =>'required',
+            'clave_eca' => 'required|string|max:12|unique:eca,clave_eca',
+            'nombre_inst' => 'required|string|max:1000',
+            'nombre_inst_ope' => 'required|string|max:1000',
+            'poblacion_atend' => 'required|integer|min:0',
+            'fecha_apert' => 'required|date|before_or_equal:today',
+            'fecha_forta' => 'required|date|after_or_equal:fecha_apert|before_or_equal:today',
+            'fecha_cierre' => 'nullable|date|after_or_equal:fecha_apert',
+            'motivo_cierre' => 'nullable|string|max:1000',
 
-            'calle_av' => 'required',
-            'num_direccion' => 'required',
-            'colonia' => 'required',
-            'localidad' => 'required',
-            'cod_postal' => 'required'
+            'telefonos' => 'required|string|max:255',
+            'dias_hora_aten' => 'required|string|max:255',
+            'equipo_movil' => 'required|string|max:350',
+            'equipo_electr' => 'required|string|max:350',
+            'material_didact' => 'required|string|max:350',
+            'comentarios' => 'required|string|max:1000'
         ], [
-            'correo.unique' => 'Este correo ya está registrado en otro ECA.'
+            'cod_postal.required' => 'El código postal es obligatorio.',
+            'cod_postal.regex' => 'El código postal debe tener 5 dígitos.',
+            'localidad.required' => 'La localidad es obligatoria.',
+            'colonia.required' => 'La colonia es obligatoria.',
+            'calle_av.required' => 'La calle o avenida es obligatoria.',
+            'num_direccion.required' => 'El número de dirección es obligatorio.',
+            'tipo_instancia.required' => 'El tipo de instancia es obligatorio.',
+
+            'nombre.required' => 'El nombre del responsable es obligatorio.',
+            'correo.required' => 'El correo del responsable es obligatorio.',
+            'correo.email' => 'Ingresa un correo electrónico válido.',
+            'correo.unique' => 'El correo ya está registrado.',
+            'correoExtra.email' => 'Ingresa un correo electrónico válido.',
+            'correoExtra.unique' => 'El correo extra ya está registrado.',
+            
+            'clave_eca.required' => 'La clave del ECA es obligatoria.',
+            'clave_eca.max' => 'La clave del ECA no puede exceder los 12 caracteres.',
+            'clave_eca.unique' => 'Ya existe un ECA registrado con esa clave.',
+            'nombre_inst.required' => 'El nombre de la institución es obligatorio.',
+            'nombre_inst_ope.required' => 'El nombre de la institución operativa es obligatorio.',
+            'poblacion_atend.required' => 'La población atendida es obligatoria.',
+            'poblacion_atend.integer' => 'La población atendida debe ser un número entero.',
+            'poblacion_atend.min' => 'La población atendida no puede ser negativa.',
+            'fecha_apert.required' => 'La fecha de apertura es obligatoria.',
+            'fecha_apert.date' => 'La fecha de apertura debe ser una fecha válida.',
+            'fecha_apert.before_or_equal' => 'La fecha de apertura no puede ser futura.',
+            'fecha_forta.required' => 'La fecha de fortalecimiento es obligatoria.',
+            'fecha_forta.date' => 'La fecha de fortalecimiento debe ser una fecha válida.',
+            'fecha_forta.after_or_equal' => 'La fecha de fortalecimiento no puede ser anterior a la fecha de apertura.',
+            'fecha_forta.before_or_equal' => 'La fecha de fortalecimiento no puede ser futura.',
+            'fecha_cierre.date' => 'La fecha de cierre debe ser una fecha válida.',
+            'fecha_cierre.after_or_equal' => 'La fecha de cierre no puede ser anterior a la fecha de apertura.',
+            'motivo_cierre.max' => 'El motivo de cierre no puede exceder los 1000 caracteres.',
+
+            'telefonos.required' => 'Los teléfonos son obligatorios.',
+            'dias_hora_aten.required' => 'Los días y horas de atención son obligatorios.',
+            'equipo_movil.required' => 'El equipo móvil es obligatorio.',
+            'equipo_electr.required' => 'El equipo electrónico es obligatorio.',
+            'material_didact.required' => 'El material didáctico es obligatorio.',
+            'comentarios.required' => 'Los comentarios son obligatorios.'
         ]);
 
         // Generación de IDs

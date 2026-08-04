@@ -67,3 +67,8 @@ export const checkAuth = async () => {
         return null; // No autenticado o error de conexión
     }
 }
+
+export const actualizarPrimerAcceso = async (datos) => {
+    const response = await axiosInstance.put('/actualizarPrimerAcceso', datos);
+    return response.data;
+};

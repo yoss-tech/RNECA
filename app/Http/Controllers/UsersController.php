@@ -13,121 +13,10 @@ use Illuminate\Http\JsonResponse;
 
 class UsersController extends Controller
 {
-    
     // GET /api/users
     public function index()
     {
         
-    }
-
-    public function infoDic()
-    {
-        $user = Auth::user();
-        $datos = DB::table('usuarios as espacio')
-            ->join('usuarios as director', 'espacio.id_dicm', '=', 'director.id_usuario')
-            ->join('eca', 'eca.id_usuario', '=', 'espacio.id_usuario')
-            ->join('direccion', 'eca.id_direccion', '=', 'direccion.id_direccion')
-            ->join('municipio', 'direccion.id_municipio', '=', 'municipio.id_municipio')
-            ->where('director.id_usuario', $user->id_usuario)
-            ->select(
-                'director.nombre',
-                'director.correo',
-                'municipio.nombre_munipio',
-                'eca.nombre_inst_ope'
-            )
-            ->first();
-        
-        return response()->json([
-            'status' => 200,
-            'body' => $datos
-        ]);
-    }
-
-    public function infoEca()
-    {
-        $user = Auth::user();
-        $datos = DB::table('usuarios')
-            ->join('eca', 'eca.id_usuario', '=', 'usuarios.id_usuario')
-            ->join('direccion', 'eca.id_direccion', '=', 'direccion.id_direccion')
-            ->join('municipio', 'direccion.id_municipio', '=', 'municipio.id_municipio')
-            ->where('usuarios.id_usuario', $user->id_usuario)
-            ->select(
-                'usuarios.nombre',
-                'usuarios.correo',
-                'municipio.nombre_munipio',
-                'eca.nombre_inst_ope'
-            )
-            ->first();
-        
-        return response()->json([
-            'status' => 200,
-            'body' => $datos
-        ]);
-    }
-
-    public function infoPerfil()
-    {
-        $user = Auth::user();
-        $datos = DB::table('usuarios')
-            ->where('usuarios.id_usuario', $user->id_usuario)
-            ->select(
-                'usuarios.nombre',
-                'usuarios.correo'
-            )
-            ->first();
-        
-        return response()->json([
-            'status' => 200,
-            'body' => $datos
-        ]);
-    }
-
-    public function totalUser()
-    {
-        $totalUsuarios = DB::table('usuarios')->count();
-
-        return response()->json([
-            'status' => 200,
-            'body' => $totalUsuarios
-        ]);
-    }
-
-    public function totalUserInactivo()
-    {
-        $totalUsuariosInactivos = DB::table('usuarios')
-            ->join('eca', 'eca.id_usuario', '=', 'usuarios.id_usuario')
-            ->join('tipo_estatus', 'tipo_estatus.id_estatus', '=', 'eca.id_estatus')
-            ->where('eca.id_estatus', 'EST-C731KSDA')
-            ->count();
-
-        return response()->json([
-            'status' => 200,
-            'body' => $totalUsuariosInactivos
-        ]);
-    }
-
-    public function totalUserECAS()
-    {
-        $totalUsuariosECAS = DB::table('usuarios')
-            ->where('usuarios.id_rol', 'rol1')
-            ->count();
-
-        return response()->json([
-            'status' => 200,
-            'body' => $totalUsuariosECAS
-        ]);
-    }
-
-    public function totalUserDic()
-    {
-        $totalUsuariosDic = DB::table('usuarios')
-            ->where('usuarios.id_rol', 'rol2')
-            ->count();
-
-        return response()->json([
-            'status' => 200,
-            'body' => $totalUsuariosDic
-        ]);
     }
 
     public function showUserEcas()
@@ -156,36 +45,6 @@ class UsersController extends Controller
             'message' => 'Usuarios ECA obtenidos correctamente',
             'status' => 200,
             'body' => $ecas
-        ], 200);
-    }
-
-    public function showUserDic()
-    {
-        $director = DB::table('usuarios as ecas')
-            ->join('usuarios as director', 'ecas.id_dicm', '=', 'director.id_usuario')
-            ->join('eca', 'ecas.id_usuario', '=', 'eca.id_usuario')
-            ->join('rol', 'director.id_rol', '=', 'rol.id_rol')
-            ->join('direccion', 'eca.id_direccion', '=', 'direccion.id_direccion')
-            ->join('municipio', 'direccion.id_municipio', '=', 'municipio.id_municipio')
-            ->join('tipo_estatus', 'eca.id_estatus', '=', 'tipo_estatus.id_estatus')
-            ->orderBy('municipio.nombre_munipio', 'asc')
-            ->orderBy('director.nombre', 'asc')
-            ->select(
-                'director.id_usuario',
-                'director.nombre', 
-                'director.correo',
-                'rol.nombre_rol as rol',
-                'eca.nombre_inst_ope',
-                'municipio.nombre_munipio',
-                'tipo_estatus.nombre_tipo as estatus',
-            )
-            ->where('director.id_rol', 'rol2')
-            ->get();
-        
-        return response()->json([
-            'message' => 'Usuarios directores obtenidos correctamente',
-            'status' => 200,
-            'body' => $director
         ], 200);
     }
 
@@ -294,8 +153,6 @@ class UsersController extends Controller
                 'message' => $e->getMessage()
             ],500);
         }
-
-
     }
 
     /**
@@ -389,5 +246,80 @@ class UsersController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function infoEca()
+    {
+        $user = Auth::user();
+        $datos = DB::table('usuarios')
+            ->join('eca', 'eca.id_usuario', '=', 'usuarios.id_usuario')
+            ->join('direccion', 'eca.id_direccion', '=', 'direccion.id_direccion')
+            ->join('municipio', 'direccion.id_municipio', '=', 'municipio.id_municipio')
+            ->where('usuarios.id_usuario', $user->id_usuario)
+            ->select(
+                'usuarios.nombre',
+                'usuarios.correo',
+                'municipio.nombre_munipio',
+                'eca.nombre_inst_ope'
+            )
+            ->first();
+        
+        return response()->json([
+            'status' => 200,
+            'body' => $datos
+        ]);
+    }
+
+    public function infoPerfil()
+    {
+        $user = Auth::user();
+        $datos = DB::table('usuarios')
+            ->where('usuarios.id_usuario', $user->id_usuario)
+            ->select(
+                'usuarios.nombre',
+                'usuarios.correo'
+            )
+            ->first();
+        
+        return response()->json([
+            'status' => 200,
+            'body' => $datos
+        ]);
+    }
+
+    public function totalUser()
+    {
+        $totalUsuarios = DB::table('usuarios')->count();
+
+        return response()->json([
+            'status' => 200,
+            'body' => $totalUsuarios
+        ]);
+    }
+
+    public function totalUserInactivo()
+    {
+        $totalUsuariosInactivos = DB::table('usuarios')
+            ->join('eca', 'eca.id_usuario', '=', 'usuarios.id_usuario')
+            ->join('tipo_estatus', 'tipo_estatus.id_estatus', '=', 'eca.id_estatus')
+            ->where('eca.id_estatus', 'EST-C731KSDA')
+            ->count();
+
+        return response()->json([
+            'status' => 200,
+            'body' => $totalUsuariosInactivos
+        ]);
+    }
+
+    public function totalUserECAS()
+    {
+        $totalUsuariosECAS = DB::table('usuarios')
+            ->where('usuarios.id_rol', 'rol1')
+            ->count();
+
+        return response()->json([
+            'status' => 200,
+            'body' => $totalUsuariosECAS
+        ]);
     }
 }

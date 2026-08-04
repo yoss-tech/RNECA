@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 
+Route::get('/actualizar', function () {
+    return Inertia::render('Modals/ActualizarPrimer');
+});
+
 Route::middleware('guest')->get('/', function () {
     return Inertia::render('Login');
 })->name('login'); // Nombramos esta ruta como 'login'
