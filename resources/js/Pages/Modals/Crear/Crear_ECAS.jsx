@@ -32,7 +32,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
         fecha_forta: "",
         fecha_cierre: "",
         motivo_cierre: "",
-        comentarios: "Los ECAS, generalmente atienden a la población de las cabeceras municipales y comunidades cercanas."
+        comentarios: ""
     });
 
     const handleChange = (e) => {
@@ -50,7 +50,59 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
         }, 3000);
     };
 
+    const campoPorPaso = {
+        1: [
+            'nombre_inst',
+            'clave_eca',
+            'nombre_inst_ope',
+            'tipo_instancia'
+        ],
+        2: [
+            'poblacion_atend'
+        ],
+        3:[
+            'id_municipio',
+            'localidad',
+            'colonia',
+            'calle_av',
+            'num_direccion',
+            'cod_postal',
+            'telefonos'
+        ],
+        4: [
+            'dias_hora_aten',
+            'nombre',
+            'correo',
+            'correoExtra'
+        ],
+        5: [
+            'equipo_movil',
+            'equipo_electr',
+            'material_didact'
+        ],
+        6: [
+            'fecha_apert',
+            'fecha_forta'
+        ],
+        7: [
+            'comentarios'
+        ]
+    };
+
+    const obtenerPasoCampo = (campo) => {
+        const pasoEncontrado = Object.entries(
+            campoPorPaso
+        ).find(([numeroPaso, campos]) =>
+            campos.includes(campo)
+        );
+
+        return pasoEncontrado
+            ? Number(pasoEncontrado[0])
+            : 1;
+    };
+
     const handleSubmit = async () => {
+        setErrors({});
         try {
             const response = await createEca(formData);
             const passwordTemporal = response.password_temporal;
@@ -108,16 +160,16 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
             });
         }
         catch (error) {
-            if (error.response && error.response?.data?.errors) {
-                showAlert('error', error.response.data.errors.correo[0]);
-                return;
+            if (error.response && error.response.status === 422) {
+                const erroresBack = error.response.data.errors;
+                setErrors(erroresBack);
+
+                const primerCampoError = Object.keys(erroresBack)[0];
+                const pasoConError = obtenerPasoCampo(primerCampoError);
+                setPaso(pasoConError);
+                showAlert("error", "Revisa los campos marcados.");
             } else {
-                Swal.fire({
-                    title: "Error al guardar",
-                    text: "Ocurrió un problema al guardar la información. Inténtalo nuevamente.",
-                    icon: "error",
-                    confirmButtonText: "Aceptar"
-                });
+                showAlert("error", error.response?.data?.message || "No fue posible guardar los datos.");
             }
         }
     }
@@ -129,54 +181,46 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
         let newErrors = {};
 
         if (paso === 1) {
-            if (!formData.nombre_inst.trim()) newErrors.nombre_inst = 'La instancia ejecutora es requerida.';
-            if (!formData.clave_eca.trim()) newErrors.clave_eca = 'La clave del eca es requerida.';
-            if (!formData.nombre_inst_ope.trim()) newErrors.nombre_inst_ope = 'La instancia operativa es requerida.';
-            if (!formData.tipo_instancia.trim()) newErrors.tipo_instancia = 'El tipo de instancia es requerida.';
+            if (!formData.nombre_inst.trim()) newErrors.nombre_inst = ['La instancia ejecutora es requerida.'];
+            if (!formData.clave_eca.trim()) newErrors.clave_eca = ['La clave del eca es requerida.'];
+            if (!formData.nombre_inst_ope.trim()) newErrors.nombre_inst_ope = ['La instancia operativa es requerida.'];
+            if (!formData.tipo_instancia.trim()) newErrors.tipo_instancia = ['El tipo de instancia es requerida.'];
         }
 
         if (paso === 2) {
-            if (!formData.poblacion_atend || Number(formData.poblacion_atend) <= 0) newErrors.poblacion_atend = 'El número de población no es valida.';
+            if (!formData.poblacion_atend) newErrors.poblacion_atend = ['El número de población es requerido.'];
         }
         
         if (paso === 3) {
-            if (!formData.id_municipio) newErrors.id_municipio = 'El municipio es requerido.';
-            if (!formData.localidad.trim()) newErrors.localidad = 'La localidad es requerida.';
-            if (!formData.colonia.trim()) newErrors.colonia = 'La colonia es requerida.';
-            if (!formData.calle_av.trim()) newErrors.calle_av = 'La calle/avenida es requerida.';
-            if (!formData.num_direccion.trim()) newErrors.num_direccion = 'El número es requerido.';
-            if (!formData.cod_postal || !/^\d{5}$/.test(formData.cod_postal)) newErrors.cod_postal = 'El código postal debe tener exactamente 5 dígitos.';
-            if (!formData.telefonos) newErrors.telefonos = 'Debe ingresar al menos un teléfono.';
+            if (!formData.id_municipio) newErrors.id_municipio = ['El municipio es requerido.'];
+            if (!formData.localidad.trim()) newErrors.localidad = ['La localidad es requerida.'];
+            if (!formData.colonia.trim()) newErrors.colonia = ['La colonia es requerida.'];
+            if (!formData.calle_av.trim()) newErrors.calle_av = ['La calle/avenida es requerida.'];
+            if (!formData.num_direccion.trim()) newErrors.num_direccion = ['El número es requerido.'];
+            if (!formData.cod_postal) newErrors.cod_postal = ['El código postal es requerido.'];
+            if (!formData.telefonos) newErrors.telefonos = ['Debe ingresar al menos un teléfono.'];
         }
 
         if (paso === 4) {
-            if (!formData.dias_hora_aten.trim()) newErrors.dias_hora_aten = 'El horario es requerido.';
-            if (!formData.nombre.trim()) newErrors.nombre = 'El responsable es requerido.';
-            if (!formData.correo.trim()) {
-                newErrors.correo = 'El correo es requerido.';
-            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.correo)) {
-                newErrors.correo = "El correo no tiene un formato válido.";
-            }
-            if (formData.correoExtra !== "") {
-                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.correoExtra)) {
-                    newErrors.correoExtra = "El correo no tiene un formato válido.";
-                }
-            }
+            if (!formData.dias_hora_aten.trim()) newErrors.dias_hora_aten = ['El horario es requerido.'];
+            if (!formData.nombre.trim()) newErrors.nombre = ['El responsable es requerido.'];
+            if (!formData.correo.trim()) newErrors.correo = ['El correo es requerido.'];
+            if (formData.correoExtra !== "") newErrors.correoExtra = ['El correo no tiene un formato válido.'];
         }
-
+ 
         if (paso === 5) {
-            if (!formData.equipo_movil.trim()) newErrors.equipo_movil = 'El equipo mobiliario es requerido.';
-            if (!formData.equipo_electr.trim()) newErrors.equipo_electr = 'El equipo de cómputo es requerido.';
-            if (!formData.material_didact.trim()) newErrors.material_didact = 'El material didactico es requerido.';
+            if (!formData.equipo_movil.trim()) newErrors.equipo_movil = ['El equipo mobiliario es requerido.'];
+            if (!formData.equipo_electr.trim()) newErrors.equipo_electr = ['El equipo de cómputo es requerido.'];
+            if (!formData.material_didact.trim()) newErrors.material_didact = ['El material didactico es requerido.'];
         }
 
         if (paso === 6) {
-            if (!formData.fecha_apert) newErrors.fecha_apert = 'La fecha de apertura es requerida.';
-            if (!formData.fecha_forta) newErrors.fecha_forta = 'La fecha de fortalecimiento es requerida.';
+            if (!formData.fecha_apert) newErrors.fecha_apert = ['La fecha de apertura es requerida.'];
+            if (!formData.fecha_forta) newErrors.fecha_forta = ['La fecha de fortalecimiento es requerida.'];
         }
 
         if (paso === 7) {
-            if (!formData.comentarios) newErrors.comentarios = 'Los comentarios son requeridos.';
+            if (!formData.comentarios) newErrors.comentarios = ['Los comentarios son requeridos.'];
         }
 
         setErrors(newErrors);
@@ -237,7 +281,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.nombre_inst}
                                 onChange={handleChange}
                             />
-                            {errors.nombre_inst && <p className="error">{errors.nombre_inst}</p>}
+                            {errors.nombre_inst && (<p className="error">{errors.nombre_inst[0]}</p>)}
                         </div>
                         <div className="form-group">
                             <label className="card-subtitle">Clave de ECA:
@@ -252,7 +296,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.clave_eca}
                                 onChange={handleChange}
                             />
-                            {errors.clave_eca && <p className="error">{errors.clave_eca}</p>}
+                            {errors.clave_eca && (<p className="error">{errors.clave_eca[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -268,7 +312,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.nombre_inst_ope}
                                 onChange={handleChange}
                             />
-                            {errors.nombre_inst_ope && <p className="error">{errors.nombre_inst_ope}</p>}
+                            {errors.nombre_inst_ope && (<p className="error">{errors.nombre_inst_ope[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -284,7 +328,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.tipo_instancia}
                                 onChange={handleChange}
                             />
-                            {errors.tipo_instancia && <p className="error">{errors.tipo_instancia}</p>}
+                            {errors.tipo_instancia && (<p className="error">{errors.tipo_instancia[0]}</p>)}
                         </div>
                         </>
                     )}
@@ -304,7 +348,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.poblacion_atend}
                                 onChange={handleChange}
                             />
-                            {errors.poblacion_atend && <p className="error">{errors.poblacion_atend}</p>}
+                            {errors.poblacion_atend && (<p className="error">{errors.poblacion_atend[0]}</p>)}
                         </div>
                         </>
                     )}
@@ -330,7 +374,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                     </option>
                                 ))}
                             </select>
-                            {errors.id_municipio && <p className="error">{errors.id_municipio}</p>}
+                            {errors.id_municipio && (<p className="error">{errors.id_municipio[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -344,7 +388,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.localidad}
                                 onChange={handleChange}
                             />
-                            {errors.localidad && <p className="error">{errors.localidad}</p>}
+                            {errors.localidad && (<p className="error">{errors.localidad[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -358,7 +402,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.colonia}
                                 onChange={handleChange}
                             />
-                            {errors.colonia && <p className="error">{errors.colonia}</p>}
+                            {errors.colonia && (<p className="error">{errors.colonia[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -372,7 +416,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.calle_av}
                                 onChange={handleChange}
                             />
-                            {errors.calle_av && <p className="error">{errors.calle_av}</p>}
+                            {errors.calle_av && (<p className="error">{errors.calle_av[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -386,7 +430,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.num_direccion}
                                 onChange={handleChange}
                             />
-                            {errors.num_direccion && <p className="error">{errors.num_direccion}</p>}
+                            {errors.num_direccion && (<p className="error">{errors.num_direccion[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -402,7 +446,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.cod_postal}
                                 onChange={handleChange}
                             />
-                            {errors.cod_postal && <p className="error">{errors.cod_postal}</p>}
+                            {errors.cod_postal && (<p className="error">{errors.cod_postal[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -416,7 +460,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.telefonos}
                                 onChange={handleChange}
                             />
-                            {errors.telefonos && <p className="error">{errors.telefonos}</p>}
+                            {errors.telefonos && (<p className="error">{errors.telefonos[0]}</p>)}
                         </div>
                         </>
                     )}
@@ -436,7 +480,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.dias_hora_aten}
                                 onChange={handleChange}
                             />
-                            {errors.dias_hora_aten && <p className="error">{errors.dias_hora_aten}</p>}
+                            {errors.dias_hora_aten && (<p className="error">{errors.dias_hora_aten[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -452,7 +496,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.nombre}
                                 onChange={handleChange}
                             />
-                            {errors.nombre && <p className="error">{errors.nombre}</p>}
+                            {errors.nombre && (<p className="error">{errors.nombre[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -468,7 +512,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.correo}
                                 onChange={handleChange}
                             />
-                            {errors.correo && <p className="error">{errors.correo}</p>}
+                            {errors.correo && (<p className="error">{errors.correo[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -484,7 +528,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.correoExtra}
                                 onChange={handleChange}
                             />
-                            {errors.correoExtra && <p className="error">{errors.correoExtra}</p>}
+                            {errors.correoExtra && (<p className="error">{errors.correoExtra[0]}</p>)}
                         </div>
                         </>
                     )}
@@ -504,7 +548,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.equipo_movil}
                                 onChange={handleChange}
                             />
-                            {errors.equipo_movil && <p className="error">{errors.equipo_movil}</p>}
+                            {errors.equipo_movil && (<p className="error">{errors.equipo_movil[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -520,7 +564,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.equipo_electr}
                                 onChange={handleChange}
                             />
-                            {errors.equipo_electr && <p className="error">{errors.equipo_electr}</p>}
+                            {errors.equipo_electr && (<p className="error">{errors.equipo_electr[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -536,7 +580,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.material_didact}
                                 onChange={handleChange}
                             />
-                            {errors.material_didact && <p className="error">{errors.material_didact}</p>}
+                            {errors.material_didact && (<p className="error">{errors.material_didact[0]}</p>)}
                         </div>
                         </>
                     )}
@@ -556,7 +600,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.fecha_apert}
                                 onChange={handleChange}
                             />
-                            {errors.fecha_apert && <p className="error">{errors.fecha_apert}</p>}
+                            {errors.fecha_apert && (<p className="error">{errors.fecha_apert[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -572,7 +616,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.fecha_forta}
                                 onChange={handleChange}
                             />
-                            {errors.fecha_forta && <p className="error">{errors.fecha_forta}</p>}
+                            {errors.fecha_forta && (<p className="error">{errors.fecha_forta[0]}</p>)}
                         </div>
                         </>
                     )}
@@ -591,7 +635,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                 value={formData.comentarios}
                                 onChange={handleChange}
                             />
-                            {errors.comentarios && <p className="error">{errors.comentarios}</p>}
+                            {errors.comentarios && (<p className="error">{errors.comentarios[0]}</p>)}
                         </div>
                         </>
                     )}

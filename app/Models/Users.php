@@ -22,8 +22,9 @@ class Users extends Authenticatable
         'id_usuario',
         'nombre',
         'correo',
-        'telefono',
         'password',
+        'cambiar_password',
+        'nombre_jefe',
         'id_rol',
     ];
 
