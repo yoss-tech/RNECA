@@ -122,7 +122,12 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
                 </div>
 
                 <div className="modal-body">
-                    {showPdf && (
+                    {loadingPdf ? (
+                        <div class="loader">
+                            <label className="component-cargando">Cargando...</label>
+                            <div class="loading"></div>
+                        </div>
+                    ) : showPdf && (
                         <>
                             <div className="dashboard">
                                 <div className="dashboard-left" style={{ width: '60%', height: 'calc(100%)' }}>

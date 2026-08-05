@@ -116,7 +116,7 @@ function Crear_Actividad({ cerrarModal, actividades }) {
       if (!formData.otras_activ.trim()) newErrors.otras_activ = 'Las otras actividades son requeridas.';
       if (formData.tipo_platica === 'escolar' && !formData.alumnos_Aten) newErrors.alumnos_Aten = 'El número de alumnos atendidos es requerido.';
       if (formData.tipo_platica === 'comunitaria' && !formData.pobl_ate) newErrors.pobl_ate = 'La población atendida es requerida.';
-      if (!formData.descripcion_activ.trim()) newErrors.descripcion_activ = 'La descripción de la actividad es requerida.';
+      // if (!formData.descripcion_activ.trim()) newErrors.descripcion_activ = 'La descripción de la actividad es requerida.';
       if (imagenes.length === 0) newErrors.imagenes = 'Debes seleccionar al menos una imagen.';
     }
 
@@ -296,7 +296,7 @@ function Crear_Actividad({ cerrarModal, actividades }) {
                       {errors.pobl_ate && <p className="error">{errors.pobl_ate}</p>}
                     </div>
 
-                    <div className="form-campo">
+                    {/* <div className="form-campo">
                       <label className="form-label">Descripción de la actividad</label>
                       <textarea
                         rows="3"
@@ -306,9 +306,10 @@ function Crear_Actividad({ cerrarModal, actividades }) {
                         className="form-control"
                         onChange={(e) => setFormData({ ...formData, descripcion_activ: e.target.value })}
                         title="Ingresa la descripción detallada de la actividad"
+                        hidden={true}
                       ></textarea>
                       {errors.descripcion_activ && <p className="error">{errors.descripcion_activ}</p>}
-                    </div>
+                    </div> */}
 
                     <div className="form-campo">
                       <label className="form-label">Subir fotográfias de la actividad:</label>

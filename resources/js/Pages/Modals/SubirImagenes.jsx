@@ -48,7 +48,7 @@ function SubirImagenes({ cerrarModal, Infoactividad, cargarImg }) {
             <div className="modal-box" style={{width:"800px"}}>
 
                 <div className="modal-head">
-                    <h4>Subir archivo firmado</h4>
+                    <h4>Agregar más imágenes</h4>
                 </div>
 
                 <div className="modal-body">

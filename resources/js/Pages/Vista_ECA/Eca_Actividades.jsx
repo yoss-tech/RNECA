@@ -3,6 +3,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "../../../css/Style.css"
 import Crear_Actividad from "../Modals/Crear/Crear_Actividad.jsx";
 import { getProgramData, delete_program, checkActividadesRegistro } from "../../Components/api/program.jsx"
+import { checkOficio } from "../../Components/api/oficio.jsx";
 import Mod_Actividad from "../../Pages/Modals/Modificar/Mod_Actividad.jsx";
 import Mostrar_Imagenes from "../Modals/MostrarImagen.jsx"
 import Swal from "sweetalert2";
@@ -18,10 +19,41 @@ function VECA_Actividades({ onComplete }) {
   const [actvidades, setActividades] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [hasShownAlert, setHasShownAlert] = useState(false);
+  const [resultado, setResultado] = useState(null);
 
   useEffect(() => {
     cargarActividades();
   }, []);
+
+  useEffect(() => {
+    const checkRegistro = async () => {
+      try {
+        const data = await checkOficio()
+        setResultado(data.registro_existente);
+      }
+      catch (error) {
+        console.error('Sin registros aún', error);
+        setResultado(false);
+      }
+    };
+
+    checkRegistro();
+  }, []);
+
+  useEffect(() => {
+    if (resultado === true && !hasShownAlert) {
+      Swal.fire({
+        title: '¡Oficio ya enviado!',
+        text: 'Actualmente el oficio ya fue enviado y esta en proceso de validación, no puede realizar ninguna acción por el momento',
+        icon: 'info',
+        confirmButtonText: 'Entendido',
+        timer: 10000,
+        timerProgressBar: true,
+      });
+      setHasShownAlert(true);
+    }
+  }, [resultado, hasShownAlert]);
 
   const cargarActividades = async () => {
     try {
@@ -86,7 +118,7 @@ function VECA_Actividades({ onComplete }) {
       <h1 className="page-title">Registro de actividades realizadas durante el periodo.</h1>
       <h2 className="page-subtitle">Capture la información de las actividades efectuadas durante el mes correspondiente.</h2>
 
-      <button className="btn-primario" onClick={() => setMostrarModal(true)}>
+      <button className="btn-primario" onClick={() => setMostrarModal(true)} disabled={resultado === true}>
         Nueva actividad
       </button>
       {mostrarModal && (
@@ -146,13 +178,13 @@ function VECA_Actividades({ onComplete }) {
                     </button>
                     {opcionesAbiertas === index && (
                       <div className="menu-perfil" style={{ position: 'absolute', right: 0, top: '100%', zIndex: 10 }}>
-                        <button className="btn-ver" onClick={() => handleVerImagenes(item)}>
+                        <button className="btn-ver" onClick={() => handleVerImagenes(item)} disabled={resultado === true}>
                           Ver fotografias
                         </button>
-                        <button className="btn-modificar" onClick={() => handleModificarActividad(item)}>
+                        <button className="btn-modificar" onClick={() => handleModificarActividad(item)} disabled={resultado === true}>
                           Modificar
                         </button>
-                        <button className="btn-eliminar" onClick={() => handleDelete(item.id_program)}>
+                        <button className="btn-eliminar" onClick={() => handleDelete(item.id_program)} disabled={resultado === true}>
                           Eliminar
                         </button>
                       </div>

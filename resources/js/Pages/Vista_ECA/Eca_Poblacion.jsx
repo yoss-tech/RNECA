@@ -7,6 +7,7 @@ import Mod_Poblacion from "../Modals/Modificar/Mod_Poblacion.jsx";
 import { checkEspacioRegistro } from "../../Components/api/espacio.jsx"
 import { getIdEspacio } from "../../Components/api/espacio_cult.jsx";
 import { getProgramData } from "../../Components/api/program.jsx";
+import { checkOficio } from "../../Components/api/oficio.jsx";
 
 function VECA_Poblacion({ onComplete }) {
 
@@ -17,8 +18,9 @@ function VECA_Poblacion({ onComplete }) {
   const [mostrarModal, setMostrarModal] = useState(false);
   const [idEspacio, setIdEspacio] = useState(false);
   const [actividad, setActividad] = useState([]);
+  const [resultado, setResultado] = useState(null);
 
-
+  // Peticiones para saber si hay registros existentes
   useEffect(() => {
     const checkRegistro = async () => {
       try {
@@ -28,6 +30,21 @@ function VECA_Poblacion({ onComplete }) {
       catch (error) {
         console.error('Sin registros aún', error);
         setRegistro(false); // Asume que no hay registro si hay un error
+      }
+    };
+
+    checkRegistro();
+  }, []);
+
+  useEffect(() => {
+    const checkRegistro = async () => {
+      try {
+        const data = await checkOficio()
+        setResultado(data.registro_existente);
+      }
+      catch (error) {
+        console.error('Sin registros aún', error);
+        setResultado(false);
       }
     };
 
@@ -134,19 +151,19 @@ function VECA_Poblacion({ onComplete }) {
     reproducido: 0,
     adquirido: 0,
   });
-  
+
   const total =
-        poblacion.hombres13_17 +
-        poblacion.hombres18_30 +
-        poblacion.hombres30_40 +
-        poblacion.hombres40_50 +
-        poblacion.hombres50mas +
-        poblacion.mujeres13_17 +
-        poblacion.mujeres18_30 +
-        poblacion.mujeres30_40 +
-        poblacion.mujeres40_50 +
-        poblacion.mujeres50mas +
-        poblacion.ninos12;
+    poblacion.hombres13_17 +
+    poblacion.hombres18_30 +
+    poblacion.hombres30_40 +
+    poblacion.hombres40_50 +
+    poblacion.hombres50mas +
+    poblacion.mujeres13_17 +
+    poblacion.mujeres18_30 +
+    poblacion.mujeres30_40 +
+    poblacion.mujeres40_50 +
+    poblacion.mujeres50mas +
+    poblacion.ninos12;
 
   const [alerts, setAlerts] = useState([]);
   const showAlert = (type, message) => {
@@ -181,17 +198,17 @@ function VECA_Poblacion({ onComplete }) {
     e.preventDefault();
 
     const totalActividad = actividad.reduce((acc, item) => {
-        return acc + (Number(item.pobl_ate) || 0) + (Number(item.alumnos_Aten) || 0);
+      return acc + (Number(item.pobl_ate) || 0) + (Number(item.alumnos_Aten) || 0);
     }, 0);
 
     if (total !== totalActividad) {
-        Swal.fire({
-            title: "Error de validación",
-            text: `El total de la población atendida (${total}) no coincide con la suma de la población de las actividades (${totalActividad}).`,
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });
-        return;
+      Swal.fire({
+        title: "Error de validación",
+        text: `El total de la población atendida (${total}) no coincide con la suma de la población de las actividades (${totalActividad}).`,
+        icon: "error",
+        confirmButtonText: "Aceptar"
+      });
+      return;
     }
 
     try {
@@ -526,7 +543,9 @@ function VECA_Poblacion({ onComplete }) {
               {registro === true && (
                 <>
                   <p className="error-message" style={{ color: 'red', marginTop: '10px' }}>Ya existe un registro para este mes. No se puede guardar uno nuevo. </p>
-                  <button type="button" className="btn-primario" onClick={() => handleEditar(idEspacio)} >Editar</button>
+                  <button type="button" className="btn-primario" onClick={() => handleEditar(idEspacio)}  disabled={resultado === true}>
+                    Editar
+                  </button>
                 </>
               )}
               {registro === false && (

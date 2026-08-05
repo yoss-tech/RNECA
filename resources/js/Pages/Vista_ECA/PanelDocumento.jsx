@@ -14,6 +14,11 @@ function PanelDocumento() {
   const [inputId, setInputId] = useState();
   const [resultado, setResultado] = useState(null)
   const [hasShownAlert, setHasShownAlert] = useState(false);
+  const [isDocumentoLoading, setIsDocumentoLoading] = useState(true);
+
+  const handleLoadingChange = (isLoading) => {
+    setIsDocumentoLoading(isLoading);
+  };
 
   useEffect(() => {
     const checkRegistro = async () => {
@@ -33,7 +38,7 @@ function PanelDocumento() {
   useEffect(() => {
     if (resultado === true && !hasShownAlert) {
       Swal.fire({
-        title: '¡Registro existente!',
+        title: '¡Oficio ya enviado!',
         text: 'Actualmente el oficio ya fue enviado y esta en proceso de validación, espera a que finalice el proceso de revición',
         icon: 'info',
         confirmButtonText: 'Entendido',
@@ -94,7 +99,7 @@ function PanelDocumento() {
         {/* SECCIÓN IZQUIERDA: Controles */}
         <div className="panel-controles">
           <h2 className="panel-controles-titulo">Panel de control</h2>
-          <div className="panel-controles-form">
+          {/* <div className="panel-controles-form">
             <div>
               <label className="panel-form-label">C.C.P</label>
               <input
@@ -104,7 +109,7 @@ function PanelDocumento() {
                 onChange={(e) => setDatosFormulario({ ...datosFormulario, ccp: e.target.value })}
               />
             </div>
-          </div>
+          </div> */}
           <div className="panel-controles-form">
             <form action="">
               <div className="form-registro">
@@ -123,12 +128,11 @@ function PanelDocumento() {
               </div>
             </form>
           </div>
-          {/* <h2 className="panel-controles-titulo">Modificar Datos</h2> */}
-          <button onClick={handlePrint} className="btn-primario" style={{ marginTop: '1rem', fontSize: '15px' }} >
+          <button onClick={handlePrint} className="btn-primario" style={{ marginTop: '1rem', fontSize: '15px' }} disabled={isDocumentoLoading}>
             <i class="bi bi-filetype-pdf"></i>
             Generar PDF
           </button>
-          <button type="submit" className="btn-primario" onClick={handleSubmit}>
+          <button type="submit" className="btn-primario" onClick={handleSubmit} disabled={isDocumentoLoading || resultado === true}>
             <i class="bi bi-clipboard2-check"></i>
             Enviar a revisión
           </button>
@@ -140,12 +144,21 @@ function PanelDocumento() {
 
           {/* El contenedor para la vista previa ahora usa paginación */}
           <div className="preview-container-paged">
-            <DocumentoPreview
-              ref={componentRef}
-              datosDinamicos={datosFormulario}
-              paginaActual={paginaActual}
-              setNumPaginas={setNumPaginas} // Pasamos la función para actualizar el número de páginas
-            />
+            {isDocumentoLoading && (
+              <div className="loader">
+                <label className="component-cargando">Cargando vista previa...</label>
+                <div className="loading"></div>
+              </div>
+            )}
+            <div style={{ display: isDocumentoLoading ? 'none' : 'block' }}>
+              <DocumentoPreview
+                ref={componentRef}
+                datosDinamicos={datosFormulario}
+                paginaActual={paginaActual}
+                setNumPaginas={setNumPaginas}
+                onLoadingChange={handleLoadingChange}
+              />
+            </div>
           </div>
 
           {/* Controles de paginación */}
