@@ -134,7 +134,7 @@ function Mod_Actividad({ cerrarModal, actividad, actualizarActiv }) {
                 </div>
 
                 <div className="form-campo">
-                  <label className="form-label">Otras Actividades</label>
+                  <label className="form-label">Nombre de la Actividades</label>
                   <textarea
                     rows="3"
                     name='otras_activ'

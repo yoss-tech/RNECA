@@ -11,7 +11,7 @@ import imglogo from "../../../img/PNG/Logotipo1.png";
 import ImagenActividadOf from '@/Components/ImagenActividadOf';
 
 
-const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNumPaginas }, ref) => {
+const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNumPaginas, onLoadingChange }, ref) => {
   const [programa, setPrograma] = useState(null);
   const [programaCargando, setProgramaCargando] = useState(true);
   const [programaError, setProgramaError] = useState(null);
@@ -25,8 +25,16 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
   const [memoriaError, setMemoriaError] = useState(null);
   const [descripcionMemoria, setDescripcionMemoria] = useState('');
 
-  const [ecaInfo, setinfoEca] = useState(null); // Descripción general de la memoria fotográfica
-  const [imagesByActivity, setImagesByActivity] = useState({}); // Nuevo estado para almacenar imágenes por actividad
+  const [ecaInfo, setinfoEca] = useState(null);
+  const [ecaInfoCargando, setEcaInfoCargando] = useState(true);
+  const [imagesByActivity, setImagesByActivity] = useState({});
+
+  useEffect(() => {
+    const isLoading = programaCargando || espacioCargando || memoriaCargando || ecaInfoCargando;
+    if (onLoadingChange) {
+      onLoadingChange(isLoading);
+    }
+  }, [programaCargando, espacioCargando, memoriaCargando, ecaInfoCargando, onLoadingChange]);
 
   // Petición para obtener las actividades del mes
   useEffect(() => {
@@ -92,14 +100,15 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
   // Petición para obtener la descripción general de la memoria fotográfica
   useEffect(() => {
     const fechtInfo = async () => {
+      setEcaInfoCargando(true);
       try {
         const data = await infoEca();
         setinfoEca(data);
       }
       catch {
-        // No hay un manejo de error específico para ecaInfo, se podría agregar si fuera necesario.
         console.error('Ocurrió un error al conectar con el servidor para obtener info ECA.');
       }
+      setEcaInfoCargando(false);
     };
     fechtInfo();
   }, []);
@@ -130,7 +139,78 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
     return { totalAlumnosAtendidos: sumAlumnos, totalPoblacionAtendida: sumPoblacion };
   }, [programa]);
 
-  const paginas = [
+  const memoriaFotograficaPages = useMemo(() => {
+    const createPage = (content, pageIndex) => (
+      <div className="hoja-a4" key={`memoria-pagina-${pageIndex}`}>
+        <div className="header-logo">
+          <img className="imagen" src={imgconagua} alt="Logo CONAGUA" style={{ width: '18%', height: 'auto' }} />
+          <img className='imagen' src={imgceaa} alt="Logo CEAA" style={{ width: '18%', height: 'auto' }} />
+          <img className='imagen' src={imglogo} alt="Logo RNECA" style={{ width: '18%', height: 'auto' }} />
+        </div>
+        
+        {pageIndex === 0 && (
+            <div className="documento-header">
+              <div>
+                <h1 className='seccion-titulo header-meta-center'>MEMORIA FOTOGRAFICA</h1>
+                <p className='header-meta-center'>Informes del mes de {mostrarSoloMes(new Date())}</p>
+              </div>
+            </div>
+        )}
+        
+        <div className="documento-contenido">
+          <section>{content}</section>
+        </div>
+        <div className="documento-footer"></div>
+      </div>
+    );
+
+    if (memoriaCargando) return [createPage(<p>Cargando memoria fotográfica...</p>, 0)];
+    if (memoriaError) return [createPage(<p style={{ color: 'red' }}>{memoriaError}</p>, 0)];
+    if (memoria.length === 0) return [createPage(<p>No hay memoria fotográfica registrada para este mes.</p>, 0)];
+
+    const pages = [];
+    let currentPageContent = [];
+    const ACTIVITIES_PER_PAGE = 1;
+
+    memoria.forEach((activity, index) => {
+      const activityContent = (
+        <div key={`activity-wrapper-${activity.id_program}`}>
+            <div key={`header-${activity.id_program}`}>
+              <div className="descripcion-parrafo">
+                <h1 className="seccion-titulo">{activity.otras_activ || '---'}</h1>
+                {/* <p>{activity.descripcion_activ || '---'}</p> */}
+              </div>
+              <h2 className="seccion-titulo">Evidencia fotografica: </h2>
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                {(imagesByActivity[activity.id_program] || []).length > 0 ? (
+                    (imagesByActivity[activity.id_program] || []).map(foto =>
+                        <ImagenActividadOf key={foto.id_foto} idFoto={foto.id_foto} />
+                    )
+                ) : (
+                    <p>No hay fotos registradas para esta actividad.</p>
+                )}
+            </div>
+            <br/>
+        </div>
+      );
+
+      currentPageContent.push(activityContent);
+      
+      if ((index + 1) % ACTIVITIES_PER_PAGE === 0 || (index + 1) === memoria.length) {
+          pages.push(createPage(currentPageContent, pages.length));
+          currentPageContent = [];
+      }
+    });
+
+    if (currentPageContent.length > 0) {
+      pages.push(createPage(currentPageContent, pages.length));
+    }
+
+    return pages.length > 0 ? pages : [createPage(<p>No hay memoria fotográfica registrada para este mes.</p>, 0)];
+  }, [memoria, imagesByActivity, memoriaCargando, memoriaError, imgconagua, imgceaa, imglogo]);
+
+  const allPages = useMemo(() => [
     // PRESENTACIÓN DEL OFICIO
     <div className="hoja-a4" key="pagina1">
       <div className="header-logo">
@@ -160,7 +240,7 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
           <div className="descripcion-parrafo">
             <p>
               Por medio del presente le saludo y me permito hacer llegar a usted el informe mensual del
-              espacio de Cultura del Agua del Municipio de {programa?.municipio || '...'}, Hidalgo,
+              espacio de Cultura del Agua del Municipio de {programa?.[0]?.municipio || '...'}, Hidalgo,
               correspondiente al mes de {mostrarSoloMes(new Date())} del año {new Date().getFullYear()},
               con la memoria fotografica y cuadro de población atendida que sustenta el trabajo de dicho municipio.
               Sin más por el momento, quedo a sus órdenes para cualquier aclaración al respecto.
@@ -174,15 +254,18 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
             <br /><br />
             <div className='firmas'>
               <div class="linea-firma"><p>Director general de la Comisión de Agua y Alcantarillado del <br />
-                municipio de {programa?.municipio || '...'}, Hidalgo.</p></div>
+                municipio de  {programa?.[0]?.municipio || '...'}, Hidalgo.</p></div>
             </div>
           </div>
         </section>
       </div>
-      <div className="documento-footer">
-        <br />
-        <h2 className="seccion-titulo">C.C.P</h2>
-        <p className="info-dato">{datosDinamicos.ccp || '---'}</p>
+      <div className="documento-footer ccp">
+        <br /><br />
+        {/* <p className="info-dato">C.C.P</p> */}
+        <p className="info-dato">C.c.p M.A.C. Félix Adrían Brambila Mendoza. -Director Local de la CONAGUA Hidalgo <br />
+        L.C.C. Luis García Contreras. -Jefe de control de Gestión, Encargado de la Subdirección de Comunicación, Social y Cultura del Agua<br />
+        Expediente único
+        </p>
       </div>
     </div>,
 
@@ -197,7 +280,7 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
       <div className="documento-header">
         <div className="header-meta-center">
           <p>Estado HIDALGO</p>
-          <p>Espacio de Cultura del Agua y Alcantarillado del Municipio de {ecaInfo?.municipio || '...'}, Hidalgo.</p>
+          <p>Espacio de Cultura del Agua y Alcantarillado del Municipio de  {programa?.[0]?.municipio || '...'}, Hidalgo.</p>
           <br />
           <p>Programa de Cultura del Agua / Informe mensual Cultura del Agua</p>
         </div>
@@ -364,71 +447,16 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
         </div>
       </div>
     </div>,
-
-    // MEMORIA FOTOGRAFICA
-    <div className="hoja-a4" key="pagina4">
-      <div className="header-logo">
-        <img className="imagen" src={imgconagua} alt="Logo CONAGUA" style={{ width: '18%', height: 'auto' }} />
-        <img className='imagen' src={imgceaa} alt="Logo CEAA" style={{ width: '18%', height: 'auto' }} />
-        <img className='imagen' src={imglogo} alt="Logo RNECA" style={{ width: '18%', height: 'auto' }} />
-      </div>
-      <div className="documento-header">
-        <div>
-          <h1 className='seccion-titulo header-meta-center' >MEMORIA FOTOGRAFICA</h1>
-          <p className='header-meta-center'>Informes del mes de {mostrarSoloMes(new Date())}</p>
-        </div>
-      </div>
-      <div className="documento-contenido">
-        <section>
-          {memoriaCargando ? (
-            <p>Cargando memoria fotográfica...</p>
-          ) : memoriaError ? (
-            <p style={{ color: 'red' }}>{memoriaError}</p>
-          ) : memoria.length > 0 ? (
-            memoria.map((item) => ( // Iteración de cada actividad de la memoria
-              <div key={item.id_program}>
-                <div className="descripcion-parrafo">
-                  <h1 className="seccion-titulo">{item.otras_activ || '---'}</h1>
-                  <p>{item.descripcion_activ || '---'}</p>
-                </div>
-                <h2 className="seccion-titulo">Evidencia fotografica: {item.otras_activ || '---'}</h2> {/* Usamos el título de la actividad */}
-                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                  {imagesByActivity[item.id_program] && imagesByActivity[item.id_program].length > 0 ? (
-                    imagesByActivity[item.id_program].map((foto) => (
-                      <ImagenActividadOf key={foto.id_foto} idFoto={foto.id_foto} />
-                    ))
-                  ) : (
-                    <p>No hay fotos registradas para esta actividad.</p>
-                  )}
-                </div>
-                <br />
-              </div>
-            ))
-          ) : (
-            <p>No hay memoria fotográfica registrada para este mes.</p>
-          )}
-
-        </section>
-        <section>
-          <h2 className="seccion-despedida"></h2>
-          <div className="info-firma">
-          </div>
-
-        </section>
-      </div>
-      <div className="documento-footer">
-
-      </div>
-    </div>
-  ];
+    ...memoriaFotograficaPages
+  ], [programa, programaCargando, programaError, ecaInfo, espacio, espacioCargando, espacioError, espacioAgrupado, totalAlumnosAtendidos, totalPoblacionAtendida, datosDinamicos.ccp, memoriaFotograficaPages]);
 
   useEffect(() => {
-    setNumPaginas(paginas.length);
-  }, [paginas.length, setNumPaginas]);
+    setNumPaginas(allPages.length);
+  }, [allPages.length, setNumPaginas]);
 
   return (
     <div ref={ref} className='documento-preview-container'>
-      {paginas.map((pagina, index) => (
+      {allPages.map((pagina, index) => (
         <div key={index} className={paginaActual === index + 1 ? 'pagina-activa' : 'pagina-oculta-pantalla'}>
           {pagina}
         </div>

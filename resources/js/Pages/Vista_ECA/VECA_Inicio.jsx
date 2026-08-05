@@ -58,6 +58,8 @@ function VECA_Inicio() {
           setCurrentStep(2);
         } else if (!hasOficio) {
           setCurrentStep(3);
+        } else {
+          setCurrentStep(4);
         }
       } catch (error) {
         console.error("Error al verificar el estado de registro:", error);
@@ -147,7 +149,7 @@ function VECA_Inicio() {
 
   const onCompleteActivity = () => {
     setHasActivitiesRegistration(true);
-    setCurrentStep(3);
+    setCurrentStep(2);
     setVistaActual("poblacion");
   };
 
@@ -362,18 +364,19 @@ function VECA_Inicio() {
 
         {vistaActual === "actividades" && currentStep >= 1 && (
           <VECA_Actividades
-            onComplete={onCompleteActivity}
+            onComplete={hasActivitiesRegistration ? () => { } : onCompleteActivity}
           />
         )}
         {vistaActual === "poblacion" && currentStep >= 2 && (
           <VECA_Poblacion
-            onComplete={onCompletePopulation}
+            onComplete={hasPoblacionRegistration ? () => { } : onCompletePopulation}
           />
         )}
         {vistaActual === "vista_previa" && currentStep >= 3 && (
           <PanelDocumento
-            onComplete={() => {
+            onComplete={hasOficioSent ? () => { } : () => {
               setHasOficioSent(true);
+              setCurrentStep(4);
             }}
           />
         )}

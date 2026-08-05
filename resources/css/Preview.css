@@ -109,20 +109,22 @@
 
 /* Estilos de impresión para la hoja */
 @media print {
+
     /* Configuración de la hoja A4 */
     @page {
         size: A4 portrait;
         margin: 8mm;
     }
 
-    body, html {
+    body,
+    html {
         background: #ffffff !important;
         margin: 0 !important;
         padding: 0 !important;
         width: 210mm !important;
     }
 
-    .no-print, 
+    .no-print,
     .paginacion-controles {
         display: none !important;
     }
@@ -140,7 +142,7 @@
         padding: 0 !important;
         background: transparent !important;
         box-shadow: none !important;
-        overflow: visible !important; 
+        overflow: visible !important;
     }
 
     /* 2. Estructura base de cada hoja A4 */
@@ -151,16 +153,17 @@
         border: none !important;
         background: #ffffff !important;
         box-sizing: border-box !important;
-        
+
         /* Dimensiones fijas para hoja vertical en impresión */
         width: 210mm !important;
-       /* max-width: 190mm !important; A4 (210mm) menos márgenes */
-        height: 275mm !important;    /* A4 (297mm) menos márgenes */
-        
+        /* max-width: 190mm !important; A4 (210mm) menos márgenes */
+        height: 275mm !important;
+        /* A4 (297mm) menos márgenes */
+
         /* FUERZA UN SALTO DE PÁGINA DESPUÉS DE CADA .hoja-a4 */
         page-break-after: always !important;
         break-after: page !important;
-        
+
         position: relative !important;
         overflow: hidden !important;
     }
@@ -168,20 +171,22 @@
     /* 3. TRUCO DE ROTACIÓN PARA LAS PÁGINAS HORIZONTALES (Tablas) */
     .hoja-a4.pagina-horizontal {
         /* Para encajar en A4 rotado, redefinimos sus dimensiones */
-        width: 270mm !important;  
-        height: 180mm !important; 
-        
+        width: 270mm !important;
+        height: 180mm !important;
+
         /* Rotación centrada sobre su origen */
         transform: rotate(-90deg) translate(-100%, 0);
         transform-origin: top left;
 
         /* Mantenemos el flujo para que no se encima con otras páginas */
-        position: absolute !important; 
+        position: absolute !important;
         /* Con esto evitamos que ocupe espacio vertical "fantasma" */
         margin: 0 !important;
 
-        top: 20mm !important; /* Desplaza el eje vertical al fondo del A4 (297mm - 12mm margen) */
-        left: 12mm !important; /* Alinea al margen izquierdo exacto */
+        top: 20mm !important;
+        /* Desplaza el eje vertical al fondo del A4 (297mm - 12mm margen) */
+        left: 12mm !important;
+        /* Alinea al margen izquierdo exacto */
     }
 
     /* Contenedor que ayuda a reservar el espacio de la hoja rotada */
@@ -309,14 +314,18 @@
 
 /* Pie de página */
 .documento-footer {
-    margin-top: 3rem;
+    margin-top: 5rem;
     padding-top: 1rem;
     border-top-width: 1px;
     border-color: #e5e7eb;
-    text-align: center;
+    /* text-align: center; */
     font-size: 0.75rem;
     color: #9ca3af;
     /* align-items: center; */
+}
+
+.ccp {
+    margin-top: 15rem;
 }
 
 /* --- Estilos para PanelDocumento.jsx --- */
@@ -371,7 +380,7 @@
     height: 1px;
 }
 
-.dashboard{
+.dashboard {
     width: 100%;
 }
 

@@ -548,7 +548,7 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                                         <textarea rows="3"
                                             name='comentarios'
                                             id="comentarios"
-                                            value={comentarios}
+                                            // value={comentarios}
                                             onChange={(e) => setComentarios(e.target.value)}
                                             placeholder="Ingresa algún comentario u observación"
                                             className="form-control">

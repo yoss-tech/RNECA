@@ -92,7 +92,7 @@ function VECA_ConsultaReg() {
                 <td>{item.fecha_registro}</td>
                 <td className="btn-container-horizontal">
                   {item.nombre_tipo === 'Pendiente' && (
-                    <button type="button" className="btn-neutral" onClick={() => handleDownloadPdf(item.id_oficio)}>Descargar PDF</button>
+                      <button type="button" className="btn-neutral" onClick={() => setVerInforme(item.id_oficio)}>Ver documento</button>
                   )}
                   {item.nombre_tipo === 'Firmado' && (
                     <button type="button" className="btn-neutral" onClick={() => setVerInforme(item.id_oficio)}>Ver documento</button>
