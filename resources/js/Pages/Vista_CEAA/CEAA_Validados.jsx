@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { buscarMunicipioSelect } from "@/Components/api/municipios";
 import { getOficioValidado } from "@/Components/api/oficio";
+import Ver_Informe from "../Modals/Ver_informe";
 
 function CEAA_Validados() {
+  const [oficioSelect, setOficioSeleccionado] = useState(null);
+  const [mostrarVer, setMostrarVer] = useState(false);
   const [municipios, setMunicipios] = useState([]);
+
   const [paginaActual, setPaginaActual] = useState(1);
   const registrosPorPagina = 9;
   const numPaginas = Math.ceil(municipios.length / registrosPorPagina);
@@ -49,6 +53,11 @@ function CEAA_Validados() {
   useEffect(() => {
     cargarMunicipios();
   }, []);
+
+  const handleVerOficio = (idOficio) => {
+    setOficioSeleccionado(idOficio);
+    setMostrarVer(true);
+  }
     
   return (
   <div className="page-container">
@@ -84,8 +93,8 @@ function CEAA_Validados() {
           {loading ? (
             <p className="text-white">Cargando datos...</p> 
           ) : oficios.length > 0 ? (
-            oficios.map((oficioVal) => (
-              <div className="cards-revision">
+            <div className="cards-revision">
+            {oficios.map((oficioVal) => (
                 <div className="card-municipio" key={oficioVal.id_municipio}>
                   <div className="card-body">
                     <div className="card-titles">
@@ -96,14 +105,20 @@ function CEAA_Validados() {
                     </div>
                     
                     <div className="botones-cards">
-                      <button className="btn-neutral">Leer documento</button>
+                      <button className="btn-neutral" onClick={() => handleVerOficio(oficioVal.id_oficio)}>Leer documento</button>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))
+            ))}
+            </div>
           ) : (
           <p className="text-white ">No existen informes validados.</p>
+          )}
+          {mostrarVer && (
+            <Ver_Informe
+              cerrarModal={() => setMostrarVer(false)}
+              idOficio={oficioSelect}
+            />
           )}
         </div>
       </div>

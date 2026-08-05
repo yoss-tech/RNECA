@@ -474,14 +474,14 @@ class OficiosRnecaController extends Controller
     {
         $pendientes = DB::table('oficios_rneca')
             ->where('id_estatus', 'EST-4HJVB2C9')
-            ->whereMonth('fecha_registro', now()->subMonth()->month)
-            ->whereYear('fecha_registro', now()->subMonth()->year)
+            ->whereMonth('fecha_registro', now()->month)
+            ->whereYear('fecha_registro', now()->year)
             ->count();
 
         $validados = DB::table('oficios_rneca')
             ->where('id_estatus', 'EST-V7WQ3N8Z')
-            ->whereMonth('fecha_registro', now()->subMonth()->month)
-            ->whereYear('fecha_registro', now()->subMonth()->year)
+            ->whereMonth('fecha_registro', now()->month)
+            ->whereYear('fecha_registro', now()->year)
             ->count();
 
         $noEntregados = DB::table('eca')
@@ -492,8 +492,8 @@ class OficiosRnecaController extends Controller
                         'oficios_rneca.idClave_eca',
                         'eca.clave_eca'
                     )
-                    ->whereMonth('fecha_registro', now()->subMonth()->month)
-                    ->whereYear('fecha_registro', now()->subMonth()->year);
+                    ->whereMonth('fecha_registro', now()->month)
+                    ->whereYear('fecha_registro', now()->year);
             })
             ->count();
 
@@ -519,7 +519,8 @@ class OficiosRnecaController extends Controller
                 'eca.nombre_inst_ope',
                 'oficios_rneca.id_oficio',
                 'oficios_rneca.mes_oficio',
-                'oficios_rneca.fecha_registro'
+                'oficios_rneca.fecha_registro',
+                'oficios_rneca.observacion'
             )
             ->where('oficios_rneca.id_estatus', 'EST-8HCVW2C7')
             ->orderBy('municipio.nombre_munipio')

@@ -220,8 +220,8 @@ function CEAA_Inicio() {
                   {loading ? (
                     <p className="text-white">Cargando datos...</p> 
                   ) : oficios.length > 0 ? (
-                    oficios.map((oficio) => (
-                      <div className="cards-municipio">
+                    <div className="cards-municipio">
+                    {oficios.map((oficio) => (
                         <div className="card-municipio" key={oficio.id_municipio}>
                           <div className="card-body">
                             <div className="card-titles">
@@ -230,14 +230,10 @@ function CEAA_Inicio() {
                               <p className="text-bold">Informes pendientes: {oficio.pendientes}</p>
                               <p className="text-bold">Validados: {oficio.validados}</p>
                             </div>
-                            
-                            <div className="botones-cards">
-                              <button className="btn-neutral">Ver detalles</button>
-                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))
+                    ))}
+                    </div>
                   ) : (
                     <p className="text-white ">No existen informes.</p>
                   )}

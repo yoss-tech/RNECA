@@ -100,7 +100,7 @@ function ActualizarPrimerAcceso() {
         <>
         <Toast alerts={alerts} />
         <div className="overlay">
-            <div className="modal-box">
+            <div className="modal-box modal-grid">
                 <div className="modal-head">
                     <h3>Actualización de datos</h3>
                     <p className="text-small text-white">Por seguridad, verifica que tus datos sean correctos y estén actualizados. De ser necesario, modifica la información y cambia tu contraseña antes de continuar.</p>

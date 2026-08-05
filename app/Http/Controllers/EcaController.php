@@ -19,14 +19,12 @@ class EcaController extends Controller
         ->join('usuarios', 'eca.id_usuario', '=', 'usuarios.id_usuario')
         ->join('direccion', 'eca.id_direccion', '=', 'direccion.id_direccion')
         ->join('municipio', 'direccion.id_municipio', '=', 'municipio.id_municipio')
-        ->leftJoin('usuarios as dicm', 'dicm.id_usuario', '=', 'usuarios.id_dicm') 
         ->select(
             'eca.id_usuario',
             'eca.nombre_inst',
             'eca.nombre_inst_ope',
             'municipio.nombre_munipio',
             'usuarios.nombre as nombre_Responsable',
-            DB::raw("IFNULL(dicm.nombre, 'Sin asignar') as director"),
             'municipio.nombre_munipio as municipio'
         )
         ->where('eca.id_usuario', auth()->user()->id_usuario)

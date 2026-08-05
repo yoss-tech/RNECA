@@ -101,8 +101,8 @@ function CEAA_Pendientes() {
             {cargando ? (
               <p className="text-white">Cargando datos...</p>
             ) : oficios.length > 0 ? (
-              oficios.map((oficioPen) => (
-                <div className="cards-revision">
+              <div className="cards-revision">
+              {oficios.map((oficioPen) => (
                   <div className="card-municipio" key={oficioPen.id_municipio}>
                     <div className="card-body">
                       <div className="card-titles">
@@ -118,8 +118,8 @@ function CEAA_Pendientes() {
                       </div>
                     </div>
                   </div>
-                </div>
-              ))
+              ))}
+              </div>
             ) : (
               <p className="text-white ">No existen informes pendientes de revisión.</p>
             )}
