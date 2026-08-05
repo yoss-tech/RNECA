@@ -15,10 +15,33 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
         id_estatus: ''
     });
 
+    const estatusValidado = 'EST-V7WQ3N8Z'
+    const estatusObservaciones = 'EST-8HCVW2C7'
+
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
+        const { name, value } = e.target;
+
+        setFormData((prev) => {
+            if (name === 'id_estatus' && value === estatusValidado) {
+                return {
+                    ...prev,
+                    id_estatus: value,
+                    observacion: "NA"
+                };
+            }
+
+            if (name === 'id_estatus' && value === estatusObservaciones) {
+                return {
+                    ...prev,
+                    id_estatus: value,
+                    observacion: ""
+                };
+            }
+            
+            return {
+                ...prev,
+                [name]: value,
+            };
         });
     };
 
@@ -127,31 +150,6 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
                                     />
                                 </div>
                                 <div className="dashboard-right">
-                                    <div className="form-group">
-                                        <label className="card-subtitle">Observaciones:</label>
-                                        <textarea
-                                            name="observacion"
-                                            value={formData.observacion}
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            placeholder="Ingresa las observaciones del sobre el informe"
-                                            title="Ingresa las observaciones del sobre el informe"
-                                        />
-                                    </div>
-
-                                    <div className="form-campo">
-                                        <label className="form-label">Fecha de revisión</label>
-                                        <input
-                                            type="date"
-                                            name='fecha_obser'
-                                            value={formData.fecha_obser}
-                                            onChange={handleChange}
-                                            id="fecha_obser"
-                                            placeholder="Ingresa la fecha de revisión"
-                                            className="form-control"
-                                        />
-                                    </div>
-
                                     <div className="form-campo">
                                         <label className="form-label">Estatus</label>
                                         <select
@@ -168,8 +166,34 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
                                             ))}
                                         </select>
                                     </div>
+                                    {formData.id_estatus === 'EST-8HCVW2C7' && (
+                                        <>
+                                        <div className="form-group">
+                                            <label className="card-subtitle">Observaciones:</label>
+                                            <textarea
+                                                name="observacion"
+                                                value={formData.observacion}
+                                                onChange={handleChange}
+                                                className="form-control"
+                                                placeholder="Ingresa las observaciones del sobre el informe"
+                                                title="Ingresa las observaciones del sobre el informe"
+                                            />
+                                        </div>
+                                        </>
+                                    )}
+                                    <div className="form-campo">
+                                        <label className="form-label">Fecha de revisión</label>
+                                        <input
+                                            type="date"
+                                            name='fecha_obser'
+                                            value={formData.fecha_obser}
+                                            onChange={handleChange}
+                                            id="fecha_obser"
+                                            placeholder="Ingresa la fecha de revisión"
+                                            className="form-control"
+                                        />
+                                    </div>
                                 </div>
-
                             </div>
                         </>
                     )}

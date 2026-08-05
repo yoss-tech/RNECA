@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "/resources/css/Style.css";
 
 function SelectorArchivo({ onChange, multiple = false }) {
   const [archivos, setArchivos] = useState([]);
@@ -25,23 +26,15 @@ function SelectorArchivo({ onChange, multiple = false }) {
       />
       <label
         htmlFor={inputId}
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          padding: '8px 12px',
-          backgroundColor: '#691B31',
-          color: 'white',
-          borderRadius: '4px',
-          cursor: 'pointer',
-          gap: '8px',
-          fontSize: '14px',
-          fontWeight: 'bold',
-          transition: 'background-color 0.3s ease',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-          paddingBottom: '10px',
+        className="btn-neutral"
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = 'transparent';
+          e.currentTarget.style.color = '#98989a';
         }}
-        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#5a162a'}
-        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#691B31'}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = '#98989a';
+          e.currentTarget.style.color = '#fff'
+        }}
       >
         <i className="bi bi-file-earmark-arrow-up"></i>
         <span>{archivos.length > 0 ? (multiple ? `${archivos.length} archivos seleccionados` : archivos[0].name) : "Seleccionar archivo"}</span>
