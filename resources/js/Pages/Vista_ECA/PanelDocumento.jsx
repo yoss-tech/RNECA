@@ -4,6 +4,7 @@ import DocumentoPreview from './DocumentoPreview';
 import { create_ofice, checkOficio } from "../../Components/api/oficio.jsx";
 import { mostrarSoloMes } from "../../Components/functions.jsx"
 import '../../../css/Preview.css';
+import '../../../css/Style.css';
 import SelectorArchivo from '../../Components/SelectorArchivo';
 import Swal from "sweetalert2";
 
@@ -98,7 +99,7 @@ function PanelDocumento() {
       <div className="panel-documento-grid">
         {/* SECCIÓN IZQUIERDA: Controles */}
         <div className="panel-controles">
-          <h2 className="panel-controles-titulo">Panel de control</h2>
+          <h3 className="text-subtitle">Panel de control</h3>
           {/* <div className="panel-controles-form">
             <div>
               <label className="panel-form-label">C.C.P</label>
@@ -114,28 +115,30 @@ function PanelDocumento() {
             <form action="">
               <div className="form-registro">
                 <div className="form-campo">
-                  <label className="panel-form-label">Mes del oficio</label>
+                  <label className="text-bold">Mes del oficio</label>
                   <input
                     type="text"
-                    className="panel-form-input"
+                    className="form-control"
                     id="mes_oficio"
                     value={mes_oficio}
                     onChange={(e) => setMes_oficio(e.target.value)}
                     readOnly
                   />
-                  <SelectorArchivo onChange={handleFileChange} />
                 </div>
               </div>
             </form>
           </div>
-          <button onClick={handlePrint} className="btn-primario" style={{ marginTop: '1rem', fontSize: '15px' }} disabled={isDocumentoLoading}>
-            <i class="bi bi-filetype-pdf"></i>
-            Generar PDF
-          </button>
-          <button type="submit" className="btn-primario" onClick={handleSubmit} disabled={isDocumentoLoading || resultado === true}>
-            <i class="bi bi-clipboard2-check"></i>
-            Enviar a revisión
-          </button>
+          <div className="btn-container-vertical">
+            <button onClick={handlePrint} className="btn-primario" disabled={isDocumentoLoading}>
+              <i class="bi bi-filetype-pdf"></i>
+              Generar PDF
+            </button>
+            <SelectorArchivo onChange={handleFileChange} />
+            <button type="submit" className="btn-negativo" onClick={handleSubmit} disabled={isDocumentoLoading || resultado === true}>
+              <i class="bi bi-clipboard2-check"></i>
+              Enviar a revisión
+            </button>
+          </div>
         </div>
 
         {/* SECCIÓN DERECHA: Vista Previa */}

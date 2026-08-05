@@ -352,6 +352,7 @@
     border-radius: 0.75rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     height: fit-content;
+    font-family: 'Montserrat', sans-serif;
 }
 
 @media (min-width: 1024px) {
@@ -393,25 +394,6 @@
 
 .panel-controles-form>div+div {
     margin-top: 1rem;
-}
-
-.panel-form-label {
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #374151;
-    margin-bottom: 0.25rem;
-}
-
-.panel-form-input {
-    margin-top: 0.25rem;
-    display: block;
-    width: 100%;
-    border-radius: 0.25rem;
-    border: 1px solid #d1d5db;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    padding: 0.5rem;
-    margin-bottom: 10px;
 }
 
 /* Panel de vista previa */
