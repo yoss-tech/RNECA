@@ -11,9 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('foto_activs', function (Blueprint $table) {
-            $table->id();
+        Schema::create('foto_activ', function (Blueprint $table) {
+            $table->char('id_foto', 20)->primary();
+            $table->string('nombre', 100);
+            $table->string('ruta_img', 500);
+            $table->char('id_actividad', 20);
             $table->timestamps();
+
+            $table->foreign('id_actividad')->references('id_program')->on('program_cult')->onDelete('cascade');
         });
     }
 
@@ -22,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('foto_activs');
+        Schema::dropIfExists('foto_activ');
     }
 };

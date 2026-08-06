@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('material_didacts', function (Blueprint $table) {
+        Schema::create('material_didact', function (Blueprint $table) {
             $table->string('id_material', 20)->primary();
-            $table->integer('inedito',11);
-            $table->integer('reproducido',11);
-            $table->integer('adquirido',11);
+            $table->integer('inedito');
+            $table->integer('reproducido');
+            $table->integer('adquirido');
             $table->string('id_espacio', 20);
-            $table->timestamps('material_Timestamp');
-            $table->foreign('id_espacio')->references('id_espacio')->on('espaciocultura');
+            $table->timestamps();
+            $table->foreign('id_espacio')->references('id_espacio')->on('espaciocultura')->onDelete('cascade');
         });
     }
 
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('material_didacts');
+        Schema::dropIfExists('material_didact');
     }
 };

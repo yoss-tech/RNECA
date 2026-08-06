@@ -57,7 +57,7 @@ class EspacioController extends Controller
         if (!$eca) {
             return response()->json(['data' => null, 'message' => 'El usuario no tiene un ECA asignado'], 403);
         }
-        
+
         $currentMonth = date('m');
         $currentYear = date('Y');
 
@@ -166,9 +166,9 @@ class EspacioController extends Controller
 
         $idEspacio = DB::table('espaciocultura as ec')
             ->join('eca', 'eca.clave_eca', '=', 'ec.clave_eca')
-            ->join('detalle_asistente as da', 'ec.id_espacio','=','da.id_espacio')
-            ->join('detalle_nexo as dn', 'ec.id_espacio','=','dn.id_espacio')
-            ->join('material_didact as mat', 'ec.id_espacio','=','mat.id_espacio')
+            ->join('detalle_asistente as da', 'ec.id_espacio', '=', 'da.id_espacio')
+            ->join('detalle_nexo as dn', 'ec.id_espacio', '=', 'dn.id_espacio')
+            ->join('material_didact as mat', 'ec.id_espacio', '=', 'mat.id_espacio')
             ->select(
                 'ec.id_espacio',
                 'dn.id_nexo',
@@ -255,7 +255,6 @@ class EspacioController extends Controller
             });
 
             return response()->json(['message' => 'Espacio de cultura actualizado correctamente'], 200);
-
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al actualizar el espacio de cultura',
@@ -291,5 +290,37 @@ class EspacioController extends Controller
             ->where('esp.clave_eca', $eca->clave_eca)
             ->get();
         return response()->json($actividad);
+    }
+
+
+    public function getEspacios()
+    {
+        $currentYear = date('Y');
+
+        $espacio = DB::table('eca')
+            ->join('espaciocultura as esp', 'eca.clave_eca', '=', 'esp.clave_eca')
+            ->join('detalle_asistente as da', 'esp.id_espacio', '=', 'da.id_espacio')
+            ->join('detalle_nexo as dn', 'esp.id_espacio', '=', 'dn.id_espacio')
+            ->join('material_didact as md', 'esp.id_espacio', '=', 'md.id_espacio')
+            ->select(
+                'eca.clave_eca',
+                'md.inedito',
+                'md.reproducido',
+                'md.adquirido',
+                'da.genero',
+                'da.rango_edad',
+                'da.cantidad',
+                'esp.total_pobl',
+                'dn.list_asist',
+                'dn.evi_foto',
+                'dn.nota_period',
+                'esp.comentarios',
+                'eca.fecha_apert',
+                'eca.fecha_forta',
+                'esp.fecha_registro'
+            )
+            ->whereYear('esp.fecha_registro', $currentYear)
+            ->get();
+        return response()->json($espacio);
     }
 }

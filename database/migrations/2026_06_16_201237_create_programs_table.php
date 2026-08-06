@@ -12,20 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('program_cult', function (Blueprint $table) {
-            $table->string('id_program', 20)->primary();
+            $table->char('id_program', 20)->primary();
             $table->string('municipio', 40)->default('');
-            $table->string('localidad', 30);
-            $table->string('tipo_platica', 50);
+            $table->string('localidad', 30)->nullable(false);
+            $table->string('tipo_platica', 50)->nullable(false);
             $table->string('otras_activ', 100)->default('');
-            $table->string('alumnos_Aten',250);
+            $table->string('descripcion_activ', 500)->nullable();
+            $table->string('alumnos_Aten',250)->nullable();
             $table->integer('pobl_ate')->default(0);
-            $table->string('fecha_mes', 15);
-            $table->string('clave_eca', 12);
-            $table->string('id_fecha', 8);
+            $table->date('fecha_registro')->default(now());
+            $table->string('fecha_mes', 15)->nullable(false);
+            $table->char('clave_eca', 12);
 
             // Foreign Keys
             $table->foreign('clave_eca')->references('clave_eca')->on('eca');
-            $table->foreign('id_fecha')->references('id_fecha')->on('fecha');
         });
     }
 

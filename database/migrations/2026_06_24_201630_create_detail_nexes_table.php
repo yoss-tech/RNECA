@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('detail_nex', function (Blueprint $table) {
-            $table->string('id_nexo', 20)->primary();
-            $table->string('list_asist', 2);
-            $table->string('evi_foto', 2);
-            $table->string('nota_period', 2);
-            $table->string('id_espacio', 20);
-            $table->foreign('id_espacio')->references('id_espacio')->on('espacio');
+        Schema::create('detalle_nexo', function (Blueprint $table) {
+            $table->char('id_nexo', 20)->primary();
+            $table->char('list_asist', 2)->nullable();
+            $table->char('evi_foto', 2)->nullable();
+            $table->char('nota_period', 2)->nullable();
+            $table->char('id_espacio', 20)->nullable(false);
+            $table->foreign('id_espacio')->references('id_espacio')->on('espaciocultura')->onDelete('cascade');
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('detail_nex');
+        Schema::dropIfExists('detalle_nexo');
     }
 };

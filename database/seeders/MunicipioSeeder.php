@@ -1,0 +1,103 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class MunicipioSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        DB::table('municipio')->insert([
+            ['id_municipio' => 'MUN-1', 'nombre_munipio' => 'Acatlán', 'num_habitan' => 22268, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-10', 'nombre_munipio' => 'Atitalaquia', 'num_habitan' => 31525, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-11', 'nombre_munipio' => 'Atlapexco', 'num_habitan' => 19812, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-12', 'nombre_munipio' => 'Atotonilco el Grande', 'num_habitan' => 30135, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-13', 'nombre_munipio' => 'Atotonilco de Tula', 'num_habitan' => 62470, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-14', 'nombre_munipio' => 'Calnali', 'num_habitan' => 16150, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-15', 'nombre_munipio' => 'Cardonal', 'num_habitan' => 19431, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-16', 'nombre_munipio' => 'Cuautepec de Hinojosa', 'num_habitan' => 60421, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-17', 'nombre_munipio' => 'Chapantongo', 'num_habitan' => 12967, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-18', 'nombre_munipio' => 'Chapulhuacán', 'num_habitan' => 22903, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-19', 'nombre_munipio' => 'Chilcuautla', 'num_habitan' => 18909, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-2', 'nombre_munipio' => 'Acaxochitlán', 'num_habitan' => 46065, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-20', 'nombre_munipio' => 'Eloxochitlán', 'num_habitan' => 2593, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-21', 'nombre_munipio' => 'Emiliano Zapata', 'num_habitan' => 15175, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-22', 'nombre_munipio' => 'Epazoyucan', 'num_habitan' => 16285, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-23', 'nombre_munipio' => 'Francisco I. Madero', 'num_habitan' => 36248, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-24', 'nombre_munipio' => 'Huasca de Ocampo', 'num_habitan' => 17607, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-25', 'nombre_munipio' => 'Huautla', 'num_habitan' => 20673, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-26', 'nombre_munipio' => 'Huazalingo', 'num_habitan' => 12766, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-27', 'nombre_munipio' => 'Huehuetla', 'num_habitan' => 22846, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-28', 'nombre_munipio' => 'Huejutla de Reyes', 'num_habitan' => 126781, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-29', 'nombre_munipio' => 'Huichapan', 'num_habitan' => 47425, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-3', 'nombre_munipio' => 'Actopan', 'num_habitan' => 61, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-30', 'nombre_munipio' => 'Ixmiquilpan', 'num_habitan' => 98654, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-31', 'nombre_munipio' => 'Jacala de Ledezma', 'num_habitan' => 12290, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-32', 'nombre_munipio' => 'Jaltocán', 'num_habitan' => 10523, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-33', 'nombre_munipio' => 'Juárez Hidalgo', 'num_habitan' => 2895, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-34', 'nombre_munipio' => 'Lolotla', 'num_habitan' => 9474, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-35', 'nombre_munipio' => 'Metepec', 'num_habitan' => 13078, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-36', 'nombre_munipio' => 'San Agustín Metzquititlán', 'num_habitan' => 9449, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-37', 'nombre_munipio' => 'Metztitlán', 'num_habitan' => 20962, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-38', 'nombre_munipio' => 'Mineral del Chico', 'num_habitan' => 8878, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-39', 'nombre_munipio' => 'La Misión', 'num_habitan' => 9819, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-4', 'nombre_munipio' => 'Agua Blanca de Iturbide', 'num_habitan' => 10313, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-40', 'nombre_munipio' => 'Mineral del Monte', 'num_habitan' => 14324, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-41', 'nombre_munipio' => 'Mixquiahuala de Juárez', 'num_habitan' => 47222, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-42', 'nombre_munipio' => 'Molango de Escamilla', 'num_habitan' => 11578, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-43', 'nombre_munipio' => 'Nicolás Flores', 'num_habitan' => 6265, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-44', 'nombre_munipio' => 'Nopala de Villagrán', 'num_habitan' => 16948, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-45', 'nombre_munipio' => 'Omitlán de Juárez', 'num_habitan' => 9295, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-46', 'nombre_munipio' => 'San Felipe Orizatlán', 'num_habitan' => 38492, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-47', 'nombre_munipio' => 'Pacula', 'num_habitan' => 4748, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-48', 'nombre_munipio' => 'Pachuca de Soto', 'num_habitan' => 314331, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-49', 'nombre_munipio' => 'Pisaflores', 'num_habitan' => 18723, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-5', 'nombre_munipio' => 'Ajacuba', 'num_habitan' => 18872, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-50', 'nombre_munipio' => 'Progreso de Obregón', 'num_habitan' => 23641, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-51', 'nombre_munipio' => 'Mineral de la Reforma', 'num_habitan' => 202749, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-52', 'nombre_munipio' => 'San Agustín Tlaxiaca', 'num_habitan' => 38891, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-53', 'nombre_munipio' => 'San Bartolo Tutotepec', 'num_habitan' => 17699, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-54', 'nombre_munipio' => 'Tasquillo', 'num_habitan' => 17441, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-55', 'nombre_munipio' => 'Tecozautla', 'num_habitan' => 38010, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-56', 'nombre_munipio' => 'Tenango de Doria', 'num_habitan' => 17503, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-57', 'nombre_munipio' => 'Tepeapulco', 'num_habitan' => 56245, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-58', 'nombre_munipio' => 'Tepehuacán de Guerrero', 'num_habitan' => 31235, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-59', 'nombre_munipio' => 'San Salvador', 'num_habitan' => 36796, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-6', 'nombre_munipio' => 'Alfajayucan', 'num_habitan' => 19162, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-60', 'nombre_munipio' => 'Santiago de Anaya', 'num_habitan' => 18329, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-61', 'nombre_munipio' => 'Santiago Tulantepec de Lugo Guerrero', 'num_habitan' => 39561, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-62', 'nombre_munipio' => 'Singuilucan', 'num_habitan' => 15142, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-63', 'nombre_munipio' => 'Tepeji del Río de Ocampo', 'num_habitan' => 90546, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-64', 'nombre_munipio' => 'Tepetitlán', 'num_habitan' => 10830, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-65', 'nombre_munipio' => 'Tetepango', 'num_habitan' => 11768, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-66', 'nombre_munipio' => 'Villa de Tezontepec', 'num_habitan' => 13032, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-67', 'nombre_munipio' => 'Tezontepec de Aldama', 'num_habitan' => 55134, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-68', 'nombre_munipio' => 'Tianguistengo', 'num_habitan' => 14340, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-69', 'nombre_munipio' => 'Tizayuca', 'num_habitan' => 168302, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-7', 'nombre_munipio' => 'Almoloya', 'num_habitan' => 12546, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-70', 'nombre_munipio' => 'Tlahuelilpan', 'num_habitan' => 19067, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-71', 'nombre_munipio' => 'Tlahuiltepa', 'num_habitan' => 9086, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-72', 'nombre_munipio' => 'Tlanalapa', 'num_habitan' => 11113, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-73', 'nombre_munipio' => 'Tula de Allende', 'num_habitan' => 115107, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-74', 'nombre_munipio' => 'Tulancingo de Bravo', 'num_habitan' => 168369, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-75', 'nombre_munipio' => 'Xochiatipan', 'num_habitan' => 18260, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-76', 'nombre_munipio' => 'Xochicoatlán', 'num_habitan' => 7015, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-77', 'nombre_munipio' => 'Yahualica', 'num_habitan' => 24674, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-78', 'nombre_munipio' => 'Tlanchinol', 'num_habitan' => 37722, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-79', 'nombre_munipio' => 'Tlaxcoapan', 'num_habitan' => 28626, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-8', 'nombre_munipio' => 'Apan', 'num_habitan' => 46681, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-80', 'nombre_munipio' => 'Tolcayuca', 'num_habitan' => 21362, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-81', 'nombre_munipio' => 'Zacualtipán de Ángeles', 'num_habitan' => 38155, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-82', 'nombre_munipio' => 'Zapotlán de Juárez', 'num_habitan' => 21443, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-83', 'nombre_munipio' => 'Zempoala', 'num_habitan' => 57906, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-84', 'nombre_munipio' => 'Zimapán', 'num_habitan' => 39927, 'estado' => 'Hidalgo'],
+            ['id_municipio' => 'MUN-9', 'nombre_munipio' => 'El Arenal', 'num_habitan' => 19836, 'estado' => 'Hidalgo'],
+        ]);
+    }
+}
