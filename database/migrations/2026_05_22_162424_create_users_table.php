@@ -19,8 +19,6 @@ return new class extends Migration
             $table->string('password')->nullable(false);
             $table->boolean('cambiar_password')->nullable(false);
             $table->date('fecha_registro')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->string('correoExtra', 500)->nullable();
-            $table->string('telefono_extra', 250)->nullable();
             $table->char('id_rol', 20)->nullable(false);
             $table->string('nombre_jefe', 200)->default('Sin jefe inmediato')->nullable();
 

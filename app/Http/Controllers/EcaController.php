@@ -25,6 +25,7 @@ class EcaController extends Controller
             'eca.nombre_inst_ope',
             'municipio.nombre_munipio',
             'usuarios.nombre as nombre_Responsable',
+            'usuarios.nombre_jefe as Jefe_inmediato',
             'municipio.nombre_munipio as municipio'
         )
         ->where('eca.id_usuario', auth()->user()->id_usuario)
