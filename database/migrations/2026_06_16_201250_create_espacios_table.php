@@ -12,18 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('espaciocultura', function (Blueprint $table) {
-            $table->string('id_espacio', 20)->primary();
-            $table->string('material_did', 100);
-            $table->integer('total_pobl');
-            $table->string('anexos', 150)->default('');
-            $table->string('comentarios', 150)->default('');
-            $table->integer('asistentes')->default(0);
-            $table->string('clave_eca', 12);
-            $table->string('id_fecha', 8);
+            $table->char('id_espacio', 20)->primary();
+            $table->integer('total_pobl')->nullable(false);
+            $table->string('comentarios', 450)->nullable(false);
+            $table->date('fecha_registro')->default(now());
+            $table->char('clave_eca', 12)->nullable(false);
 
             // Foreign Keys
             $table->foreign('clave_eca')->references('clave_eca')->on('eca');
-            $table->foreign('id_fecha')->references('id_fecha')->on('fecha');
         });
     }
 

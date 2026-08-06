@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('detail_asists', function (Blueprint $table) {
-            $table->string('id_detalle', 20)->primary();
+        Schema::create('detalle_asistente', function (Blueprint $table) {
+            $table->char('id_detalle', 20);
             $table->string('genero', 10);
             $table->string('rango_edad', 10);
-            $table->integer('cantidad',20);
-            $table->string('id_espacio', 20);
-            $table->foreign('id_espacio')->references('id_espacio')->on('espaciocultura');
+            $table->integer('cantidad');
+            $table->char('id_espacio', 20);
+            $table->foreign('id_espacio')->references('id_espacio')->on('espaciocultura')->onDelete('cascade');
+
+            $table->primary('id_detalle');
         });
     }
 
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('detail_asists');
+        Schema::dropIfExists('detalle_asistente');
     }
 };
