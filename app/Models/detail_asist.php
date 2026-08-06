@@ -9,6 +9,7 @@ class detail_asist extends Model
 {
     protected $table = 'detalle_asistente';
     public $incrementing = false;
+    // public $timestamps = true;
     public $timestamps = false;
     protected $primaryKey = 'id_detalle';
     protected $keyType = 'string';
@@ -17,7 +18,6 @@ class detail_asist extends Model
     {
         static::creating(function ($detail_asist) {
             if (empty($detail_asist->id_detalle)) {
-                // Genera un ID como PROG-7A2B9C (ajustable a tus necesidades)
                 $detail_asist->id_detalle = 'DETL-' . strtoupper(Str::random(10));
             }
         });

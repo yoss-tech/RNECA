@@ -13,7 +13,9 @@ class oficios_rneca extends Model
     protected $table = 'oficios_rneca';
     protected $primaryKey = 'id_oficio';
     public $incrementing = false;
+    // public $timestamps = true;
     public $timestamps = false;
+    protected $keyType = 'string';
 
     protected static function booted()
     {
