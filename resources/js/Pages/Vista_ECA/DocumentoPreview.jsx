@@ -72,7 +72,7 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
       setMemoriaCargando(true);
       try {
         const [memoriaData, descData] = await Promise.all([get_memoria(), getDesc()]);
-        
+
         setMemoria(memoriaData || []);
         setDescripcionMemoria(descData?.descripcion || '');
 
@@ -103,7 +103,7 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
       setEcaInfoCargando(true);
       try {
         const data = await infoEca();
-        setinfoEca(data);
+        setinfoEca(data.body || {});
       }
       catch {
         console.error('Ocurrió un error al conectar con el servidor para obtener info ECA.');
@@ -139,6 +139,16 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
     return { totalAlumnosAtendidos: sumAlumnos, totalPoblacionAtendida: sumPoblacion };
   }, [programa]);
 
+  const { totalplaticasEscolares, totalplaticasComunitarias } = useMemo(() => {
+    if (!programa || programa.length === 0) {
+      return { totalplaticasEscolares: 0, totalplaticasComunitarias: 0 };
+    }
+
+    const sumEscolares = programa.reduce((acc, item) => acc + (item.tipo_platica === 'escolar' ? 1 : 0), 0);
+    const sumComunitarias = programa.reduce((acc, item) => acc + (item.tipo_platica === 'comunitaria' ? 1 : 0), 0);
+    return { totalplaticasEscolares: sumEscolares, totalplaticasComunitarias: sumComunitarias };
+  }, [programa]);
+
   const memoriaFotograficaPages = useMemo(() => {
     const createPage = (content, pageIndex) => (
       <div className="hoja-a4" key={`memoria-pagina-${pageIndex}`}>
@@ -147,16 +157,16 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
           <img className='imagen' src={imgceaa} alt="Logo CEAA" style={{ width: '18%', height: 'auto' }} />
           <img className='imagen' src={imglogo} alt="Logo RNECA" style={{ width: '18%', height: 'auto' }} />
         </div>
-        
+
         {pageIndex === 0 && (
-            <div className="documento-header">
-              <div>
-                <h1 className='seccion-titulo header-meta-center'>MEMORIA FOTOGRAFICA</h1>
-                <p className='header-meta-center'>Informes del mes de {mostrarSoloMes(new Date())}</p>
-              </div>
+          <div className="documento-header">
+            <div>
+              <h1 className='seccion-titulo header-meta-center'>MEMORIA FOTOGRAFICA</h1>
+              <p className='header-meta-center'>Informes del mes de {mostrarSoloMes(new Date())}</p>
             </div>
+          </div>
         )}
-        
+
         <div className="documento-contenido">
           <section>{content}</section>
         </div>
@@ -175,31 +185,31 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
     memoria.forEach((activity, index) => {
       const activityContent = (
         <div key={`activity-wrapper-${activity.id_program}`}>
-            <div key={`header-${activity.id_program}`}>
-              <div className="descripcion-parrafo">
-                <h1 className="seccion-titulo">{activity.otras_activ || '---'}</h1>
-                {/* <p>{activity.descripcion_activ || '---'}</p> */}
-              </div>
-              <h2 className="seccion-titulo">Evidencia fotografica: </h2>
+          <div key={`header-${activity.id_program}`}>
+            <div className="descripcion-parrafo">
+              <h1 className="seccion-titulo">{activity.otras_activ || '---'} - {activity.fecha_mes || '---'}</h1>
+              {/* <p>{activity.descripcion_activ || '---'}</p> */}
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                {(imagesByActivity[activity.id_program] || []).length > 0 ? (
-                    (imagesByActivity[activity.id_program] || []).map(foto =>
-                        <ImagenActividadOf key={foto.id_foto} idFoto={foto.id_foto} />
-                    )
-                ) : (
-                    <p>No hay fotos registradas para esta actividad.</p>
-                )}
-            </div>
-            <br/>
+            <h2 className="seccion-titulo">Evidencia fotografica: </h2>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+            {(imagesByActivity[activity.id_program] || []).length > 0 ? (
+              (imagesByActivity[activity.id_program] || []).map(foto =>
+                <ImagenActividadOf key={foto.id_foto} idFoto={foto.id_foto} />
+              )
+            ) : (
+              <p>No hay fotos registradas para esta actividad.</p>
+            )}
+          </div>
+          <br />
         </div>
       );
 
       currentPageContent.push(activityContent);
-      
+
       if ((index + 1) % ACTIVITIES_PER_PAGE === 0 || (index + 1) === memoria.length) {
-          pages.push(createPage(currentPageContent, pages.length));
-          currentPageContent = [];
+        pages.push(createPage(currentPageContent, pages.length));
+        currentPageContent = [];
       }
     });
 
@@ -263,8 +273,8 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
         <br /><br />
         {/* <p className="info-dato">C.C.P</p> */}
         <p className="info-dato">C.c.p M.A.C. Félix Adrían Brambila Mendoza. -Director Local de la CONAGUA Hidalgo <br />
-        L.C.C. Luis García Contreras. -Jefe de control de Gestión, Encargado de la Subdirección de Comunicación, Social y Cultura del Agua<br />
-        Expediente único
+          L.C.C. Luis García Contreras. -Jefe de control de Gestión, Encargado de la Subdirección de Comunicación, Social y Cultura del Agua<br />
+          Expediente único
         </p>
       </div>
     </div>,
@@ -279,11 +289,13 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
       <br />
       <div className="documento-header">
         <div className="header-meta-center">
-          <p>Estado HIDALGO</p>
-          <p>Espacio de Cultura del Agua y Alcantarillado del Municipio de  {programa?.[0]?.municipio || '...'}, Hidalgo.</p>
-          <br />
-          <p>Programa de Cultura del Agua / Informe mensual Cultura del Agua</p>
+          <p><b>Estado Hidalgo</b></p>
+          <p><b>Espacio de Cultura del Agua de: {ecaInfo?.nombre_inst_ope || '---'}</b></p>
+          <p><b>Programa de Cultura del Agua / Informe mensual Cultura del Agua</b></p>
         </div>
+      </div>
+      <div className="header-meta-right">
+        <p><b>Fecha de informe: {mostrarSoloMes(new Date())} {new Date().getFullYear()}</b></p>
       </div>
       <div className="documento-contenido">
         {programaCargando ? (
@@ -293,7 +305,7 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
         ) : programa && programa.length > 0 ? (
           <table className="tabla-programa tablas-preview" border="1" cellPadding="5" cellSpacing="0">
             <thead>
-              <tr>
+              <tr className="tabla-header">
                 <th rowSpan="2">Estado</th>
                 <th rowSpan="2">Municipio</th>
                 <th rowSpan="2">Localidad</th>
@@ -314,8 +326,8 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
                   <td>Hidalgo</td>
                   <td>{item.municipio || '---'}</td>
                   <td>{item.localidad || '---'}</td>
-                  <td>{item.tipo_platica === 'escolar' ? 'X' : ''}</td>
-                  <td>{item.tipo_platica === 'comunitaria' ? 'X' : ''}</td>
+                  <td>{item.tipo_platica === 'escolar' ? '1' : 'N/A'}</td>
+                  <td>{item.tipo_platica === 'comunitaria' ? '1' : 'N/A'}</td>
                   <td>{item.otras_activ || '---'}</td>
                   <td>{item.alumnos_Aten || '---'}</td>
                   <td>{item.pobl_ate || '---'}</td>
@@ -325,7 +337,10 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
             </tbody>
             <tfoot>
               <tr>
-                <td colSpan="6" style={{ textAlign: 'right', fontWeight: 'bold' }}>Total:</td>
+                <td colSpan="3" style={{ textAlign: 'right', fontWeight: 'bold' }}>Total:</td>
+                <td>{totalplaticasEscolares}</td>
+                <td>{totalplaticasComunitarias}</td>
+                <td></td>
                 <td>{totalAlumnosAtendidos}</td>
                 <td>{totalPoblacionAtendida}</td>
                 <td></td> {/* Empty cell for Fecha */}
@@ -340,12 +355,12 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
         <div className='dashboard'>
           <div class="firmas">
             <div class="firma dashboard-left">
-              <div class="linea-firma"><p>{ecaInfo?.director || '---'}</p>Director General de la comisión de Agua y Alcantarillado del Municipio de {ecaInfo?.municipio || '...'}, Hidalgo</div>
+              <div class="linea-firma">{ecaInfo?.Jefe_inmediato || '---'} Director General de la comisión de Agua y Alcantarillado del Municipio de {ecaInfo?.municipio || '...'}, Hidalgo</div>
             </div>
           </div>
           <div className='firmas'>
             <div class="firma dashboard-right">
-              <div class="linea-firma"><p>{ecaInfo?.coordinador || '---'}</p>Coordinador del Espacio de Cultura del Agua de la {ecaInfo?.nombre_eca || '...'}</div>
+              <div class="linea-firma">{ecaInfo?.nombre_Responsable || '---'} Encargado del Área de Espacio de Cultura del Agua de la {ecaInfo?.nombre_eca || '...'}</div>
             </div>
           </div>
         </div>
@@ -362,9 +377,17 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
       <br />
       <div className="documento-header">
         <div className="header-meta-center">
-          <p>Información sobre la población beneficiera con las acciones de Cultura del Agua.</p>
+          <p><b>Información sobre la población beneficiera con las acciones de Cultura del Agua.</b></p>
           <br />
-          <p>Espacio de Cultura del Agua</p>
+          <p><b>Espacio de Cultura del Agua</b></p>
+        </div>
+      </div>
+      <div className="dashboard">
+        <div className="dashboard-left">
+          <p><b>Entidad federativa: Hidalgo</b></p>
+        </div>
+        <div className="header-meta-right">
+          <p><b>Mes: {mostrarSoloMes(new Date())} {new Date().getFullYear()}</b></p>
         </div>
       </div>
       <div className="documento-contenido">
@@ -385,11 +408,12 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
                 <tr>
                   <th colSpan="5">Hombres</th>
                   <th colSpan="5">Mujeres</th>
-                  <th rowSpan="3">Niños (Menores de 12)</th>
+                  <th rowSpan="1">Niños</th>
                 </tr>
                 <tr>
                   <th colSpan="5">Rango de edad</th>
                   <th colSpan="5">Rango de edad</th>
+                  <th rowSpan="2">Menores de 12</th>
                 </tr>
                 <tr>
                   <th>Inédito</th><th>Reproducido</th><th>Aquirido</th>
@@ -419,9 +443,9 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
                     <td>{item.asistentes.Mujer_51_o__ || 0}</td>
                     <td>{item.asistentes['Niño/Niña_12'] || 0}</td>
                     <td>{item.total_pobl || '---'}</td>
-                    <td>{item.list_asist === 'sí' ? 'X' : ''}</td>
-                    <td>{item.evi_foto === 'sí' ? 'X' : ''}</td>
-                    <td>{item.nota_period === 'sí' ? 'X' : ''}</td>
+                    <td>{item.list_asist === 'sí' ? 'Sí' : 'No'}</td>
+                    <td>{item.evi_foto === 'sí' ? 'Sí' : 'No'}</td>
+                    <td>{item.nota_period === 'sí' ? 'Sí' : 'No'}</td>
                     <td>{item.comentarios || '---'}</td>
                   </tr>
                 ))}
@@ -436,12 +460,12 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
         <div className='dashboard'>
           <div class="firmas">
             <div class="firma dashboard-left">
-              <div class="linea-firma"><p>{ecaInfo?.director || '---'}</p>Director General de la comisión de Agua y Alcantarillado del Municipio de {ecaInfo?.municipio || '...'}, Hidalgo</div>
+              <div class="linea-firma">{ecaInfo?.Jefe_inmediato || '---'} Director General de la comisión de Agua y Alcantarillado del Municipio de {ecaInfo?.municipio || '...'}, Hidalgo</div>
             </div>
           </div>
           <div className='firmas'>
             <div class="firma dashboard-right">
-              <div class="linea-firma"><p>{ecaInfo?.coordinador || '---'}</p>Coordinador del Espacio de Cultura del Agua de la {ecaInfo?.nombre_eca || '...'}</div>
+              <div class="linea-firma">{ecaInfo?.nombre_Responsable || '---'} Coordinador del Espacio de Cultura del Agua de {ecaInfo?.municipio || '...'}</div>
             </div>
           </div>
         </div>

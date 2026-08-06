@@ -11,6 +11,7 @@ class program extends Model
 {
     protected $table = 'program_cult';
     public $incrementing = false;
+    // public $timestamps = true;
     public $timestamps = false;
     protected $primaryKey = 'id_program';
     protected $keyType = 'string';

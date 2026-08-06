@@ -13,6 +13,7 @@ class espacio extends Model
     protected $primaryKey = 'id_espacio';
     public $incrementing = false;
     public $timestamps = false;
+    // public $timestamps = true;
     protected $keyType = 'string'; 
 
 

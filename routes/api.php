@@ -55,6 +55,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/infoProgram', [ProgramController::class, 'index']); // Informacion del programa de cultura
     Route::put('/update_program', [ProgramController::class, 'update']); // Actualizar un programa de cultura :)
     Route::get('/checkActividad', [ProgramController::class, 'checkActividad']); // Validación para evitar registros de actividades doble por un ECA
+    Route::get('/infoMemoria', [ProgramController::class, 'get_memoria']); // Informacion de la memoria fotografica con sus actividades correspondiente
+    Route::get('/getActivityById/{id}', [ProgramController::class, 'actividadById']); // Obtener la inforamción de la actividad por su id
+
 
     // Espacio de cultura
     Route::post('/create_espacio', [EspacioController::class, 'store']);
@@ -67,10 +70,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Memoria fotografica
     Route::post('/create_memoria', [MemoriaFotoController::class, 'store']); // Crear una memoria
     Route::get('/getDesc', [MemoriaFotoController::class, 'index']); // Obtener la descripcion general de la memoria
-    Route::get('/infoMemoria', [ActividadMemoController::class, 'index']); // Informacion de la memoria fotografica con sus actividades correspondiente
 
     // Actividades para la memoria fotografica
-    Route::get('/getActivityById/{id}', [ActividadMemoController::class, 'actividadById']); // Obtener la inforamción de la actividad por su id
     Route::post('/create_activ', [ActividadMemoController::class, 'store']); // Crear una actividad
     Route::put('/update_activ', [ActividadMemoController::class, 'update']); // Actualizar una actividad
 

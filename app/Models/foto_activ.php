@@ -13,6 +13,7 @@ class foto_activ extends Model
     protected $primaryKey = 'id_foto';
     public $incrementing = false;
     public $timestamps = false;
+    // public $timestamps = true;
     protected $keyType = 'string';
 
     protected static function booted()

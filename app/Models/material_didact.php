@@ -10,6 +10,7 @@ class material_didact extends Model
     protected $table = 'material_didact';
     public $incrementing = false;
     public $timestamps = false;
+    // public $timestamps = true;
     protected $primaryKey = 'id_material';
     protected $keyType = 'string';
 

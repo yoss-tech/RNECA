@@ -10,6 +10,7 @@ class detail_nex extends Model
 {
     protected $table = 'detalle_nexo';
     public $incrementing = false;
+    // public $timestamps = true;
     public $timestamps = false;
     protected $primaryKey = 'id_nexo';
     protected $keyType = 'string';

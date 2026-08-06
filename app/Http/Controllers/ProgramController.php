@@ -59,7 +59,7 @@ class ProgramController extends Controller
             'localidad' => 'required',
             'tipo_platica' => 'required',
             'otras_activ' => 'required',
-            'descripcion_activ' => 'required',
+            // 'descripcion_activ' => 'required',
             // 'alumnos_Aten' => 'required',
             // 'pobl_ate' => 'required',
             'fecha_mes' => 'required',
@@ -79,7 +79,7 @@ class ProgramController extends Controller
             'localidad' => $request->localidad,
             'tipo_platica' => $request->tipo_platica,
             'otras_activ' => $request->otras_activ,
-            'descripcion_activ' => $request->descripcion_activ,
+            // 'descripcion_activ' => $request->descripcion_activ,
             'alumnos_Aten' => $request->alumnos_Aten,
             'pobl_ate' => $request->pobl_ate,
             'fecha_mes' => $request->fecha_mes,
@@ -240,4 +240,51 @@ class ProgramController extends Controller
             ->get();
         return response()->json($actividad);
     }
+
+    //  obtener la información de las actividades para la memoria fotografica
+    public function get_memoria()
+    {
+        $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+        $actividad_memo = DB::table('program_cult as pc')
+            ->select(
+                'pc.descripcion_activ',
+                'pc.otras_activ',
+                'pc.id_program',
+                'pc.clave_eca',
+                'pc.fecha_mes',
+            )
+            ->where('pc.clave_eca', $eca->clave_eca)
+            ->whereMonth('pc.fecha_registro', $currentMonth)
+            ->whereYear('pc.fecha_registro', $currentYear)
+            ->distinct()
+            ->get();
+
+        return response()->json($actividad_memo);
+    }
+
+    // Obtener información de un programa de cultura específico para la memoria fotografica
+    public function actividadById($id)
+    {
+        $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
+
+
+        $actividadById = DB::table('program_cult as pc')
+            ->join('foto_activ as fa', 'pc.id_program', '=', 'fa.id_actividad')
+            ->select(
+                'pc.descripcion_activ',
+                'pc.otras_activ',
+                'pc.id_program',
+                'pc.clave_eca'
+            )
+            ->where('pc.clave_eca', $eca->clave_eca)
+            ->where('pc.id_program', $id)
+            ->distinct()
+            ->get();
+    
+
+        return response()->json($actividadById);
+    }
+
 }

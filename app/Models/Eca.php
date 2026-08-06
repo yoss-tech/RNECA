@@ -13,6 +13,7 @@ class Eca extends Model
     protected $table = 'eca';
     protected $primaryKey = 'claveEca';
     public $incrementing = false;
+    // public $timestamps = true;
     public $timestamps = false;
     protected $keyType = 'string';
 
