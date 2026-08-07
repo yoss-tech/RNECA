@@ -169,7 +169,10 @@ function VECA_Actividades({ onComplete }) {
                 </td>
                 <td>{item.tipo_platica}</td>
                 <td>{item.otras_activ}</td>
-                <td>{item.pobl_ate}</td>
+                <td>
+                  {item.pobl_ate}
+                  {item.alumnos_Aten}
+                </td>
                 <td>{new Date(item.fecha_mes).toLocaleDateString()}</td>
                 <td style={{ position: 'relative' }}>
                   <div>

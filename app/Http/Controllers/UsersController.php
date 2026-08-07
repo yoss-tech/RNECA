@@ -221,22 +221,45 @@ class UsersController extends Controller
     public function updatePerfil(Request $request)
     {
         $user = Auth::user();
-        $datos = [
-            'nombre' => $request->nombre,
-            'correo' => $request->correo
+        $rol_eca = 'rol1';
+
+        $reglas = [
+            'nombre' => 'required|string|max:255',
+            'correo' => 'required|email|max:100|unique:usuarios,correo,' . $user->id_usuario . ',id_usuario',
+            'password' => 'nullable|string|min:8|confirmed'
         ];
 
-        if ($request->filled('password')) {
-            $datos['password'] = Hash::make($request->password);
+        if ($user->id_rol === $rol_eca) {
+            $reglas['nombre_jefe'] = 'required|string|max:200';
         }
-        
-        DB::table('usuarios')
-            ->where('id_usuario', $user->id_usuario)
-            ->update($datos);
+
+        $request->validate($reglas, [
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre_jefe.required' => 'El nombre y cargo del jefe inmediato es obligatorio.',
+            'correo.required' => 'El correo es obligatorio.',
+            'correo.email' => 'Ingresa un correo electronico válido.',
+            'correo.unique' => 'El correo ya esta registrado.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'password.confirmed' => 'Las contraseñas no coinciden.'
+        ]);
+
+        $user->update([
+            'nombre' => $request->nombre,
+            'correo' => $request->correo,
+            'password' => Hash::make($request->password),
+        ]);
+
+        if ($user->id_rol === $rol_eca) {
+            DB::table('usuarios')
+                ->where('id_usuario', $user->id_usuario)
+                ->update([
+                    'usuarios.nombre_jefe' => $request->nombre_jefe,
+                ]);
+        }
 
         return response()->json([
+            'status' => 200,
             'message' => 'Usuario actualizado correctamente',
-            'status' => 200
         ]);
     }
 
@@ -259,6 +282,7 @@ class UsersController extends Controller
             ->select(
                 'usuarios.nombre',
                 'usuarios.correo',
+                'usuarios.nombre_jefe',
                 'municipio.nombre_munipio',
                 'eca.nombre_inst_ope'
             )

@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import Toast from "../Toast.jsx";
 import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 function ActualizarPrimerAcceso() {
     const [mostrarPassword, setMostrarPassword] = useState(false);

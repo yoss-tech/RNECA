@@ -4,6 +4,7 @@ import miImagen from "/resources/img/PNG/Logotipo1.png";
 import { useForm, Head } from "@inertiajs/react";
 import InputError from "../Components/InputError";
 import { loginUser, checkAuth } from "../Components/api/auth.jsx";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 function Login() {
   const { data, setData, processing, errors, setError, clearErrors } = useForm({
