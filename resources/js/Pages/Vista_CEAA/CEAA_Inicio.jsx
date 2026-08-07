@@ -12,7 +12,6 @@ import CEAA_Historial from "./CEAA_Historial.jsx";
 import CEAA_Ecas from "./CEAA_ECAS.jsx";
 import Perfil_CEAA from "../Modals/Perfiles/Perfil.jsx";
 import Notificaciones_CEAA from "../Modals/Notificaciones/Notificacion_CEAA.jsx";
-import Avisos_CEAA from "../Modals/Avisos/Avisos_CEAA.jsx";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
 import "/resources/css/Style.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -22,7 +21,6 @@ function CEAA_Inicio() {
   const [vistaActual, setVistaActual] = useState("inicio");
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
   const [mostrarNoti, setMostrarNoti] = useState(false);
-  const [mostrarAvisos, setMostrarAvisos] = useState(false);
   const [CerrarSesion, setCerrarSesion] = useState(false);
   
   const [municipios, setMunicipios] = useState([]);
@@ -80,16 +78,7 @@ function CEAA_Inicio() {
     <>
       <header className="header">
         <div className="logo"><img src={miImagen} alt="Logo RNECA"/></div>
-
         <div className="acciones-header">
-          <button className="icono"  onClick={() =>setMostrarAvisos(true)}>
-            <i className="bi bi-envelope"></i>
-          </button>
-          {mostrarAvisos && (
-            <Avisos_CEAA
-              cerrarModal={() => setMostrarAvisos(false)}
-            />
-          )}
           <button className="icono"  onClick={() =>setMostrarNoti(true)}>
             <i className="bi bi-bell"></i>
           </button>

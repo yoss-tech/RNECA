@@ -16,7 +16,6 @@ import { getLastOficio } from "../../Components/api/dowload_ofice.js";
 import Swal from "sweetalert2";
 import Notificaciones_Eca from "../Modals/Notificaciones/NoticacionECA.jsx";
 import PerfilECA from "../Modals/Perfiles/Perfil.jsx";
-import Avisos_eca from "../Modals/Avisos/AvisosECA.jsx";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
 import "/resources/css/Style.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -27,7 +26,6 @@ function VECA_Inicio() {
   const [vistaActual, setVistaActual] = useState("inicio");
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
   const [mostrarNoti, setMostrarNoti] = useState(false);
-  const [mostrarAvisos, setMostrarAvisos] = useState(false);
   const [CerrarSesion, setCerrarSesion] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [hasPoblacionRegistration, setHasPoblacionRegistration] = useState(null);
@@ -168,14 +166,6 @@ function VECA_Inicio() {
 
         <div className="logo"><img src={miImagen} alt="Logo RNECA" /></div>
         <div className="acciones-header">
-          <button className="icono" onClick={() => setMostrarAvisos(true)}>
-            <i className="bi bi-envelope"></i>
-          </button>
-          {mostrarAvisos && (
-            <Avisos_eca
-              cerrarModal={() => setMostrarAvisos(false)}
-            />
-          )}
           <button className="icono" onClick={() => setMostrarNoti(true)}>
             <i className="bi bi-bell"></i>
           </button>
@@ -367,23 +357,34 @@ function VECA_Inicio() {
             onComplete={hasActivitiesRegistration ? () => { } : onCompleteActivity}
           />
         )}
-        {vistaActual === "poblacion" && currentStep >= 2 && (
+        {vistaActual === "poblacion" && (
+          currentStep >= 2 ? (
           <VECA_Poblacion
             onComplete={hasPoblacionRegistration ? () => { } : onCompletePopulation}
           />
-        )}
-        {vistaActual === "vista_previa" && currentStep >= 3 && (
+        ) : (
+          <div className="page-container">
+            <h1 className="page-title">Acceso denegado</h1>
+            <h2 className="page-subtitle">Debes completar el registro de actividades antes de poder registrar la población beneficiaria.</h2>
+          </div>
+        ))}
+        {vistaActual === "vista_previa" && (
+          currentStep >= 3 ? (
           <PanelDocumento
             onComplete={hasOficioSent ? () => { } : () => {
               setHasOficioSent(true);
               setCurrentStep(4);
             }}
           />
-        )}
+        ) : (
+          <div className="page-container">
+            <h1 className="page-title">Acceso denegado</h1>
+            <h2 className="page-subtitle">Debes completar el registro de población beneficiaria antes de poder acceder a la vista previa.</h2>
+          </div>
+        ))}
         {vistaActual === "consulta_registros" && (
           <VECA_ConsultaReg />
         )}
-
       </div>
     </>
   );

@@ -466,6 +466,20 @@ function VECA_Poblacion({ onComplete }) {
             </div>
             {errors.poblacion && <p className="error">{errors.poblacion}</p>}
 
+            <p className="form-subtitle">Total de la población atendida
+              <i class="bi bi-question-circle" title="Sumatoria de los asistentes"></i>
+            </p>
+            <div className="form-campo">
+              <input
+                type="number"
+                value={total}
+                id="total_pobl"
+                name="total_pobl"
+                readOnly
+                className="form-control"
+              />
+            </div>
+
             <div className="btn-container-horizontal">
               <div className="input-container-horizontal">
                 <p className="form-subtitle">Anexos
@@ -504,23 +518,6 @@ function VECA_Poblacion({ onComplete }) {
                   </label>
                 </div>
                 {errors.nexo && <p className="error">{errors.nexo}</p>}
-              </div>
-
-              <div className="input-container-horizontal">
-                <p className="form-subtitle">Total de la población atendida
-                  <i class="bi bi-question-circle" title="Sumatoria de los asistentes"></i>
-                </p>
-
-                <div className="form-campo">
-                  <input
-                    type="number"
-                    value={total}
-                    id="total_pobl"
-                    name="total_pobl"
-                    readOnly
-                    className="form-control"
-                  />
-                </div>
               </div>
             </div>
 

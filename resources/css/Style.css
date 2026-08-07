@@ -483,6 +483,11 @@ p {
     transform: rotate(180deg);
 }
 
+.icono_alerta i {
+    font-size: 32px;
+    color: var(--ginda-color);
+}
+
 /* ================= FORMULARIOS ================= */
 .dashboard {
     display: flex;

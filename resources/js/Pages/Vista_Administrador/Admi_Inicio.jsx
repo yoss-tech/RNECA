@@ -8,7 +8,6 @@ import Admi_NumHab from "./Admi_NumHab.jsx";
 import Admi_SupervisoresECAS from "./Admi_SEcas.jsx";
 import Perfil_Admi from "../Modals/Perfiles/Perfil.jsx";
 import Notificaciones_Admi from "../Modals/Notificaciones/Notificacion_Admi.jsx";
-import Avisos_Admi from "../Modals/Avisos/Avisos_Admi.jsx";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
 import "/resources/css/Style.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -19,7 +18,6 @@ function Admi_Inicio() {
   const [vistaActual, setVistaActual] = useState("inicio");
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
   const [mostrarNoti, setMostrarNoti] = useState(false);
-  const [mostrarAvisos, setMostrarAvisos] = useState(false);
   const [CerrarSesion, setCerrarSesion] = useState(false);
 
   const menuItems = document.querySelectorAll('.sidebar .form-group a');
@@ -96,16 +94,7 @@ function Admi_Inicio() {
         </button>
 
         <div className="logo"><img src={miImagen} alt="Logo RNECA"/></div>
-
         <div className="acciones-header">
-          <button className="icono"  onClick={() =>setMostrarAvisos(true)}>
-            <i className="bi bi-envelope"></i>
-          </button>
-          {mostrarAvisos && (
-            <Avisos_Admi
-              cerrarModal={() => setMostrarAvisos(false)}
-            />
-          )}
           <button className="icono"  onClick={() =>setMostrarNoti(true)}>
             <i className="bi bi-bell"></i>
           </button>

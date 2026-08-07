@@ -9,7 +9,7 @@ function Notificaciones_Eca({ cerrarModal }) {
             <div className="modal-box">
 
                 <div className="modal-head">
-                    <h4>Notificaciones</h4>
+                    <h3 className="text-white">Notificaciones</h3>
                 </div>
 
                 <div className="modal-body">

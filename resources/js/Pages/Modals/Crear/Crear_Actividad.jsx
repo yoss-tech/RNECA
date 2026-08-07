@@ -10,7 +10,34 @@ import { infoEca } from "../../../Components/api/infoEca.jsx"
 
 
 function Crear_Actividad({ cerrarModal, actividades }) {
+  const [formData, setFormData] = useState({
+    municipio: '',
+    localidad: '',
+    tipo_platica: '',
+    otras_activ: '',
+    alumnos_Aten: '',
+    pobl_ate: '',
+    fecha_mes: '',
+  });
+  
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    Math.max(0, Number(e.target.value))
+  };
+  const handleImageChange = (event) => {
+    if (event.target.files) {
+      setImagenes(Array.from(event.target.files));
+    }
+  };
 
+  const [alerts, setAlerts] = useState([]);
+  const showAlert = (type, message) => {
+    setAlerts([...alerts, { type, message }]);
+    setTimeout(() => {
+      setAlerts((prev) => prev.slice(1));
+    }, 3000);
+  };
+  
   const [municipio, setMunicipio] = useState('');
 
   useEffect(() => {
@@ -28,18 +55,6 @@ function Crear_Actividad({ cerrarModal, actividades }) {
     loadInfo();
   }, []);
 
-
-  const [formData, setFormData] = useState({
-    municipio: '',
-    localidad: '',
-    tipo_platica: '',
-    otras_activ: '',
-    descripcion_activ: '',
-    alumnos_Aten: '',
-    pobl_ate: '',
-    fecha_mes: '',
-  });
-
   useEffect(() => {
     if (municipio) {
       setFormData(prevFormData => ({ ...prevFormData, municipio: municipio }));
@@ -47,29 +62,16 @@ function Crear_Actividad({ cerrarModal, actividades }) {
   }, [municipio]);
 
   const [imagenes, setImagenes] = useState([]);
-
-  const [alerts, setAlerts] = useState([]);
-  const showAlert = (type, message) => {
-    setAlerts([...alerts, { type, message }]);
-    setTimeout(() => {
-      setAlerts((prev) => prev.slice(1));
-    }, 3000);
-  };
-
-  const [errors, setErrors] = useState({});
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if (!validateForm(paso)) {
+      return;
+    }
     const formDataToSend = {
       programa: formData,
       imagenes: imagenes
     }
 
-    if (!validateForm()) {
-      showAlert('error', 'Por favor, completa todos los campos requeridos.');
-      return;
-    }
     try {
       await create_program(formDataToSend);
       await actividades();
@@ -92,31 +94,19 @@ function Crear_Actividad({ cerrarModal, actividades }) {
     }
   };
 
-  const handleImageChange = (event) => {
-    if (event.target.files) {
-      setImagenes(Array.from(event.target.files));
-    }
-  };
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    Math.max(0, Number(e.target.value))
-  };
-
+  const [errors, setErrors] = useState({});
   const [paso, setPaso] = useState(1);
-
   const validateForm = (paso) => {
     let newErrors = {};
-    if (paso == 1) {
+    if (paso === 1) {
       if (!formData.localidad.trim()) newErrors.localidad = 'La localidad es requerida.';
       if (!formData.tipo_platica) newErrors.tipo_platica = 'Selecciona el tipo de plática.';
       if (!formData.fecha_mes) newErrors.fecha_mes = 'La fecha de la actividad es requerida.';
     }
-    if (paso == 2) {
+    if (paso === 2) {
       if (!formData.otras_activ.trim()) newErrors.otras_activ = 'Las otras actividades son requeridas.';
       if (formData.tipo_platica === 'escolar' && !formData.alumnos_Aten) newErrors.alumnos_Aten = 'El número de alumnos atendidos es requerido.';
       if (formData.tipo_platica === 'comunitaria' && !formData.pobl_ate) newErrors.pobl_ate = 'La población atendida es requerida.';
-      // if (!formData.descripcion_activ.trim()) newErrors.descripcion_activ = 'La descripción de la actividad es requerida.';
       if (imagenes.length === 0) newErrors.imagenes = 'Debes seleccionar al menos una imagen.';
     }
 
@@ -211,6 +201,7 @@ function Crear_Actividad({ cerrarModal, actividades }) {
                             name='tipo_platica'
                             id='platica_escolar'
                             value={'escolar'}
+                            checked={formData.tipo_platica === 'escolar'}
                             onChange={(e) => setFormData({ ...formData, tipo_platica: e.target.value })}
                           />
                           Escolar
@@ -221,6 +212,7 @@ function Crear_Actividad({ cerrarModal, actividades }) {
                             name='tipo_platica'
                             id='platica_comunitaria'
                             value={'comunitaria'}
+                            checked={formData.tipo_platica === 'comunitaria'}
                             onChange={(e) => setFormData({ ...formData, tipo_platica: e.target.value })}
                           />
                           Comunitaria
@@ -229,21 +221,39 @@ function Crear_Actividad({ cerrarModal, actividades }) {
                       {errors.tipo_platica && <p className="error">{errors.tipo_platica}</p>}
                     </div>
 
+                    {formData.tipo_platica === 'escolar' && (
                     <div className="form-campo">
-                      <label className="form-label">Fecha de la actividad</label>
+                      <label className="form-label">Alumnos Atendidos</label>
                       <input
-                        type="date"
-                        name='fecha_mes'
-                        id="fecha_mes"
-                        placeholder="Ingresa la fecha de la actividad"
+                        type="number"
+                        name='alumnos_Aten'
+                        id="alumnos_Aten"
+                        placeholder="Ingresa el número de alumnos atendidos"
                         className="form-control"
-                        value={formData.fecha_mes}
-                        onChange={handleChange}
-                        min={getPreviousMonthDateRange().minDate}
-                        max={getPreviousMonthDateRange().maxDate}
+                        min="1"
+                        value={formData.alumnos_Aten}
+                        onChange={(e) => setFormData({ ...formData, alumnos_Aten: Math.max(0, Number(e.target.value))})}
                       />
-                      {errors.fecha_mes && <p className="error">{errors.fecha_mes}</p>}
+                      {errors.alumnos_Aten && <p className="error">{errors.alumnos_Aten}</p>}
                     </div>
+                    )}
+
+                    {formData.tipo_platica === 'comunitaria' && (
+                    <div className="form-campo">
+                      <label className="form-label">Población atendida</label>
+                      <input
+                        type="number"
+                        name='pobl_ate'
+                        id="pobl_ate"
+                        placeholder="Ingresa la población atendida"
+                        className="form-control"
+                        min="1"
+                        value={formData.pobl_ate}
+                        onChange={(e) => setFormData({ ...formData, pobl_ate: Math.max(0, Number(e.target.value))})}
+                      />
+                      {errors.pobl_ate && <p className="error">{errors.pobl_ate}</p>}
+                    </div>
+                    )}
                   </div>
                 </>
               )}
@@ -265,51 +275,22 @@ function Crear_Actividad({ cerrarModal, actividades }) {
                       </textarea>
                       {errors.otras_activ && <p className="error">{errors.otras_activ}</p>}
                     </div>
-
+                    
                     <div className="form-campo">
-                      <label className="form-label">Alumnos Atendidos</label>
+                      <label className="form-label">Fecha de la actividad</label>
                       <input
-                        type="number"
-                        name='alumnos_Aten'
-                        id="alumnos_Aten"
-                        placeholder="Ingresa el número de alumnos atendidos"
+                        type="date"
+                        name='fecha_mes'
+                        id="fecha_mes"
+                        placeholder="Ingresa la fecha de la actividad"
                         className="form-control"
-                        min="1"
-                        value={formData.alumnos_Aten}
-                        onChange={(e) => setFormData({ ...formData, alumnos_Aten: Math.max(0, Number(e.target.value))})}
+                        value={formData.fecha_mes}
+                        onChange={handleChange}
+                        min={getPreviousMonthDateRange().minDate}
+                        max={getPreviousMonthDateRange().maxDate}
                       />
-                      {errors.alumnos_Aten && <p className="error">{errors.alumnos_Aten}</p>}
-                    </div>
-
-                    <div className="form-campo">
-                      <label className="form-label">Población atendida</label>
-                      <input
-                        type="number"
-                        name='pobl_ate'
-                        id="pobl_ate"
-                        placeholder="Ingresa la población atendida"
-                        className="form-control"
-                        min="1"
-                        value={formData.pobl_ate}
-                        onChange={(e) => setFormData({ ...formData, pobl_ate: Math.max(0, Number(e.target.value))})}
-                      />
-                      {errors.pobl_ate && <p className="error">{errors.pobl_ate}</p>}
-                    </div>
-
-                    {/* <div className="form-campo">
-                      <label className="form-label">Descripción de la actividad</label>
-                      <textarea
-                        rows="3"
-                        name='descripcionActividad'
-                        id="descripcionActividad"
-                        placeholder="Ingresa la descripción detallada de la actividad"
-                        className="form-control"
-                        onChange={(e) => setFormData({ ...formData, descripcion_activ: e.target.value })}
-                        title="Ingresa la descripción detallada de la actividad"
-                        hidden={true}
-                      ></textarea>
-                      {errors.descripcion_activ && <p className="error">{errors.descripcion_activ}</p>}
-                    </div> */}
+                      {errors.fecha_mes && <p className="error">{errors.fecha_mes}</p>}
+                    </div>                    
 
                     <div className="form-campo">
                       <label className="form-label">Subir fotográfias de la actividad:</label>

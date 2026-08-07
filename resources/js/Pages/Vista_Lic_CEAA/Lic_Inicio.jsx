@@ -6,7 +6,6 @@ import CumplimientoInformes from "@/Components/Graficas.jsx";
 import Lic_Registros from "./Lic_Registros.jsx";
 import Perfil_LIC from "../Modals/Perfiles/Perfil.jsx";
 import Notificaciones_LIC from "../Modals/Notificaciones/NotificaciónLIC.jsx";
-import Avisos_LIC from "../Modals/Avisos/AvisosLIC.jsx";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
 import "/resources/css/Style.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -16,7 +15,6 @@ function Lic_Inicio() {
   const [vistaActual, setVistaActual] = useState("inicio");
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
   const [mostrarNoti, setMostrarNoti] = useState(false);
-  const [mostrarAvisos, setMostrarAvisos] = useState(false);
   const [CerrarSesion, setCerrarSesion] = useState(false);
 
   const [municipios, setMunicipios] = useState([]);
@@ -76,14 +74,6 @@ function Lic_Inicio() {
         <div className="logo"><img src={miImagen} alt="Logo RNECA"/></div>
 
         <div className="acciones-header">
-          <button className="icono"  onClick={() =>setMostrarAvisos(true)}>
-            <i className="bi bi-envelope"></i>
-          </button>
-          {mostrarAvisos && (
-            <Avisos_LIC
-              cerrarModal={() => setMostrarAvisos(false)}
-            />
-          )}
           <button className="icono"  onClick={() =>setMostrarNoti(true)}>
             <i className="bi bi-bell"></i>
           </button>

@@ -12,10 +12,11 @@ function Perfil({ cerrarModal, obtenerPerfil, mostrarInformacion = false}) {
     const [datos, setDatos] = useState({
         nombre_munipio: "",
         nombre_inst_ope: "",
+        nombre_jefe: "",
         nombre: "",
         correo: "",
         password: "",
-        confirmPassword: ""
+        password_confirmation: ""
     });
     const [editar, setEditar] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -25,9 +26,11 @@ function Perfil({ cerrarModal, obtenerPerfil, mostrarInformacion = false}) {
             setDatos({
                 nombre_inst_ope: response.body.nombre_inst_ope || "",
                 nombre_munipio: response.body.nombre_munipio || "",
+                nombre_jefe: response.body.nombre_jefe || "",
                 nombre: response.body.nombre || "",
                 correo: response.body.correo || "",
-                password: ""
+                password: "",
+                password_confirmation: ""
             });
             setLoading(false);
         }
@@ -44,6 +47,8 @@ function Perfil({ cerrarModal, obtenerPerfil, mostrarInformacion = false}) {
         }));
     };
 
+    
+    const [errors, setErrors] = useState({});
     const [alerts, setAlerts] = useState([]);
     const showAlert = (type, message) => {
         setAlerts([...alerts, { type, message }]);
@@ -52,36 +57,11 @@ function Perfil({ cerrarModal, obtenerPerfil, mostrarInformacion = false}) {
         }, 3000);
     };
 
-    const [errors, setErrors] = useState({});
-    const validateForm =() => {
-        let newErrors = {};
-    
-        if (!datos.nombre.trim()) newErrors.nombre = 'El nombre es requerido.';
-        if (!datos.correo.trim()) {
-            newErrors.correo = 'El correo es requerido.';
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(datos.correo)) {
-            newErrors.correo = 'El correo no tiene un formato válido.';
-        }
-
-        if (datos.password !== "") {
-            if (datos.confirmPassword === "") {
-                newErrors.confirmPassword = 'Confirma la contraseña.';
-            }
-            if (datos.password !== datos.confirmPassword) {
-                newErrors.confirmPassword = 'Las contraseñas no coinciden.';
-            }
-        }
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-    const handleSubmit = async () => {
-        if (!validateForm()) {
-            showAlert('error', 'Por favor, completa todos los campos requeridos.');
-            return;
-        }
-
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setErrors({});
         const datosActualizar = {
+            nombre_jefe: datos.nombre_jefe,
             nombre: datos.nombre,
             correo: datos.correo,
             password: datos.password
@@ -105,8 +85,11 @@ function Perfil({ cerrarModal, obtenerPerfil, mostrarInformacion = false}) {
             }
         }
         catch (error) {
-            showAlert('error', 'Error al actualizar.');
-            return;
+            if (error.response && error.response.status === 422) {
+                setErrors(error.response.data.errors);
+            } else {
+                showAlert('error', error.response?.data?.message || 'Error al actualizar.');
+            }
         }
     }
 
@@ -125,10 +108,24 @@ function Perfil({ cerrarModal, obtenerPerfil, mostrarInformacion = false}) {
                     ) : (
                         <>
                         {mostrarInformacion && (
+                            <>
                             <div class="mb-3">
                                 <p className="text-title">{datos.nombre_munipio}</p>
                                 <p className="text-subtitle">{datos.nombre_inst_ope}</p>
                             </div>
+                            <div className="form-group">
+                                <label className="card-subtitle">Jefe inmediato:</label>
+                                <input
+                                    type="text"
+                                    name="nombre_jefe"
+                                    className="form-control"
+                                    value={datos.nombre_jefe}
+                                    onChange={handleChange}
+                                    readOnly={!editar}
+                                />
+                                {errors.nombre_jefe && (<p className="error">{errors.nombre_jefe[0]}</p>)}
+                            </div>
+                            </>
                         )}
                         <div className="form-group">
                             <label className="card-subtitle">Nombre:</label>
@@ -140,7 +137,7 @@ function Perfil({ cerrarModal, obtenerPerfil, mostrarInformacion = false}) {
                                 onChange={handleChange}
                                 readOnly={!editar}
                             />
-                            {errors.nombre && <p className="error">{errors.nombre}</p>}
+                            {errors.nombre && (<p className="error">{errors.nombre[0]}</p>)}
                         </div>
                         <div className="form-group">
                             <label className="card-subtitle">Correo electrónico:</label>
@@ -152,7 +149,7 @@ function Perfil({ cerrarModal, obtenerPerfil, mostrarInformacion = false}) {
                                 onChange={handleChange}
                                 readOnly={!editar}
                             />
-                            {errors.correo && <p className="error">{errors.correo}</p>}
+                            {errors.correo && (<p className="error">{errors.correo[0]}</p>)}
                         </div>
                         {editar && (
                             <>
@@ -170,7 +167,7 @@ function Perfil({ cerrarModal, obtenerPerfil, mostrarInformacion = false}) {
                                     />
                                     <i className={mostrarPassword ? "bi bi-eye-slash" : "bi bi-eye"} onClick={() => setMostrarPassword(!mostrarPassword)}></i>
                                 </div>
-                                {errors.password && <p className="error">{errors.password}</p>}
+                                {errors.password && (<p className="error">{errors.password[0]}</p>)}
                             </div>
 
                             <div className="form-group">
@@ -178,16 +175,16 @@ function Perfil({ cerrarModal, obtenerPerfil, mostrarInformacion = false}) {
                                 <div className="input-password">
                                     <input
                                         type={mostrarPasswordConfirm ? "text" : "password"}
-                                        name="confirmPassword"
+                                        name="password_confirmation"
                                         className="form-control"
                                         placeholder="Confirmar nueva contraseña"
                                         title="Confirmar nueva contraseña"
-                                        value={datos.confirmPassword}
+                                        value={datos.password_confirmation}
                                         onChange={handleChange}
                                     />
                                     <i className={mostrarPasswordConfirm ? "bi bi-eye-slash" : "bi bi-eye"} onClick={() => setMostrarPasswordConfirm(!mostrarPasswordConfirm)}></i>
                                 </div>
-                                {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
+                                {errors.password_confirmation && (<p className="error">{errors.password_confirmation[0]}</p>)}
                             </div>
                             </>
                         )}

@@ -121,13 +121,8 @@ export const updateUser = async (id, data) => {
 }
 
 export const updateUserPerfil = async (data) => {
-    try {
-        const response = await axiosInstance.put('/usuarios/perfil', data);
-        return response.data;
-    } catch (error) {
-        console.error("Error en updateUserPerfil:", error);
-        return null;
-    }
+    const response = await axiosInstance.put('/usuarios/perfil', data);
+    return response.data;
 }
 
 export const updateEca = async (id, data) => {
