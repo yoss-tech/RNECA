@@ -90,7 +90,7 @@ class OficiosRnecaController extends Controller
         // $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
 
         $oficios = DB::table('oficios_rneca as ofr')
-            ->join('eca', 'ofr.idClave_eca', '=', 'eca.clave_eca')
+            ->join('eca', 'ofr.clave_eca', '=', 'eca.clave_eca')
             ->join('usuarios as u', 'eca.id_usuario', '=', 'u.id_usuario')
             ->join('tipo_estatus as te', 'ofr.id_estatus', '=', 'te.id_estatus')
             ->select(
@@ -115,7 +115,7 @@ class OficiosRnecaController extends Controller
     public function OficioRneca()
     {
         $oficios = DB::table('oficios_rneca as ofr')
-            ->join('eca', 'ofr.idClave_eca', '=', 'eca.clave_eca')
+            ->join('eca', 'ofr.clave_eca', '=', 'eca.clave_eca')
             ->join('usuarios as u', 'eca.id_usuario', '=', 'u.id_usuario')
             ->join('tipo_estatus as te', 'ofr.id_estatus', '=', 'te.id_estatus')
             ->select(
@@ -336,7 +336,7 @@ class OficiosRnecaController extends Controller
         $currentYear = date('Y');
 
         $oficio = DB::table('oficios_rneca as of')
-            ->where('of.idClave_eca', $eca->clave_eca)
+            ->where('of.clave_eca', $eca->clave_eca)
             ->whereMonth('of.fecha_registro', $currentMonth)
             ->whereYear('of.fecha_registro', $currentYear)
             // ->where('of.id_estatus', '=', 'EST-R4M8TP1L')
@@ -399,12 +399,12 @@ class OficiosRnecaController extends Controller
     public function oficios()
     {
         $oficio = DB::table('oficios_rneca')
-            ->join('eca', 'eca.clave_eca', '=', 'oficios_rneca.idClave_eca')
+            ->join('eca', 'eca.clave_eca', '=', 'oficios_rneca.clave_eca')
             ->join('direccion', 'direccion.id_direccion', '=', 'eca.id_direccion')
             ->join('municipio', 'municipio.id_municipio', '=', 'direccion.id_municipio')
             ->select(
                 'municipio.id_municipio',
-                'municipio.nombre_munipio',
+                'municipio.nombre_municipio',
                 'eca.nombre_inst_ope',
                 DB::raw("
                     COUNT(
@@ -425,10 +425,10 @@ class OficiosRnecaController extends Controller
             )
             ->groupBy(
                 'municipio.id_municipio',
-                'municipio.nombre_munipio',
+                'municipio.nombre_municipio',
                 'eca.nombre_inst_ope'
             )
-            ->orderBy('municipio.nombre_munipio')
+            ->orderBy('municipio.nombre_municipio')
             ->get();
 
         return response()->json([
@@ -442,13 +442,13 @@ class OficiosRnecaController extends Controller
     public function oficiosPendientes()
     {
         $oficioPen = DB::table('oficios_rneca')
-            ->join('eca', 'eca.clave_eca', '=', 'oficios_rneca.idClave_eca')
+            ->join('eca', 'eca.clave_eca', '=', 'oficios_rneca.clave_eca')
             ->join('direccion', 'direccion.id_direccion', '=', 'eca.id_direccion')
             ->join('municipio', 'municipio.id_municipio', '=', 'direccion.id_municipio')
             ->select(
                 'oficios_rneca.id_oficio',
                 'municipio.id_municipio',
-                'municipio.nombre_munipio',
+                'municipio.nombre_municipio',
                 'eca.nombre_inst_ope',
                 DB::raw('COUNT(*) as pendientes')
             )
@@ -456,10 +456,10 @@ class OficiosRnecaController extends Controller
             ->groupBy(
                 'oficios_rneca.id_oficio',
                 'municipio.id_municipio',
-                'municipio.nombre_munipio',
+                'municipio.nombre_municipio',
                 'eca.nombre_inst_ope'
             )
-            ->orderBy('municipio.nombre_munipio')
+            ->orderBy('municipio.nombre_municipio')
             ->get();
 
         return response()->json([
@@ -489,7 +489,7 @@ class OficiosRnecaController extends Controller
                 $query->select(DB::raw(1))
                     ->from('oficios_rneca')
                     ->whereColumn(
-                        'oficios_rneca.idClave_eca',
+                        'oficios_rneca.clave_eca',
                         'eca.clave_eca'
                     )
                     ->whereMonth('fecha_registro', now()->month)
@@ -511,11 +511,11 @@ class OficiosRnecaController extends Controller
     public function oficiosCorreccion()
     {
         $oficioCor = DB::table('oficios_rneca')
-            ->join('eca', 'eca.clave_eca', '=', 'oficios_rneca.idClave_eca')
+            ->join('eca', 'eca.clave_eca', '=', 'oficios_rneca.clave_eca')
             ->join('direccion', 'direccion.id_direccion', '=', 'eca.id_direccion')
             ->join('municipio', 'municipio.id_municipio', '=', 'direccion.id_municipio')
             ->select(
-                'municipio.nombre_munipio',
+                'municipio.nombre_municipio',
                 'eca.nombre_inst_ope',
                 'oficios_rneca.id_oficio',
                 'oficios_rneca.mes_oficio',
@@ -523,7 +523,7 @@ class OficiosRnecaController extends Controller
                 'oficios_rneca.observacion'
             )
             ->where('oficios_rneca.id_estatus', 'EST-8HCVW2C7')
-            ->orderBy('municipio.nombre_munipio')
+            ->orderBy('municipio.nombre_municipio')
             ->get();
 
         return response()->json([
@@ -537,12 +537,12 @@ class OficiosRnecaController extends Controller
     public function oficiosValidados()
     {
         $oficioVal = DB::table('oficios_rneca')
-            ->join('eca', 'eca.clave_eca', '=', 'oficios_rneca.idClave_eca')
+            ->join('eca', 'eca.clave_eca', '=', 'oficios_rneca.clave_eca')
             ->join('direccion', 'direccion.id_direccion', '=', 'eca.id_direccion')
             ->join('municipio', 'municipio.id_municipio', '=', 'direccion.id_municipio')
             ->select(
                 'municipio.id_municipio',
-                'municipio.nombre_munipio',
+                'municipio.nombre_municipio',
                 'eca.nombre_inst_ope',
                 'oficios_rneca.id_oficio',
                 'oficios_rneca.mes_oficio',
@@ -551,7 +551,7 @@ class OficiosRnecaController extends Controller
             ->where('oficios_rneca.id_estatus', 'EST-V7WQ3N8Z')
             // ->whereMonth('oficios_rneca.fecha_registro', now()->subMonth()->month)
             // ->whereYear('oficios_rneca.fecha_registro', now()->subMonth()->year)
-            ->orderBy('municipio.nombre_munipio')
+            ->orderBy('municipio.nombre_municipio')
             ->get();
 
         return response()->json([

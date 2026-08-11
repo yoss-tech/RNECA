@@ -9,7 +9,7 @@ function Ver_ECA({ eca, cerrarModal, abrirModalModificar }) {
     <div className="overlay">
         <div className="modal-box">
             <div className="modal-head">
-              <h3>Espacio de cultura del agua {eca.nombre_munipio}</h3>
+              <h3>Espacio de cultura del agua {eca.nombre_municipio}</h3>
             </div>
             <div className="modal-body">
               <p className="text-title">Datos generales</p>
@@ -53,7 +53,7 @@ function Ver_ECA({ eca, cerrarModal, abrirModalModificar }) {
                 <tbody>
                   <tr>
                     <td className="text-bold">Municipio</td>
-                    <td>{eca.nombre_munipio}</td>
+                    <td>{eca.nombre_municipio}</td>
                   </tr>
                   <tr>
                     <td className="text-bold">Localidad</td>

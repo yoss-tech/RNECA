@@ -44,7 +44,7 @@ function Admi_NumHab() {
       <tbody>
         {municipios.map((municipio) => (
           <tr key={municipio.id_municipio}>
-            <td>{municipio.nombre_munipio}</td>
+            <td>{municipio.nombre_municipio}</td>
             <td><p className="text-title">{municipio.num_habitan}</p></td>
             <td>
               <button className="btn-negativo" onClick={() => abrirModalModificar(municipio)}>Modificar</button>

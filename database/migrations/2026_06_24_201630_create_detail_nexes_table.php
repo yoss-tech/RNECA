@@ -16,7 +16,7 @@ return new class extends Migration
             $table->char('list_asist', 2)->nullable();
             $table->char('evi_foto', 2)->nullable();
             $table->char('nota_period', 2)->nullable();
-            $table->char('id_espacio', 20)->nullable(false);
+            $table->char('id_espacio', 20);
             $table->foreign('id_espacio')->references('id_espacio')->on('espaciocultura')->onDelete('cascade');
         });
     }

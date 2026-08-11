@@ -13,18 +13,18 @@ return new class extends Migration
     {
         Schema::create('eca', function (Blueprint $table) {
             $table->char('clave_eca', 12)->primary();
-            $table->text('nombre_inst')->nullable(false);
-            $table->text('nombre_inst_ope')->nullable(false);
-            $table->integer('poblacion_atend')->nullable(false);
-            $table->date('fecha_apert')->nullable(false);
-            $table->date('fecha_forta')->nullable(false);
+            $table->text('nombre_inst');
+            $table->text('nombre_inst_ope');
+            $table->integer('poblacion_atend');
+            $table->date('fecha_apert');
+            $table->date('fecha_forta');
             $table->string('fecha_cierre', 50)->nullable();
             $table->text('motivo_cierre')->nullable();
-            $table->char('id_usuario', 20)->nullable(false);
-            $table->char('id_estatus', 20)->nullable(false);
-            $table->char('id_direccion', 20)->nullable(false);
+            $table->char('id_usuario', 20);
+            $table->char('id_estatus', 20);
+            $table->char('id_direccion', 20);
             $table->date('fecha_registro')->default(now());
-            $table->string('ruta_logo', 500)->nullable(false);
+            $table->string('ruta_logo', 500);
 
             // Foreign Keys
             $table->foreign('id_usuario')->references('id_usuario')->on('usuarios');

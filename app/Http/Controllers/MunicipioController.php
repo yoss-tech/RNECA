@@ -38,10 +38,10 @@ class MunicipioController extends Controller
     public function municipios()
     {
         $municipio = DB::table('municipio')
-            ->orderBy('municipio.nombre_munipio', 'asc')
+            ->orderBy('municipio.nombre_municipio', 'asc')
             ->select(
                 'municipio.id_municipio',
-                'municipio.nombre_munipio',
+                'municipio.nombre_municipio',
                 'municipio.num_habitan'
             )
             ->get();
@@ -56,7 +56,7 @@ class MunicipioController extends Controller
     public function buscar(Request $request)
     {
         $buscar = $request->buscar;
-        $municipio = Municipio::where('nombre_munipio', 'like', '%' . $buscar . '%')
+        $municipio = Municipio::where('nombre_municipio', 'like', '%' . $buscar . '%')
         ->get();
         return response()->json([
         'status' => 200,

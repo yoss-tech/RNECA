@@ -42,7 +42,7 @@ function CEAA_Observaciones() {
           oficios.map((oficioCor) => (
             <tr key={oficioCor.id_oficio}>
               <td>
-                <p className="text-title">{oficioCor.nombre_munipio}</p>
+                <p className="text-title">{oficioCor.nombre_municipio}</p>
                 <p className="text-subtitle">{oficioCor.nombre_inst_ope}</p>
               </td>
               <td>{oficioCor.mes_oficio}</td>

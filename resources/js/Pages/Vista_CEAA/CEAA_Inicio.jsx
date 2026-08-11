@@ -8,7 +8,6 @@ import CEAA_Pendientes from "./CEAA_Pendientes.jsx";
 import CEAA_Observaciones from "./CEAA_Observaciones.jsx";
 import CEAA_Validados from "./CEAA_Validados.jsx";
 import CEAA_Solicitudes from "./CEAA_Solicitudes.jsx";
-import CEAA_Historial from "./CEAA_Historial.jsx";
 import CEAA_Ecas from "./CEAA_ECAS.jsx";
 import Perfil_CEAA from "../Modals/Perfiles/Perfil.jsx";
 import Notificaciones_CEAA from "../Modals/Notificaciones/Notificacion_CEAA.jsx";
@@ -163,16 +162,6 @@ function CEAA_Inicio() {
             Solicitudes de registros fuera de plazo
           </a>
         </div>
-        
-        <div className="form-group">
-          <a
-            className={vistaActual === "historial" ? "active" : ""}
-            onClick={() => setVistaActual("historial")}
-            style={{ cursor: "pointer" }}>
-            <i class="bi bi-search"></i>
-            Consulta de Registros
-          </a>
-        </div>
 
         <div className="form-group">
           <a
@@ -214,7 +203,7 @@ function CEAA_Inicio() {
                         <div className="card-municipio" key={oficio.id_municipio}>
                           <div className="card-body">
                             <div className="card-titles">
-                              <h3 className="text-title">{oficio.nombre_munipio}</h3>
+                              <h3 className="text-title">{oficio.nombre_municipio}</h3>
                               <h3 className="text-subtitle">{oficio.nombre_inst_ope}</h3>
                               <p className="text-bold">Informes pendientes: {oficio.pendientes}</p>
                               <p className="text-bold">Validados: {oficio.validados}</p>
@@ -267,9 +256,6 @@ function CEAA_Inicio() {
         )}
         {vistaActual === "solicitudes" && (
           <CEAA_Solicitudes/>
-        )}
-        {vistaActual === "historial" && (
-          <CEAA_Historial />
         )}
         {vistaActual === "Ecas" && (
           <CEAA_Ecas/>

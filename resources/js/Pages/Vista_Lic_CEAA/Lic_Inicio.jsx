@@ -158,7 +158,7 @@ function Lic_Inicio() {
                         <div className="card-municipio" key={municipio.id_municipio}>
                           <div className="card-body">
                             <div className="card-titles">
-                              <h3 className="text-title">{municipio.nombre_munipio}</h3>
+                              <h3 className="text-title">{municipio.nombre_municipio}</h3>
                               <h3 className="text-subtitle">INSTANCIA OPERATIVA</h3>
                               <p className="text-bold">Informes pendientes:</p>
                               <p className="text-bold">Validados:</p>

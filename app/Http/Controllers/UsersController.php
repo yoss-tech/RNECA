@@ -27,12 +27,12 @@ class UsersController extends Controller
             ->join('direccion', 'eca.id_direccion', '=', 'direccion.id_direccion')
             ->join('municipio', 'direccion.id_municipio', '=', 'municipio.id_municipio')
             ->join('tipo_estatus', 'eca.id_estatus', '=', 'tipo_estatus.id_estatus')
-            ->orderBy('municipio.nombre_munipio', 'asc')
+            ->orderBy('municipio.nombre_municipio', 'asc')
             ->orderBy('usuarios.nombre', 'asc')
             ->select(
                 'usuarios.id_usuario',
                 'eca.nombre_inst_ope',
-                'municipio.nombre_munipio',
+                'municipio.nombre_municipio',
                 'usuarios.nombre', 
                 'usuarios.correo',
                 'tipo_estatus.nombre_tipo as estatus',
@@ -283,7 +283,7 @@ class UsersController extends Controller
                 'usuarios.nombre',
                 'usuarios.correo',
                 'usuarios.nombre_jefe',
-                'municipio.nombre_munipio',
+                'municipio.nombre_municipio',
                 'eca.nombre_inst_ope'
             )
             ->first();

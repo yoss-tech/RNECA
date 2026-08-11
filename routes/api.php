@@ -13,6 +13,7 @@ use App\Http\Controllers\EspacioController;
 use App\Http\Controllers\MemoriaFotoController;
 use App\Http\Controllers\ActividadMemoController;
 use App\Http\Controllers\MunicipioController;
+use App\Http\Controllers\NotificacionController;
 
 use App\Http\Controllers\FotoActivController;
 use App\Http\Controllers\OficiosRnecaController;
@@ -121,6 +122,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/municipio/{id}', [MunicipioController::class, 'update']); // Modificar usuarios
     Route::get('/municipios/buscar', [MunicipioController::class, 'buscar']); //Busqueda por municipio en texto
     Route::get('/municipios/select', [MunicipioController::class, 'buscarSelect']); //busqueda por municipio en el select
+
+    //Notificaciones
+    Route::get('/notificaciones', [NotificacionController::class, 'index']);
+    Route::get('/notificaciones/contador', [NotificacionController::class, 'contador']);
+    Route::put('/notificaciones/{id}/leida', [NotificacionController::class, 'marcarLeida']);
 
     // Eliminar una actividad de la memoria
     Route::delete('/delete_activ/{id}', [ActividadMemoController::class, 'destroy']);

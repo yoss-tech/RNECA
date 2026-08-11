@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('tipo_estatus', function (Blueprint $table) {
             $table->char('id_estatus', 20)->primary();
-            $table->string('nombre_tipo', 50)->nullable(false);
+            $table->string('nombre_tipo', 50);
         });
     }
 

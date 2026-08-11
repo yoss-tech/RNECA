@@ -15,7 +15,7 @@ return new class extends Migration
             $table->char('id_oficio', 20)->primary();
             $table->string('mes_oficio', 20);
             $table->string('ruta_oficio', 255);
-            $table->char('observacion', 500)->default('Sin observaciones');
+            $table->text('observacion')->default('Sin observaciones');
             $table->date('fecha_registro')->default(now());
             $table->date('fecha_firma')->default(now());
             $table->date('fecha_obser')->default(now());
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('clave_eca')->references('clave_eca')->on('eca');
-            $table->foreign('id_estatus')->references('id_estatus')->on('estatus');
+            $table->foreign('id_estatus')->references('id_estatus')->on('tipo_estatus');
         });
     }
 

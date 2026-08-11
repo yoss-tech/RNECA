@@ -370,7 +370,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
                                         key={municipio.id_municipio}
                                         value={municipio.id_municipio}
                                     >
-                                        {municipio.nombre_munipio}
+                                        {municipio.nombre_municipio}
                                     </option>
                                 ))}
                             </select>

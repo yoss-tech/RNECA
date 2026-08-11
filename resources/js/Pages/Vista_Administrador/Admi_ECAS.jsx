@@ -46,7 +46,7 @@ function Admi_ECAS() {
           <tr key={eca.id_usuario}>
             <td>{eca.nombre}</td>
             <td>
-              <p className="text-subtitle">{eca.nombre_munipio}</p>
+              <p className="text-subtitle">{eca.nombre_municipio}</p>
               <p className="text-bold">{eca.nombre_inst_ope}</p>
             </td>
             <td>{eca.correo}</td>

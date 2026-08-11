@@ -23,10 +23,10 @@ class EcaController extends Controller
             'eca.id_usuario',
             'eca.nombre_inst',
             'eca.nombre_inst_ope',
-            'municipio.nombre_munipio',
+            'municipio.nombre_municipio',
             'usuarios.nombre as nombre_Responsable',
             'usuarios.nombre_jefe as Jefe_inmediato',
-            'municipio.nombre_munipio as municipio'
+            'municipio.nombre_municipio as municipio'
         )
         ->where('eca.id_usuario', auth()->user()->id_usuario)
         ->first();
@@ -288,7 +288,7 @@ class EcaController extends Controller
             ->join('rol', 'usuarios.id_rol', '=', 'rol.id_rol')
             ->join('tipo_estatus', 'eca.id_estatus', '=', 'tipo_estatus.id_estatus')
             ->orderBy('tipo_estatus.nombre_tipo', 'desc')
-            ->orderBy('municipio.nombre_munipio', 'asc')
+            ->orderBy('municipio.nombre_municipio', 'asc')
             ->select(
                 'direccion.id_direccion',
                 'usuarios.id_usuario',
@@ -304,7 +304,7 @@ class EcaController extends Controller
                 'direccion.calle_av',
                 'direccion.num_direccion',
                 'direccion.colonia',
-                'municipio.nombre_munipio',
+                'municipio.nombre_municipio',
                 'direccion.localidad',
                 'direccion.cod_postal',
                 'detalle_eca.telefonos',

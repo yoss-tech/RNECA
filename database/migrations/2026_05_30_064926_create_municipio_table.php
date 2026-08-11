@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('municipio', function (Blueprint $table) {
             $table->char('id_municipio', 20)->primary();
-            $table->string('nombre_munipio', 40)->nullable(false);
-            $table->integer('num_habitan')->nullable(false);
+            $table->string('nombre_municipio', 40);
+            $table->integer('num_habitan');
             $table->string('estado', 60)->default('');
         });
     }

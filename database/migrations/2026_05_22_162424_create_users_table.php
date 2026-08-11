@@ -14,12 +14,12 @@ return new class extends Migration
     {
         Schema::create('usuarios', function (Blueprint $table) {
             $table->char('id_usuario', 20)->primary();
-            $table->string('nombre', 60)->nullable(false);
-            $table->string('correo', 100)->nullable(false);
-            $table->string('password')->nullable(false);
-            $table->boolean('cambiar_password')->nullable(false);
+            $table->string('nombre', 80);
+            $table->string('correo', 100)->unique();
+            $table->string('password');
+            $table->boolean('cambiar_password');
             $table->date('fecha_registro')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->char('id_rol', 20)->nullable(false);
+            $table->char('id_rol', 20);
             $table->string('nombre_jefe', 200)->default('Sin jefe inmediato')->nullable();
 
             // Definición de llaves foráneas

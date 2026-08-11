@@ -10,7 +10,7 @@ function Perfil({ cerrarModal, obtenerPerfil, mostrarInformacion = false}) {
     const [mostrarPasswordConfirm, setMostrarPasswordConfirm] = useState(false);
 
     const [datos, setDatos] = useState({
-        nombre_munipio: "",
+        nombre_municipio: "",
         nombre_inst_ope: "",
         nombre_jefe: "",
         nombre: "",
@@ -25,7 +25,7 @@ function Perfil({ cerrarModal, obtenerPerfil, mostrarInformacion = false}) {
         if (response?.status === 200) {
             setDatos({
                 nombre_inst_ope: response.body.nombre_inst_ope || "",
-                nombre_munipio: response.body.nombre_munipio || "",
+                nombre_municipio: response.body.nombre_municipio || "",
                 nombre_jefe: response.body.nombre_jefe || "",
                 nombre: response.body.nombre || "",
                 correo: response.body.correo || "",
@@ -110,7 +110,7 @@ function Perfil({ cerrarModal, obtenerPerfil, mostrarInformacion = false}) {
                         {mostrarInformacion && (
                             <>
                             <div class="mb-3">
-                                <p className="text-title">{datos.nombre_munipio}</p>
+                                <p className="text-title">{datos.nombre_municipio}</p>
                                 <p className="text-subtitle">{datos.nombre_inst_ope}</p>
                             </div>
                             <div className="form-group">

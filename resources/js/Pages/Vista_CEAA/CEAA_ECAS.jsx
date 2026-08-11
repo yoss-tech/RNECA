@@ -87,7 +87,7 @@ function CEAA_Ecas() {
                 <p>{eca.clave_eca}</p>
               </td>
               <td>
-                <p className="text-title">{eca.nombre_munipio}</p>
+                <p className="text-title">{eca.nombre_municipio}</p>
               </td>
               <td>
                 <p className="text-subtitle">{eca.nombre_inst_ope}</p>
