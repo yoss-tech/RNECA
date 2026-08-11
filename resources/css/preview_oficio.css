@@ -1,26 +1,308 @@
-.controles{
+.tabla-espacio-general {
+    border-collapse: collapse;
+    table-layout: fixed;
     width: 100%;
+    min-width: 1350px;
+    color: #1a1a1a;
+}
+
+.tabla-espacio-general td{
+    border: 1px solid #999;
+    padding: 4px 6px;
+    vertical-align: middle;
+    color: #000;
+    font-size: 9px;
+}
+.item-left{
+    text-align: left;
+}
+.item-center{
+    text-align: center;
+}
+.item-right{
+    text-align: right;
+}
+
+.tabla-espacio-general th {
+    border: 1px solid #999;
+    padding: 4px 6px;
+    vertical-align: middle;
+    color: #000;
+    text-align: center;
+    font-size: 10px;
+}
+
+.tabla-espacio-general thead th {
     background-color: #ffffff;
-    padding: 1.5rem;
-    border-radius: 0.75rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    height: fit-content;
+    font-weight: 700;
+    text-align: center;
+    vertical-align: middle;
 }
 
-
-.modal-grid{
-    display: flex;
-    flex-direction: column;
-    background-color: #f5f5f5;
-    min-height: 100vh;
+@page {
+    size: portrait;
+    margin: 0.4cm;
+    scale: inherit;
 }
 
-.vista_oficio{
-    width: 100%;
-    overflow-x: auto;
+@media print {
+    .tabla-espacio-general {
+        font-size: 6px;
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .tabla-espacio-general th,
+    .tabla-espacio-general td {
+        padding: 1px 2px;
+        line-height: 1.1;
+    }
+
+    .hoja-a4.pagina-horizontal {
+        width: 520mm !important;
+        height: 216mm !important;
+
+        transform: rotate(-90deg) translate(-98%, 0);
+        transform-origin: top left;
+
+        position: absolute !important;
+        margin: 0 !important;
+
+        top: 10mm !important;
+        left: 10mm !important;
+
+        box-shadow: none !important;
+        border: none !important;
+        background: #ffffff !important;
+        box-sizing: border-box !important;
+        page-break-after: always !important;
+        break-after: page !important;
+
+        overflow: hidden !important;
+    }
+
+    body,
+    html {
+        background: #ffffff !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 623mm !important;
+    }
+
+    .documento-preview-container {
+        padding: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        overflow: visible !important;
+    }
+
+}
+
+/* Estilos para el contenedor principal de la vista previa */
+.documento-preview-container {
     padding: 1rem;
+    background-color: #f3f4f6;
+    border-radius: 0.5rem;
+    overflow: auto;
+}
+
+/* Hoja física en pantalla */
+.hoja-a4 {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    color: #000000;
+    width: 387mm;
+    min-height: 216mm;
+    margin: 0 auto 2rem auto;
+    box-sizing: border-box;
+}
+
+/* Hoja horizontal solo en pantalla */
+.pagina-horizontal {
+    width: 387mm;
+    min-height: 216mm;
+    margin: 0 auto 2rem auto;
+    box-sizing: border-box;
+
+}
+
+/* Encabezados y logotipos */
+.header-logo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.header-meta-center {
+    text-align: center;
+    width: 100%;
+}
+
+.imagen {
+    height: auto;
+}
+
+.documento-header {
+    border-bottom-width: 1px;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.2rem;
+    display: flex;
+    justify-content: space-between;
+    color: #000000;
+    font-size: 14px;
+}
+
+.header-meta {
+    text-align: right;
+    font-size: 0.875rem;
+    color: #000000;
+}
+
+.documento-contenido {
     display: flex;
     flex-direction: column;
+    gap: 1.5rem;
+    color: #000000;
+}
+
+.seccion-titulo,
+.seccion-despedida {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 0.5rem;
+}
+
+.descripcion-parrafo {
+    color: #000000;
+    line-height: 1.6;
+    text-align: justify;
+}
+
+/* Encabezado del documento */
+.header-logo {
+    display: flex;
+    justify-content: center;
     align-items: center;
 }
 
+.header-meta-center {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+}
+
+.imagen {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.header-info p {
+    font-size: 0.875rem;
+    color: #000000;
+}
+
+.header-meta {
+    text-align: right;
+    font-size: 0.875rem;
+    color: #000000;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    background-color: #f9fafb;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    border-width: 1px;
+}
+
+.info-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #000000;
+    text-transform: uppercase;
+}
+
+.info-dato {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.info-firma {
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* Títulos de sección */
+.seccion-titulo,
+.seccion-despedida {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 0.5rem;
+}
+
+/* Párrafo de descripción */
+.descripcion-parrafo {
+    color: #000000;
+    line-height: 1.625;
+    text-align: justify;
+}
+
+/* Pie de página */
+.documento-footer {
+    margin-top: 5rem;
+    padding-top: 1rem;
+    border-top-width: 1px;
+    border-color: #e5e7eb;
+    /* text-align: center; */
+    font-size: 0.75rem;
+    color: #000000;
+    /* align-items: center; */
+}
+
+/* Firmas*/
+.firmas {
+    margin-top: 40px;
+    text-align: center;
+    margin-left: 80px;
+    margin-right: 80px;
+}
+
+.firmas p {
+    margin: 15px 0;
+    text-align: center !important;
+}
+
+.linea-firma {
+    width: 66%;
+    margin: 40px auto 5px auto;
+    border-top: 1px solid #000;
+    height: 1px;
+    color: #000;
+}
+
+.dashboard {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    gap: 20px;
+    height: 100%;
+    align-items: flex-start;
+}
+
+.dashboard-left {
+    flex: 2;
+}
+
+.dashboard-right {
+    flex: 2;
+}

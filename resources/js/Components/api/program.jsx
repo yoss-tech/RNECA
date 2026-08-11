@@ -1,6 +1,6 @@
 import axiosInstance from "./axiosInstance";
 
-export const create_program = async (data) =>{
+export const create_program = async (data) => {
     const formData = new FormData();
     formData.append('municipio', data.programa.municipio);
     formData.append('localidad', data.programa.localidad);
@@ -10,21 +10,21 @@ export const create_program = async (data) =>{
     formData.append('pobl_ate', data.programa.pobl_ate);
     formData.append('fecha_mes', data.programa.fecha_mes);
     formData.append('descripcion_activ', data.programa.descripcion_activ);
-    
+
     if (data.imagenes && data.imagenes.length > 0) {
         for (let i = 0; i < data.imagenes.length; i++) {
             formData.append('imagenes[]', data.imagenes[i]);
         }
     }
 
-    try{
+    try {
         const response = await axiosInstance.post('/create_program', formData);
         return response.data;
     }
-    catch(error){
+    catch (error) {
         console.log(error);
         return null;
-        }
+    }
 }
 
 export const getProgramData = async () => {
@@ -49,22 +49,33 @@ export const delete_program = async (id) => {
 }
 
 export const update_program = async (data) => {
-    try{
+    try {
         const response = await axiosInstance.put('/update_program', data);
         return response.data;
     }
-    catch(error){
+    catch (error) {
         console.log(error);
         return null;
     }
 }
 
 export const checkActividadesRegistro = async () => {
-    try{
+    try {
         const response = await axiosInstance.get('/checkActividad');
         return response.data;
     }
-    catch(error){
+    catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+export const getTotalPlaticas = async () => {
+    try {
+        const response = await axiosInstance.get('/getTotalPlaticas');
+        return response.data;
+    }
+    catch (error) {
         console.log(error);
         return null;
     }
