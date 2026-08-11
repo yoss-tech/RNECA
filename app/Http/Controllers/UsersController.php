@@ -19,6 +19,24 @@ class UsersController extends Controller
         
     }
 
+    public function getadmin()
+    {
+        $admin = DB::table('usuarios')
+            ->select(
+                'usuarios.nombre',
+                'usuarios.nombre_jefe',
+                'rol.nombre_rol as rol'
+            )
+            ->join('rol', 'usuarios.id_rol', '=', 'rol.id_rol')
+            ->where('usuarios.id_usuario', auth()->user()->id_usuario)
+            ->first();
+
+        return response()->json([
+            'status' => 200,
+            'body' => $admin
+        ]);
+    }
+
     public function showUserEcas()
     {
         $ecas = DB::table('usuarios')

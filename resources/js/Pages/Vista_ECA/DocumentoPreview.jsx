@@ -97,7 +97,7 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
     fetchMemoriaAndImages();
   }, []);
 
-  // Petición para obtener la descripción general de la memoria fotográfica
+  // Petición para obtener la información del eca
   useEffect(() => {
     const fechtInfo = async () => {
       setEcaInfoCargando(true);
@@ -353,14 +353,18 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
       </div>
       <div className="documento-footer">
         <div className='dashboard'>
-          <div class="firmas">
-            <div class="firma dashboard-left">
-              <div class="linea-firma">{ecaInfo?.Jefe_inmediato || '---'} Director General de la comisión de Agua y Alcantarillado del Municipio de {ecaInfo?.municipio || '...'}, Hidalgo</div>
+          <div className='dashboard-left'>
+            <div class="firmas">
+              <div class="firma">
+                <div class="linea-firma">{ecaInfo?.Jefe_inmediato || '---'} Director General de la comisión de Agua y Alcantarillado del Municipio de {ecaInfo?.municipio || '...'}, Hidalgo</div>
+              </div>
             </div>
           </div>
-          <div className='firmas'>
-            <div class="firma dashboard-right">
-              <div class="linea-firma">{ecaInfo?.nombre_Responsable || '---'} Encargado del Área de Espacio de Cultura del Agua de la {ecaInfo?.nombre_eca || '...'}</div>
+          <div className='dashboard-right'>
+            <div className='firmas'>
+              <div class="firma">
+                <div class="linea-firma">{ecaInfo?.nombre_Responsable || '---'} Encargado del Área de Espacio de Cultura del Agua de la {ecaInfo?.nombre_eca || '...'}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -458,14 +462,18 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
       </div>
       <div className="documento-footer">
         <div className='dashboard'>
-          <div class="firmas">
-            <div class="firma dashboard-left">
-              <div class="linea-firma">{ecaInfo?.Jefe_inmediato || '---'} Director General de la comisión de Agua y Alcantarillado del Municipio de {ecaInfo?.municipio || '...'}, Hidalgo</div>
+          <div className='dashboard-left'>
+            <div class="firmas">
+              <div class="firma">
+                <div class="linea-firma">{ecaInfo?.Jefe_inmediato || '---'} Director General de la comisión de Agua y Alcantarillado del Municipio de {ecaInfo?.municipio || '...'}, Hidalgo</div>
+              </div>
             </div>
           </div>
-          <div className='firmas'>
-            <div class="firma dashboard-right">
-              <div class="linea-firma">{ecaInfo?.nombre_Responsable || '---'} Coordinador del Espacio de Cultura del Agua de {ecaInfo?.municipio || '...'}</div>
+          <div className='dashboard-right'>
+            <div className='firmas'>
+              <div class="firma">
+                <div class="linea-firma">{ecaInfo?.nombre_Responsable || '---'} Coordinador del Espacio de Cultura del Agua de {ecaInfo?.municipio || '...'}</div>
+              </div>
             </div>
           </div>
         </div>

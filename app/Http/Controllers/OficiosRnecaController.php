@@ -90,7 +90,7 @@ class OficiosRnecaController extends Controller
         // $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
 
         $oficios = DB::table('oficios_rneca as ofr')
-            ->join('eca', 'ofr.clave_eca', '=', 'eca.clave_eca')
+            ->join('eca', 'ofr.IdClave_eca', '=', 'eca.clave_eca')
             ->join('usuarios as u', 'eca.id_usuario', '=', 'u.id_usuario')
             ->join('tipo_estatus as te', 'ofr.id_estatus', '=', 'te.id_estatus')
             ->select(
@@ -115,7 +115,7 @@ class OficiosRnecaController extends Controller
     public function OficioRneca()
     {
         $oficios = DB::table('oficios_rneca as ofr')
-            ->join('eca', 'ofr.clave_eca', '=', 'eca.clave_eca')
+            ->join('eca', 'ofr.idClave_eca', '=', 'eca.clave_eca')
             ->join('usuarios as u', 'eca.id_usuario', '=', 'u.id_usuario')
             ->join('tipo_estatus as te', 'ofr.id_estatus', '=', 'te.id_estatus')
             ->select(
@@ -336,7 +336,7 @@ class OficiosRnecaController extends Controller
         $currentYear = date('Y');
 
         $oficio = DB::table('oficios_rneca as of')
-            ->where('of.clave_eca', $eca->clave_eca)
+            ->where('of.IdClave_eca', $eca->clave_eca)
             ->whereMonth('of.fecha_registro', $currentMonth)
             ->whereYear('of.fecha_registro', $currentYear)
             // ->where('of.id_estatus', '=', 'EST-R4M8TP1L')

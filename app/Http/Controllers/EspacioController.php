@@ -304,6 +304,7 @@ class EspacioController extends Controller
             ->join('material_didact as md', 'esp.id_espacio', '=', 'md.id_espacio')
             ->select(
                 'eca.clave_eca',
+                'eca.nombre_inst_ope',
                 'md.inedito',
                 'md.reproducido',
                 'md.adquirido',

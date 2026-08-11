@@ -4,7 +4,7 @@ import DocumentoPreview from './DocumentoPreview';
 import { create_ofice, checkOficio } from "../../Components/api/oficio.jsx";
 import { mostrarSoloMes } from "../../Components/functions.jsx"
 import '../../../css/Preview.css';
-import '../../../css/Style.css';
+// import '../../../css/Style.css';
 import SelectorArchivo from '../../Components/SelectorArchivo';
 import Swal from "sweetalert2";
 
@@ -29,7 +29,7 @@ function PanelDocumento() {
       }
       catch (error) {
         console.error('Sin registros aún', error);
-        setResultado(false); 
+        setResultado(false);
       }
     };
 
@@ -48,7 +48,7 @@ function PanelDocumento() {
       });
       setHasShownAlert(true);
     }
-  }, [resultado, hasShownAlert]); 
+  }, [resultado, hasShownAlert]);
 
   // Ejemplo de estado.
   const [datosFormulario, setDatosFormulario] = useState({
@@ -128,13 +128,14 @@ function PanelDocumento() {
               </div>
             </form>
           </div>
-          <div className="btn-container-vertical">
-            <button onClick={handlePrint} className="btn-primario" disabled={isDocumentoLoading}>
+          <SelectorArchivo onChange={handleFileChange} />
+          <br />
+          <div className="dashboard">
+            <button onClick={handlePrint} className="btn-primario" style={{ padding: '10px auto', fontSize: "14px" }} disabled={isDocumentoLoading}>
               <i class="bi bi-filetype-pdf"></i>
               Generar PDF
             </button>
-            <SelectorArchivo onChange={handleFileChange} />
-            <button type="submit" className="btn-negativo" onClick={handleSubmit} disabled={isDocumentoLoading || resultado === true}>
+            <button type="submit" className="btn-negativo" onClick={handleSubmit} disabled={isDocumentoLoading || resultado === true} style={{ padding: '10px auto', fontSize: "14px" }}>
               <i class="bi bi-clipboard2-check"></i>
               Enviar a revisión
             </button>
