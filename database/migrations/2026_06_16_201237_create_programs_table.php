@@ -14,14 +14,13 @@ return new class extends Migration
         Schema::create('program_cult', function (Blueprint $table) {
             $table->char('id_program', 20)->primary();
             $table->string('municipio', 40)->default('');
-            $table->string('localidad', 30)->nullable(false);
-            $table->string('tipo_platica', 50)->nullable(false);
+            $table->string('localidad', 30);
+            $table->string('tipo_platica', 50);
             $table->string('otras_activ', 100)->default('');
-            $table->string('descripcion_activ', 500)->nullable();
-            $table->string('alumnos_Aten',250)->nullable();
-            $table->integer('pobl_ate')->default(0);
+            $table->integer('alumnos_Aten')->nullable();
+            $table->integer('pobl_ate')->nullable();
             $table->date('fecha_registro')->default(now());
-            $table->string('fecha_mes', 15)->nullable(false);
+            $table->string('fecha_mes', 15);
             $table->char('clave_eca', 12);
 
             // Foreign Keys

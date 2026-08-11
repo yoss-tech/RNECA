@@ -446,7 +446,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 
 CREATE TABLE `municipio` (
   `id_municipio` char(20) NOT NULL,
-  `nombre_munipio` varchar(40) NOT NULL,
+  `nombre_municipio` varchar(40) NOT NULL,
   `num_habitan` int(15) NOT NULL,
   `estado` varchar(60) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -455,7 +455,7 @@ CREATE TABLE `municipio` (
 -- Volcado de datos para la tabla `municipio`
 --
 
-INSERT INTO `municipio` (`id_municipio`, `nombre_munipio`, `num_habitan`, `estado`) VALUES
+INSERT INTO `municipio` (`id_municipio`, `nombre_municipio`, `num_habitan`, `estado`) VALUES
 ('MUN-1', 'Acatlán', 22268, 'Hidalgo'),
 ('MUN-10', 'Atitalaquia', 31525, 'Hidalgo'),
 ('MUN-11', 'Atlapexco', 19812, 'Hidalgo'),

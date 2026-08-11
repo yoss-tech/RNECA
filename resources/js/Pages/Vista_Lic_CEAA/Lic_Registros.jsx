@@ -66,7 +66,7 @@ function Lic_Registros() {
             <option value="">Todos los municipios</option>
             {listaMunicipios.map((oficioVal) => (
               <option key={oficioVal.id_municipio} value={oficioVal.id_municipio}>
-                {oficioVal.nombre_munipio}
+                {oficioVal.nombre_municipio}
               </option>
             ))}
           </select>
@@ -94,7 +94,7 @@ function Lic_Registros() {
                 <div className="card-municipio" key={oficioVal.id_municipio}>
                   <div class="card-body">
                     <div className="card-titles">
-                      <h3 className="text-title">{oficioVal.nombre_munipio}</h3>
+                      <h3 className="text-title">{oficioVal.nombre_municipio}</h3>
                       <h3 class="text-subtitle">{oficioVal.nombre_inst_ope}</h3>
                       <p class="text-bold">Mes: {oficioVal.mes_oficio}</p>
                       <p class="text-bold">Fecha: {oficioVal.fecha_registro}</p>

@@ -78,7 +78,7 @@ function CEAA_Pendientes() {
               <option value="">Todos los municipios</option>
               {listaMunicipios.map((oficioPen) => (
                 <option key={oficioPen.id_municipio} value={oficioPen.id_municipio}>
-                  {oficioPen.nombre_munipio}
+                  {oficioPen.nombre_municipio}
                 </option>
               ))}
             </select>
@@ -106,7 +106,7 @@ function CEAA_Pendientes() {
                   <div className="card-municipio" key={oficioPen.id_municipio}>
                     <div className="card-body">
                       <div className="card-titles">
-                        <h3 className="text-title">{oficioPen.nombre_munipio}</h3>
+                        <h3 className="text-title">{oficioPen.nombre_municipio}</h3>
                         <h3 className="text-subtitle">{oficioPen.nombre_inst_ope}</h3>
                         <p>Informes pendientes:{oficioPen.pendientes}</p>
                       </div>

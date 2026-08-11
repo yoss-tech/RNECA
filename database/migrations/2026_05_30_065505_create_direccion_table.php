@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('direccion', function (Blueprint $table) {
             $table->char('id_direccion', 20)->primary();
-            $table->string('cod_postal', 5)->nullable(false);
-            $table->string('localidad', 50)->nullable(false);
-            $table->string('colonia', 50)->nullable(false);
-            $table->string('calle_av', 50)->nullable(false);
-            $table->string('num_direccion', 20)->nullable(false);
-            $table->string('tipo_instancia', 100)->nullable(false);
-            $table->char('id_municipio', 20)->nullable(false);
+            $table->string('cod_postal', 5);
+            $table->string('localidad', 50);
+            $table->string('colonia', 50);
+            $table->string('calle_av', 50);
+            $table->string('num_direccion', 20);
+            $table->string('tipo_instancia', 100);
+            $table->char('id_municipio', 20);
 
             $table->foreign('id_municipio')->references('id_municipio')->on('municipio');
         });

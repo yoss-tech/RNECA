@@ -65,7 +65,7 @@ function CEAA_Solicitudes() {
             <option value="">Todos los municipios</option>
             {listaMunicipios.map((municipio) => (
               <option key={municipio.id_municipio} value={municipio.id_municipio}>
-                {municipio.nombre_munipio}
+                {municipio.nombre_municipio}
               </option>
             ))}
           </select>
@@ -90,7 +90,7 @@ function CEAA_Solicitudes() {
               <div className="card-municipio" key={municipio.id_municipio}>
                 <div className="card-body">
                   <div className="card-titles">
-                    <h3 className="text-title">{municipio.nombre_munipio}</h3>
+                    <h3 className="text-title">{municipio.nombre_municipio}</h3>
                     <h3 className="text-subtitle">Instancia Operativa:</h3>
                     <p className="text-bold">Mes:</p>
                     <p className="text-bold">Fecha:</p>

@@ -72,7 +72,7 @@ function CEAA_Validados() {
             <option value="">Todos los municipios</option>
             {listaMunicipios.map((oficioVal) => (
               <option key={oficioVal.id_municipio} value={oficioVal.id_municipio}>
-                {oficioVal.nombre_munipio}
+                {oficioVal.nombre_municipio}
               </option>
             ))}
           </select>
@@ -98,7 +98,7 @@ function CEAA_Validados() {
                 <div className="card-municipio" key={oficioVal.id_municipio}>
                   <div className="card-body">
                     <div className="card-titles">
-                      <h3 className="text-title">{oficioVal.nombre_munipio}</h3>
+                      <h3 className="text-title">{oficioVal.nombre_municipio}</h3>
                       <h3 className="text-subtitle">{oficioVal.nombre_inst_ope}</h3>
                       <p className="text-bold">Mes: {oficioVal.mes_oficio}</p>
                       <p className="text-bold">Fecha: {oficioVal.fecha_registro}</p>

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('rol', function (Blueprint $table) {
             $table->char('id_rol', 20)->primary();
-            $table->string('nombre_rol', 30)->nullable(false);
+            $table->string('nombre_rol', 30);
         });
     }
 

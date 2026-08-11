@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('espaciocultura', function (Blueprint $table) {
             $table->char('id_espacio', 20)->primary();
-            $table->integer('total_pobl')->nullable(false);
-            $table->string('comentarios', 450)->nullable(false);
+            $table->integer('total_pobl');
+            $table->text('comentarios');
             $table->date('fecha_registro')->default(now());
-            $table->char('clave_eca', 12)->nullable(false);
+            $table->char('clave_eca', 12);
 
             // Foreign Keys
             $table->foreign('clave_eca')->references('clave_eca')->on('eca');
