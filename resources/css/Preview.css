@@ -200,17 +200,6 @@
         table-layout: auto !important;
     }
 
-    /* .pagina-horizontal .tabla-programa td,
-    .pagina-horizontal .tabla-programa th {
-        font-size: 6pt !important;
-        padding: 2px !important;
-    }
-
-    .pagina-horizontal .tabla-espacio td,
-    .pagina-horizontal .tabla-espacio th {
-        font-size: 5.5pt !important;
-        padding: 1px !important;
-    } */
 }
 
 /* Encabezado del documento */
@@ -235,7 +224,7 @@
 
 .tabla-header {
     background-color: #0a74cb;
-     /* font-weight: bold; */
+    /* font-weight: bold; */
 }
 
 .header-info p {
@@ -375,6 +364,17 @@
     width: 100%;
     height: fit-content;
     display: flex;
+    gap: 20px;
+    height: 100%;
+    align-items: flex-start;
+}
+
+.dashboard-left {
+    flex: 2;
+}
+
+.dashboard-right {
+    flex: 2;
 }
 
 .panel-controles-titulo {
@@ -409,19 +409,6 @@
         height: 33.666667%;
     }
 }
-
-/* .tabla-programa td,
-.tabla-programa th {
-    border: 1px solid #d1d5db;
-    font-size: small;
-}
-
-
-.tabla-espacio td,
-.tabla-espacio th {
-    border: 1px solid #d1d5db;
-    font-size: xx-small;
-} */
 
 /* Estilos para la paginación */
 .paginacion-controles {

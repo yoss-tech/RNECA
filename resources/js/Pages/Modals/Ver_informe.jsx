@@ -129,7 +129,7 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
                         </div>
                     ) : showPdf && (
                         <>
-                            <div className="dashboard">
+                            <div className="dashboard" style={{height: "520px"}}>
                                 <div className="dashboard-left" style={{ width: '60%', height: 'calc(100%)' }}>
                                     <iframe
                                         src={pdfSrc}

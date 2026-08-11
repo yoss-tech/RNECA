@@ -13,3 +13,14 @@ export const GetUserInfo = async () => {
         return null;
     }
 }
+
+export const getadmin = async () => {
+    try{
+        const response = await axiosInstance.get('/usuarios/admin');
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error en getadmin:", error);
+        return null;
+    }
+}

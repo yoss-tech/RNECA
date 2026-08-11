@@ -56,3 +56,15 @@ export const getDataEspacio = async (id) => {
         return error;
     }
 }
+
+// Función para obtener toda la información del espacio de cultura (General) de todos los ecas
+export const getAllEspacio = async () => {
+    try{
+        const response = await axiosInstance.get('/getEspacios');
+        return response.data;
+    }
+    catch(error){
+        console.log(error);
+        return null;
+    }
+}
