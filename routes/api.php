@@ -58,7 +58,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/checkActividad', [ProgramController::class, 'checkActividad']); // Validación para evitar registros de actividades doble por un ECA
     Route::get('/infoMemoria', [ProgramController::class, 'get_memoria']); // Informacion de la memoria fotografica con sus actividades correspondiente
     Route::get('/getActivityById/{id}', [ProgramController::class, 'actividadById']); // Obtener la inforamción de la actividad por su id
-
+    Route::get('/getTotalPlaticas', [ProgramController::class, 'getTotalPlaticas']); //Total de platica por eca
 
     // Espacio de cultura
     Route::post('/create_espacio', [EspacioController::class, 'store']);
@@ -115,6 +115,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/usuarios/ceaa', [UsersController::class, 'showUserCeaa']); // Información de los usuarios del ceaa
     Route::get('/usuarios/lic', [UsersController::class, 'showUserLic']); // Información del licenciado
     Route::put('/usuarios/{id}', [UsersController::class, 'update']); // Modificar usuarios
+    Route::get('/usuarios/admin', [UsersController::class, 'getadmin']); // Información del administrador
 
     //Municipios
     Route::get('/municipio', [MunicipioController::class, 'municipios']); // Información de los municipios
@@ -141,6 +142,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/delete_espacio/{id}', [EspacioController::class, 'destroy']);
 });
 
+// Route::get('/getTotalPlaticas', [ProgramController::class, 'getTotalPlaticas']); //Total de platica por eca
 
 // El login se maneja a través de AuthController vinculado en auth.php
 Route::post('/login', [AuthController::class, 'login'])->name('api.login');

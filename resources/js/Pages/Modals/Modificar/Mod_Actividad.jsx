@@ -13,8 +13,8 @@ function Mod_Actividad({ cerrarModal, actividad, actualizarActiv }) {
     localidad: actividad?.localidad || '',
     tipo_platica: actividad?.tipo_platica || '',
     otras_activ: actividad?.otras_activ || '',
-    alumnos_Aten: actividad?.alumnos_Aten || '',
-    pobl_ate: actividad?.pobl_ate || '',
+    alumnos_Aten: actividad?.alumnos_Aten || '0',
+    pobl_ate: actividad?.pobl_ate || '0',
     fecha_mes: actividad?.fecha_mes || '',
   });
 
@@ -104,7 +104,6 @@ function Mod_Actividad({ cerrarModal, actividad, actualizarActiv }) {
                     value={formData.localidad}
                     onChange={(e) => setFormData({ ...formData, localidad: e.target.value })}
                   />
-                  {errors.localidad && <p className="error">{errors.localidad}</p>}
                 </div>
                 <div className="form-campo">
                   <label className="form-label">Platica</label>
@@ -132,43 +131,10 @@ function Mod_Actividad({ cerrarModal, actividad, actualizarActiv }) {
                       Comunitaria
                     </label>
                   </div>
-                  {errors.tipo_platica && <p className="error">{errors.tipo_platica}</p>}
                 </div>
-                
-                {formData.tipo_platica === 'escolar' && (
-                <div className="form-campo">
-                  <label className="form-label">Alumnos Atendidos</label>
-                  <input
-                    type="number"
-                    name='alumnos_Aten'
-                    id="alumnos_Aten"
-                    placeholder="Ingresa el número de alumnos atendidos"
-                    className="form-control"
-                    value={formData.alumnos_Aten}
-                    onChange={(e) => setFormData({ ...formData, alumnos_Aten: e.target.value })}
-                  />
-                  {errors.alumnos_Aten && <p className="error">{errors.alumnos_Aten}</p>}
-                </div>
-                )}
-
-                {formData.tipo_platica === 'comunitaria' && (
-                <div className="form-campo">
-                  <label className="form-label">Población atendida</label>
-                  <input
-                    type="number"
-                    name='pobl_ate'
-                    id="pobl_ate"
-                    placeholder="Ingresa la población atendida"
-                    className="form-control"
-                    value={formData.pobl_ate}
-                    onChange={(e) => setFormData({ ...formData, pobl_ate: e.target.value })}
-                  />
-                  {errors.pobl_ate && <p className="error">{errors.pobl_ate}</p>}
-                </div>
-                )}
 
                 <div className="form-campo">
-                  <label className="form-label">Nombre de la Actividades</label>
+                  <label className="form-label">Nombre de la Actividad</label>
                   <textarea
                     rows="3"
                     name='otras_activ'
@@ -179,8 +145,37 @@ function Mod_Actividad({ cerrarModal, actividad, actualizarActiv }) {
                     onChange={(e) => setFormData({ ...formData, otras_activ: e.target.value })}
                   >
                   </textarea>
-                  {errors.otras_activ && <p className="error">{errors.otras_activ}</p>}
                 </div>
+
+
+                <div className="form-campo" hidden={formData.tipo_platica !== 'escolar'}>
+                  <label className="form-label">Alumnos Atendidos</label>
+                  <input
+                    type="number"
+                    name='alumnos_Aten'
+                    id="alumnos_Aten"
+                    placeholder="Ingresa el número de alumnos atendidos"
+                    className="form-control"
+                    value={formData.alumnos_Aten}
+                    onChange={(e) => setFormData({ ...formData, alumnos_Aten: e.target.value })}
+                  />
+                </div>
+
+
+
+                <div className="form-campo" hidden={formData.tipo_platica !== 'comunitaria'}>
+                  <label className="form-label">Población atendida</label>
+                  <input
+                    type="number"
+                    name='pobl_ate'
+                    id="pobl_ate"
+                    placeholder="Ingresa la población atendida"
+                    className="form-control"
+                    value={formData.pobl_ate}
+                    onChange={(e) => setFormData({ ...formData, pobl_ate: e.target.value })}
+                  />
+                </div>
+
 
                 <div className="form-campo" class="mb-0">
                   <label className="form-label">Fecha de la actividad</label>
@@ -193,7 +188,6 @@ function Mod_Actividad({ cerrarModal, actividad, actualizarActiv }) {
                     value={formData.fecha_mes}
                     onChange={(e) => setFormData({ ...formData, fecha_mes: e.target.value })}
                   />
-                  {errors.fecha_mes && <p className="error">{errors.fecha_mes}</p>}
                 </div>
               </div>
             </form >

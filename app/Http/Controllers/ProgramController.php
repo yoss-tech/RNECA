@@ -43,7 +43,7 @@ class ProgramController extends Controller
     }
 
     // Crear un nuevo programa de cultura (lista de actividades)
-    public function store(Request $request) 
+    public function store(Request $request)
     {
 
         // Obtener la información del ECA vinculada al usuario autenticado
@@ -59,8 +59,9 @@ class ProgramController extends Controller
             'localidad' => 'required',
             'tipo_platica' => 'required',
             'otras_activ' => 'required',
-            'alumnos_Aten' => 'nullable',
-            'pobl_ate' => 'nullable',
+            // 'descripcion_activ' => 'required',
+            // 'alumnos_Aten' => 'required',
+            // 'pobl_ate' => 'required',
             'fecha_mes' => 'required',
         ]);
 
@@ -144,7 +145,7 @@ class ProgramController extends Controller
             foto_activ::where('id_actividad', $actividad->id_actividad)->delete();
             $actividad->delete();
         }
-        
+
         $program->delete();
 
         $data = [
@@ -281,9 +282,25 @@ class ProgramController extends Controller
             ->where('pc.id_program', $id)
             ->distinct()
             ->get();
-    
+
 
         return response()->json($actividadById);
     }
 
+    public function getTotalPlaticas()
+    {
+
+        $conteosPlaticas = program::selectRaw("
+            clave_eca,
+            MONTH(fecha_registro) as mes_numero,
+            YEAR(fecha_registro) as año,
+            SUM(CASE WHEN tipo_platica = 'escolar' THEN 1 ELSE 0 END) as total_escolar,
+            SUM(CASE WHEN tipo_platica = 'comunitaria' THEN 1 ELSE 0 END) as total_comunitarias
+        ")
+        ->groupByRaw('MONTH(fecha_registro), clave_eca, YEAR(fecha_registro)')
+        ->orderBy('mes_numero', 'asc')
+        ->get();
+        
+        return response()->json($conteosPlaticas);
+    }
 }

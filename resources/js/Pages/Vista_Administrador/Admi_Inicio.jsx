@@ -6,6 +6,8 @@ import Admi_DireA from "./Admi_DireA.jsx";
 import Admi_ECAS from "./Admi_ECAS.jsx";
 import Admi_NumHab from "./Admi_NumHab.jsx";
 import Admi_SupervisoresECAS from "./Admi_SEcas.jsx";
+import Admin_oficios from "./Admi_oficios.jsx";
+import Contador from "@/Components/ContadorNumero.jsx";
 import Perfil_Admi from "../Modals/Perfiles/Perfil.jsx";
 import Notificaciones_Admi from "../Modals/Notificaciones/Notificacion_Admi.jsx";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
@@ -79,7 +81,7 @@ function Admi_Inicio() {
       setTotalMunicipio(response.body);
     }
   };
-  useEffect (() => {
+  useEffect(() => {
     cargarTotalUser();
     cargarTotalUserECAS();
     cargarTotalUserInactivo();
@@ -110,7 +112,7 @@ function Admi_Inicio() {
             </button>
             {CerrarSesion && (
               <div className="menu-perfil">
-                <button className="btn-cerrar-sesion"  onClick={() =>setMostrarPerfil(true)}>
+                <button className="btn-cerrar-sesion" onClick={() => setMostrarPerfil(true)}>
                   Perfil
                 </button>
                 {mostrarPerfil && (
@@ -194,6 +196,15 @@ function Admi_Inicio() {
             </ul>
           )}
         </div>
+        <div className="form-group">
+          <a
+            className={vistaActual === "oficios" ? "active" : ""}
+            onClick={() => setVistaActual("oficios")}
+            style={{ cursor: "pointer" }}>
+            <i className="bi bi-file-text"></i>
+            Generación de oficios
+          </a>
+        </div>
       </div>
 
       <div className="content">
@@ -202,33 +213,33 @@ function Admi_Inicio() {
             <div className="page-container">
               <h1 className="page-title">Administración general de usuarios.</h1>
               <h2 className="page-subtitle">Consulte información general sobre los usuarios registrados y gestione el acceso a la plataforma.</h2>
-              
+
               <div className="dashboard-cards">
                 <div className="fila-cards">
                   <div className="card-number">
                     <div class="card-body">
-                      <h3 className="card-subtitle">Espacios de cultura del agua</h3>
-                      <h1 className="number">{totalUserECAS}</h1>
+                      <h3 className="card-subtitle">Espacios de Cultura del Agua</h3>
+                      <h1 className="number"><Contador valorFinal={totalUserECAS} /></h1>
                     </div>
                   </div>
                   <div className="card-number">
                     <div className="card-body">
                       <h3 className="card-subtitle">Municipios</h3>
-                      <h1 className="number">{totalMunicipio}</h1>
+                      <h1 className="number"><Contador valorFinal={totalMunicipio} /></h1>
                     </div>
                   </div>
                 </div>
                 <div className="fila-cards">
                   <div className="card-number">
                     <div className="card-body">
-                      <h3 className="card-subtitle">Total de usuarios</h3>
-                      <h1 className="number">{totalUser}</h1>
+                      <h3 className="card-subtitle">Total de Usuarios</h3>
+                      <h1 className="number"><Contador valorFinal={totalUser} /></h1>
                     </div>
                   </div>
                   <div className="card-number">
                     <div class="card-body">
                       <h3 className="card-subtitle">Usuarios inactivos</h3>
-                      <h1 className="number">{totalUserInactivo}</h1>
+                      <h1 className="number"><Contador valorFinal={totalUserInactivo} /></h1>
                     </div>
                   </div>
                 </div>
@@ -251,7 +262,9 @@ function Admi_Inicio() {
         {vistaActual === "diseñador" && (
           <Diseño_Formularios />
         )}
-
+        {vistaActual === "oficios" && (
+          <Admin_oficios />
+        )}
       </div>
     </>
   );
