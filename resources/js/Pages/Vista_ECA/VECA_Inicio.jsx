@@ -12,7 +12,7 @@ import VECA_Poblacion from "./Eca_Poblacion.jsx";
 import VECA_ConsultaReg from "./Eca_ConsultaRegistros.jsx";
 import PanelDocumento from "./PanelDocumento.jsx";
 import Swal from "sweetalert2";
-import Notificaciones_Eca from "../Modals/Noticaciones.jsx";
+import Notificaciones_Eca from "../Modals/Notificaciones.jsx";
 import PerfilECA from "../Modals/Perfil.jsx";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
 import "/resources/css/Style.css";
