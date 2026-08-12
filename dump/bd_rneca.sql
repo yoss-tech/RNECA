@@ -555,7 +555,7 @@ CREATE TABLE `oficios_rneca` (
   `fecha_registro` date NOT NULL DEFAULT current_timestamp(),
   `fecha_firma` date NOT NULL DEFAULT current_timestamp(),
   `fecha_obser` date NOT NULL DEFAULT current_timestamp(),
-  `idClave_eca` char(12) NOT NULL,
+  `clave_eca` char(12) NOT NULL,
   `id_estatus` char(20) NOT NULL DEFAULT 'EST-4HJVB2C9'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -563,7 +563,7 @@ CREATE TABLE `oficios_rneca` (
 -- Volcado de datos para la tabla `oficios_rneca`
 --
 
-INSERT INTO `oficios_rneca` (`id_oficio`, `mes_oficio`, `ruta_oficio`, `observacion`, `fecha_registro`, `fecha_firma`, `fecha_obser`, `idClave_eca`, `id_estatus`) VALUES
+INSERT INTO `oficios_rneca` (`id_oficio`, `mes_oficio`, `ruta_oficio`, `observacion`, `fecha_registro`, `fecha_firma`, `fecha_obser`, `clave_eca`, `id_estatus`) VALUES
 ('OFIC-1NAVJ', 'Junio', 'documents/CyqJEYLQ7yBAULJdh6cHXPtceY6myiTUAdI9JFT2.pdf', 'NA', '2026-07-19', '2026-07-19', '2026-07-28', '13-30-1-1', 'EST-4HJVB2C9'),
 ('OFIC-5CJPY', 'Junio', 'documents/sCE2W5rM5n4L1hYpC8j5AEbQA5tzQy9tvRttWG0t.pdf', '', '2026-07-16', '2026-07-19', '2026-07-28', '13-30-1-1', 'EST-4HJVB2C9'),
 ('OFIC-6F0CV', 'Junio', 'documents/nYrFxVtsfaZeaixW8tfUd5lox7V9yewgtg0LoBNU.pdf', '', '2026-07-16', '2026-07-19', '2026-07-28', '13-30-1-1', 'EST-4HJVB2C9'),
@@ -874,7 +874,7 @@ ALTER TABLE `municipio`
 --
 ALTER TABLE `oficios_rneca`
   ADD PRIMARY KEY (`id_oficio`),
-  ADD KEY `fk_rneca_eca` (`idClave_eca`),
+  ADD KEY `fk_rneca_eca` (`clave_eca`),
   ADD KEY `fk_rneca_estatus` (`id_estatus`);
 
 --
@@ -1012,7 +1012,7 @@ ALTER TABLE `material_didact`
 -- Filtros para la tabla `oficios_rneca`
 --
 ALTER TABLE `oficios_rneca`
-  ADD CONSTRAINT `fk_rneca_eca` FOREIGN KEY (`idClave_eca`) REFERENCES `eca` (`clave_eca`),
+  ADD CONSTRAINT `fk_rneca_eca` FOREIGN KEY (`clave_eca`) REFERENCES `eca` (`clave_eca`),
   ADD CONSTRAINT `fk_rneca_estatus` FOREIGN KEY (`id_estatus`) REFERENCES `tipo_estatus` (`id_estatus`);
 
 --

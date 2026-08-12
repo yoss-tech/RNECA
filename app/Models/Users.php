@@ -23,6 +23,7 @@ class Users extends Authenticatable
         'id_usuario',
         'nombre',
         'correo',
+        'correoExtra',
         'password',
         'cambiar_password',
         'nombre_jefe',

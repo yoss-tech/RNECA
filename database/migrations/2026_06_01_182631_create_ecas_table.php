@@ -24,7 +24,7 @@ return new class extends Migration
             $table->char('id_estatus', 20);
             $table->char('id_direccion', 20);
             $table->date('fecha_registro')->default(now());
-            $table->string('ruta_logo', 500);
+            $table->string('ruta_logo', 500)->nullable();
 
             // Foreign Keys
             $table->foreign('id_usuario')->references('id_usuario')->on('usuarios');

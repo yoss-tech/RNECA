@@ -76,7 +76,7 @@ body {
 .acciones-header {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 8px;
 }
 
 .icono,
@@ -87,8 +87,8 @@ body {
     cursor: pointer;
 }
 
-.icono {
-    font-size: 20px;
+.icono i {
+    font-size: 24px;
 }
 
 .icono:hover {
@@ -105,10 +105,6 @@ body {
     align-items: center;
     gap: 10px;
     color: var(--blanco-color);
-}
-
-.perfil-icono {
-    font-size: 28px;
 }
 
 /* ================= SIDEBAR ================= */

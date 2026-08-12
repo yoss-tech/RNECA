@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { updateUserPerfil } from "@/Components/api/usuarios";
 import Swal from "sweetalert2";
-import Toast from "../../Toast.jsx";
+import Toast from "../Toast.jsx";
 import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
 
