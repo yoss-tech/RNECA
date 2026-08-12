@@ -15,7 +15,8 @@ return new class extends Migration
         Schema::create('usuarios', function (Blueprint $table) {
             $table->char('id_usuario', 20)->primary();
             $table->string('nombre', 80);
-            $table->string('correo', 100)->unique();
+            $table->string('correo')->unique();
+            $table->string('correoExtra')->nullable();
             $table->string('password');
             $table->boolean('cambiar_password');
             $table->date('fecha_registro')->default(DB::raw('CURRENT_TIMESTAMP'));

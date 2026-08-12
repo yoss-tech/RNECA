@@ -3,19 +3,17 @@ import { mostrarSoloMes, dateLimit } from "../../Components/functions.jsx";
 import { logoutUser } from "../../Components/api/auth.jsx";
 import { checkEspacioRegistro } from "../../Components/api/espacio.jsx";
 import { getInfoEca } from "@/Components/api/usuarios.jsx";
-import VECA_VistaP from "./Eca_VistaPrevia.jsx";
-import VECA_Actividades from "./Eca_Actividades.jsx";
-import VECA_Poblacion from "./Eca_Poblacion.jsx";
-import VECA_Memoria from "./Eca_Memoria.jsx";
-import VECA_ConsultaReg from "./Eca_ConsultaRegistros.jsx";
-import PanelDocumento from "./PanelDocumento.jsx";
-import { Head } from "@inertiajs/react";
 import { checkActividadesRegistro } from "../../Components/api/program.jsx"
 import { checkOficio } from "../../Components/api/oficio.jsx";
 import { getLastOficio } from "../../Components/api/dowload_ofice.js";
+import { getContadorNotificaciones } from "@/Components/api/notificaciones.jsx";
+import VECA_Actividades from "./Eca_Actividades.jsx";
+import VECA_Poblacion from "./Eca_Poblacion.jsx";
+import VECA_ConsultaReg from "./Eca_ConsultaRegistros.jsx";
+import PanelDocumento from "./PanelDocumento.jsx";
 import Swal from "sweetalert2";
-import Notificaciones_Eca from "../Modals/Notificaciones/NoticacionECA.jsx";
-import PerfilECA from "../Modals/Perfiles/Perfil.jsx";
+import Notificaciones_Eca from "../Modals/Noticaciones.jsx";
+import PerfilECA from "../Modals/Perfil.jsx";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
 import "/resources/css/Style.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -31,6 +29,7 @@ function VECA_Inicio() {
   const [hasPoblacionRegistration, setHasPoblacionRegistration] = useState(null);
   const [hasActivitiesRegistration, setHasActivitiesRegistration] = useState(null);
   const [hasOficioSent, setHasOficioSent] = useState(null);
+  const [contador, setContador] = useState(0);
   const menuItems = document.querySelectorAll('.sidebar .form-group a');
 
   useEffect(() => {
@@ -157,6 +156,22 @@ function VECA_Inicio() {
     setVistaActual("vista_previa");
   };
 
+  const cargarContador = async () => {
+    const response = await getContadorNotificaciones();
+    console.log('Contador:', response);
+    if (response && response.status === 200) {
+      setContador(response.body);
+    }
+  };
+
+  const disminuirContador = () => {
+    setContador((prev) => Math.max(0, prev - 1));
+  };
+
+  useEffect(() => {
+    cargarContador();
+  }, []);
+
   return (
     <>
       <header className="header">
@@ -167,17 +182,22 @@ function VECA_Inicio() {
         <div className="logo"><img src={miImagen} alt="Logo RNECA" /></div>
         <div className="acciones-header">
           <button className="icono" onClick={() => setMostrarNoti(true)}>
-            <i className="bi bi-bell"></i>
+            <i className="bi bi-bell-fill"></i>
+            {contador > 0 && (
+              <span>{contador}</span>
+            )}
           </button>
           {mostrarNoti && (
             <Notificaciones_Eca
               cerrarModal={() => setMostrarNoti(false)}
+              disminuirContador={disminuirContador}
+              cambiarVista={setVistaActual}
             />
           )}
 
           <div className="perfil">
             <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)}>
-              <i className="bi bi-person-circle perfil-icono"></i>
+              <i className="bi bi-person-fill"></i>
             </button>
             {CerrarSesion && (
               <div className="menu-perfil">

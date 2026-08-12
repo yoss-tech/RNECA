@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Notificacion;
 use Illuminate\Http\Request;
-use Iluminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
 
 class NotificacionController extends Controller
 {
@@ -13,7 +13,7 @@ class NotificacionController extends Controller
         $usuario = Auth::user();
         $notificaciones = Notificacion::where(
             'id_usuario',
-            $usuario->id
+            $usuario->id_usuario
         )->orderBy('created_at', 'desc')->get();
 
         return response()->json([
@@ -27,7 +27,7 @@ class NotificacionController extends Controller
         $usuario = Auth::user();
         $contador = Notificacion::where(
             'id_usuario',
-            $usuario->id
+            $usuario->id_usuario
         )
         ->where('leida', false)
         ->count();
@@ -42,7 +42,7 @@ class NotificacionController extends Controller
     {
         $usuario = Auth::user();
         $notificacion = Notificacion::where('id', $id)
-        ->where('id_usuario', $usuario->id)
+        ->where('id_usuario', $usuario->id_usuario)
         ->firstOrFail();
 
         $notificacion->update([

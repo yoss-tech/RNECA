@@ -36,7 +36,7 @@ class oficios_rneca extends Model
         'observacion',
         'ruta_oficio_firm',
         'fecha_firma',
-        'idClave_eca',
+        'clave_eca',
         'id_estatus'
     ];
 

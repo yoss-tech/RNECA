@@ -3,14 +3,15 @@ import { getOficio } from "@/Components/api/oficio";
 import { buscarMunicipio } from "@/Components/api/municipios";
 import { getInfoPerfil } from "@/Components/api/usuarios.jsx";
 import { logoutUser } from "@/Components/api/auth.jsx";
+import { getContadorNotificaciones } from "@/Components/api/notificaciones.jsx";
 import CumplimientoInformes from "@/Components/Graficas.jsx";
 import CEAA_Pendientes from "./CEAA_Pendientes.jsx";
 import CEAA_Observaciones from "./CEAA_Observaciones.jsx";
 import CEAA_Validados from "./CEAA_Validados.jsx";
 import CEAA_Solicitudes from "./CEAA_Solicitudes.jsx";
 import CEAA_Ecas from "./CEAA_ECAS.jsx";
-import Perfil_CEAA from "../Modals/Perfiles/Perfil.jsx";
-import Notificaciones_CEAA from "../Modals/Notificaciones/Notificacion_CEAA.jsx";
+import Perfil_CEAA from "../Modals/Perfil.jsx";
+import Notificaciones_CEAA from "../Modals/Notificaciones.jsx";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
 import "/resources/css/Style.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -21,7 +22,7 @@ function CEAA_Inicio() {
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
   const [mostrarNoti, setMostrarNoti] = useState(false);
   const [CerrarSesion, setCerrarSesion] = useState(false);
-  
+  const [contador, setContador] = useState(0);
   const [municipios, setMunicipios] = useState([]);
   const [paginaActual, setPaginaActual] = useState(1);
   const registrosPorPagina = 6;
@@ -73,23 +74,44 @@ function CEAA_Inicio() {
     }
   }
 
+  const cargarContador = async () => {
+    const response = await getContadorNotificaciones();
+    console.log('Contador:', response);
+    if (response && response.status === 200) {
+      setContador(response.body);
+    }
+  };
+
+  const disminuirContador = () => {
+    setContador((prev) => Math.max(0, prev - 1));
+  };
+
+  useEffect(() => {
+    cargarContador();
+  }, []);
+
   return (
     <>
       <header className="header">
         <div className="logo"><img src={miImagen} alt="Logo RNECA"/></div>
         <div className="acciones-header">
           <button className="icono"  onClick={() =>setMostrarNoti(true)}>
-            <i className="bi bi-bell"></i>
+            <i className="bi bi-bell-fill"></i>
+            {contador > 0 && (
+              <span>{contador}</span>
+            )}
           </button>
           {mostrarNoti && (
             <Notificaciones_CEAA
               cerrarModal={() => setMostrarNoti(false)}
+              disminuirContador={disminuirContador}
+              cambiarVista={setVistaActual}
             />
           )}
           
           <div className="perfil">
             <button className="icono" onClick={() => setCerrarSesion(!CerrarSesion)}>
-              <i className="bi bi-person-circle perfil-icono"></i>
+              <i className="bi bi-person-fill"></i>
             </button>
             {CerrarSesion && (
               <div className="menu-perfil">
