@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\oficios_rneca;
+use App\Models\Notificacion;
+use App\Models\Users;
+use App\Models\Eca;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Eca;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -189,6 +191,29 @@ class OficiosRnecaController extends Controller
             'clave_eca' => $eca->clave_eca
         ]);
 
+        $municipio = DB::table('direccion')
+            ->join(
+                'municipio', 'direccion.id_municipio', '=', 'municipio.id_municipio'
+            )
+            ->where('direccion.id_direccion', $eca->id_direccion)
+            ->value('municipio.nombre_municipio');
+
+        //Buscar supervisores
+        $supervisores = Users::where('id_rol', 'rol4')->get();
+
+        //Crear notificacion
+        foreach ($supervisores as $supervisor) {
+            Notificacion::create([
+                'id_usuario' => $supervisor->id_usuario,
+                'titulo' => 'Nuevo oficio para revisión',
+                'mensaje' => 'El ECA del municipio ' . $municipio . ' ha enviado un nuevo oficio correspondiente al mes de '
+                 . $request->mes_oficio . ' para su revisión.',
+                'tipo' => 'info',
+                'url' => 'pendientes',
+                'leida' => false,
+            ]);
+        }
+
         if (!$oficio) {
             $data = [
                 'message' => 'Error al crear el oficio',
@@ -346,6 +371,36 @@ class OficiosRnecaController extends Controller
         $oficio->fecha_obser = $request->input('fecha_obser');
         $oficio->id_estatus = $request->input('id_estatus');
         $oficio->save();
+
+        if ($oficio->id_estatus === 'EST-8HCVW2C7') {
+            $eca = Eca::where('clave_eca', $oficio->clave_eca)->first();
+
+            if ($eca) {
+                Notificacion::create([
+                    'id_usuario' => $eca->id_usuario,
+                    'titulo' => 'Nueva observación',
+                    'mensaje' => 'El supervisor ha realizado una observación en tu oficio.',
+                    'tipo' => 'warning',
+                    'url' => 'consulta_registros',
+                    'leida' => false
+                ]);
+            }
+        }
+
+        if ($oficio->id_estatus === 'EST-V7WQ3N8Z') {
+            $eca = Eca::where('clave_eca', $oficio->clave_eca)->first();
+
+            if ($eca) {
+                Notificacion::create([
+                    'id_usuario' => $eca->id_usuario,
+                    'titulo' => 'Oficio validado',
+                    'mensaje' => 'Tu oficio del mes ha sido validado correctamente.',
+                    'tipo' => 'success',
+                    'url' => 'consulta_registros',
+                    'leida' => false
+                ]);
+            }
+        }
 
         return response()->json([
             'message' => 'El oficio revisado correctamente',
