@@ -65,7 +65,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/espacio/check', [EspacioController::class, 'checkRegistroActual']);
     Route::get('/infoEspacio', [EspacioController::class, 'index']); // Informacion del espacio de cultura
     Route::get('/idEspacio', [EspacioController::class, 'getIdEspacio']);
-    Route::put('/updateEspacio', [EspacioController::class, 'update']); 
+    Route::put('/updateEspacio', [EspacioController::class, 'update']);
     Route::get('/infoPoblacion/{id}', [EspacioController::class, 'show']);
     Route::get('/getEspacios', [EspacioController::class, 'getEspacios']); // Obtener todos los espacios de cultura para general el oficio del primero semestre
 
@@ -99,6 +99,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user/perfil', [UsersController::class, 'infoPerfil']); // Información del perfil
     Route::get('/user/eca', [UsersController::class, 'infoEca']); // Información del director
     Route::put('/usuarios/perfil', [UsersController::class, 'updatePerfil']); // Modificar usuarios desde su perfil
+    // Route::get('/getEstatusOficio', [OficiosRnecaController::class, 'getEstatusOficio']); // Obtener el estatus de un oficio enviado
 
     //Imagenes de la memoria
     Route::get('/getIdActividad/{id}', [FotoActivController::class, 'getImagenes']);
@@ -143,6 +144,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 // Route::get('/getTotalPlaticas', [ProgramController::class, 'getTotalPlaticas']); //Total de platica por eca
+Route::get('/getEstatusOficio', [OficiosRnecaController::class, 'getEstatusOficio']); // Obtener el estatus de un oficio enviado
+
 
 // El login se maneja a través de AuthController vinculado en auth.php
 Route::post('/login', [AuthController::class, 'login'])->name('api.login');

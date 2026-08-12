@@ -1,6 +1,7 @@
 import axios from "axios";
 import axiosInstance from "./axiosInstance";
 
+// Crear la ruta del oficio y guardarlo en el storage
 export const create_ofice = async (data) => {
     const formData = new FormData();
     formData.append('mes_oficio', data.mes_oficio);
@@ -124,6 +125,7 @@ export const getOficeFirm = async () => {
     }
 }
 
+// 
 export const subInfoFirm = async (data) => {
     const formData = new FormData();
     formData.append('id_oficio', data.id_oficio)
@@ -149,6 +151,7 @@ export const subInfoFirm = async (data) => {
     }
 }
 
+// Revisión para saber si el oficio ya fue enviado o no
 export const checkOficio = async () => {
     try {
         const response = await axiosInstance.get('/checkOficio');
@@ -160,6 +163,7 @@ export const checkOficio = async () => {
     }
 }
 
+// Traer los oficios existentes en pdf desde el storage
 export const viewOficio = async (id) => {
     try {
         const response = await axiosInstance.get(`/view_ofice/${id}`, {
@@ -173,6 +177,7 @@ export const viewOficio = async (id) => {
     }
 }
 
+// Crear las observaciones de un oficio
 export const observacionOficio = async (data) => {
     try {
         const response = await axiosInstance.put('/observacionesOficio', data);
@@ -183,6 +188,7 @@ export const observacionOficio = async (data) => {
     }
 }
 
+//Obtener los tipos de estatus disponibles para asignar a un oficio
 export const getEstatus = async () => {
     try {
         const response = await axiosInstance.get('/getEstatusOficios');
@@ -190,5 +196,16 @@ export const getEstatus = async () => {
     }
     catch (error) {
         console.log('Error al realizar la validación del documento');
+    }
+}
+
+// Obtener el estatus de un oficio ya registrado con el fin de saber si esta firmado o con correcciones
+export const getEstatusOficio = async () => {
+    try{
+        const response = await axiosInstance.get('/getEstatusOficio');
+        return response.data;
+    }
+    catch(error){
+        console.log('Error al realizar la validación del document');
     }
 }

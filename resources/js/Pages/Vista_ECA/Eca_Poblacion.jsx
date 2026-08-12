@@ -7,7 +7,7 @@ import Mod_Poblacion from "../Modals/Modificar/Mod_Poblacion.jsx";
 import { checkEspacioRegistro } from "../../Components/api/espacio.jsx"
 import { getIdEspacio } from "../../Components/api/espacio_cult.jsx";
 import { getProgramData } from "../../Components/api/program.jsx";
-import { checkOficio } from "../../Components/api/oficio.jsx";
+import { checkOficio, getEstatusOficio } from "../../Components/api/oficio.jsx";
 
 function VECA_Poblacion({ onComplete }) {
 
@@ -19,6 +19,7 @@ function VECA_Poblacion({ onComplete }) {
   const [idEspacio, setIdEspacio] = useState(false);
   const [actividad, setActividad] = useState([]);
   const [resultado, setResultado] = useState(null);
+  const [estatusOficio, setEstatusOficio] = useState(null);
 
   // Peticiones para saber si hay registros existentes
   useEffect(() => {
@@ -39,8 +40,9 @@ function VECA_Poblacion({ onComplete }) {
   useEffect(() => {
     const checkRegistro = async () => {
       try {
-        const data = await checkOficio()
-        setResultado(data.registro_existente);
+        const data = await getEstatusOficio()
+        setResultado(data.body.registro_existente);
+        setEstatusOficio(data.body.estatus_oficio);
       }
       catch (error) {
         console.error('Sin registros aún', error);
@@ -64,7 +66,33 @@ function VECA_Poblacion({ onComplete }) {
   }, []);
 
   useEffect(() => {
-    if (registro === true && !hasShownAlert) {
+    if (estatusOficio === 'Correcciones' && !hasShownAlert) {
+      setResultado(false);
+      setRegistro(false);
+    }
+    else if (estatusOficio === 'Validado' && !hasShownAlert) {
+      Swal.fire({
+        title: '¡Oficio validado!',
+        text: 'El oficio ya fue validado, espera hasta el siguiente mes para realizar otro registro',
+        icon: 'info',
+        confirmButtonText: 'Entendido',
+        timer: 10000,
+        timerProgressBar: true,
+      });
+      setHasShownAlert(true);
+    }
+    else if (resultado === true && !hasShownAlert) {
+      Swal.fire({
+        title: '¡Oficio ya enviado!',
+        text: 'Actualmente el oficio ya fue enviado y esta en proceso de validación, no puede realizar ninguna acción por el momento',
+        icon: 'info',
+        confirmButtonText: 'Entendido',
+        timer: 10000,
+        timerProgressBar: true,
+      });
+      setHasShownAlert(true);
+    }
+    else if (registro === true && !hasShownAlert) {
       Swal.fire({
         title: '¡Registro existente!',
         text: 'Actualmente ya existe un registro para la población beneficiaria de este mes, unicamente lo puedes editar',
@@ -75,7 +103,7 @@ function VECA_Poblacion({ onComplete }) {
       });
       setHasShownAlert(true); // Marca que la alerta ya se mostró
     }
-  }, [registro, hasShownAlert]); // Depende de 'registro' y 'hasShownAlert'
+  }, [ estatusOficio, resultado, registro, hasShownAlert]); // Depende de 'registro' y 'hasShownAlert'
 
   useEffect(() => {
     const fetchPrograma = async () => {
@@ -540,7 +568,7 @@ function VECA_Poblacion({ onComplete }) {
               {registro === true && (
                 <>
                   <p className="error-message" style={{ color: 'red', marginTop: '10px' }}>Ya existe un registro para este mes. No se puede guardar uno nuevo. </p>
-                  <button type="button" className="btn-primario" onClick={() => handleEditar(idEspacio)}  disabled={resultado === true}>
+                  <button type="button" className="btn-primario" onClick={() => handleEditar(idEspacio)} disabled={resultado === true}>
                     Editar
                   </button>
                 </>

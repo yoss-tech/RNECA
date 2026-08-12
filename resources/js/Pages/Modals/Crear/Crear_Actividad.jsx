@@ -19,7 +19,7 @@ function Crear_Actividad({ cerrarModal, actividades }) {
     pobl_ate: '',
     fecha_mes: '',
   });
-  
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     Math.max(0, Number(e.target.value))
@@ -37,7 +37,7 @@ function Crear_Actividad({ cerrarModal, actividades }) {
       setAlerts((prev) => prev.slice(1));
     }, 3000);
   };
-  
+
   const [municipio, setMunicipio] = useState('');
 
   useEffect(() => {
@@ -64,14 +64,16 @@ function Crear_Actividad({ cerrarModal, actividades }) {
   const [imagenes, setImagenes] = useState([]);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm(paso)) {
-      return;
-    }
+
     const formDataToSend = {
       programa: formData,
       imagenes: imagenes
     }
 
+    if (!validateForm()) {
+      showAlert('error', 'Por favor, completa todos los campos requeridos.');
+      return;
+    }
     try {
       await create_program(formDataToSend);
       await actividades();
@@ -96,17 +98,18 @@ function Crear_Actividad({ cerrarModal, actividades }) {
 
   const [errors, setErrors] = useState({});
   const [paso, setPaso] = useState(1);
+
   const validateForm = (paso) => {
     let newErrors = {};
-    if (paso === 1) {
+    if (paso == 1) {
       if (!formData.localidad.trim()) newErrors.localidad = 'La localidad es requerida.';
       if (!formData.tipo_platica) newErrors.tipo_platica = 'Selecciona el tipo de plática.';
-      if (!formData.fecha_mes) newErrors.fecha_mes = 'La fecha de la actividad es requerida.';
-    }
-    if (paso === 2) {
-      if (!formData.otras_activ.trim()) newErrors.otras_activ = 'Las otras actividades son requeridas.';
       if (formData.tipo_platica === 'escolar' && !formData.alumnos_Aten) newErrors.alumnos_Aten = 'El número de alumnos atendidos es requerido.';
       if (formData.tipo_platica === 'comunitaria' && !formData.pobl_ate) newErrors.pobl_ate = 'La población atendida es requerida.';
+    }
+    if (paso == 2) {
+      if (!formData.otras_activ.trim()) newErrors.otras_activ = 'El nombre de la actividad es requerida.';
+      if (!formData.fecha_mes) newErrors.fecha_mes = 'La fecha de la actividad es requerida.';      
       if (imagenes.length === 0) newErrors.imagenes = 'Debes seleccionar al menos una imagen.';
     }
 
@@ -134,15 +137,15 @@ function Crear_Actividad({ cerrarModal, actividades }) {
     const firstDayOfPreviousMonth = new Date(lastDayOfPreviousMonth.getFullYear(), lastDayOfPreviousMonth.getMonth(), 1);
 
     const format = (date) => {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
     };
 
     return {
-        minDate: format(firstDayOfPreviousMonth),
-        maxDate: format(lastDayOfPreviousMonth)
+      minDate: format(firstDayOfPreviousMonth),
+      maxDate: format(lastDayOfPreviousMonth)
     };
   };
 
@@ -221,8 +224,7 @@ function Crear_Actividad({ cerrarModal, actividades }) {
                       {errors.tipo_platica && <p className="error">{errors.tipo_platica}</p>}
                     </div>
 
-                    {formData.tipo_platica === 'escolar' && (
-                    <div className="form-campo">
+                    <div className="form-campo" hidden={formData.tipo_platica !== 'escolar'}>
                       <label className="form-label">Alumnos Atendidos</label>
                       <input
                         type="number"
@@ -232,14 +234,12 @@ function Crear_Actividad({ cerrarModal, actividades }) {
                         className="form-control"
                         min="1"
                         value={formData.alumnos_Aten}
-                        onChange={(e) => setFormData({ ...formData, alumnos_Aten: Math.max(0, Number(e.target.value))})}
+                        onChange={(e) => setFormData({ ...formData, alumnos_Aten: Math.max(0, Number(e.target.value)) })}
                       />
                       {errors.alumnos_Aten && <p className="error">{errors.alumnos_Aten}</p>}
                     </div>
-                    )}
 
-                    {formData.tipo_platica === 'comunitaria' && (
-                    <div className="form-campo">
+                    <div className="form-campo" hidden={formData.tipo_platica !== 'comunitaria'}>
                       <label className="form-label">Población atendida</label>
                       <input
                         type="number"
@@ -249,11 +249,11 @@ function Crear_Actividad({ cerrarModal, actividades }) {
                         className="form-control"
                         min="1"
                         value={formData.pobl_ate}
-                        onChange={(e) => setFormData({ ...formData, pobl_ate: Math.max(0, Number(e.target.value))})}
+                        onChange={(e) => setFormData({ ...formData, pobl_ate: Math.max(0, Number(e.target.value)) })}
                       />
                       {errors.pobl_ate && <p className="error">{errors.pobl_ate}</p>}
                     </div>
-                    )}
+
                   </div>
                 </>
               )}
@@ -275,7 +275,7 @@ function Crear_Actividad({ cerrarModal, actividades }) {
                       </textarea>
                       {errors.otras_activ && <p className="error">{errors.otras_activ}</p>}
                     </div>
-                    
+
                     <div className="form-campo">
                       <label className="form-label">Fecha de la actividad</label>
                       <input
@@ -290,8 +290,7 @@ function Crear_Actividad({ cerrarModal, actividades }) {
                         max={getPreviousMonthDateRange().maxDate}
                       />
                       {errors.fecha_mes && <p className="error">{errors.fecha_mes}</p>}
-                    </div>                    
-
+                    </div>
                     <div className="form-campo">
                       <label className="form-label">Subir fotográfias de la actividad:</label>
                       <SelectorImagen onChange={handleImageChange} multiple={true} />
