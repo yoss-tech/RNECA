@@ -365,7 +365,7 @@
     height: fit-content;
     display: flex;
     gap: 20px;
-    height: 100%;
+    height: auto;
     align-items: flex-start;
 }
 

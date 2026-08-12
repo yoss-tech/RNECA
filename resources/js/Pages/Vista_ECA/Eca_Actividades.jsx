@@ -3,7 +3,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "../../../css/Style.css"
 import Crear_Actividad from "../Modals/Crear/Crear_Actividad.jsx";
 import { getProgramData, delete_program, checkActividadesRegistro } from "../../Components/api/program.jsx"
-import { checkOficio } from "../../Components/api/oficio.jsx";
+import { checkOficio, getEstatusOficio } from "../../Components/api/oficio.jsx";
 import Mod_Actividad from "../../Pages/Modals/Modificar/Mod_Actividad.jsx";
 import Mostrar_Imagenes from "../Modals/MostrarImagen.jsx"
 import Swal from "sweetalert2";
@@ -22,6 +22,8 @@ function VECA_Actividades({ onComplete }) {
   const [hasShownAlert, setHasShownAlert] = useState(false);
   const [resultado, setResultado] = useState(null);
 
+  const [estatusOficio, setEstatusOficio] = useState(null);
+
   useEffect(() => {
     cargarActividades();
   }, []);
@@ -29,8 +31,9 @@ function VECA_Actividades({ onComplete }) {
   useEffect(() => {
     const checkRegistro = async () => {
       try {
-        const data = await checkOficio()
-        setResultado(data.registro_existente);
+        const data = await getEstatusOficio()
+        setResultado(data.body.registro_existente);
+        setEstatusOficio(data.body.estatus);
       }
       catch (error) {
         console.error('Sin registros aún', error);
@@ -42,10 +45,13 @@ function VECA_Actividades({ onComplete }) {
   }, []);
 
   useEffect(() => {
-    if (resultado === true && !hasShownAlert) {
+    if (estatusOficio === 'Correcciones' && !hasShownAlert) {
+      setResultado(false);
+    }
+    else if (estatusOficio === 'Validado' && !hasShownAlert) {
       Swal.fire({
-        title: '¡Oficio ya enviado!',
-        text: 'Actualmente el oficio ya fue enviado y esta en proceso de validación, no puede realizar ninguna acción por el momento',
+        title: '¡Oficio ya fue validado!',
+        text: 'El oficio ya fue validado, espera hasta el siguiente mes para realizar otro registro',
         icon: 'info',
         confirmButtonText: 'Entendido',
         timer: 10000,
@@ -53,7 +59,21 @@ function VECA_Actividades({ onComplete }) {
       });
       setHasShownAlert(true);
     }
-  }, [resultado, hasShownAlert]);
+    else {
+      if (resultado === true && !hasShownAlert) {
+        Swal.fire({
+          title: '¡Oficio ya enviado!',
+          text: 'Actualmente el oficio ya fue enviado y esta en proceso de validación, no puede realizar ninguna acción por el momento',
+          icon: 'info',
+          confirmButtonText: 'Entendido',
+          timer: 10000,
+          timerProgressBar: true,
+        });
+        setHasShownAlert(true);
+      }
+    }
+
+  }, [estatusOficio, resultado, hasShownAlert]);
 
   const cargarActividades = async () => {
     try {
