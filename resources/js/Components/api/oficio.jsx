@@ -88,6 +88,20 @@ export const getOficioPendiente = async () => {
     }
 }
 
+export const buscarMunicipioSelect = async (id_municipio) => {
+    try {
+        const response = await axiosInstance.get(
+            `/oficiosPendientes/municipio/${id_municipio}`
+        );
+
+        return response.data;
+    }
+    catch (error) {
+        console.log("Error al buscar oficios por municipio:", error);
+        return null;
+    }
+}
+
 export const getOficioCorreccion = async () => {
     try {
         const response = await axiosInstance.get('/oficiosCorreccion');
@@ -106,6 +120,20 @@ export const getOficioValidado = async () => {
     }
     catch (error) {
         console.log(error);
+        return null;
+    }
+}
+
+export const buscarSelectValidado = async (id_municipio) => {
+    try {
+        const response = await axiosInstance.get(
+            `/oficiosValidados/municipio/${id_municipio}`
+        );
+
+        return response.data;
+    }
+    catch (error) {
+        console.log("Error al buscar oficios validados por municipio:", error);
         return null;
     }
 }

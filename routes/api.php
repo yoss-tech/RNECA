@@ -50,6 +50,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/ecas', [EcaController::class, 'show']); // Información de los  ecas
     Route::get('/estatu', [EcaController::class, 'estatus']); // Información de los estatus
     Route::put('/usuarios/eca/{id}', [EcaController::class, 'update']); // Modificar ecas
+    Route::get('/ecas/buscar', [EcaController::class, 'buscar']);//Buscar ecas
+
 
     // Programa_cultura
     Route::post('/create_program', [ProgramController::class, 'store']); // Registrat las actividades de un programa de cultura
@@ -84,8 +86,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/getOficeByEca', [OficiosRnecaController::class, 'OficioRneca']); // Obtener los oficios para el ECA
     Route::get('/oficios', [OficiosRnecaController::class, 'oficios']); // Obtener los oficios
     Route::get('/oficiosPendientes', [OficiosRnecaController::class, 'oficiosPendientes']); // Obtener los oficios pendientes
+    Route::get('/oficiosPendientes/municipio/{id_municipio}',[OficiosRnecaController::class, 'buscarMunicipioSelect']);// buscar los oficios pendientes por municipio
     Route::get('/oficiosCorreccion', [OficiosRnecaController::class, 'oficiosCorreccion']); // Obtener los oficios con correcciones
     Route::get('/oficiosValidados', [OficiosRnecaController::class, 'oficiosValidados']); // Obtener los oficios con correcciones
+    Route::get('/oficiosValidados/municipio/{id_municipio}',[OficiosRnecaController::class, 'buscarSelectValidado']);// buscar los oficios validados por municipio
     Route::get('/cumplimientoOficios', [OficiosRnecaController::class, 'cumplimientoOficios']); // Obtener los oficios con correcciones
     Route::get('/view_ofice/{id}', [OficiosRnecaController::class, 'view']); // Visualizar un oficio
     Route::post('/subirOficioFirm', [OficiosRnecaController::class, 'update']); // Subir el oficio escaneado
@@ -100,6 +104,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user/eca', [UsersController::class, 'infoEca']); // Información del director
     Route::put('/usuarios/perfil', [UsersController::class, 'updatePerfil']); // Modificar usuarios desde su perfil
     // Route::get('/getEstatusOficio', [OficiosRnecaController::class, 'getEstatusOficio']); // Obtener el estatus de un oficio enviado
+
 
     //Imagenes de la memoria
     Route::get('/getIdActividad/{id}', [FotoActivController::class, 'getImagenes']);
