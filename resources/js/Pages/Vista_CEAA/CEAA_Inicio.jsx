@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getOficio } from "@/Components/api/oficio";
-import { buscarMunicipio } from "@/Components/api/municipios";
+import { getOficio, buscarOficios } from "@/Components/api/oficio";
 import { getInfoPerfil } from "@/Components/api/usuarios.jsx";
 import { logoutUser } from "@/Components/api/auth.jsx";
 import { getContadorNotificaciones } from "@/Components/api/notificaciones.jsx";
@@ -53,7 +52,11 @@ function CEAA_Inicio() {
   };
   const [buscar, setBuscar] = useState("");
   const handleBuscar = async () => {
-  const response = await buscarMunicipio(buscar);
+    if (!buscar.trim()) {
+      cargarMunicipios();
+      return;
+    }
+    const response = await buscarOficios(buscar.trim());
     if (response && response.status === 200) {
       setMunicipios(response.body);
       setPaginaActual(1);

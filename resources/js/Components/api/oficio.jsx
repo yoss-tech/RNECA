@@ -77,6 +77,20 @@ export const getOficio = async () => {
     }
 }
 
+export const buscarOficios = async (municipio) => {
+    try {
+        const response = await axiosInstance.get(
+            `/oficios/buscar/${encodeURIComponent(municipio)}`
+        );
+
+        return response.data;
+    }
+    catch (error) {
+        console.log("Error al buscar oficios por municipio:", error);
+        return null;
+    }
+};
+
 export const getOficioPendiente = async () => {
     try {
         const response = await axiosInstance.get('/oficiosPendientes');

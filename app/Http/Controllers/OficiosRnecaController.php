@@ -479,6 +479,48 @@ class OficiosRnecaController extends Controller
             'body' => $oficio
         ], 200);
     }
+    // Buscar oficios por nombre de municipio
+    public function buscarOficios($municipio)
+    {
+        $oficio = DB::table('oficios_rneca')
+          ->join('eca', 'eca.clave_eca', '=', 'oficios_rneca.clave_eca')
+          ->join('direccion', 'direccion.id_direccion', '=', 'eca.id_direccion')
+          ->join('municipio', 'municipio.id_municipio', '=', 'direccion.id_municipio')
+          ->select(
+            'municipio.id_municipio',
+            'municipio.nombre_municipio',
+            'eca.nombre_inst_ope',
+            DB::raw("
+                COUNT(
+                    CASE
+                        WHEN oficios_rneca.id_estatus = 'EST-4HJVB2C9'
+                        THEN 1
+                    END
+                ) as pendientes
+            "),
+            DB::raw("
+                COUNT(
+                    CASE
+                        WHEN oficios_rneca.id_estatus = 'EST-V7WQ3N8Z'
+                        THEN 1
+                    END
+                ) as validados
+            ")
+            )
+            ->where('municipio.nombre_municipio', 'LIKE', '%' . $municipio . '%')
+            ->groupBy(
+                'municipio.id_municipio',
+                'municipio.nombre_municipio',
+                'eca.nombre_inst_ope'
+            )
+            ->orderBy('municipio.nombre_municipio')
+            ->get();
+        return response()->json([
+            'message' => 'Oficios encontrados correctamente',
+            'status' => 200,
+            'body' => $oficio
+        ], 200);
+    }
 
     // Traer oficios pendientes
     public function oficiosPendientes()
