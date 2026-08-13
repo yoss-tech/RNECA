@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { updateEca, getEstatus } from "../../../Components/api/usuarios.jsx"
 import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
 import Swal from "sweetalert2";
-import { updateEca } from "../../../Components/api/usuarios.jsx"
-import { getEstatus } from "../../../Components/api/usuarios.jsx"
+import Toast from "../../Toast.jsx";
 
 function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
     const [formData, setFormData] = useState({
@@ -43,7 +43,54 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
         });
     };
 
+    const [alerts, setAlerts] = useState([]);
+    const showAlert = (type, message) => {
+        setAlerts([...alerts, { type, message }]);
+        setTimeout(() => {
+          setAlerts((prev) => prev.slice(1));
+        }, 3000);
+    };
+
+    const campoPorPaso = {
+        1: [
+            'poblacion_atend',
+        ],
+        2: [
+            'dias_hora_aten',
+            'nombre',
+            'correo',
+            'correoExtra',
+            'telefonos',
+        ],
+        3: [
+            'equipo_movil',
+            'equipo_electr',
+            'material_didact'
+        ],
+        4: [
+            'fecha_forta',
+            'fecha_cierre',
+            'motivo_cierre',
+        ],
+        5: [
+            'comentarios'
+        ]
+    };
+
+    const obtenerPasoCampo = (campo) => {
+        const pasoEncontrado = Object.entries(
+            campoPorPaso
+        ).find(([numeroPaso, campos]) =>
+            campos.includes(campo)
+        );
+
+        return pasoEncontrado
+            ? Number(pasoEncontrado[0])
+            : 1;
+    };
+
     const handleSubmit = async () => {
+        setErrors({});
         try {
             await updateEca(
                 formData.id_usuario,
@@ -59,12 +106,17 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
             });
         }
         catch (error) {
-            Swal.fire({
-                title: "Error al actualizar",
-                text: "Ocurrió un problema al actualizar la información. Inténtalo nuevamente.",
-                icon: "error",
-                confirmButtonText: "Aceptar"
-            });
+            if (error.response && error.response.status === 422) {
+                const erroresBack = error.response.data.errors;
+                setErrors(erroresBack);
+
+                const primerCampoError = Object.keys(erroresBack)[0];
+                const pasoConError = obtenerPasoCampo(primerCampoError);
+                setPaso(pasoConError);
+                showAlert('error', 'Revisa los campos marcados.');
+            } else {
+                showAlert('error', error.response?.data?.message || 'No fue posible guardar los datos.');
+            }
         }
     };
 
@@ -75,36 +127,31 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
         let newErrors = {};
 
         if (paso === 1) {
-            if (!formData.poblacion_atend || Number(formData.poblacion_atend) <= 0) newErrors.poblacion_atend = 'El número de población no es valida.';
+            if (!formData.poblacion_atend) newErrors.poblacion_atend = ['El número de población es requerido.'];
         }
 
         if (paso === 2) {
-            if (!formData.dias_hora_aten.trim()) newErrors.dias_hora_aten = 'El horario es requerido.';
-            if (!formData.nombre.trim()) newErrors.nombre = 'El responsable es requerido.';
-            if (!formData.correo.trim()) newErrors.correo = 'El correo es requerido.';
-            if (formData.correoExtra !== "") {
-                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.correoExtra)) {
-                    newErrors.correoExtra = "El correo no tiene un formato válido.";
-                }
-            }
-            if (!formData.telefonos) newErrors.telefonos = 'Debe ingresar al menos un teléfono.';
+            if (!formData.dias_hora_aten.trim()) newErrors.dias_hora_aten = ['El horario es requerido.'];
+            if (!formData.nombre.trim()) newErrors.nombre = ['El responsable es requerido.'];
+            if (!formData.correo.trim()) newErrors.correo = ['El correo es requerido.'];
+            if (!formData.telefonos) newErrors.telefonos = ['Debe ingresar al menos un teléfono.'];
         }
 
         if (paso === 3) {
-            if (!formData.equipo_movil.trim()) newErrors.equipo_movil = 'El equipo mobiliario es requerido.';
-            if (!formData.equipo_electr.trim()) newErrors.equipo_electr = 'El equipo de cómputo es requerido.';
-            if (!formData.material_didact.trim()) newErrors.material_didact = 'El material didactico es requerido.';
+            if (!formData.equipo_movil.trim()) newErrors.equipo_movil = ['El equipo mobiliario es requerido.'];
+            if (!formData.equipo_electr.trim()) newErrors.equipo_electr = ['El equipo de cómputo es requerido.'];
+            if (!formData.material_didact.trim()) newErrors.material_didact = ['El material didactico es requerido.'];
         }
 
         if (paso === 4) {
+            if (!formData.fecha_forta) newErrors.fecha_forta = ['La fecha de fortalecimiento es requerida.'];
             if (!formData.fecha_forta) newErrors.fecha_forta = 'La fecha es requerida.';
-            if (!formData.id_estatus) newErrors.id_estatus = 'El estado es requerido.';
-            if (formData.id_estatus === 'estado2' && !formData.fecha_cierre) newErrors.fecha_cierre = 'La fecha de cierre es requerida.';
-            if (formData.id_estatus === 'estado2' && !formData.motivo_cierre?.trim()) newErrors.motivo_cierre = 'El motivo de cierre es requerido.';
+            if (formData.id_estatus === 'EST-C731KSDA' && !formData.fecha_cierre) newErrors.fecha_cierre = ['La fecha de cierre es requerida.'];
+            if (formData.id_estatus === 'EST-C731KSDA' && !formData.motivo_cierre?.trim()) newErrors.motivo_cierre = ['El motivo de cierre es requerido.'];
         }
 
         if (paso === 5) {
-            if (!formData.comentarios) newErrors.comentarios = 'Los comentarios son requeridos.';
+            if (!formData.comentarios) newErrors.comentarios = ['Los comentarios son requeridos.'];
         }
 
         setErrors(newErrors);
@@ -139,6 +186,8 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
     }, [eca]);
 
     return (
+        <>
+        <Toast alerts={alerts} />
         <div className="overlay">
             <div className="modal-box">
                 <div className="modal-head">
@@ -166,7 +215,7 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
                                 value={formData.poblacion_atend}
                                 onChange={handleChange}
                             />
-                            {errors.poblacion_atend && <p className="error">{errors.poblacion_atend}</p>}
+                            {errors.poblacion_atend && (<p className="error">{errors.poblacion_atend[0]}</p>)}
                         </div>
                         </>
                     )}
@@ -186,7 +235,7 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
                                 value={formData.dias_hora_aten}
                                 onChange={handleChange}
                             />
-                            {errors.dias_hora_aten && <p className="error">{errors.dias_hora_aten}</p>}
+                            {errors.dias_hora_aten && (<p className="error">{errors.dias_hora_aten[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -202,7 +251,7 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
                                 value={formData.nombre}
                                 onChange={handleChange}
                             />
-                            {errors.nombre && <p className="error">{errors.nombre}</p>}
+                            {errors.nombre && (<p className="error">{errors.nombre[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -218,7 +267,7 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
                                 value={formData.correo}
                                 onChange={(handleChange)}
                             />
-                            {errors.correo && <p className="error">{errors.correo}</p>}
+                            {errors.correo && (<p className="error">{errors.correo[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -234,7 +283,7 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
                                 value={formData.correoExtra}
                                 onChange={handleChange}
                             />
-                            {errors.correoExtra && <p className="error">{errors.correoExtra}</p>}
+                            {errors.correoExtra && (<p className="error">{errors.correoExtra[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -250,7 +299,7 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
                                 value={formData.telefonos}
                                 onChange={handleChange}
                             />
-                            {errors.telefonos && <p className="error">{errors.telefonos}</p>}
+                            {errors.telefonos && (<p className="error">{errors.telefonos[0]}</p>)}
                         </div>
                         </>
                     )}
@@ -270,7 +319,7 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
                                 value={formData.equipo_movil}
                                 onChange={handleChange}
                             />
-                            {errors.equipo_movil && <p className="error">{errors.equipo_movil}</p>}
+                            {errors.equipo_movil && (<p className="error">{errors.equipo_movil[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -286,7 +335,7 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
                                 value={formData.equipo_electr}
                                 onChange={handleChange}
                             />
-                            {errors.equipo_electr && <p className="error">{errors.equipo_electr}</p>}
+                            {errors.equipo_electr && (<p className="error">{errors.equipo_electr[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -302,7 +351,7 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
                                 value={formData.material_didact}
                                 onChange={handleChange}
                             />
-                            {errors.material_didact && <p className="error">{errors.material_didact}</p>}
+                            {errors.material_didact && (<p className="error">{errors.material_didact[0]}</p>)}
                         </div>
                         </>
                     )}
@@ -322,7 +371,7 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
                                 value={formData.fecha_forta}
                                 onChange={handleChange}
                             />
-                            {errors.fecha_forta && <p className="error">{errors.fecha_forta}</p>}
+                            {errors.fecha_forta && (<p className="error">{errors.fecha_forta[0]}</p>)}
                         </div>
 
                         <div className="form-group">
@@ -344,10 +393,10 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
                                     </option>
                                 ))}
                             </select>
-                            {errors.id_estatus && <p className="error">{errors.id_estatus}</p>}
+                            {errors.id_estatus && (<p className="error">{errors.id_estatus[0]}</p>)}
                         </div>
 
-                        {formData.id_estatus === "estado2" && (
+                        {formData.id_estatus === "EST-C731KSDA" && (
                             <>
                             <div className="form-group">
                                 <label className="card-subtitle">Fecha de cierre:
@@ -362,7 +411,7 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
                                     value={formData.fecha_cierre}
                                     onChange={handleChange}
                                 />
-                                {errors.fecha_cierre && <p className="error">{errors.fecha_cierre}</p>}
+                                {errors.fecha_cierre && (<p className="error">{errors.fecha_cierre[0]}</p>)}
                             </div>
 
                             <div className="form-group">
@@ -378,7 +427,7 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
                                     value={formData.motivo_cierre}
                                     onChange={handleChange}
                                 />
-                                {errors.motivo_cierre && <p className="error">{errors.motivo_cierre}</p>}
+                                {errors.motivo_cierre && (<p className="error">{errors.motivo_cierre[0]}</p>)}
                             </div>
                             </>
                         )}
@@ -400,7 +449,7 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
                                 value={formData.comentarios}
                                 onChange={handleChange}
                             />
-                            {errors.comentarios && <p className="error">{errors.comentarios}</p>}
+                            {errors.comentarios && (<p className="error">{errors.comentarios[0]}</p>)}
                         </div>
                         </>
                     )}
@@ -419,6 +468,7 @@ function Mod_ECAS({ eca, cerrarModal, actualizarLista }) {
                 </div>
             </div>
         </div>
+        </>
     );
 }
 
