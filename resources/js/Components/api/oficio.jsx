@@ -207,13 +207,8 @@ export const viewOficio = async (id) => {
 
 // Crear las observaciones de un oficio
 export const observacionOficio = async (data) => {
-    try {
-        const response = await axiosInstance.put('/observacionesOficio', data);
-        return response.data;
-    }
-    catch (error) {
-        console.log('Error al realizar la validación del documento');
-    }
+    const response = await axiosInstance.put('/observacionesOficio', data);
+    return response.data;
 }
 
 //Obtener los tipos de estatus disponibles para asignar a un oficio
@@ -223,7 +218,8 @@ export const getEstatus = async () => {
         return response.data;
     }
     catch (error) {
-        console.log('Error al realizar la validación del documento');
+        console.log('Error en getEstatus: ', error);
+        return null;
     }
 }
 
