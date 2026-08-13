@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { buscarMunicipioSelect } from "@/Components/api/municipios";
-import { getOficioPendiente } from "@/Components/api/oficio";
+import { getOficioPendiente,buscarMunicipioSelect } from "@/Components/api/oficio";
 import Revisar_Informe from "../Modals/Revisar_Informe";
 
 function CEAA_Pendientes() {
@@ -35,19 +34,22 @@ function CEAA_Pendientes() {
     }
   };
 
-  const buscarPorSelect = async (e) => {
+ const buscarPorSelect = async (e) => {
     const id = e.target.value;
     setMunicipioSeleccionado(id);
     if (id === "") {
-      cargarMunicipios();
-      return;
+        cargarMunicipios();
+        setPaginaActual(1);
+        return;
     }
+    setCargando(true)
     const response = await buscarMunicipioSelect(id);
     if (response && response.status === 200) {
-      setMunicipios(response.body);
-      setPaginaActual(1);
+        setMunicipios(response.body);
+        setPaginaActual(1);
     }
-  };
+    setCargando(false);
+};
 
   const registrosPorPagina = 9;
   const numPaginas = Math.ceil(municipios.length / registrosPorPagina);

@@ -411,4 +411,58 @@ class EcaController extends Controller
     {
         //
     }
+
+    //buscador de ecas
+    public function buscar(Request $request)
+    {
+        $buscar = $request->buscar;
+        $eca = DB::table('eca')
+        ->join('detalle_eca', 'eca.clave_eca', '=', 'detalle_eca.clave_eca')
+        ->join('direccion', 'eca.id_direccion', '=', 'direccion.id_direccion')
+        ->join('municipio', 'direccion.id_municipio', '=', 'municipio.id_municipio')
+        ->join('usuarios', 'eca.id_usuario', '=', 'usuarios.id_usuario')
+        ->join('rol', 'usuarios.id_rol', '=', 'rol.id_rol')
+        ->join('tipo_estatus', 'eca.id_estatus', '=', 'tipo_estatus.id_estatus')
+        ->select(
+            'direccion.id_direccion',
+            'usuarios.id_usuario',
+            'detalle_eca.id_detalle_eca',
+            'municipio.id_municipio',
+            'tipo_estatus.id_estatus',
+            'eca.nombre_inst',
+            'eca.clave_eca',
+            'eca.nombre_inst_ope',
+            'direccion.tipo_instancia',
+            'municipio.num_habitan',
+            'municipio.nombre_municipio',
+            'eca.poblacion_atend',
+            'direccion.calle_av',
+            'direccion.num_direccion',
+            'direccion.colonia',
+            'direccion.localidad',
+            'direccion.cod_postal',
+            'detalle_eca.telefonos',
+            'detalle_eca.dias_hora_aten',
+            'usuarios.nombre',
+            'usuarios.correo',
+            'detalle_eca.equipo_movil',
+            'detalle_eca.equipo_electr',
+            'detalle_eca.material_didact',
+            'tipo_estatus.nombre_tipo',
+            'eca.fecha_apert',
+            'eca.fecha_forta',
+            'eca.fecha_cierre',
+            'eca.motivo_cierre',
+            'detalle_eca.comentarios'
+        )
+            ->where('rol.id_rol', 'rol1')
+            ->where('municipio.nombre_municipio','like','%' . $buscar . '%')
+            ->orderBy('tipo_estatus.nombre_tipo', 'desc')
+            ->orderBy('municipio.nombre_municipio', 'asc')
+            ->get();
+            return response()->json([
+                'status' => 200,
+                'body' => $eca
+            ]);
+    }
 }

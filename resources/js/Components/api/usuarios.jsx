@@ -154,3 +154,17 @@ export const createUserCeaa = async (data) => {
         throw error;
     }
 }
+
+export const buscarEcas = async (buscar) => {
+    try {
+        const response = await axiosInstance.get("/ecas/buscar", {
+            params: {
+                buscar: buscar
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+};

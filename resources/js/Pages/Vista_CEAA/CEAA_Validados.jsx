@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { buscarMunicipioSelect } from "@/Components/api/municipios";
-import { getOficioValidado } from "@/Components/api/oficio";
+import { getOficioValidado,buscarSelectValidado } from "@/Components/api/oficio";
 import Ver_Informe from "../Modals/Ver_informe";
 
 function CEAA_Validados() {
@@ -28,31 +27,46 @@ function CEAA_Validados() {
   const [municipioSeleccionado, setMunicipioSeleccionado] = useState("");
   const [listaMunicipios, setListaMunicipios] = useState([]);
   const [loading, setLoading] = useState(true);
-  const cargarMunicipios = async () => {
-    const response = await getOficioValidado();
-    if (response && response.status==200){
-      setMunicipios(response.body);
-      setListaMunicipios(response.body);
-      console.log(response);
-      setLoading(false);
+ const cargarMunicipios = async () => {
+    setLoading(true);
+  const response = await getOficioValidado();
+    console.log("Oficios validados:", response);
+    if (response && response.status === 200) {
+  const datos = response.body || [];
+      setMunicipios(datos);
+  const municipiosUnicos = datos.filter(
+        (municipio, index, self) => index === self.findIndex((m) => m.id_municipio === municipio.id_municipio)
+      );
+      setListaMunicipios(municipiosUnicos);
+    } else {
+      setMunicipios([]);
+      setListaMunicipios([]);
     }
+    setLoading(false);
   };
+   useEffect(() => {
+    cargarMunicipios();
+  }, []);
+
   const buscarPorSelect = async (e) => {
     const id = e.target.value;
     setMunicipioSeleccionado(id);
     if (id === "") {
-      cargarMunicipios();
+      await cargarMunicipios();
+      setPaginaActual(1);
       return;
     }
-    const response = await buscarMunicipioSelect(id);
+    setLoading(true);
+    const response = await buscarSelectValidado(id);
+    console.log("Oficios filtrados:", response);
     if (response && response.status === 200) {
-      setMunicipios(response.body);
+      setMunicipios(response.body || []);
       setPaginaActual(1);
+    } else {
+      setMunicipios([]);
     }
+    setLoading(false);
   };
-  useEffect(() => {
-    cargarMunicipios();
-  }, []);
 
   const handleVerOficio = (idOficio) => {
     setOficioSeleccionado(idOficio);
@@ -70,9 +84,9 @@ function CEAA_Validados() {
           <p className="card-text">Municipio:</p>
           <select className="selector-control" value={municipioSeleccionado} onChange={buscarPorSelect}>
             <option value="">Todos los municipios</option>
-            {listaMunicipios.map((oficioVal) => (
-              <option key={oficioVal.id_municipio} value={oficioVal.id_municipio}>
-                {oficioVal.nombre_municipio}
+            {listaMunicipios.map((municipio) => (
+              <option key={municipio.id_municipio} value={municipio.id_municipio}>
+                {municipio.nombre_municipio}
               </option>
             ))}
           </select>

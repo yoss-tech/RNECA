@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getEcas } from "../../Components/api/usuarios.jsx";
+import { getEcas,buscarEcas } from "../../Components/api/usuarios.jsx";
 import Ver_ECA from "../Modals/Ver_ECA";
 import Crear_ECAS from "../Modals/Crear/Crear_ECAS";
 import Modificar_ECAS from "../Modals/Modificar/Mod_ECAS";
@@ -23,6 +23,20 @@ function CEAA_Ecas() {
     cargarEcas();
   }, []);
 
+const [busqueda, setBusqueda] = useState("");
+  const ejecutarBusqueda = async () => {
+    if (busqueda.trim() === "") {
+        cargarEcas();
+        return;
+    }
+    setLoading(true);
+    const response = await buscarEcas(busqueda);
+    if (response && response.status === 200) {
+        setEcas(response.body);
+    }
+    setLoading(false);
+  };
+
   const [ecaSeleccionado, setEcaSeleccionado] = useState(null);
   const abrirVerEcas = (eca) => {
     setEcaSeleccionado(eca);
@@ -34,6 +48,7 @@ function CEAA_Ecas() {
     setMostrarModificar(true);
     setMostrarEcas(false);
   };
+  
 
   return (
   <div className="page-container">
@@ -42,9 +57,18 @@ function CEAA_Ecas() {
     
     <div className="dashboard">
         <div className="dashboard-left">
-            <div className="buscador">
-              <input type="text" placeholder="Buscar..." className="buscador-control"/>
-              <button className="buscador-button"><i className="bi bi-search"></i></button>
+           <div className="buscador">
+              <input
+              type="text"
+              placeholder="Buscar..."
+              className="buscador-control"
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") { ejecutarBusqueda();}
+              }}/>
+              <button className="buscador-button" onClick={ejecutarBusqueda}>
+                <i className="bi bi-search"></i>
+              </button>
             </div>
         </div>
         
