@@ -21,17 +21,6 @@ export const get_memoria = async () => {
     }
 }
 
-// Otener la descripción general de la memoria
-export const getDesc = async () =>{
-    try {
-        const response = await axiosInstance.get('/getDesc');
-        return response.data;
-    } catch (error) {
-        console.log(error);
-        return null;
-    }
-}
-
 // Esta es la función que se conectará con el ActividadMemoController
 export const create_activ = async (data) => {
     // Creamos un objeto FormData para poder enviar archivos.

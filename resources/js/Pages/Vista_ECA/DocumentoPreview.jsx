@@ -3,7 +3,7 @@ import '../../../css/Preview.css';
 import { mostrarSoloMes } from "../../Components/functions.jsx";
 import { get_espacio } from "../../Components/api/espacio_cult.jsx";
 import { getProgramData } from "../../Components/api/program.jsx";
-import { get_memoria, getImgByactiv, getDesc } from "../../Components/api/memoria.jsx";
+import { get_memoria, getImgByactiv } from "../../Components/api/memoria.jsx";
 import { infoEca } from "../../Components/api/infoEca.jsx";
 import imgceaa from "../../../img/PNG/Logotipo7.png";
 import imgconagua from "../../../img/PNG/CONAGUA.png";
@@ -71,7 +71,7 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
     const fetchMemoriaAndImages = async () => {
       setMemoriaCargando(true);
       try {
-        const [memoriaData, descData] = await Promise.all([get_memoria(), getDesc()]);
+        const [memoriaData, descData] = await Promise.all([get_memoria()]);
 
         setMemoria(memoriaData || []);
         setDescripcionMemoria(descData?.descripcion || '');

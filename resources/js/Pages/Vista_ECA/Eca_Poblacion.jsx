@@ -4,10 +4,10 @@ import { create_espacio, get_espacio } from "../../Components/api/espacio_cult.j
 import Toast from "../Toast.jsx";
 import Swal from "sweetalert2";
 import Mod_Poblacion from "../Modals/Modificar/Mod_Poblacion.jsx";
+import { getEstatusOficio } from "../../Components/api/oficio.jsx";
 import { checkEspacioRegistro } from "../../Components/api/espacio.jsx"
 import { getIdEspacio } from "../../Components/api/espacio_cult.jsx";
 import { getProgramData } from "../../Components/api/program.jsx";
-import { checkOficio, getEstatusOficio } from "../../Components/api/oficio.jsx";
 
 function VECA_Poblacion({ onComplete }) {
 
@@ -18,8 +18,25 @@ function VECA_Poblacion({ onComplete }) {
   const [mostrarModal, setMostrarModal] = useState(false);
   const [idEspacio, setIdEspacio] = useState(false);
   const [actividad, setActividad] = useState([]);
-  const [resultado, setResultado] = useState(null);
   const [estatusOficio, setEstatusOficio] = useState(null);
+  const [resultado, setResultado] = useState(null);
+
+  // Petición para saber si el oficio ya fue enviado
+  useEffect(() => {
+    const checkRegistro = async () => {
+      try {
+        const data = await getEstatusOficio()
+        setResultado(data.body.registro_existente);
+        setEstatusOficio(data.body.estatus);
+      }
+      catch (error) {
+        console.error('Sin registros aún', error);
+        setResultado(false);
+      }
+    };
+
+    checkRegistro();
+  }, []);
 
   // Peticiones para saber si hay registros existentes
   useEffect(() => {
@@ -38,28 +55,12 @@ function VECA_Poblacion({ onComplete }) {
   }, []);
 
   useEffect(() => {
-    const checkRegistro = async () => {
-      try {
-        const data = await getEstatusOficio()
-        setResultado(data.body.registro_existente);
-        setEstatusOficio(data.body.estatus_oficio);
-      }
-      catch (error) {
-        console.error('Sin registros aún', error);
-        setResultado(false);
-      }
-    };
-
-    checkRegistro();
-  }, []);
-
-  useEffect(() => {
     const fetchPrograma = async () => {
       try {
         const data = await getProgramData();
         setActividad(data);
       } catch (error) {
-        console.error('Error al obtener los programas:', error);
+        console.error('Error al obtener las actividades:', error);
       }
     };
     fetchPrograma();
@@ -68,13 +69,12 @@ function VECA_Poblacion({ onComplete }) {
   useEffect(() => {
     if (estatusOficio === 'Correcciones' && !hasShownAlert) {
       setResultado(false);
-      setRegistro(false);
     }
     else if (estatusOficio === 'Validado' && !hasShownAlert) {
       Swal.fire({
         title: '¡Oficio validado!',
         text: 'El oficio ya fue validado, espera hasta el siguiente mes para realizar otro registro',
-        icon: 'info',
+        icon: 'success',
         confirmButtonText: 'Entendido',
         timer: 10000,
         timerProgressBar: true,
@@ -103,7 +103,8 @@ function VECA_Poblacion({ onComplete }) {
       });
       setHasShownAlert(true); // Marca que la alerta ya se mostró
     }
-  }, [ estatusOficio, resultado, registro, hasShownAlert]); // Depende de 'registro' y 'hasShownAlert'
+
+  }, [estatusOficio, resultado, registro, hasShownAlert]);
 
   useEffect(() => {
     const fetchPrograma = async () => {
@@ -257,16 +258,15 @@ function VECA_Poblacion({ onComplete }) {
             ? ['Hombre', key.replace('hombres', '')]
             : key.startsWith('mujeres')
               ? ['Mujer', key.replace('mujeres', '')]
-              : ['Niño/Niña', key.replace('ninos', '')]; // 'ninos12'
+              : ['Niño/Niña', key.replace('ninos', '')];
 
           return {
             genero: genero,
-            rango_edad: rango_edad.replace('_', '-'), // ej: 13_17 -> 13-17
+            rango_edad: rango_edad.replace('_', '-'),
             cantidad: cantidad,
           };
         });
 
-      // Construimos el objeto de datos final
       const dataToSend = {
         total_pobl: total,
         comentarios: comentarios,

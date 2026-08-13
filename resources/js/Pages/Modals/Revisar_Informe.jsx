@@ -37,7 +37,7 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
                     observacion: ""
                 };
             }
-            
+
             return {
                 ...prev,
                 [name]: value,
@@ -59,16 +59,31 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
             ...formData,
             id_oficio: idOficio
         };
-        await observacionOficio(dataToSend);
-        await cargarLista();
-        Swal.fire({
-            title: "Enviado!",
-            text: "Las revisiones y correcciones fueron enviadas",
-            icon: "success",
-            confirmButtonText: "Aceptar"
-        }).then(() => {
-            cerrarModal();
-        });
+
+        if (formData.id_estatus === estatusObservaciones) {
+            await observacionOficio(dataToSend);
+            await cargarLista();
+            Swal.fire({
+                title: "¡Observaciones enviadas!",
+                text: "Las observaciones fueron enviadas",
+                icon: "success",
+                confirmButtonText: "Aceptar"
+            }).then(() => {
+                cerrarModal();
+            });
+            
+        } else {
+            await observacionOficio(dataToSend);
+            await cargarLista();
+            Swal.fire({
+                title: "¡Oficio validado!",
+                text: "Oficio validado con exito",
+                icon: "success",
+                confirmButtonText: "Aceptar"
+            }).then(() => {
+                cerrarModal();
+            });
+        }
     };
 
     useEffect(() => {
@@ -168,17 +183,17 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
                                     </div>
                                     {formData.id_estatus === 'EST-8HCVW2C7' && (
                                         <>
-                                        <div className="form-group">
-                                            <label className="card-subtitle">Observaciones:</label>
-                                            <textarea
-                                                name="observacion"
-                                                value={formData.observacion}
-                                                onChange={handleChange}
-                                                className="form-control"
-                                                placeholder="Ingresa las observaciones del sobre el informe"
-                                                title="Ingresa las observaciones del sobre el informe"
-                                            />
-                                        </div>
+                                            <div className="form-group">
+                                                <label className="card-subtitle">Observaciones:</label>
+                                                <textarea
+                                                    name="observacion"
+                                                    value={formData.observacion}
+                                                    onChange={handleChange}
+                                                    className="form-control"
+                                                    placeholder="Ingresa las observaciones del sobre el informe"
+                                                    title="Ingresa las observaciones del sobre el informe"
+                                                />
+                                            </div>
                                         </>
                                     )}
                                     <div className="form-campo">
