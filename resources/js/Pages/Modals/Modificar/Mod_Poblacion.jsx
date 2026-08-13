@@ -4,12 +4,13 @@ import "/resources/css/Modal.css";
 import Toast from "../../Toast.jsx";
 import Swal from "sweetalert2";
 import { updatePoblacion, getDataEspacio } from "../../../Components/api/espacio_cult.jsx"
+import { getProgramData } from "../../../Components/api/program.jsx";
 import { data } from "autoprefixer";
 
 function Mod_Poblacion({ cerrarModal, espacioId }) {
 
+    const [actividad, setActividad] = useState([]);
     const [poblData, setPoblData] = useState(null);
-
     const [poblacion, setPoblacion] = useState({
         hombres13_17: 0,
         hombres18_30: 0,
@@ -110,8 +111,34 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
         }
     };
 
+    useEffect(() => {
+        const fetchPrograma = async () => {
+            try {
+                const data = await getProgramData();
+                setActividad(data);
+            } catch (error) {
+                console.error('Error al obtener las actividades:', error);
+            }
+        };
+        fetchPrograma();
+    }, []); 
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const totalActividad = actividad.reduce((acc, item) => {
+            return acc + (Number(item.pobl_ate) || 0) + (Number(item.alumnos_Aten) || 0);
+        }, 0);
+
+        if (total !== totalActividad) {
+            Swal.fire({
+                title: "Error de validación",
+                text: `El total de la población atendida (${total}) no coincide con la suma de la población de las actividades (${totalActividad}).`,
+                icon: "error",
+                confirmButtonText: "Aceptar"
+            });
+            return;
+        }
 
         if (!validateForm(3)) {
             Swal.fire({
@@ -249,7 +276,7 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                     })
 
                     setComentarios({
-                        
+
                     })
                 }
                 catch (error) {

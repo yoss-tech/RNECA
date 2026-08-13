@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import DocumentoPreview from './DocumentoPreview';
-import { create_ofice, checkOficio } from "../../Components/api/oficio.jsx";
-import { mostrarSoloMes } from "../../Components/functions.jsx"
+import { create_ofice, getEstatusOficio, updateOficio } from "../../Components/api/oficio.jsx";
+import { mostrarSoloMes, dateShortNow } from "../../Components/functions.jsx";
 import '../../../css/Preview.css';
 // import '../../../css/Style.css';
 import SelectorArchivo from '../../Components/SelectorArchivo';
@@ -16,6 +16,8 @@ function PanelDocumento() {
   const [resultado, setResultado] = useState(null)
   const [hasShownAlert, setHasShownAlert] = useState(false);
   const [isDocumentoLoading, setIsDocumentoLoading] = useState(true);
+  const [idOficioActual, setIdOficioActual] = useState(null);
+  const [estatusOficio, setEstatusOficio] = useState(null);
 
   const handleLoadingChange = (isLoading) => {
     setIsDocumentoLoading(isLoading);
@@ -24,8 +26,10 @@ function PanelDocumento() {
   useEffect(() => {
     const checkRegistro = async () => {
       try {
-        const data = await checkOficio()
-        setResultado(data.registro_existente);
+        const data = await getEstatusOficio()
+        setResultado(data.body.registro_existente);
+        setIdOficioActual(data.body.id_oficio); // Almacenar el id_oficio
+        setEstatusOficio(data.body.estatus);
       }
       catch (error) {
         console.error('Sin registros aún', error);
@@ -36,19 +40,38 @@ function PanelDocumento() {
     checkRegistro();
   }, []);
 
+  console.log(estatusOficio)
+  console.log(idOficioActual)
+
   useEffect(() => {
-    if (resultado === true && !hasShownAlert) {
+    if (estatusOficio === 'Correcciones' && !hasShownAlert) {
+      setResultado(false);
+    }
+    else if (estatusOficio === 'Validado' && !hasShownAlert) {
       Swal.fire({
-        title: '¡Oficio ya enviado!',
-        text: 'Actualmente el oficio ya fue enviado y esta en proceso de validación, espera a que finalice el proceso de revición',
-        icon: 'info',
+        title: '¡Oficio validado!',
+        text: 'El oficio ya fue validado, espera hasta el siguiente mes para realizar otro registro',
+        icon: 'success',
         confirmButtonText: 'Entendido',
         timer: 10000,
         timerProgressBar: true,
       });
       setHasShownAlert(true);
     }
-  }, [resultado, hasShownAlert]);
+    else {
+      if (resultado === true && !hasShownAlert) {
+        Swal.fire({
+          title: '¡Oficio ya enviado!',
+          text: 'Actualmente el oficio ya fue enviado y esta en proceso de validación, no puede realizar ninguna acción por el momento',
+          icon: 'info',
+          confirmButtonText: 'Entendido',
+          timer: 10000,
+          timerProgressBar: true,
+        });
+        setHasShownAlert(true);
+      }
+    }
+  }, [estatusOficio, resultado, hasShownAlert]);
 
   // Ejemplo de estado.
   const [datosFormulario, setDatosFormulario] = useState({
@@ -74,16 +97,33 @@ function PanelDocumento() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await create_ofice({
-      mes_oficio: mes_oficio,
-      ruta_oficio: ruta_oficio
-    });
-    Swal.fire({
-      title: "¡Enviado!",
-      text: "Archivo enviando correctamente.",
-      icon: "success",
-      confirmButtonText: "Aceptar"
-    });
+
+    if (!ruta_oficio) {
+      Swal.fire({
+        title: "Error",
+        text: "Por favor, selecciona un archivo PDF para enviar.",
+        icon: "error",
+        confirmButtonText: "Aceptar"
+      });
+      return;
+    }
+
+    const fecha = dateShortNow();
+
+    try {
+      if (estatusOficio === 'Correcciones' && idOficioActual) {
+        // Si el oficio está en correcciones, lo actualizamos
+        await updateOficio({ id_oficio: idOficioActual, ruta_oficio_firma: ruta_oficio, fecha_firma: fecha }); // No enviar fecha_firma para correcciones
+        Swal.fire({ title: "¡Reenviado!", text: "Oficio corregido reenviado para revisión correctamente.", icon: "success", confirmButtonText: "Aceptar" });
+      } else {
+        // Si es la primera vez o no está en correcciones, lo creamos
+        await create_ofice({ mes_oficio: mes_oficio, ruta_oficio: ruta_oficio });
+        Swal.fire({ title: "¡Enviado!", text: "Archivo enviado correctamente.", icon: "success", confirmButtonText: "Aceptar" });
+      }
+    } catch (error) {
+      console.error("Error al enviar/actualizar oficio:", error);
+      Swal.fire({ title: "Error", text: "Ocurrió un error al procesar el oficio. Inténtalo de nuevo.", icon: "error", confirmButtonText: "Aceptar" });
+    }
     // setInputId(null);
   };
 
@@ -135,7 +175,7 @@ function PanelDocumento() {
               <i class="bi bi-filetype-pdf"></i>
               Generar PDF
             </button>
-            <button type="submit" className="btn-negativo" onClick={handleSubmit} disabled={isDocumentoLoading || resultado === true} style={{ padding: '10px auto', fontSize: "14px" }}>
+            <button type="submit" className="btn-negativo" onClick={handleSubmit} disabled={isDocumentoLoading || (resultado === true && estatusOficio !== 'Correcciones')} style={{ padding: '10px auto', fontSize: "14px" }}>
               <i class="bi bi-clipboard2-check"></i>
               Enviar a revisión
             </button>

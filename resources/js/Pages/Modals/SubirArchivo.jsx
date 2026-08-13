@@ -2,7 +2,7 @@ import Reac, { useState } from "react";
 import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
 import SelectorArchivo from "@/Components/SelectorArchivo";
-import { subInfoFirm } from "../../Components/api/oficio.jsx"
+import { updateOficio } from "../../Components/api/oficio.jsx"
 import { dateShortNow } from "@/Components/functions";
 
 function SubirArchivo({ cerrarModal, idOficio, oficios }) {
@@ -14,7 +14,7 @@ function SubirArchivo({ cerrarModal, idOficio, oficios }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await subInfoFirm({
+        await updateOficio({
             id_oficio: idOficio,
             fecha_firma: fecha_oficio,
             ruta_oficio_firma: ruta_oficio

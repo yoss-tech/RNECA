@@ -126,7 +126,7 @@ export const getOficeFirm = async () => {
 }
 
 // 
-export const subInfoFirm = async (data) => {
+export const updateOficio = async (data) => {
     const formData = new FormData();
     formData.append('id_oficio', data.id_oficio)
     formData.append('fecha_firma', data.fecha_firma);

@@ -50,9 +50,9 @@ function VECA_Actividades({ onComplete }) {
     }
     else if (estatusOficio === 'Validado' && !hasShownAlert) {
       Swal.fire({
-        title: '¡Oficio ya fue validado!',
+        title: '¡Oficio validado!',
         text: 'El oficio ya fue validado, espera hasta el siguiente mes para realizar otro registro',
-        icon: 'info',
+        icon: 'success',
         confirmButtonText: 'Entendido',
         timer: 10000,
         timerProgressBar: true,

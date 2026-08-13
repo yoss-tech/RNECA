@@ -249,7 +249,6 @@ class ProgramController extends Controller
         $currentYear = date('Y');
         $actividad_memo = DB::table('program_cult as pc')
             ->select(
-                'pc.descripcion_activ',
                 'pc.otras_activ',
                 'pc.id_program',
                 'pc.clave_eca',
@@ -273,7 +272,6 @@ class ProgramController extends Controller
         $actividadById = DB::table('program_cult as pc')
             ->join('foto_activ as fa', 'pc.id_program', '=', 'fa.id_actividad')
             ->select(
-                'pc.descripcion_activ',
                 'pc.otras_activ',
                 'pc.id_program',
                 'pc.clave_eca'

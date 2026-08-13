@@ -170,7 +170,7 @@ class OficiosRnecaController extends Controller
 
         $validator = Validator::make($request->all(), [
             'mes_oficio' => 'required',
-            'ruta_oficio' => 'required|file|mimes:pdf|max:5000000'
+            'ruta_oficio' => 'required|file|mimes:pdf|max:5000'
         ]);
 
         if ($validator->fails()) {
@@ -263,11 +263,11 @@ class OficiosRnecaController extends Controller
     public function update(Request $request)
     {
         // Validación de los datos recibidos en la petición.
-        // Se asegura que el 'id_oficio' exista en la tabla 'oficios_rneca',
-        // que 'fecha_firma' sea una fecha válida, y que 'ruta_oficio_firm' sea un archivo PDF no mayor a 5MB.
+        // Se asegura que el 'id_oficio' exista
+        // y que 'ruta_oficio' sea un archivo PDF no mayor a 5MB.
         $validator = Validator::make($request->all(), [
             'id_oficio' => 'required|string|exists:oficios_rneca,id_oficio',
-            'fecha_firma' => 'required|date',
+            'fecha_firma' => 'nullable|date',
             'ruta_oficio' => 'required|file|mimes:pdf|max:5000' // 5000 KB = 5 MB
         ]);
 
@@ -282,22 +282,33 @@ class OficiosRnecaController extends Controller
         // Busca el oficio por su ID. Si no se encuentra, Laravel arrojará una excepción ModelNotFoundException.
         $oficio = oficios_rneca::findOrFail($request->input('id_oficio'));
 
-        // Si ya existe un archivo firmado, lo eliminamos antes de guardar el nuevo.
-        if ($oficio->ruta_oficio) {
+        // Si ya existe un archivo, lo eliminamos antes de guardar el nuevo para evitar archivos huérfanos.
+        if ($oficio->ruta_oficio && Storage::disk('public')->exists($oficio->ruta_oficio)) {
             Storage::disk('public')->delete($oficio->ruta_oficio);
         }
 
-        // Guarda el nuevo archivo PDF firmado en el almacenamiento público.
+        // Guarda el nuevo archivo PDF en el almacenamiento público.
         $rutaPdf = $request->file('ruta_oficio')->store('documents', 'public');
 
         // Actualiza los campos del oficio con la nueva información.
         $oficio->ruta_oficio = $rutaPdf;
-        $oficio->fecha_firma = $request->input('fecha_firma');
-        $oficio->id_estatus = 'EST-R4M8TP1L'; // estatus "Firmado" 
+
+        // Lógica para manejar tanto la subida de un oficio firmado como la de uno corregido.
+        if ($request->filled('fecha_firma')) {
+            $oficio->fecha_firma = $request->input('fecha_firma');
+            $oficio->id_estatus = 'EST-R4M8TP1L'; // Estatus "Firmado"
+            $message = 'El oficio firmado se subió correctamente';
+        } else {
+            $oficio->id_estatus = 'EST-R4M8TP1L'; // Estatus "Firmado"
+            $oficio->observacion = 'Oficio corregido';
+            $oficio->fecha_registro = now();
+            $message = 'El oficio corregido se ha enviado para su revisión';
+        }
+
         $oficio->save();
 
         return response()->json([
-            'message' => 'El oficio firmado se subió correctamente',
+            'message' => $message,
             'status' => 200
         ], 200);
     }
@@ -483,7 +494,7 @@ class OficiosRnecaController extends Controller
                 'eca.nombre_inst_ope',
                 DB::raw('COUNT(*) as pendientes')
             )
-            ->where('oficios_rneca.id_estatus', 'EST-4HJVB2C9')
+            ->whereIn('oficios_rneca.id_estatus', ['EST-R4M8TP1L'])
             ->groupBy(
                 'oficios_rneca.id_oficio',
                 'municipio.id_municipio',
@@ -619,7 +630,8 @@ class OficiosRnecaController extends Controller
             'body' => [
                 'registro_existente' => $registroExistente,
                 'estatus' => $estatus ? $estatus->estatus : null,
-                'observacion' => $estatus ? $estatus->observacion : null
+                'observacion' => $estatus ? $estatus->observacion : null,
+                'id_oficio' => $estatus ? $estatus->id_oficio : null
             ]
         ]);
     }
