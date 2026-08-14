@@ -248,8 +248,8 @@ function Mod_Poblacion({ cerrarModal, espacioId }) {
                         let rango_edad_key = item.rango_edad;
                         if (rango_edad_key === '13-17') rango_edad_key = '13_17';
                         else if (rango_edad_key === '18-30') rango_edad_key = '18_30';
-                        else if (rango_edad_key === '31-40') rango_edad_key = '30_40'; // Mapea 31-40 a 30_40 para la clave
-                        else if (rango_edad_key === '41-50') rango_edad_key = '40_50';
+                        else if (rango_edad_key === '30-40') rango_edad_key = '30_40'; // Mapea 31-40 a 30_40 para la clave
+                        else if (rango_edad_key === '40-50') rango_edad_key = '40_50';
                         else if (rango_edad_key === '50 o más') rango_edad_key = '50mas';
                         else if (rango_edad_key === 'Menor a 12') rango_edad_key = '12';
 

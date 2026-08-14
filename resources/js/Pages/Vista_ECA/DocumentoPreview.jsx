@@ -149,6 +149,142 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
     return { totalplaticasEscolares: sumEscolares, totalplaticasComunitarias: sumComunitarias };
   }, [programa]);
 
+  const programaPages = useMemo(() => {
+    const createPageHeader = () => (
+      <>
+        <div className="documento-header">
+          <div className="header-meta-center">
+            <p><b>Estado Hidalgo</b></p>
+            <p><b>Espacio de Cultura del Agua de: {ecaInfo?.nombre_inst_ope || '---'}</b></p>
+            <p><b>Programa de Cultura del Agua / Informe mensual Cultura del Agua</b></p>
+          </div>
+        </div>
+        <div className="header-meta-right">
+          <p><b>Fecha de informe: {mostrarSoloMes(new Date())} {new Date().getFullYear()}</b></p>
+        </div>
+      </>
+    );
+
+    const createSignatures = () => (
+      <div className="documento-footer">
+        <div className='dashboard'>
+          <div className='dashboard-left'>
+            <div className="firmas">
+              <div className="firma">
+                <div className="linea-firma">{ecaInfo?.Jefe_inmediato || '---'} Director General de la comisión de Agua y Alcantarillado del Municipio de {ecaInfo?.municipio || '...'}, Hidalgo</div>
+              </div>
+            </div>
+          </div>
+          <div className='dashboard-right'>
+            <div className='firmas'>
+              <div className="firma">
+                <div className="linea-firma">{ecaInfo?.nombre_Responsable || '---'} Encargado del Área de Espacio de Cultura del Agua de la {ecaInfo?.municipio || '...'}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+
+    if (programaCargando) {
+      return [
+        <div className="hoja-a4 pagina-horizontal" key="programa-loading">
+          {createPageHeader()}
+          <p>Cargando actividades del mes...</p>
+        </div>
+      ];
+    }
+    if (programaError) {
+      return [
+        <div className="hoja-a4 pagina-horizontal" key="programa-error">
+          {createPageHeader()}
+          <p style={{ color: 'red' }}>{programaError}</p>
+        </div>
+      ];
+    }
+    if (!programa || programa.length === 0) {
+      return [
+        <div className="hoja-a4 pagina-horizontal" key="programa-empty">
+          {createPageHeader()}
+          <p>No hay actividades registradas para este mes.</p>
+          {createSignatures()}
+        </div>
+      ];
+    }
+
+    const firstPageRows = 10;
+    const subsequentPageRows = 18;
+    const chunks = [];
+
+    chunks.push(programa.slice(0, firstPageRows));
+    let currentIndex = firstPageRows;
+    while (currentIndex < programa.length) {
+      chunks.push(programa.slice(currentIndex, currentIndex + subsequentPageRows));
+      currentIndex += subsequentPageRows;
+    }
+
+    return chunks.map((chunk, pageIndex) => (
+      <div className="hoja-a4 pagina-horizontal" key={`pagina-programa-${pageIndex}`}>
+        <div className="header-logo">
+          <img className="imagen" src={imgconagua} alt="Logo CONAGUA" style={{ width: '18%', height: 'auto' }} />
+          <img className='imagen' src={imgceaa} alt="Logo CEAA" style={{ width: '18%', height: 'auto' }} />
+          <img className='imagen' src={imglogo} alt="Logo RNECA" style={{ width: '18%', height: 'auto' }} />
+        </div>
+        <br />
+        {pageIndex === 0 && createPageHeader()}
+        <div className="documento-contenido">
+          <table className="tabla-programa tablas-preview" border="1" cellPadding="5" cellSpacing="0">
+            <thead>
+              <tr className="tabla-header">
+                <th rowSpan="2">Estado</th>
+                <th rowSpan="2">Municipio</th>
+                <th rowSpan="2">Localidad</th>
+                <th colSpan="2">Plática</th>
+                <th rowSpan="2">Otras actividades</th>
+                <th rowSpan="2">Alumnos atendidos</th>
+                <th rowSpan="2">Población atendida</th>
+                <th rowSpan="2">Fecha</th>
+              </tr>
+              <tr className="tabla-header">
+                <th>Escolar</th>
+                <th>Comunitaria</th>
+              </tr>
+            </thead>
+            <tbody>
+              {chunk.map((item, index) => (
+                <tr key={index}>
+                  <td>Hidalgo</td>
+                  <td>{item.municipio || '---'}</td>
+                  <td>{item.localidad || '---'}</td>
+                  <td>{item.tipo_platica === 'escolar' ? '1' : 'N/A'}</td>
+                  <td>{item.tipo_platica === 'comunitaria' ? '1' : 'N/A'}</td>
+                  <td>{item.otras_activ || '---'}</td>
+                  <td>{item.alumnos_Aten || '---'}</td>
+                  <td>{item.pobl_ate || '---'}</td>
+                  <td>{new Date(item.fecha_mes).toLocaleDateString() || '---'}</td>
+                </tr>
+              ))}
+            </tbody>
+            {pageIndex === chunks.length - 1 && (
+              <tfoot>
+                <tr>
+                  <td colSpan="3" style={{ textAlign: 'right', fontWeight: 'bold' }}>Total:</td>
+                  <td>{totalplaticasEscolares}</td>
+                  <td>{totalplaticasComunitarias}</td>
+                  <td></td>
+                  <td>{totalAlumnosAtendidos}</td>
+                  <td>{totalPoblacionAtendida}</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            )}
+          </table>
+        </div>
+        {pageIndex === chunks.length - 1 && createSignatures()}
+      </div>
+    ));
+  }, [programa, programaCargando, programaError, ecaInfo, totalAlumnosAtendidos, totalPoblacionAtendida, totalplaticasEscolares, totalplaticasComunitarias]);
+
   const memoriaFotograficaPages = useMemo(() => {
     const createPage = (content, pageIndex) => (
       <div className="hoja-a4" key={`memoria-pagina-${pageIndex}`}>
@@ -279,97 +415,8 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
       </div>
     </div>,
 
-    // POBLACIÓN ANTENDIDA -> ACTIVIDADES
-    <div className="hoja-a4 pagina-horizontal" key="pagina2">
-      <div className="header-logo">
-        <img className="imagen" src={imgconagua} alt="Logo CONAGUA" style={{ width: '18%', height: 'auto' }} />
-        <img className='imagen' src={imgceaa} alt="Logo CEAA" style={{ width: '18%', height: 'auto' }} />
-        <img className='imagen' src={imglogo} alt="Logo RNECA" style={{ width: '18%', height: 'auto' }} />
-      </div>
-      <br />
-      <div className="documento-header">
-        <div className="header-meta-center">
-          <p><b>Estado Hidalgo</b></p>
-          <p><b>Espacio de Cultura del Agua de: {ecaInfo?.nombre_inst_ope || '---'}</b></p>
-          <p><b>Programa de Cultura del Agua / Informe mensual Cultura del Agua</b></p>
-        </div>
-      </div>
-      <div className="header-meta-right">
-        <p><b>Fecha de informe: {mostrarSoloMes(new Date())} {new Date().getFullYear()}</b></p>
-      </div>
-      <div className="documento-contenido">
-        {programaCargando ? (
-          <p>Cargando actividades del mes...</p>
-        ) : programaError ? (
-          <p style={{ color: 'red' }}>{programaError}</p>
-        ) : programa && programa.length > 0 ? (
-          <table className="tabla-programa tablas-preview" border="1" cellPadding="5" cellSpacing="0">
-            <thead>
-              <tr className="tabla-header">
-                <th rowSpan="2">Estado</th>
-                <th rowSpan="2">Municipio</th>
-                <th rowSpan="2">Localidad</th>
-                <th colSpan="2">Plática</th>
-                <th rowSpan="2">Otras actividades</th>
-                <th rowSpan="2">Alumnos atendidos</th>
-                <th rowSpan="2">Población atendida</th>
-                <th rowSpan="2">Fecha</th>
-              </tr>
-              <tr>
-                <th>Escolar</th>
-                <th>Comunitaria</th>
-              </tr>
-            </thead>
-            <tbody>
-              {programa.map((item, index) => (
-                <tr key={index}>
-                  <td>Hidalgo</td>
-                  <td>{item.municipio || '---'}</td>
-                  <td>{item.localidad || '---'}</td>
-                  <td>{item.tipo_platica === 'escolar' ? '1' : 'N/A'}</td>
-                  <td>{item.tipo_platica === 'comunitaria' ? '1' : 'N/A'}</td>
-                  <td>{item.otras_activ || '---'}</td>
-                  <td>{item.alumnos_Aten || '---'}</td>
-                  <td>{item.pobl_ate || '---'}</td>
-                  <td>{new Date(item.fecha_mes).toLocaleDateString() || '---'}</td>
-                </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan="3" style={{ textAlign: 'right', fontWeight: 'bold' }}>Total:</td>
-                <td>{totalplaticasEscolares}</td>
-                <td>{totalplaticasComunitarias}</td>
-                <td></td>
-                <td>{totalAlumnosAtendidos}</td>
-                <td>{totalPoblacionAtendida}</td>
-                <td></td> {/* Empty cell for Fecha */}
-              </tr>
-            </tfoot>
-          </table>
-        ) : (
-          <p>No hay actividades registradas para este mes.</p>
-        )}
-      </div>
-      <div className="documento-footer">
-        <div className='dashboard'>
-          <div className='dashboard-left'>
-            <div class="firmas">
-              <div class="firma">
-                <div class="linea-firma">{ecaInfo?.Jefe_inmediato || '---'} Director General de la comisión de Agua y Alcantarillado del Municipio de {ecaInfo?.municipio || '...'}, Hidalgo</div>
-              </div>
-            </div>
-          </div>
-          <div className='dashboard-right'>
-            <div className='firmas'>
-              <div class="firma">
-                <div class="linea-firma">{ecaInfo?.nombre_Responsable || '---'} Encargado del Área de Espacio de Cultura del Agua de la {ecaInfo?.nombre_eca || '...'}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>,
+    // PROGRMAS DE CULTURA -> ACTIVIDADES
+    ...programaPages,
 
     // POBLACIÓN BENEFICIARIA
     <div className="hoja-a4 pagina-horizontal" key="pagina3">
@@ -429,8 +476,8 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
               <tbody>
                 {espacioAgrupado.map((item, index) => (
                   <tr key={index}>
-                    <td>{item.clave_eca || '---'}</td>
-                    <td>{item.fecha_apert || '---'}</td>
+                    <td style={{width: '8%'}}>{item.clave_eca || '---'}</td>
+                    <td style={{width: '8%'}}>{item.fecha_apert || '---'}</td>
                     <td>{item.fecha_forta || '---'}</td>
                     <td>{item.inedito || '---'}</td>
                     <td>{item.reproducido || '---'}</td>
@@ -480,7 +527,7 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
       </div>
     </div>,
     ...memoriaFotograficaPages
-  ], [programa, programaCargando, programaError, ecaInfo, espacio, espacioCargando, espacioError, espacioAgrupado, totalAlumnosAtendidos, totalPoblacionAtendida, datosDinamicos.ccp, memoriaFotograficaPages]);
+  ], [programaPages, ecaInfo, espacio, espacioCargando, espacioError, espacioAgrupado, totalAlumnosAtendidos, totalPoblacionAtendida, datosDinamicos.ccp, memoriaFotograficaPages]);
 
   useEffect(() => {
     setNumPaginas(allPages.length);

@@ -313,19 +313,19 @@ p {
 }
 
 /* ================= CARDS ================= */
-.login-card { 
+.login-card {
     width: 100%;
     max-width: 450px;
-    padding: 30px; 
-    border-radius: 15px; 
-    background-color: var(--blanco-color); 
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
-} 
+    padding: 30px;
+    border-radius: 15px;
+    background-color: var(--blanco-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
 .card-body {
     display: flex;
-    flex-direction: column; 
-} 
+    flex-direction: column;
+}
 
 .container-municipios,
 .cards-revision,
@@ -340,7 +340,7 @@ p {
     display: grid;
     top:5px;
 }
- 
+
 .cards-municipio {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -415,7 +415,7 @@ p {
     width: 100%;
     justify-content: center;
     top: 5px;
-} 
+}
 
 .card-contenedor {
     width: 99%;
@@ -446,12 +446,12 @@ p {
 }
 
 .card-text {
-    margin-bottom: 4px; 
+    margin-bottom: 4px;
 }
 
-.card-titles { 
-    margin-bottom: 10px; 
-} 
+.card-titles {
+    margin-bottom: 10px;
+}
 .card-historial {
     width: 100%;
     max-width: 100%;
@@ -594,7 +594,7 @@ input[type="file"] {
 
 .input-password input{
     width: 100%;
-    padding-right: 40px; 
+    padding-right: 40px;
 }
 
 .input-password i{
@@ -611,9 +611,9 @@ input[type="file"] {
     flex-direction: column;
     margin-bottom: 15px;
     width: 100%;
-    
+
 }
-     
+
 /* ================= BOTONES ================= */
 .btn-primario,
 .btn-negativo,
@@ -727,7 +727,7 @@ input[type="file"] {
     border: none;
 }
 
-.btn-cerrar-sesion, 
+.btn-cerrar-sesion,
 .btn-modificar,
 .btn-eliminar,
 .btn-ver,
@@ -758,7 +758,7 @@ input[type="file"] {
 .btn-eliminar:hover{
      background: var(--ginda-color);
     color: var(--blanco-color);
-} 
+}
 
 .btn-evidencia:hover{
      background: var(--ginda-color);
@@ -984,7 +984,7 @@ tr {
         text-align: center;
     }
 
-    
+
 
     .card {
         padding: 25px;
@@ -1059,11 +1059,15 @@ tr {
 /*Diseño para la barra de carga animado*/
 .loader {
     width: 100%;
-    height: 180px;
+    height: 100%;
     border-radius: 10px;
     background: #fff;
     margin-top: 50px;
+    margin-bottom: 50px;
     display: flex;
+    max-width: auto;
+    max-height: auto;
+    justify-content: center;
     flex-direction: column;
     align-items: center;
     /* justify-content: space-evenly; */

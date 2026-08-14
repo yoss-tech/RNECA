@@ -274,7 +274,7 @@ function VECA_Poblacion({ onComplete }) {
         nexo: nexo,
         material: material
       };
-      console.log(dataToSend);
+      // console.log(dataToSend);
       await create_espacio(dataToSend);
       Swal.fire({
         title: "¡Guardado!",
