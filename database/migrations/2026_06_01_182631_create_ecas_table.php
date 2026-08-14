@@ -18,13 +18,14 @@ return new class extends Migration
             $table->integer('poblacion_atend');
             $table->date('fecha_apert');
             $table->date('fecha_forta');
-            $table->string('fecha_cierre', 50)->nullable();
+            $table->date('fecha_cierre')->nullable();
             $table->text('motivo_cierre')->nullable();
+            $table->string('ruta_logo', 500)->nullable();
             $table->char('id_usuario', 20);
             $table->char('id_estatus', 20);
             $table->char('id_direccion', 20);
             $table->date('fecha_registro')->default(now());
-            $table->string('ruta_logo', 500)->nullable();
+
 
             // Foreign Keys
             $table->foreign('id_usuario')->references('id_usuario')->on('usuarios');

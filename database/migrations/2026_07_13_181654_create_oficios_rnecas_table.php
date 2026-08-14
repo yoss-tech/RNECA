@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('fecha_firma')->default(now());
             $table->date('fecha_obser')->default(now());
             $table->char('clave_eca', 12);
-            $table->char('id_estatus', 20)->default('EST-R4M8TP1L');
+            $table->char('id_estatus', 20)->default('EST-4HJVB2C9');
             $table->timestamps();
 
             $table->foreign('clave_eca')->references('clave_eca')->on('eca');
