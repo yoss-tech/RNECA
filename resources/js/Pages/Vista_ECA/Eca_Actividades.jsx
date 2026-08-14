@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../../../css/Style.css"
 import Crear_Actividad from "../Modals/Crear/Crear_Actividad.jsx";
-import { getProgramData, delete_program, checkActividadesRegistro } from "../../Components/api/program.jsx"
-import { checkOficio, getEstatusOficio } from "../../Components/api/oficio.jsx";
+import { getProgramData, delete_program } from "../../Components/api/program.jsx"
+import { getEstatusOficio } from "../../Components/api/oficio.jsx";
+import { checkEspacioRegistro } from "../../Components/api/espacio.jsx";
 import Mod_Actividad from "../../Pages/Modals/Modificar/Mod_Actividad.jsx";
 import Mostrar_Imagenes from "../Modals/MostrarImagen.jsx"
 import Swal from "sweetalert2";
@@ -21,6 +22,7 @@ function VECA_Actividades({ onComplete }) {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [hasShownAlert, setHasShownAlert] = useState(false);
   const [resultado, setResultado] = useState(null);
+  const [checkEspacio, setCheckEspacio] = useState(false);
 
   const [estatusOficio, setEstatusOficio] = useState(null);
 
@@ -90,6 +92,21 @@ function VECA_Actividades({ onComplete }) {
     }
   }
 
+  useEffect(() => {
+    const checkEspacio = async () => {
+      try {
+        const data = await checkEspacioRegistro()
+        setCheckEspacio(data.registro_existente);
+      }
+      catch (error) {
+        console.error('Sin registros aún', error);
+        setCheckEspacio(false);
+      }
+    };
+
+    checkEspacio();
+  })
+
   const toggleOpciones = (index) => {
     setOpcionesAbiertas(opcionesAbiertas === index ? null : index);
   };
@@ -133,12 +150,28 @@ function VECA_Actividades({ onComplete }) {
       }
   };
 
+  const manejarClic = () => {
+    setMostrarModal(true);
+
+    if(checkEspacio === true)
+    {
+      Swal.fire({
+        title: '!Advertencia!',
+        text: 'Estas a punto de agregar una nueva actividad, toma en cuenta que ya registraste la población beneficiaria y deberas modificarla al finalizar este registro',
+        icon: 'warning',
+        confirmButtonText: 'Entendido',
+        timer: 10000,
+        timerProgressBar: true,
+      });
+    }
+  }
+
   return (
     <div className="page-container">
       <h1 className="page-title">Registro de actividades realizadas durante el periodo.</h1>
       <h2 className="page-subtitle">Capture la información de las actividades efectuadas durante el mes correspondiente.</h2>
 
-      <button className="btn-primario" onClick={() => setMostrarModal(true)} disabled={resultado === true}>
+      <button className="btn-primario" onClick={() => manejarClic()} disabled={resultado === true}>
         Nueva actividad
       </button>
       {mostrarModal && (

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 // import "/resources/css/Style.css";
 import "/resources/css/Preview_oficio.css"
 import { getAllEspacio } from "../../Components/api/espacio_cult"
-import { infoEca } from "../../Components/api/infoEca.jsx";
 import { mostrarSoloMes } from "../../Components/functions.jsx";
 import { useReactToPrint } from "react-to-print";
 import { getTotalPlaticas } from "../../Components/api/program.jsx";
@@ -17,6 +16,8 @@ function Admin_oficios() {
     const [espacioError, setEspacioError] = useState(null);
     const [ecaInfoCargando, setEcaInfoCargando] = useState(true);
     const [totalPlaticas, setTotalPlaticas] = useState(null);
+    const [paginaActual, setPaginaActual] = useState(1);
+    const [numPaginas, setNumPaginas] = useState(0);
     const [cargandoTotales, setCargandoTotales] = useState(true);
     const [semestreSeleccionado, setSemestreSeleccionado] = useState(new Date().getMonth() < 6 ? 1 : 2);
 
@@ -42,21 +43,21 @@ function Admin_oficios() {
 
     const [admin, setAdmin] = useState(null);
 
-     // Petición para obtener la descripción general de la memoria fotográfica
-      useEffect(() => {
+    // Petición para obtener la descripción general de la memoria fotográfica
+    useEffect(() => {
         const fechtInfo = async () => {
-          setEcaInfoCargando(true);
-          try {
-            const data = await getadmin();
-            setAdmin(data.body || {});
-          }
-          catch {
-            console.error('Ocurrió un error al conectar con el servidor para obtener info ECA.');
-          }
-          setEcaInfoCargando(false);
+            setEcaInfoCargando(true);
+            try {
+                const data = await getadmin();
+                setAdmin(data.body || {});
+            }
+            catch {
+                console.error('Ocurrió un error al conectar con el servidor para obtener info ECA.');
+            }
+            setEcaInfoCargando(false);
         };
         fechtInfo();
-      }, []);
+    }, []);
 
     // console.log(admin)
 
@@ -199,6 +200,197 @@ function Admin_oficios() {
     const anioActual = new Date().getFullYear();
     const semestreActual = semestreSeleccionado === 1 ? '1er' : '2do';
 
+    const oficioPages = useMemo(() => {
+        const createPageHeader = () => (
+            <>
+                <div className="header-logo">
+                    <img className="imagen" src={imgconagua} alt="Logo CONAGUA" style={{ width: '14%', height: 'auto' }} />
+                    <img className='imagen' src={imgceaa} alt="Logo CEAA" style={{ width: '12%', height: 'auto' }} />
+                </div>
+                <br />
+                <div className="documento-header">
+                    <div className="header-meta-center">
+                        <p><b>Información sobre la población potencial atendida</b></p>
+                        <br />
+                        <p><b>Espacios de Cultura del Agua</b></p>
+                    </div>
+                </div>
+                <div className="dashboard">
+                    <div className="dashboard-left">
+                        <p><b>Entidad federativa: Hidalgo</b></p>
+                    </div>
+                    <div className="header-meta-right">
+                        <p><b>Semestre: {semestreActual} Semestre {anioActual}</b></p>
+                    </div>
+                </div>
+            </>
+        );
+
+        const createSignatures = () => (
+            <div className="documento-footer">
+                <div className='dashboard'>
+                    <div className="dashboard-left">
+                        <div className="firmas">
+                            <div className="firma">
+                                <div className="linea-firma"><b>{admin?.nombre || '---'}</b><br />Encargado de Control de Gestión, Comunicación, Atención Social e Institucional y Cultura del Agua en la Dirección Local Hidalgo de la Comisión Nacional del Agua</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="dashboard-right">
+                        <div className='firmas'>
+                            <div className="firma">
+                                <div className="linea-firma"><b>{admin?.nombre_jefe || '---'}</b><br />Director de Organizmos Operadores y Atención a Usuarios</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const createTableHead = () => (
+            <thead>
+                <tr>
+                    <th rowSpan="2" style={{ width: '4%' }}>Clave del ECA</th>
+                    <th rowSpan="2" style={{ width: '20%' }}>Nombre del ECA</th>
+                    <th rowSpan="2" style={{ width: '5%' }}>Fecha de apertura</th>
+                    <th rowSpan="2" style={{ width: '7%' }}>Fecha de fortalecimiento</th>
+                    <th rowSpan="2" style={{ width: '9%' }}>Actividad realizada</th>
+                    <th colSpan="3" style={{ width: '16.5%' }} >Material didactico</th>
+                    <th colSpan="4" style={{ width: '16.5%', background: '#BFBFBF' }}>Asistentes</th>
+                    <th rowSpan="2" style={{ width: '5%' }}>Total de población atendida</th>
+                    <th colSpan="3" style={{ width: '15.5%' }}>Soporte/Evidencia</th>
+                    <th rowSpan="2" style={{ width: '12%' }}>Comentarios/Observaciones</th>
+                </tr>
+                <tr>
+                    <th>Inédito</th>
+                    <th>Reproducido</th>
+                    <th>Adquirido</th>
+                    <th style={{ background: '#BFBFBF' }}>Hombres</th>
+                    <th style={{ background: '#BFBFBF' }}>Mujeres</th>
+                    <th style={{ background: '#BFBFBF' }}>Jovenes</th>
+                    <th style={{ background: '#BFBFBF' }}>Niños</th>
+                    <th>Lista de asistencia</th>
+                    <th>Evidencia fotográfica</th>
+                    <th>Nota periodística</th>
+                </tr>
+            </thead>
+        );
+
+        if (espacioCargando || cargandoTotales) {
+            return [<div className="hoja-a4 pagina-horizontal" key="loading"><p>Cargando...</p></div>];
+        }
+        if (espacioError) {
+            return [<div className="hoja-a4 pagina-horizontal" key="error"><p style={{ color: 'red' }}>{espacioError}</p></div>];
+        }
+        if (!espacioAgrupado || espacioAgrupado.length === 0) {
+            return [<div className="hoja-a4 pagina-horizontal" key="empty"><p>No hay datos para mostrar.</p></div>];
+        }
+
+        const allRowElements = [];
+        espacioAgrupado.forEach((grupoMes, idx) => {
+            allRowElements.push(
+                <tr key={`header-${idx}`}>
+                    <th colSpan="17" style={{ backgroundColor: '#000', color: '#ffffff', fontSize: '12px' }}>{meses[grupoMes.mes - 1]}</th>
+                </tr>
+            );
+            grupoMes.registros.forEach((item, index) => {
+                allRowElements.push(
+                    <tr key={`${idx}-${index}`}>
+                        <td className="item-center">{item.clave_eca || '---'}</td>
+                        <td className="item-left">{item.nombre_inst_ope}</td>
+                        <td className="item-center">{item.fecha_apert || '---'}</td>
+                        <td className="item-center">{item.fecha_forta || '---'}</td>
+                        <td className="item-center">
+                            {`${item.actividades.totalEscolar} platica(s) escolar(es) y ${item.actividades.totalComunitaria} comunitaria(s)`}
+                        </td>
+                        <td className="item-center">{item.inedito || '---'}</td>
+                        <td className="item-center">{item.reproducido || '---'}</td>
+                        <td className="item-center">{item.adquirido || '---'}</td>
+                        <td className="item-center" style={{ background: '#BFBFBF' }}><b>{item.totales.totalHombres || 0}</b></td>
+                        <td className="item-center" style={{ background: '#BFBFBF' }}><b>{item.totales.totalMujeres || 0}</b></td>
+                        <td className="item-center" style={{ background: '#BFBFBF' }}><b>{item.totales.totalJovenes || 0}</b></td>
+                        <td className="item-center" style={{ background: '#BFBFBF' }}><b>{item.totales.totalNinos || 0}</b></td>
+                        <td className="item-center">{item.total_pobl || 0}</td>
+                        <td className="item-center">{item.list_asist === 'sí' ? 'Sí' : 'No'}</td>
+                        <td className="item-center">{item.evi_foto === 'sí' ? 'Sí' : 'No'}</td>
+                        <td className="item-center">{item.nota_period === 'sí' ? 'Sí' : 'No'}</td>
+                        <td className="item-left">{item.comentarios || '---'}</td>
+                    </tr>
+                );
+            });
+            allRowElements.push(
+                <tr key={`subtotal-${idx}`} style={{ fontWeight: 'bold' }}>
+                    <td colSpan="5" style={{ textAlign: 'right' }}>Subtotal:</td>
+                    <td className="item-center">{grupoMes.totalesMes.inedito}</td>
+                    <td className="item-center">{grupoMes.totalesMes.reproducido}</td>
+                    <td className="item-center">{grupoMes.totalesMes.adquirido}</td>
+                    <td className="item-center" style={{ background: '#BFBFBF' }}>{grupoMes.totalesMes.hombres}</td>
+                    <td className="item-center" style={{ background: '#BFBFBF' }}>{grupoMes.totalesMes.mujeres}</td>
+                    <td className="item-center" style={{ background: '#BFBFBF' }}>{grupoMes.totalesMes.jovenes}</td>
+                    <td className="item-center" style={{ background: '#BFBFBF' }}>{grupoMes.totalesMes.ninos}</td>
+                    <td className="item-center" style={{ background: '#BFBFBF' }}>{grupoMes.totalesMes.poblacion}</td>
+                    <td colSpan="4"></td>
+                </tr>
+            );
+        });
+
+        const firstPageRows = 15;
+        const subsequentPageRows = 20;
+        const chunks = [];
+        if (allRowElements.length > 0) {
+            let remainingRows = [...allRowElements];
+            chunks.push(remainingRows.splice(0, firstPageRows));
+            while (remainingRows.length > 0) {
+                chunks.push(remainingRows.splice(0, subsequentPageRows));
+            }
+        }
+
+        return chunks.map((chunk, pageIndex) => (
+            <div className="hoja-a4 pagina-horizontal" key={`oficio-page-${pageIndex}`}>
+                {createPageHeader()}
+                <div className="documento-contenido">
+                    <table className="tabla-espacio-general tablas-preview" border="1" cellPadding="5" cellSpacing="0">
+                        {createTableHead()}
+                        <tbody>
+                            {chunk}
+                        </tbody>
+                        {pageIndex === chunks.length - 1 && (
+                            <tfoot>
+                                <tr style={{ fontWeight: 'bold', fontSize: '1.1em' }}>
+                                    <td colSpan="5" style={{ textAlign: 'right' }}>Totales del {semestreActual} Semestre {anioActual}:</td>
+                                    <td className="item-center">{totalesSemestre.inedito}</td>
+                                    <td className="item-center">{totalesSemestre.reproducido}</td>
+                                    <td className="item-center">{totalesSemestre.adquirido}</td>
+                                    <td className="item-center">{totalesSemestre.hombres}</td>
+                                    <td className="item-center">{totalesSemestre.mujeres}</td>
+                                    <td className="item-center">{totalesSemestre.jovenes}</td>
+                                    <td className="item-center">{totalesSemestre.ninos}</td>
+                                    <td className="item-center">{totalesSemestre.poblacion}</td>
+                                    <td colSpan="4"></td>
+                                </tr>
+                            </tfoot>
+                        )}
+                    </table>
+                </div>
+                {pageIndex === chunks.length - 1 && createSignatures()}
+            </div>
+        ));
+    }, [espacioAgrupado, espacioCargando, espacioError, admin, semestreActual, anioActual, totalesSemestre, cargandoTotales]);
+
+    useEffect(() => {
+        if (oficioPages) {
+            setNumPaginas(oficioPages.length);
+        }
+    }, [oficioPages]);
+
+    const irAPaginaSiguiente = () => {
+        setPaginaActual((prev) => Math.min(prev + 1, numPaginas));
+    };
+
+    const irAPaginaAnterior = () => {
+        setPaginaActual((prev) => Math.max(prev - 1, 1));
+    };
+
     return (
         <>
             <div className="page-container">
@@ -214,154 +406,34 @@ function Admin_oficios() {
                             2do Semestre
                         </button>
                     </div>
-                    <div className="header-meta-right">
+                    <div className="header-meta-right" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        {numPaginas > 1 && (
+                            <div className="paginacion-controles" style={{ margin: 0, padding: 0, background: 'transparent', boxShadow: 'none' }}>
+                                <button onClick={irAPaginaAnterior} disabled={paginaActual === 1} className="btn-neutral">
+                                    Anterior
+                                </button>
+                                <span>
+                                    Página {paginaActual} de {numPaginas}
+                                </span>
+                                <button onClick={irAPaginaSiguiente} disabled={paginaActual >= numPaginas} className="btn-neutral">
+                                    Siguiente
+                                </button>
+                            </div>
+                        )}
                         <button className="btn-primario" onClick={handlePrint}>Generar PDF</button>
                     </div>
                 </div>
 
-                <div ref={componentRef} className="hoja-a4  pagina-horizontal">
-                    <div className="header-logo">
-                        <img className="imagen" src={imgconagua} alt="Logo CONAGUA" style={{ width: '14%', height: 'auto' }} />
-                        <img className='imagen' src={imgceaa} alt="Logo CEAA" style={{ width: '12%', height: 'auto' }} />
-                    </div>
-                    <br />
-                    <div className="documento-header">
-                        <div className="header-meta-center">
-                            <p><b>Información sobre la población potencial atendida</b></p>
-                            <br />
-                            <p><b>Espacios de Cultura del Agua</b></p>
-                        </div>
-                    </div>
-                    <div className="documento-contenido">
-                        <div className="dashboard">
-                            <div className="dashboard-left">
-                                <p><b>Entidad federativa: Hidalgo</b></p>
+                <div ref={componentRef}>
+                    {espacioCargando || cargandoTotales ? (
+                        <div className="hoja-a4 pagina-horizontal"><p>Cargando...</p></div>
+                    ) : (
+                        oficioPages.map((pagina, index) => (
+                            <div key={index} className={paginaActual === index + 1 ? 'pagina-activa' : 'pagina-oculta-pantalla'}>
+                                {pagina}
                             </div>
-                            <div className="header-meta-right">
-                                <p><b>Semestre: {semestreActual} Semestre {anioActual}</b></p>
-                            </div>
-                        </div>
-                        <React.Fragment> <table className="tabla-espacio-general tablas-preview" border="1" cellPadding="5" cellSpacing="0" style={{ marginBottom: '20px' }}>
-
-                            <tr>
-                                <th rowSpan="2" style={{ width: '4%' }}>Clave del ECA</th>
-                                <th rowSpan="2" style={{ width: '20%' }}>Nombre del ECA</th>
-                                <th rowSpan="2" style={{ width: '5%' }}>Fecha de apertura</th>
-                                <th rowSpan="2" style={{ width: '7%' }}>Fecha de fortalecimiento</th>
-                                <th rowSpan="2" style={{ width: '9%' }}>Actividad realizada</th>
-                                <th colSpan="3" style={{ width: '16.5%' }} >Material didactico</th>
-                                <th colSpan="4" style={{ width: '16.5%', background: '#BFBFBF' }}>Asistentes</th>
-                                <th rowSpan="2" style={{ width: '5%' }}>Total de población atendida</th>
-                                <th colSpan="3" style={{ width: '15.5%' }}>Soporte/Evidencia</th>
-                                <th rowSpan="2" style={{ width: '12%' }}>Comentarios/Observaciones</th>
-                            </tr>
-                            <tr>
-                                <th>Inédito</th>
-                                <th>Reproducido</th>
-                                <th>Adquirido</th>
-                                <th style={{ background: '#BFBFBF' }}>Hombres</th>
-                                <th style={{ background: '#BFBFBF' }}>Mujeres</th>
-                                <th style={{ background: '#BFBFBF' }}>Jovenes</th>
-                                <th style={{ background: '#BFBFBF' }}>Niños</th>
-                                <th>Lista de asistencia</th>
-                                <th>Evidencia fotográfica</th>
-                                <th>Nota periodística</th>
-                            </tr>
-                            {espacioCargando ?
-                                <tr>
-                                    <td colSpan="17" className="item-center">
-                                        <p>Cargando datos de población...</p>
-                                    </td>
-                                </tr>
-                                : espacioError ? <p style={{ color: 'red' }}>{espacioError}</p> : (
-                                    espacioAgrupado.length > 0 ? (
-                                        <> {espacioAgrupado.map((grupoMes, idx) => (
-                                            <>
-                                                <tr>
-                                                    <th colSpan="17" style={{ backgroundColor: '#000', color: '#ffffff', fontSize: '12px' }}>{meses[grupoMes.mes - 1]}</th>
-                                                </tr>
-                                                <tbody>
-                                                    {grupoMes.registros.map((item, index) => (
-                                                        <tr key={`${idx}-${index}`}>
-                                                            <td className="item-center">{item.clave_eca || '---'}</td>
-                                                            <td className="item-left">{item.nombre_inst_ope}</td>
-                                                            <td className="item-center">{item.fecha_apert || '---'}</td>
-                                                            <td className="item-center">{item.fecha_forta || '---'}</td>
-                                                            <td className="item-center">
-                                                                {`${item.actividades.totalEscolar} platica(s) escolar(es) y ${item.actividades.totalComunitaria} comunitaria(s)`}
-                                                            </td>
-                                                            <td className="item-center">{item.inedito || '---'}</td>
-                                                            <td className="item-center">{item.reproducido || '---'}</td>
-                                                            <td className="item-center">{item.adquirido || '---'}</td>
-                                                            <td className="item-center" style={{ background: '#BFBFBF' }}><b>{item.totales.totalHombres || 0}</b></td>
-                                                            <td className="item-center" style={{ background: '#BFBFBF' }}><b>{item.totales.totalMujeres || 0}</b></td>
-                                                            <td className="item-center" style={{ background: '#BFBFBF' }}><b>{item.totales.totalJovenes || 0}</b></td>
-                                                            <td className="item-center" style={{ background: '#BFBFBF' }}><b>{item.totales.totalNinos || 0}</b></td>
-                                                            <td className="item-center">{item.total_pobl || 0}</td>
-                                                            <td className="item-center">{item.list_asist === 'sí' ? 'Sí' : 'No'}</td>
-                                                            <td className="item-center">{item.evi_foto === 'sí' ? 'Sí' : 'No'}</td>
-                                                            <td className="item-center">{item.nota_period === 'sí' ? 'Sí' : 'No'}</td>
-                                                            <td className="item-left">{item.comentarios || '---'}</td>
-                                                        </tr>
-                                                    ))}
-                                                    <tr style={{ fontWeight: 'bold' }}>
-                                                        <td colSpan="5" style={{ textAlign: 'right' }}>Subtotal:</td>
-                                                        <td className="item-center">{grupoMes.totalesMes.inedito}</td>
-                                                        <td className="item-center">{grupoMes.totalesMes.reproducido}</td>
-                                                        <td className="item-center">{grupoMes.totalesMes.adquirido}</td>
-                                                        <td className="item-center" style={{ background: '#BFBFBF' }}>{grupoMes.totalesMes.hombres}</td>
-                                                        <td className="item-center" style={{ background: '#BFBFBF' }}>{grupoMes.totalesMes.mujeres}</td>
-                                                        <td className="item-center" style={{ background: '#BFBFBF' }}>{grupoMes.totalesMes.jovenes}</td>
-                                                        <td className="item-center" style={{ background: '#BFBFBF' }}>{grupoMes.totalesMes.ninos}</td>
-                                                        <td className="item-center" style={{ background: '#BFBFBF' }}>{grupoMes.totalesMes.poblacion}</td>
-                                                        <td colSpan="4"></td>
-                                                    </tr>
-                                                </tbody>
-                                            </>
-                                        ))}
-                                            <tfoot>
-                                                <tr style={{ fontWeight: 'bold', fontSize: '1.1em' }}>
-                                                    <td colSpan="5" style={{ textAlign: 'right' }}>Totales del {semestreActual} Semestre {anioActual}:</td>
-                                                    <td className="item-center">{totalesSemestre.inedito}</td>
-                                                    <td className="item-center">{totalesSemestre.reproducido}</td>
-                                                    <td className="item-center">{totalesSemestre.adquirido}</td>
-                                                    <td className="item-center">{totalesSemestre.hombres}</td>
-                                                    <td className="item-center">{totalesSemestre.mujeres}</td>
-                                                    <td className="item-center">{totalesSemestre.jovenes}</td>
-                                                    <td className="item-center">{totalesSemestre.ninos}</td>
-                                                    <td className="item-center">{totalesSemestre.poblacion}</td>
-                                                    <td colSpan="4"></td>
-                                                </tr>
-                                            </tfoot>
-                                        </>
-                                    ) : (
-                                        <tr>
-                                            <td colSpan="17" className="item-center">
-                                                <p>No hay datos de población beneficiaria para mostrar.</p>
-                                            </td>
-                                        </tr>
-                                    )
-                                )}
-                        </table> </React.Fragment>
-                    </div>
-                    <div className="documento-footer">
-                        <div className='dashboard'>
-                            <div className="dashboard-left">
-                                <div class="firmas">
-                                    <div class="firma">
-                                        <div class="linea-firma"><b>{admin?.nombre || '---'}</b><br></br>Encargado de Control de Gestión, Comunicación, Atención Social e Institucional y Cultura del Agua en la Dirección Local Hidalgo de la Comisión Nacional del Agua</div>
-                                    </div>
-                                </div>
-                            </div> 
-                            <div className="dashboard-right">
-                                <div className='firmas'>
-                                    <div class="firma">
-                                        <div class="linea-firma"><b>{admin?.nombre_jefe || '---'}</b><br></br>Director de Organizmos Operadores y Atención a Usuarios</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        ))
+                    )}
                 </div>
             </div>
         </>

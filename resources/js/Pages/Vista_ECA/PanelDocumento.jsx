@@ -40,8 +40,8 @@ function PanelDocumento() {
     checkRegistro();
   }, []);
 
-  console.log(estatusOficio)
-  console.log(idOficioActual)
+  // console.log(estatusOficio)
+  // console.log(idOficioActual)
 
   useEffect(() => {
     if (estatusOficio === 'Correcciones' && !hasShownAlert) {

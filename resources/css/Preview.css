@@ -89,7 +89,6 @@
 /* Tablas */
 .tablas-preview {
     width: 100%;
-    table-layout: fixe;
     border-collapse: collapse;
     margin-top: 10px;
 }
@@ -110,6 +109,11 @@
     font-size: 7.8pt;
     text-align: center;
     color: #000;
+}
+
+.tabla-espacio td{
+    padding-top: 45px;
+    padding-bottom: 45px;
 }
 
 /* Estilos de impresión para la hoja */
@@ -292,7 +296,7 @@
 
 /* Pie de página */
 .documento-footer {
-    margin-top: 5rem;
+    margin-top: 1rem;
     padding-top: 1rem;
     border-top-width: 1px;
     border-color: #e5e7eb;
