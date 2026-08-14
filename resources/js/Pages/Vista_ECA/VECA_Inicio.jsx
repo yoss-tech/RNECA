@@ -4,7 +4,7 @@ import { logoutUser } from "../../Components/api/auth.jsx";
 import { checkEspacioRegistro } from "../../Components/api/espacio.jsx";
 import { getInfoEca } from "@/Components/api/usuarios.jsx";
 import { checkActividadesRegistro } from "../../Components/api/program.jsx"
-import { getEstatusOficio } from "../../Components/api/oficio.jsx";
+import { checkOficio } from "../../Components/api/oficio.jsx";
 import { getLastOficio } from "../../Components/api/dowload_ofice.js";
 import { getContadorNotificaciones } from "@/Components/api/notificaciones.jsx";
 import VECA_Actividades from "./Eca_Actividades.jsx";
@@ -29,29 +29,25 @@ function VECA_Inicio() {
   const [hasPoblacionRegistration, setHasPoblacionRegistration] = useState(null);
   const [hasActivitiesRegistration, setHasActivitiesRegistration] = useState(null);
   const [hasOficioSent, setHasOficioSent] = useState(null);
-  const [estatusOficio, setEstatusOficio] = useState(null);
-  const [hasShownCorrectionsAlert, setHasShownCorrecorrectionsAlert] = useState(false); // Nuevo estado
   const [contador, setContador] = useState(0);
   const menuItems = document.querySelectorAll('.sidebar .form-group a');
 
   useEffect(() => {
     const fetchRegistrationStatus = async () => {
       try {
-        const [oficioData, poblacionData, actividadesData] = await Promise.all([
-          getEstatusOficio(),
+        const [poblacionData, actividadesData, oficioData] = await Promise.all([
           checkEspacioRegistro(),
           checkActividadesRegistro(),
+          checkOficio()
         ]);
 
         const hasActividades = actividadesData.registro_existente;
         const hasPoblacion = poblacionData.registro_existente;
-        const hasOficio = oficioData.body.registro_existente;
-        const estatus = oficioData.body.estatus;
+        const hasOficio = oficioData.registro_existente;
 
         setHasActivitiesRegistration(hasActividades);
         setHasPoblacionRegistration(hasPoblacion);
         setHasOficioSent(hasOficio);
-        setEstatusOficio(estatus);
 
         if (!hasActividades) {
           setCurrentStep(1);
@@ -73,32 +69,6 @@ function VECA_Inicio() {
 
     fetchRegistrationStatus();
   }, []);
-
-  console.log(estatusOficio);
-
-  useEffect(() => {
-    if (estatusOficio === 'Correcciones' && !hasShownCorrectionsAlert)
-    {
-      Swal.fire({
-        title: 'Tu oficio requiere correcciones',
-        text: 'Tu oficio fue revisado y presenta errores, revisalo en el apartado de Consultas.',
-        icon: 'warning',
-        confirmButtonText: 'Entendido',
-        allowOutsideClick: false,
-      });
-      setHasShownCorrecorrectionsAlert(true); // Marcar la alerta como mostrada
-    }
-    else{
-      Swal.fire({
-        title: 'Oficio validado',
-        text: 'El oficio fue validado correctamente, espera hasta el siguiente mes para hacer otro registro.',
-        icon: 'success',
-        confirmButtonText: 'Entendido',
-        allowOutsideClick: false,
-      });
-      setHasShownCorrecorrectionsAlert(true); // Marcar la alerta como mostrada
-    }
-  }, [estatusOficio, hasShownCorrectionsAlert]);
 
 
   const downloadLastOficio = async () => {
@@ -328,7 +298,7 @@ function VECA_Inicio() {
 
                 <div className="card-body">
                   <div className="fecha-row">
-                    <p className="card-subtitle">Fecha límite para el registro:</p>
+                    <p className="card-subtitle">Fecha límite:</p>
                     <p className="card-text">{dateLimit()}</p>
                   </div>
 

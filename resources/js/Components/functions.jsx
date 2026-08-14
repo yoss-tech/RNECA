@@ -24,8 +24,8 @@ export function dateLimit() {
 
     const fechaLimite = "5 de "+ nombreMes + " de " + año; // Formato MM/DD/YYYY
 
-    // Si la fecha actual es mayor al día 28, mostrar la fecha límite del próximo mes
-    if (dia > 28) {
+    // Si la fecha actual es mayor al día 5, mostrar la fecha límite del próximo mes
+    if (dia > 5) {
         const proximoMesIndex = (mesActualIndex + 1) % 12;
         const proximoAño = mesActualIndex === 11 ? año + 1 : año;
         return (proximoMesIndex + 1) + "/5/" + proximoAño; // Formato MM/DD/YYYY

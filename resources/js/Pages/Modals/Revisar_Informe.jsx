@@ -1,16 +1,17 @@
-import { useState, useEffect } from "react";
-import { observacionOficio, viewOficio, getEstatus } from "@/Components/api/oficio";
+import React, { useState, useEffect, use } from "react";
 import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
+import { observacionOficio, viewOficio, getEstatus } from "@/Components/api/oficio";
 import Swal from "sweetalert2";
-import Toast from "../Toast.jsx";
 
 function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
     const [showPdf, setShowPdf] = useState(false);
     const [pdfSrc, setPdfSrc] = useState(null);
     const [loadingPdf, setLoadingPdf] = useState(false);
+    const [estatus, setEstatus] = useState([]);
     const [formData, setFormData] = useState({
         observacion: '',
+        fecha_obser: '',
         id_estatus: ''
     });
 
@@ -52,72 +53,53 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
         };
     }, [pdfSrc]);
 
-    const [errors, setErrors] = useState({});
-    const [alerts, setAlerts] = useState([]);
-    const showAlert = (type, message) => {
-        setAlerts([...alerts, { type, message }]);
-        setTimeout(() => {
-          setAlerts((prev) => prev.slice(1));
-        }, 3000);
-    };
-
     const hableSubmit = async (e) => {
         e.preventDefault();
-        setErrors({});
+        const dataToSend = {
+            ...formData,
+            id_oficio: idOficio
+        };
 
-        try {
-            const dataToSend = {
-                ...formData,
-                id_oficio: idOficio
-            };
-
-            const response = await observacionOficio(dataToSend);
-
-            if (response?.status === 200 && formData.id_estatus === estatusObservaciones) {
-                await cargarLista();
-                const resultado = await Swal.fire({
-                    title: "¡Observaciones enviadas!",
-                    text: "Las observaciones fueron enviadas",
-                    icon: "success",
-                    confirmButtonText: "Aceptar"
-                })
-                if (resultado.isConfirmed) {
-                    cerrarModal();
-                }
-            } else {
-                await cargarLista();
-                const resultado = await Swal.fire({
-                    title: "¡Oficio validado!",
-                    text: "Oficio validado con exito",
-                    icon: "success",
-                    confirmButtonText: "Aceptar"
-                })
-                if (resultado.isConfirmed) {
-                    cerrarModal();
-                }
-            }
-        }
-        catch (error) {
-            if(error.response && error.response.status === 422)  {
-                setErrors(error.response.data.errors);
-            } else {
-                showAlert('error', error.response?.data?.message || 'No fue posible validar el informe.');
-            }
-        }
-    };
-
-    const [estatus, setEstatus] = useState([]);
-    const cargarEstatus = async () => {
-        const response = await getEstatus();
-        console.log(response.body);
-
-        if (response && response.status === 200) {
-            setEstatus(response.body);
+        if (formData.id_estatus === estatusObservaciones) {
+            await observacionOficio(dataToSend);
+            await cargarLista();
+            Swal.fire({
+                title: "¡Observaciones enviadas!",
+                text: "Las observaciones fueron enviadas",
+                icon: "success",
+                confirmButtonText: "Aceptar"
+            }).then(() => {
+                cerrarModal();
+            });
+            
+        } else {
+            await observacionOficio(dataToSend);
+            await cargarLista();
+            Swal.fire({
+                title: "¡Oficio validado!",
+                text: "Oficio validado con exito",
+                icon: "success",
+                confirmButtonText: "Aceptar"
+            }).then(() => {
+                cerrarModal();
+            });
         }
     };
 
     useEffect(() => {
-        cargarEstatus();
+        const fetchEstatus = async () => {
+            try {
+                const data = await getEstatus();
+                setEstatus(data);
+                if (data.length > 0) {
+                    setFormData(prev => ({ ...prev, id_estatus: '' }));
+                }
+            }
+            catch (error) {
+                console.error('Error al obtener los estatus:', error);
+            }
+        }
+        fetchEstatus();
     }, []);
 
     useEffect(() => {
@@ -160,8 +142,6 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
     }
 
     return (
-        <>
-        <Toast alerts={alerts} />
         <div className="overlay">
             <div className="modal-box modal-grid" style={{ width: showPdf ? '85%' : '500px', height: showPdf ? '90vh' : 'auto', transition: 'width 0.3s ease, height 0.3s ease' }}>
                 <div className="modal-head">
@@ -185,27 +165,22 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
                                     />
                                 </div>
                                 <div className="dashboard-right">
-                                    <div className="form-group">
+                                    <div className="form-campo">
                                         <label className="form-label">Estatus</label>
                                         <select
-                                            className="selector-control"
                                             name="id_estatus"
                                             value={formData.id_estatus}
                                             onChange={handleChange}
+                                            className="form-control"
                                         >
-                                            <option value="" disabled>Selecciona una opción</option>
-                                            {estatus.map((est) => (
-                                                <option 
-                                                    key={est.id_estatus}
-                                                    value={est.id_estatus}
-                                                >
+                                            <option value="" disabled>--Selecciona un estatus--</option>
+                                            {estatus && estatus.map((est) => (
+                                                <option key={est.id_estatus} value={est.id_estatus}>
                                                     {est.nombre_tipo}
                                                 </option>
                                             ))}
                                         </select>
-                                        {errors.id_estatus && (<p className="error">{errors.id_estatus[0]}</p>)}
                                     </div>
-
                                     {formData.id_estatus === 'EST-8HCVW2C7' && (
                                         <>
                                             <div className="form-group">
@@ -218,10 +193,21 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
                                                     placeholder="Ingresa las observaciones del sobre el informe"
                                                     title="Ingresa las observaciones del sobre el informe"
                                                 />
-                                                {errors.observacion && (<p className="error">{errors.observacion[0]}</p>)}
                                             </div>
                                         </>
                                     )}
+                                    <div className="form-campo">
+                                        <label className="form-label">Fecha de revisión</label>
+                                        <input
+                                            type="date"
+                                            name='fecha_obser'
+                                            value={formData.fecha_obser}
+                                            onChange={handleChange}
+                                            id="fecha_obser"
+                                            placeholder="Ingresa la fecha de revisión"
+                                            className="form-control"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </>
@@ -234,7 +220,6 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
                 </div>
             </div>
         </div>
-        </>
     );
 }
 

@@ -91,12 +91,12 @@ class EcaController extends Controller
             'localidad' => 'required|string|max:50',
             'colonia' => 'required|string|max:50',
             'calle_av' => 'required|string|max:50',
-            'num_direccion' => 'required|string|max:20',
+            'num_direccion' => 'required|string|max:10',
             'tipo_instancia' => 'required|string|max:100',
 
-            'nombre' => 'required|string|max:80',
-            'correo' => 'required|email|max:200|unique:usuarios,correo',
-            'correoExtra' => 'nullable|email|max:200|unique:usuarios,correoExtra',
+            'nombre' => 'required|string|max:60',
+            'correo' => 'required|email|max:100|unique:usuarios,correo',
+            'correoExtra' => 'nullable|email|max:100|unique:usuarios,correoExtra',
 
             'clave_eca' => 'required|string|max:12|unique:eca,clave_eca',
             'nombre_inst' => 'required|string|max:1000',
@@ -107,12 +107,12 @@ class EcaController extends Controller
             'fecha_cierre' => 'nullable|date|after_or_equal:fecha_apert',
             'motivo_cierre' => 'nullable|string|max:1000',
 
-            'telefonos' => 'required|string|max:150',
-            'dias_hora_aten' => 'required|string|max:150',
-            'equipo_movil' => 'required|string|max:1000',
-            'equipo_electr' => 'required|string|max:1000',
-            'material_didact' => 'required|string|max:1000',
-            'comentarios' => 'required|string|max:1000',
+            'telefonos' => 'required|string|max:255',
+            'dias_hora_aten' => 'required|string|max:255',
+            'equipo_movil' => 'required|string|max:350',
+            'equipo_electr' => 'required|string|max:350',
+            'material_didact' => 'required|string|max:350',
+            'comentarios' => 'required|string|max:1000'
         ], [
             'cod_postal.required' => 'El código postal es obligatorio.',
             'cod_postal.regex' => 'El código postal debe tener 5 dígitos.',
@@ -344,51 +344,6 @@ class EcaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'poblacion_atend' => 'required|integer|min:0',
-
-            'dias_hora_aten' => 'required|string|max:150',
-            'nombre' => 'required|string|max:80',
-            'correo' => 'required|email|max:200|unique:usuarios,correo',
-            'correoExtra' => 'nullable|email|max:200|unique:usuarios,correoExtra',
-            
-            'equipo_movil' => 'required|string|max:1000',
-            'equipo_electr' => 'required|string|max:1000',
-            'material_didact' => 'required|string|max:1000',
-
-            'fecha_forta' => 'required|date|after_or_equal:fecha_apert|before_or_equal:today',
-            'fecha_cierre' => 'nullable|date|after_or_equal:fecha_apert',
-            'motivo_cierre' => 'nullable|string|max:1000',
-
-            'comentarios' => 'required|string|max:1000',
-        ], [
-            'poblacion_atend.required' => 'La población atendida es obligatoria.',
-            'poblacion_atend.integer' => 'La población atendida debe ser un número entero.',
-            'poblacion_atend.min' => 'La población atendida no puede ser negativa.',
-            
-            'dias_hora_aten.required' => 'Los días y horas de atención son obligatorios.',
-            'nombre.required' => 'El nombre del responsable es obligatorio.',
-            'correo.required' => 'El correo del responsable es obligatorio.',
-            'correo.email' => 'Ingresa un correo electrónico válido.',
-            'correo.unique' => 'El correo ya está registrado.',
-            'correoExtra.email' => 'Ingresa un correo electrónico válido.',
-            'correoExtra.unique' => 'El correo extra ya está registrado.',
-            
-            'equipo_movil.required' => 'El equipo móvil es obligatorio.',
-            'equipo_electr.required' => 'El equipo electrónico es obligatorio.',
-            'material_didact.required' => 'El material didáctico es obligatorio.',
-            
-            'fecha_forta.required' => 'La fecha de fortalecimiento es obligatoria.',
-            'fecha_forta.date' => 'La fecha de fortalecimiento debe ser una fecha válida.',
-            'fecha_forta.after_or_equal' => 'La fecha de fortalecimiento no puede ser anterior a la fecha de apertura.',
-            'fecha_forta.before_or_equal' => 'La fecha de fortalecimiento no puede ser futura.',
-            'fecha_cierre.date' => 'La fecha de cierre debe ser una fecha válida.',
-            'fecha_cierre.after_or_equal' => 'La fecha de cierre no puede ser anterior a la fecha de apertura.',
-            'motivo_cierre.max' => 'El motivo de cierre no puede exceder los 1000 caracteres.',
-
-            'comentarios.required' => 'Los comentarios son obligatorios.',
-        ]);
-
         DB::beginTransaction();
         try {
             DB::table('usuarios')

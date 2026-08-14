@@ -77,6 +77,20 @@ export const getOficio = async () => {
     }
 }
 
+export const buscarOficios = async (municipio) => {
+    try {
+        const response = await axiosInstance.get(
+            `/oficios/buscar/${encodeURIComponent(municipio)}`
+        );
+
+        return response.data;
+    }
+    catch (error) {
+        console.log("Error al buscar oficios por municipio:", error);
+        return null;
+    }
+};
+
 export const getOficioPendiente = async () => {
     try {
         const response = await axiosInstance.get('/oficiosPendientes');
@@ -139,8 +153,13 @@ export const buscarSelectValidado = async (id_municipio) => {
 }
 
 export const getCumplimientoOficios = async () => {
-    const response = await axiosInstance.get('/cumplimientoOficios');
-    return response.data;
+    try {
+        const response = await axiosInstance.get('/cumplimientoOficios');
+        return response.data;
+    } catch (error) {
+        console.error("Error al obtener cumplimiento de oficios:", error);
+        throw error;
+    }
 }
 
 export const getOficeFirm = async () => {
@@ -207,8 +226,13 @@ export const viewOficio = async (id) => {
 
 // Crear las observaciones de un oficio
 export const observacionOficio = async (data) => {
-    const response = await axiosInstance.put('/observacionesOficio', data);
-    return response.data;
+    try {
+        const response = await axiosInstance.put('/observacionesOficio', data);
+        return response.data;
+    }
+    catch (error) {
+        console.log('Error al realizar la validación del documento');
+    }
 }
 
 //Obtener los tipos de estatus disponibles para asignar a un oficio
@@ -218,8 +242,7 @@ export const getEstatus = async () => {
         return response.data;
     }
     catch (error) {
-        console.log('Error en getEstatus: ', error);
-        return null;
+        console.log('Error al realizar la validación del documento');
     }
 }
 

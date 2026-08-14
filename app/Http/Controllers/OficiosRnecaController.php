@@ -361,26 +361,27 @@ class OficiosRnecaController extends Controller
     //Registrar observaciones de los oficios y cambiar su estatus a "Correcciones"
     public function observaOficios(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'id_oficio' => 'required|string|exists:oficios_rneca,id_oficio',
-            'id_estatus' => 'required',
             'observacion' => 'required|string',
-        ], [
-            'observacion.required' => 'La observación es obligatoria.',
-            'id_estatus.required' => 'El estatus del informe es obligatorio.',
+            'fecha_obser' => 'required|date',
+            'id_estatus' => 'required'
         ]);
 
-        DB::table('oficios_rneca')
-            ->where('id_oficio', $request->id_oficio)
-            ->update([
-                'id_estatus' => $request->id_estatus,
-                'observacion' => $request->observacion,
-                'fecha_obser' => now(),
-            ]);
-        
-        $oficio = DB::table('oficios_rneca')
-            ->where('id_oficio', $request->id_oficio)
-            ->first();
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Error en la validación de datos',
+                'status' => 400,
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        $oficio = oficios_rneca::findOrFail($request->input('id_oficio'));
+
+        $oficio->observacion = $request->input('observacion');
+        $oficio->fecha_obser = $request->input('fecha_obser');
+        $oficio->id_estatus = $request->input('id_estatus');
+        $oficio->save();
 
         if ($oficio->id_estatus === 'EST-8HCVW2C7') {
             $eca = Eca::where('clave_eca', $oficio->clave_eca)->first();
@@ -419,21 +420,13 @@ class OficiosRnecaController extends Controller
     }
 
     // lista de estatus para los oficios que pueden ser asignados a un oficio
-    public function estatusOficios()
+    public function estatusOficios(Request $request)
     {
         $estatusOfic = DB::table('tipo_estatus')
-            ->select(
-                'id_estatus',
-                'nombre_tipo'
-            )
-            ->whereIn('nombre_tipo', ['Correcciones', 'Validado'])
+            ->select('id_estatus', 'nombre_tipo')
+            ->whereIn('nombre_tipo', ['Correcciones', 'Validado', 'Rechazado'])
             ->get();
-
-        return response()->json([
-            'message' => 'Estatus obtenidos correctamente',
-            'status' => 200,
-            'body' => $estatusOfic,
-        ], 200);
+        return response()->json($estatusOfic);
     }
 
     /**
@@ -486,6 +479,48 @@ class OficiosRnecaController extends Controller
             'body' => $oficio
         ], 200);
     }
+    // Buscar oficios por nombre de municipio
+    public function buscarOficios($municipio)
+    {
+        $oficio = DB::table('oficios_rneca')
+          ->join('eca', 'eca.clave_eca', '=', 'oficios_rneca.clave_eca')
+          ->join('direccion', 'direccion.id_direccion', '=', 'eca.id_direccion')
+          ->join('municipio', 'municipio.id_municipio', '=', 'direccion.id_municipio')
+          ->select(
+            'municipio.id_municipio',
+            'municipio.nombre_municipio',
+            'eca.nombre_inst_ope',
+            DB::raw("
+                COUNT(
+                    CASE
+                        WHEN oficios_rneca.id_estatus = 'EST-4HJVB2C9'
+                        THEN 1
+                    END
+                ) as pendientes
+            "),
+            DB::raw("
+                COUNT(
+                    CASE
+                        WHEN oficios_rneca.id_estatus = 'EST-V7WQ3N8Z'
+                        THEN 1
+                    END
+                ) as validados
+            ")
+            )
+            ->where('municipio.nombre_municipio', 'LIKE', '%' . $municipio . '%')
+            ->groupBy(
+                'municipio.id_municipio',
+                'municipio.nombre_municipio',
+                'eca.nombre_inst_ope'
+            )
+            ->orderBy('municipio.nombre_municipio')
+            ->get();
+        return response()->json([
+            'message' => 'Oficios encontrados correctamente',
+            'status' => 200,
+            'body' => $oficio
+        ], 200);
+    }
 
     // Traer oficios pendientes
     public function oficiosPendientes()
@@ -501,7 +536,7 @@ class OficiosRnecaController extends Controller
                 'eca.nombre_inst_ope',
                 DB::raw('COUNT(*) as pendientes')
             )
-            ->whereIn('oficios_rneca.id_estatus', ['EST-4HJVB2C9'])
+            ->whereIn('oficios_rneca.id_estatus', ['EST-R4M8TP1L'])
             ->groupBy(
                 'oficios_rneca.id_oficio',
                 'municipio.id_municipio',
@@ -548,38 +583,54 @@ class OficiosRnecaController extends Controller
     // Traer oficios pendientes
     public function cumplimientoOficios()
     {
-        $pendientes = DB::table('oficios_rneca')
-            ->where('id_estatus', 'EST-4HJVB2C9')
-            ->whereMonth('fecha_registro', now()->month)
-            ->whereYear('fecha_registro', now()->year)
-            ->count();
-
-        $validados = DB::table('oficios_rneca')
-            ->where('id_estatus', 'EST-V7WQ3N8Z')
-            ->whereMonth('fecha_registro', now()->month)
-            ->whereYear('fecha_registro', now()->year)
-            ->count();
-
-        $noEntregados = DB::table('eca')
-            ->whereNotExists(function ($query) {
-                $query->select(DB::raw(1))
-                    ->from('oficios_rneca')
-                    ->whereColumn(
-                        'oficios_rneca.clave_eca',
-                        'eca.clave_eca'
+        // ECA que entregaron su oficio y está pendiente de validación
+        $pendientes = DB::table('eca')
+        ->whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('oficios_rneca')
+                ->whereColumn(
+                    'oficios_rneca.clave_eca',
+                    'eca.clave_eca'
                     )
-                    ->whereMonth('fecha_registro', now()->month)
-                    ->whereYear('fecha_registro', now()->year);
+                ->where('oficios_rneca.id_estatus', 'EST-4HJVB2C9')
+                ->whereMonth('oficios_rneca.fecha_registro', now()->month)
+                ->whereYear('oficios_rneca.fecha_registro', now()->year);
             })
+        ->count();
+        // ECA que entregaron su oficio y ya fue validado
+        $validados = DB::table('eca')
+        ->whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('oficios_rneca')
+                ->whereColumn(
+                    'oficios_rneca.clave_eca',
+                    'eca.clave_eca'
+                    )
+                ->where('oficios_rneca.id_estatus', 'EST-V7WQ3N8Z')
+                ->whereMonth('oficios_rneca.fecha_registro', now()->month)
+                ->whereYear('oficios_rneca.fecha_registro', now()->year);
+            })
+        ->count();
+        // ECA que todavía no han entregado oficio este mes
+        $noEntregados = DB::table('eca')
+        ->whereNotExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('oficios_rneca')
+                ->whereColumn(
+                    'oficios_rneca.clave_eca',
+                    'eca.clave_eca'
+                    )
+                ->whereMonth('oficios_rneca.fecha_registro', now()->month)
+                ->whereYear('oficios_rneca.fecha_registro', now()->year);
+                })
             ->count();
-
         return response()->json([
             'status' => 200,
             'body' => [
                 'validados' => $validados,
                 'pendientes' => $pendientes,
                 'noEntregados' => $noEntregados
-            ]
+                ]
         ]);
     }
 

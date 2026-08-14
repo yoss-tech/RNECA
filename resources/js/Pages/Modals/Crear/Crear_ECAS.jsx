@@ -205,6 +205,7 @@ function Crear_ECAS({ cerrarModal, actualizarLista }) {
             if (!formData.dias_hora_aten.trim()) newErrors.dias_hora_aten = ['El horario es requerido.'];
             if (!formData.nombre.trim()) newErrors.nombre = ['El responsable es requerido.'];
             if (!formData.correo.trim()) newErrors.correo = ['El correo es requerido.'];
+            if (formData.correoExtra !== "") newErrors.correoExtra = ['El correo no tiene un formato válido.'];
         }
  
         if (paso === 5) {
