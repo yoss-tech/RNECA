@@ -153,8 +153,13 @@ export const buscarSelectValidado = async (id_municipio) => {
 }
 
 export const getCumplimientoOficios = async () => {
-    const response = await axiosInstance.get('/cumplimientoOficios');
-    return response.data;
+    try {
+        const response = await axiosInstance.get('/cumplimientoOficios');
+        return response.data;
+    } catch (error) {
+        console.error("Error al obtener cumplimiento de oficios:", error);
+        throw error;
+    }
 }
 
 export const getOficeFirm = async () => {

@@ -1,40 +1,55 @@
-import { Select } from "@headlessui/react";
 import React, { useState, useEffect } from "react";
-import { buscarMunicipioSelect } from "@/Components/api/municipios";
-import { getOficioValidado } from "@/Components/api/oficio";
+import { getOficioValidado,buscarSelectValidado } from "@/Components/api/oficio";
+import Ver_Informe from "../Modals/Ver_informe";
 
 function Lic_Registros() {
+  const [oficioSelect, setOficioSeleccionado] = useState(null);
+  const [mostrarVer, setMostrarVer] = useState(false);
+  const [municipios, setMunicipios] = useState([]);
+  
   const [paginaActual, setPaginaActual] = useState(1);
   const [listaMunicipios, setListaMunicipios] = useState([]);
-  const [municipios, setMunicipios] = useState([]);
   const [municipioSeleccionado, setMunicipioSeleccionado] = useState("");
   const [loading, setLoading] = useState(true);
-  
-  const cargarMunicipios = async () => {
+   const cargarMunicipios = async () => {
+      setLoading(true);
     const response = await getOficioValidado();
-    if(response && response.status == 200) {
-      setMunicipios(response.body);
-      setListaMunicipios(response.body);
-      console.log(response);
+      console.log("Oficios validados:", response);
+      if (response && response.status === 200) {
+    const datos = response.body || [];
+        setMunicipios(datos);
+    const municipiosUnicos = datos.filter(
+          (municipio, index, self) => index === self.findIndex((m) => m.id_municipio === municipio.id_municipio)
+        );
+        setListaMunicipios(municipiosUnicos);
+      } else {
+        setMunicipios([]);
+        setListaMunicipios([]);
+      }
       setLoading(false);
-    }
-  };
-  useEffect(() => {
-    cargarMunicipios();
-  }, []);
+    };
+     useEffect(() => {
+      cargarMunicipios();
+    }, []);
   
   const buscarPorSelect = async (e) => {
     const id = e.target.value;
-    setMunicipioSeleccionado(id);
-    if (id === "") {
-      cargarMunicipios();
-      return;
-    }
-    const response = await buscarMunicipioSelect(id);
-    if (response && response.status === 200) {
-      setMunicipios(response.body);
-      setPaginaActual(1);
-    }
+      setMunicipioSeleccionado(id);
+      if (id === "") {
+        await cargarMunicipios();
+        setPaginaActual(1);
+        return;
+      }
+      setLoading(true);
+      const response = await buscarSelectValidado(id);
+      console.log("Oficios filtrados:", response);
+      if (response && response.status === 200) {
+        setMunicipios(response.body || []);
+        setPaginaActual(1);
+      } else {
+        setMunicipios([]);
+      }
+    setLoading(false);
   };
   
   const registrosPorPagina = 9;
@@ -52,28 +67,32 @@ function Lic_Registros() {
       setPaginaActual(paginaActual - 1);
     }
   };
-    
+  
+  const handleVerOficio = (idOficio) => {
+    setOficioSeleccionado(idOficio);
+    setMostrarVer(true);
+  }
+  
   return (
   <div className="page-container">
     <h1 className="page-title">Informes entregados del periodo actual.</h1>
     <h2 className="page-subtitle">Consulte los informes correspondientes al mes en curso que han sido enviados por los municipios.</h2>
     
-    <div className="dashboard">
+   <div className="dashboard">
       <div className="dashboard-left">
-        <div className="filtro">
-          <p class="card-text">Municipio:</p>
+         <div className="filtro">
+          <p className="card-text">Municipio:</p>
           <select className="selector-control" value={municipioSeleccionado} onChange={buscarPorSelect}>
             <option value="">Todos los municipios</option>
-            {listaMunicipios.map((oficioVal) => (
-              <option key={oficioVal.id_municipio} value={oficioVal.id_municipio}>
-                {oficioVal.nombre_municipio}
+            {listaMunicipios.map((municipio) => (
+              <option key={municipio.id_municipio} value={municipio.id_municipio}>
+                {municipio.nombre_municipio}
               </option>
             ))}
           </select>
         </div>
-
         <div className="container-municipios">
-          <div className="container-paginacion">
+           <div className="container-paginacion">
             {numPaginas > 1 && (
               <div className="paginacion-controles">
                 <button onClick={irAPaginaAnterior} disabled={paginaActual === 1} className="btn-blanco">
@@ -81,34 +100,39 @@ function Lic_Registros() {
                 </button>
                 <button onClick={irAPaginaSiguiente} disabled={paginaActual === numPaginas} className="btn-blanco">
                   Siguiente
-                </button>
+                </button> 
               </div>
             )}
-          </div>
-          
+          </div>   
           {loading ? (
             <p className="text-white">Cargando datos...</p> 
           ) : oficios.length > 0 ? (
-            oficios.map((oficioVal) => (
-              <div className="cards-revision">
+            <div className="cards-revision">
+            {oficios.map((oficioVal) => (
                 <div className="card-municipio" key={oficioVal.id_municipio}>
-                  <div class="card-body">
+                  <div className="card-body">
                     <div className="card-titles">
                       <h3 className="text-title">{oficioVal.nombre_municipio}</h3>
-                      <h3 class="text-subtitle">{oficioVal.nombre_inst_ope}</h3>
-                      <p class="text-bold">Mes: {oficioVal.mes_oficio}</p>
-                      <p class="text-bold">Fecha: {oficioVal.fecha_registro}</p>
+                      <h3 className="text-subtitle">{oficioVal.nombre_inst_ope}</h3>
+                      <p className="text-bold">Mes: {oficioVal.mes_oficio}</p>
+                      <p className="text-bold">Fecha: {oficioVal.fecha_registro}</p>
                     </div>
                     
                     <div className="botones-cards">
-                      <button className="btn-primario"> Revisar</button>
+                      <button className="btn-neutral" onClick={() => handleVerOficio(oficioVal.id_oficio)}>Leer documento</button>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))
+            ))}
+            </div>
           ) : (
-          <p className="text-white">No existen informes del mes actual.</p>
+          <p className="text-white ">No existen informes validados.</p>
+          )}
+          {mostrarVer && (
+            <Ver_Informe
+              cerrarModal={() => setMostrarVer(false)}
+              idOficio={oficioSelect}
+            />
           )}
         </div>
       </div>

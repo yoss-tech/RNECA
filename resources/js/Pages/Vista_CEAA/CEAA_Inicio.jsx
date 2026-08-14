@@ -20,6 +20,7 @@ function CEAA_Inicio() {
   const [vistaActual, setVistaActual] = useState("inicio");
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
   const [mostrarNoti, setMostrarNoti] = useState(false);
+  const [totalInformes, setTotalInformes] = useState("");
   const [CerrarSesion, setCerrarSesion] = useState(false);
   const [contador, setContador] = useState(0);
   const [municipios, setMunicipios] = useState([]);
@@ -177,17 +178,17 @@ function CEAA_Inicio() {
             Registros validados
           </a>
         </div>
-
-        <div className="form-group">
-          <a
-            className={vistaActual === "solicitudes" ? "active" : ""}
-            onClick={() => setVistaActual("solicitudes")}
-            style={{ cursor: "pointer" }}>
-            <i class="bi bi-files"></i>
-            Solicitudes de registros fuera de plazo
-          </a>
+        {/* <div className="form-group">
+        <a
+          className={vistaActual === "solicitudes" ? "active" : ""}
+          onClick={() => setVistaActual("solicitudes")}
+          style={{ cursor: "pointer" }}>
+          <i class="bi bi-files"></i>
+          Solicitudes de registros fuera de plazo
+        </a>
         </div>
-
+        */}
+        
         <div className="form-group">
           <a
             className={vistaActual === "Ecas" ? "active" : ""}
@@ -260,8 +261,9 @@ function CEAA_Inicio() {
                 <div className="card-grafico">
                   <h3 className="card-title">Cumplimiento de Entrega de Informes mensuales </h3>
                   <p className="card-text">Visualice el porcentaje de municipios que han cumplido con la entrega de su informe mensual y aquellos que se encuentran pendientes.</p>
+                  <p className="btn-container-horizontal text-bold">Total de Informes: {totalInformes}</p> 
                   <div className="container-grafico">
-                    <CumplimientoInformes/>
+                    <CumplimientoInformes setTotalInformes={setTotalInformes} />
                   </div>
                 </div>
               </div>
