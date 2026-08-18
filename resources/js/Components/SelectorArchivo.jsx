@@ -3,9 +3,51 @@ import "/resources/css/Style.css";
 
 function SelectorArchivo({ onChange, multiple = false }) {
   const [archivos, setArchivos] = useState([]);
+  const [error, setError] = useState('');
+  const MAX_SIZE = 5 * 1024 * 1024;
 
   const manejarArchivo = (e) => {
     const listaArchivos = Array.from(e.target.files);
+
+    if (!listaArchivos.length > 1) {
+      setError(
+        Swal.fire({
+          title: 'Error',
+          text: 'Solo puedes subir un solo archivo',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        })
+      );
+      e.target.value = '';
+      return;
+    }
+
+    if (listaArchivos > MAX_SIZE) {
+      setError(
+        Swal.fire({
+          title: 'Error',
+          text: 'El archivo es muy pesado, revisa que no sea mayor a 5MB',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        })
+      );
+      e.target.value = '';
+      return;
+    }
+
+    if (listaArchivos.type !== 'application/pdf') {
+      setError(
+        Swal.fire({
+          title: 'Error',
+          text: 'El archivo seleccionado no es un PDF',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        })
+      );
+      e.target.value = '';
+      return;
+    }
+
     setArchivos(listaArchivos);
     if (onChange) {
       onChange(e);
@@ -22,7 +64,7 @@ function SelectorArchivo({ onChange, multiple = false }) {
         onChange={manejarArchivo}
         className="selector-control"
         style={{ display: 'none' }}
-        multiple={multiple}
+        accept="application/pdf"
       />
       <label
         htmlFor={inputId}

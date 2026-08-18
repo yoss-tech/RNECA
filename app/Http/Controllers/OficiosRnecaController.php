@@ -138,26 +138,58 @@ class OficiosRnecaController extends Controller
     // Traer el último oficio registrado
     public function ultimoOficio()
     {
-        $id = DB::table('oficios_rneca')->latest()->first();
+        $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
 
-        $oficio = oficios_rneca::findOrFail($id);
-        $rutaBD = $oficio->ruta_pdf;
-        $rutaInterna = 'app/public/' . $rutaBD;
-        $rutaAbsoluta = storage_path($rutaBD);
-        $rutaAbsoluta = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $rutaAbsoluta);
-        $rutaInterna = str_replace('documents', 'app\public\documents', $oficio->ruta_oficio);
-        $rutaAbsoluta = storage_path($rutaInterna);
-        if (file_exists($rutaAbsoluta)) {
-            return response()->download($rutaAbsoluta, "oficio_{$id}.pdf");
+        if (!$eca) {
+            return response()->json(['error' => 'Usuario no asociado a un ECA.'], 404);
         }
 
-        return response()->json([
-            'error' => 'Archivo no encontrado físicamente',
-            'ruta_buscada_final' => $rutaAbsoluta,
-            '¿existe?' => 'NO'
-        ], 404);
+        $oficio = oficios_rneca::where('clave_eca', $eca->clave_eca)
+            ->latest('fecha_registro')
+            ->first();
+
+        if (!$oficio) {
+            return response()->json(['error' => 'No se encontraron oficios para este ECA.'], 404);
+        }
+
+        $path = $oficio->ruta_oficio;
+
+        if (!$path || !Storage::disk('public')->exists($path)) {
+            return response()->json([
+                'error' => 'El archivo del oficio no fue encontrado en el servidor.',
+                'ruta_buscada' => $path
+            ], 404);
+        }
+
+        $nombreArchivo = "oficio_{$oficio->mes_oficio}_{$oficio->clave_eca}.pdf";
+        return Storage::disk('public')->download($path, $nombreArchivo);
     }
 
+    // Traer la información (metadata) del último oficio registrado por el ECA
+    public function getUltimoOficioMetadata()
+    {
+        $eca = Eca::where('id_usuario', auth()->user()->id_usuario)->first();
+
+        if (!$eca) {
+            return response()->json(['error' => 'Usuario no asociado a un ECA.'], 404);
+        }
+
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+
+        $oficio = DB::table('oficios_rneca as ofr')
+            ->join('tipo_estatus as te', 'ofr.id_estatus', '=', 'te.id_estatus')
+            ->where('ofr.clave_eca', $eca->clave_eca)
+            ->select('ofr.mes_oficio', 'te.nombre_tipo as estatus')
+            ->latest('ofr.fecha_registro')
+            ->first();
+
+        if (!$oficio) {
+            return response()->json(['error' => 'No se encontraron oficios anteriores.'], 404);
+        }
+
+        return response()->json($oficio);
+    }
 
     // Registrar un nuevo oficio para el ECA
     public function store(Request $request)

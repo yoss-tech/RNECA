@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { mostrarSoloMes, dateLimit } from "../../Components/functions.jsx";
 import { logoutUser } from "../../Components/api/auth.jsx";
 import { checkEspacioRegistro } from "../../Components/api/espacio.jsx";
 import { getInfoEca } from "@/Components/api/usuarios.jsx";
 import { checkActividadesRegistro } from "../../Components/api/program.jsx"
-import { getEstatusOficio } from "../../Components/api/oficio.jsx";
-import { getLastOficio } from "../../Components/api/dowload_ofice.js";
+import { getEstatusOficio, getUltimoOficioMetadata } from "../../Components/api/oficio.jsx";
+import { getLastOficio } from "../../Components/api/dowload_ofice.js"; // Asumo que esta es la función correcta para descargar
 import { getContadorNotificaciones } from "@/Components/api/notificaciones.jsx";
 import VECA_Actividades from "./Eca_Actividades.jsx";
 import VECA_Poblacion from "./Eca_Poblacion.jsx";
@@ -19,6 +19,7 @@ import "/resources/css/Style.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 function VECA_Inicio() {
+  const sidebarRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [submenuOpen, setSubmenuOpen] = useState(false);
   const [vistaActual, setVistaActual] = useState("inicio");
@@ -31,8 +32,8 @@ function VECA_Inicio() {
   const [hasOficioSent, setHasOficioSent] = useState(null);
   const [estatusOficio, setEstatusOficio] = useState(null);
   const [hasShownCorrectionsAlert, setHasShownCorrecorrectionsAlert] = useState(false); // Nuevo estado
+  const [ultimoOficioInfo, setUltimoOficioInfo] = useState({ mes: '', estatus: '', cargando: true });
   const [contador, setContador] = useState(0);
-  const menuItems = document.querySelectorAll('.sidebar .form-group a');
 
   useEffect(() => {
     const fetchRegistrationStatus = async () => {
@@ -75,6 +76,23 @@ function VECA_Inicio() {
   }, []);
 
   useEffect(() => {
+    const fetchUltimoOficio = async () => {
+      try {
+        const data = await getUltimoOficioMetadata();
+        setUltimoOficioInfo({
+          mes: data.mes_oficio,
+          estatus: data.estatus,
+          cargando: false,
+        });
+      } catch (error) {
+        console.error("No se encontró información del último oficio:", error);
+        setUltimoOficioInfo({ mes: 'No disponible', estatus: 'No disponible', cargando: false });
+      }
+    };
+    fetchUltimoOficio();
+  }, []);
+
+  useEffect(() => {
     if (estatusOficio === 'Correcciones' && !hasShownCorrectionsAlert)
     {
       Swal.fire({
@@ -107,8 +125,8 @@ function VECA_Inicio() {
       const pdfBlob = await getLastOficio();
       const blobUrl = window.URL.createObjectURL(new Blob([pdfBlob], { type: 'application/pdf' }));
       const link = document.createElement('a');
-      link.href = blobUrl;
-      link.setAttribute('download', `oficio_ultimo.pdf`);
+      link.href = blobUrl;      
+      link.setAttribute('download', `oficio_${ultimoOficioInfo.mes}.pdf`);
       document.body.appendChild(link);
 
       link.click();
@@ -133,23 +151,22 @@ function VECA_Inicio() {
     }
   }
 
-  menuItems.forEach(item => {
-    item.addEventListener('click', () => {
-      const sidebar = document.querySelector('.sidebar');
-      sidebar.classList.remove('active');
-      setMenuOpen(false);
-    });
-  });
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const toggleButton = document.querySelector('.menu-toggle');
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target) &&
+        toggleButton &&
+        !toggleButton.contains(event.target)
+      ) {
+        setMenuOpen(false);
+      }
+    };
 
-  document.addEventListener('click', (event) => {
-    const sidebar = document.querySelector('.sidebar');
-    const toggleButton = document.querySelector('.menu-toggle');
-
-    if (sidebar && toggleButton && !sidebar.contains(event.target) && !toggleButton.contains(event.target)) {
-      sidebar.classList.remove('active');
-      setMenuOpen(false);
-    }
-  });
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [sidebarRef]);
 
   const handleCompletePending = () => {
     if (hasActivitiesRegistration === null || hasPoblacionRegistration === null || hasOficioSent === null) {
@@ -251,11 +268,11 @@ function VECA_Inicio() {
         </div>
       </header>
 
-      <div className={`sidebar ${menuOpen ? "active" : ""}`}>
+      <div className={`sidebar ${menuOpen ? "active" : ""}`} ref={sidebarRef}>
         <div className="form-group p">
           <a
             className={vistaActual === "inicio" ? "active" : ""}
-            onClick={() => setVistaActual("inicio")}
+            onClick={() => { setVistaActual("inicio"); setMenuOpen(false); }}
             style={{ cursor: "pointer" }}>
             <i className="bi bi-house"></i>
             Inicio
@@ -274,7 +291,7 @@ function VECA_Inicio() {
                 <div className="submenu-item">
                   <a
                     className={vistaActual === "actividades" ? "active" : ""}
-                    onClick={() => setVistaActual("actividades")}
+                    onClick={() => { setVistaActual("actividades"); setMenuOpen(false); }}
                     style={{ cursor: "pointer" }}>
                     <i className="bi bi-clock"></i>
                     Actividades del mes</a>
@@ -285,7 +302,7 @@ function VECA_Inicio() {
                 <div className="submenu-item">
                   <a
                     className={vistaActual === "poblacion" ? "active" : ""}
-                    onClick={() => setVistaActual("poblacion")}
+                    onClick={() => { setVistaActual("poblacion"); setMenuOpen(false); }}
                     style={{ cursor: "pointer" }}>
                     <i className="bi bi-clock"></i>
                     Población Beneficiaria</a>
@@ -298,7 +315,7 @@ function VECA_Inicio() {
         <div className="form-group p">
           <a
             className={vistaActual === "vista_previa" ? "active" : ""}
-            onClick={() => setVistaActual("vista_previa")}
+            onClick={() => { setVistaActual("vista_previa"); setMenuOpen(false); }}
             style={{ cursor: "pointer" }}>
             <i className="bi bi-clipboard2-check"></i>
             Vista previa
@@ -308,7 +325,7 @@ function VECA_Inicio() {
         <div className="form-group p">
           <a
             className={vistaActual === "consulta_registros" ? "active" : ""}
-            onClick={() => setVistaActual("consulta_registros")}
+            onClick={() => { setVistaActual("consulta_registros"); setMenuOpen(false); }}
             style={{ cursor: "pointer" }}>
             <i className="bi bi-folder"></i>
             Consulta de registros
@@ -385,15 +402,15 @@ function VECA_Inicio() {
 
               <h3 className="form-subtitle">Último Registro</h3>
               <div className="card-contenedor">
-                <p className="card-header">Informe del mes de MES</p>
+                <p className="card-header">Informe del mes de {ultimoOficioInfo.cargando ? 'Cargando...' : ultimoOficioInfo.mes}</p>
 
                 <div className="card-body">
                   <div className="fecha-row">
                     <p className="card-subtitle">Estado:</p>
-                    <p className="card-text">ESTADO</p>
+                    <p className="card-text">{ultimoOficioInfo.cargando ? 'Cargando...' : ultimoOficioInfo.estatus}</p>
                   </div>
                   <div className="botones-cards">
-                    <button type="button" className="btn-neutral" onClick={downloadLastOficio}>
+                    <button type="button" className="btn-neutral" onClick={downloadLastOficio} disabled={ultimoOficioInfo.cargando || ultimoOficioInfo.mes === 'No disponible'}>
                       Descargar PDF
                     </button>
                   </div>
@@ -434,7 +451,9 @@ function VECA_Inicio() {
           </div>
         ))}
         {vistaActual === "consulta_registros" && (
-          <VECA_ConsultaReg />
+          <VECA_ConsultaReg
+            cambiarVista={setVistaActual}
+          />
         )}
       </div>
     </>

@@ -2,8 +2,7 @@ import React from "react";
 import "/resources/css/Style.css";
 import "/resources/css/Modal.css";
 
-function ECA_Correccion({ cerrarModal, oficioCorregir }) {
-
+function ECA_Correccion({ cerrarModal, oficioCorregir, onRedirectToActivities }) {
     console.log(oficioCorregir);
 
     return (
@@ -23,7 +22,11 @@ function ECA_Correccion({ cerrarModal, oficioCorregir }) {
 
                 <div className="modal-foot">
                     <button type="button" className="btn-neutral" onClick={cerrarModal}>Cerrar</button>
-                    <button type="button" className="btn-negativo">Corregir</button>
+                    <button
+                        type="button"
+                        className="btn-negativo"
+                        onClick={onRedirectToActivities}
+                    >Corregir</button>
                 </div>
             </div>
         </div>

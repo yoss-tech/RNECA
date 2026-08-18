@@ -102,6 +102,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/oficiosCompletos', [OficiosRnecaController::class, 'oficiosCompletos']); // Obtener todos los oficios para el director
     Route::get('/getLastOficio', [OficiosRnecaController::class, 'ultimoOficio']); // Obtener el ultimo oficio registrado para cada ECA
     Route::get('/user/perfil', [UsersController::class, 'infoPerfil']); // Información del perfil
+    Route::get('/getUltimoOficioMetadata', [OficiosRnecaController::class, 'getUltimoOficioMetadata']); // Metadata del último oficio
     Route::get('/user/eca', [UsersController::class, 'infoEca']); // Información del director
     Route::put('/usuarios/perfil', [UsersController::class, 'updatePerfil']); // Modificar usuarios desde su perfil
     // Route::get('/getEstatusOficio', [OficiosRnecaController::class, 'getEstatusOficio']); // Obtener el estatus de un oficio enviado

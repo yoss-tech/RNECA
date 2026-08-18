@@ -246,6 +246,17 @@ export const getEstatus = async () => {
     }
 }
 
+// Obtener la metadata del último oficio (mes y estado)
+export const getUltimoOficioMetadata = async () => {
+    try {
+        const response = await axiosInstance.get('/getUltimoOficioMetadata');
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener la metadata del último oficio:', error);
+        throw error; // Re-lanzamos el error para que el componente que llama lo maneje
+    }
+};
+
 // Obtener el estatus de un oficio ya registrado con el fin de saber si esta firmado o con correcciones
 export const getEstatusOficio = async () => {
     try{
@@ -253,6 +264,7 @@ export const getEstatusOficio = async () => {
         return response.data;
     }
     catch(error){
-        console.log('Error al realizar la validación del document');
+        console.log('Error al realizar la validación del documento');
+        throw error;
     }
 }

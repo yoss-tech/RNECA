@@ -178,7 +178,7 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
           <div className='dashboard-right'>
             <div className='firmas'>
               <div className="firma">
-                <div className="linea-firma">{ecaInfo?.nombre_Responsable || '---'} Encargado del Área de Espacio de Cultura del Agua de la {ecaInfo?.municipio || '...'}</div>
+                <div className="linea-firma">{ecaInfo?.nombre_Responsable || '---'} Coordinador del Espacio de Cultura del Agua de {ecaInfo?.municipio || '...'}</div>
               </div>
             </div>
           </div>
@@ -234,22 +234,24 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
         {pageIndex === 0 && createPageHeader()}
         <div className="documento-contenido">
           <table className="tabla-programa tablas-preview" border="1" cellPadding="5" cellSpacing="0">
-            <thead>
-              <tr className="tabla-header">
-                <th rowSpan="2">Estado</th>
-                <th rowSpan="2">Municipio</th>
-                <th rowSpan="2">Localidad</th>
-                <th colSpan="2">Plática</th>
-                <th rowSpan="2">Otras actividades</th>
-                <th rowSpan="2">Alumnos atendidos</th>
-                <th rowSpan="2">Población atendida</th>
-                <th rowSpan="2">Fecha</th>
-              </tr>
-              <tr className="tabla-header">
-                <th>Escolar</th>
-                <th>Comunitaria</th>
-              </tr>
-            </thead>
+            {pageIndex === 0 && (
+              <thead>
+                <tr className="tabla-header">
+                  <th rowSpan="2">Estado</th>
+                  <th rowSpan="2">Municipio</th>
+                  <th rowSpan="2">Localidad</th>
+                  <th colSpan="2">Plática</th>
+                  <th rowSpan="2">Otras actividades</th>
+                  <th rowSpan="2">Alumnos atendidos</th>
+                  <th rowSpan="2">Población atendida</th>
+                  <th rowSpan="2">Fecha</th>
+                </tr>
+                <tr className="tabla-header">
+                  <th>Escolar</th>
+                  <th>Comunitaria</th>
+                </tr>
+              </thead>
+            )}
             <tbody>
               {chunk.map((item, index) => (
                 <tr key={index}>
@@ -323,7 +325,7 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
         <div key={`activity-wrapper-${activity.id_program}`}>
           <div key={`header-${activity.id_program}`}>
             <div className="descripcion-parrafo">
-              <h1 className="seccion-titulo">{activity.otras_activ || '---'} - {activity.fecha_mes || '---'}</h1>
+              <h1 className="seccion-titulo">{activity.otras_activ || '---'} - {activity.fecha_mes ? new Date(activity.fecha_mes).toLocaleDateString('es-Es', { day: 'numeric', month: 'long', year: 'numeric' }) : '---'}</h1>
               {/* <p>{activity.descripcion_activ || '---'}</p> */}
             </div>
             <h2 className="seccion-titulo">Evidencia fotografica: </h2>
@@ -476,23 +478,23 @@ const DocumentoPreview = React.forwardRef(({ datosDinamicos, paginaActual, setNu
               <tbody>
                 {espacioAgrupado.map((item, index) => (
                   <tr key={index}>
-                    <td style={{width: '8%'}}>{item.clave_eca || '---'}</td>
-                    <td style={{width: '8%'}}>{item.fecha_apert || '---'}</td>
+                    <td style={{ width: '8%' }}>{item.clave_eca || '---'}</td>
+                    <td style={{ width: '8%' }}>{item.fecha_apert || '---'}</td>
                     <td>{item.fecha_forta || '---'}</td>
                     <td>{item.inedito || '---'}</td>
                     <td>{item.reproducido || '---'}</td>
                     <td>{item.adquirido || '---'}</td>
                     <td>{item.asistentes.Hombre_13_17 || 0}</td>
                     <td>{item.asistentes.Hombre_18_30 || 0}</td>
-                    <td>{item.asistentes.Hombre_31_40 || 0}</td>
-                    <td>{item.asistentes.Hombre_41_50 || 0}</td>
-                    <td>{item.asistentes.Hombre_51_o__ || 0}</td>
+                    <td>{item.asistentes.Hombre_30_40 || 0}</td>
+                    <td>{item.asistentes.Hombre_40_50 || 0}</td>
+                    <td>{item.asistentes['Hombre_50 o más'] || 0}</td>
                     <td>{item.asistentes.Mujer_13_17 || 0}</td>
                     <td>{item.asistentes.Mujer_18_30 || 0}</td>
-                    <td>{item.asistentes.Mujer_31_40 || 0}</td>
-                    <td>{item.asistentes.Mujer_41_50 || 0}</td>
-                    <td>{item.asistentes.Mujer_51_o__ || 0}</td>
-                    <td>{item.asistentes['Niño/Niña_12'] || 0}</td>
+                    <td>{item.asistentes.Mujer_30_40 || 0}</td>
+                    <td>{item.asistentes.Mujer_40_50 || 0}</td>
+                    <td>{item.asistentes['Mujer_50 o más'] || 0}</td>
+                    <td>{item.asistentes['Niño/Niña_Menor a 12'] || 0}</td>
                     <td>{item.total_pobl || '---'}</td>
                     <td>{item.list_asist === 'sí' ? 'Sí' : 'No'}</td>
                     <td>{item.evi_foto === 'sí' ? 'Sí' : 'No'}</td>
