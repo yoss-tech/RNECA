@@ -131,7 +131,7 @@ export const updateEca = async (id, data) => {
         return response.data;
     } catch (error) {
         console.error("Error en updateEca:", error);
-        return null;
+        throw error;
     }
 }
 

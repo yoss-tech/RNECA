@@ -93,6 +93,10 @@ function Ver_ECA({ eca, cerrarModal, abrirModalModificar }) {
                     <td>{eca.correo}</td>
                   </tr>
                   <tr>
+                    <td className="text-bold">Correo Extra</td>
+                    <td>{eca.correoExtra}</td>
+                  </tr>
+                  <tr>
                     <td className="text-bold">Horario</td>
                     <td>{eca.dias_hora_aten}</td>
                   </tr>
