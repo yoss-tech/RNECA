@@ -128,7 +128,7 @@ class UsuariosSeeder extends Seeder
             ],
             [
                 'id_usuario' => 'USER-11',
-                'nombre' => 'C. Hilario Hernándezz Bautista',
+                'nombre' => 'C. Hilario Hernández Bautista',
                 'correo' => 'mpioatlapexcoaguapotable@gmail.com',
                 'correoExtra' => '',
                 'password' => Hash::make('RNECA2026'),
@@ -145,17 +145,6 @@ class UsuariosSeeder extends Seeder
                 'password' => Hash::make('RNECA2026'),
                 'cambiar_password' => 1,
                 'fecha_registro' => '2026-07-17',
-                'id_rol' => 'rol1',
-                'nombre_jefe' => '',
-            ],
-            [
-                'id_usuario' => '',
-                'nombre' => '',
-                'correo' => '',
-                'correoExtra' => '',
-                'password' => Hash::make('RNECA2026'),
-                'cambiar_password' => 1,
-                'fecha_registro' => '',
                 'id_rol' => 'rol1',
                 'nombre_jefe' => '',
             ],
@@ -226,9 +215,8 @@ class UsuariosSeeder extends Seeder
                 'nombre_jefe' => '',
             ],
             [
-                'id_usuario' => 'USER-19
-                ',
-                'nombre' => 'C. Sergio Pérezz Serrano',
+                'id_usuario' => 'USER-19',
+                'nombre' => 'C. Sergio Pérez Serrano',
                 'correo' => 'chil20.24serviciosmunicipales@gmail.com',
                 'correoExtra' => '',
                 'password' => Hash::make('RNECA2026'),
