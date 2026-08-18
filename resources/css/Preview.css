@@ -1,6 +1,6 @@
 /* Estilos para el contenedor principal de la vista previa */
 .documento-preview-container {
-    padding: 1rem;
+    /* padding: 1rem; */
     background-color: #f3f4f6;
     border-radius: 0.5rem;
     overflow: auto;
@@ -17,12 +17,14 @@
     min-height: 297mm;
     margin: 0 auto 2rem auto;
     box-sizing: border-box;
+    zoom: 0.80;
 }
 
 /* Hoja horizontal solo en pantalla */
 .pagina-horizontal {
     width: 297mm;
     min-height: 210mm;
+    zoom: 0.70
 }
 
 .pagina-activa {
@@ -171,6 +173,7 @@
 
         position: relative !important;
         overflow: hidden !important;
+        zoom: normal;
     }
 
     .hoja-a4.pagina-horizontal {
@@ -396,7 +399,7 @@
 .panel-preview {
     width: 100%;
     overflow-x: auto;
-    padding: 1rem;
+    /* padding: 1rem; */
     display: flex;
     flex-direction: column;
     align-items: center;

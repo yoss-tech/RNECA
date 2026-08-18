@@ -4,8 +4,9 @@ import { getOficeEca } from "@/Components/api/oficio.jsx";
 import { dowloadOfice } from "@/Components/api/dowload_ofice.js";
 import Ver_Informe from '../Modals/Ver_informe.jsx'
 import '../../../css/Style.css'
+import VECA_Actividades from "./Eca_Actividades.jsx";
 
-function VECA_ConsultaReg() {
+function VECA_ConsultaReg({ cambiarVista }) {
 
   const [mostrarCorreccion, setMostrarCorreccion] = useState(false);
   const [verInforme, setVerInforme] = useState(null);
@@ -33,6 +34,10 @@ function VECA_ConsultaReg() {
     setMostrarCorreccion(true);
   }
 
+  const handleRedirectToActivities = () => {
+    setMostrarCorreccion(false);
+    cambiarVista('actividades');
+  };
 
   const handleDownloadPdf = async (id_oficio) => {
     try {
@@ -92,7 +97,7 @@ function VECA_ConsultaReg() {
                 <td>{item.fecha_registro}</td>
                 <td className="btn-container-horizontal">
                   {item.nombre_tipo === 'Pendiente' && (
-                      <button type="button" className="btn-neutral" onClick={() => setVerInforme(item.id_oficio)}>Ver documento</button>
+                    <button type="button" className="btn-neutral" onClick={() => setVerInforme(item.id_oficio)}>Ver documento</button>
                   )}
                   {item.nombre_tipo === 'Firmado' && (
                     <button type="button" className="btn-neutral" onClick={() => setVerInforme(item.id_oficio)}>Ver documento</button>
@@ -125,6 +130,7 @@ function VECA_ConsultaReg() {
         <ECA_Correccion
           oficioCorregir={informeSeleccinado}
           cerrarModal={() => setMostrarCorreccion(false)}
+          onRedirectToActivities={handleRedirectToActivities}
         />
       )}
       {verInforme && (

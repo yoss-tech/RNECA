@@ -299,9 +299,9 @@ class EspacioController extends Controller
 
         $espacio = DB::table('eca')
             ->join('espaciocultura as esp', 'eca.clave_eca', '=', 'esp.clave_eca')
-            ->join('detalle_asistente as da', 'esp.id_espacio', '=', 'da.id_espacio')
-            ->join('detalle_nexo as dn', 'esp.id_espacio', '=', 'dn.id_espacio')
-            ->join('material_didact as md', 'esp.id_espacio', '=', 'md.id_espacio')
+            ->leftJoin('detalle_asistente as da', 'esp.id_espacio', '=', 'da.id_espacio')
+            ->leftJoin('detalle_nexo as dn', 'esp.id_espacio', '=', 'dn.id_espacio')
+            ->leftJoin('material_didact as md', 'esp.id_espacio', '=', 'md.id_espacio')
             ->select(
                 'eca.clave_eca',
                 'eca.nombre_inst_ope',
@@ -318,7 +318,8 @@ class EspacioController extends Controller
                 'esp.comentarios',
                 'eca.fecha_apert',
                 'eca.fecha_forta',
-                'esp.fecha_registro'
+                'esp.fecha_registro',
+                'esp.id_espacio'
             )
             ->whereYear('esp.fecha_registro', $currentYear)
             ->get();

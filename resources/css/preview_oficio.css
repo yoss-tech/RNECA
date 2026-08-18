@@ -4,22 +4,26 @@
     width: 100%;
     min-width: 1350px;
     color: #1a1a1a;
+    zoom: .80;
 }
 
-.tabla-espacio-general td{
+.tabla-espacio-general td {
     border: 1px solid #999;
     padding: 4px 6px;
     vertical-align: middle;
     color: #000;
     font-size: 9px;
 }
-.item-left{
+
+.item-left {
     text-align: left;
 }
-.item-center{
+
+.item-center {
     text-align: center;
 }
-.item-right{
+
+.item-right {
     text-align: right;
 }
 
@@ -39,71 +43,183 @@
     vertical-align: middle;
 }
 
+.paginacion-controles {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 48%;
+}
+
+.btn-acciones {
+    width: 3rem;
+}
+
+.acciones-paginacion{
+    font-size: 9.6pt;
+}
+
+.btn-pdf{
+    width: 12rem;
+}
+
+.pagina-activa {
+    display: block;
+}
+
+.pagina-oculta-pantalla {
+    display: none;
+}
+
 @page {
-    size: portrait;
+    size: legal portrait;
     margin: 0.4cm;
     scale: inherit;
 }
 
 @media print {
+
+    /* Tabla compacta tipo informe oficial */
     .tabla-espacio-general {
-        font-size: 6px;
-        width: 100%;
-        border-collapse: collapse;
+        font-size: 5px !important;
+        /* Tipografía reducida para densidad de datos */
+        width: 100% !important;
+        min-width: 0 !important;
+        /* table-layout: fixe !important; Fuerza a respetar los anchos definidos */
+        border-collapse: collapse !important;
+        /* zoom: .75; */
     }
 
     .tabla-espacio-general th,
     .tabla-espacio-general td {
-        padding: 1px 2px;
-        line-height: 1.1;
+        padding: 1px 2px !important;
+        line-height: 1.05 !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        white-space: normal !important;
     }
 
-    .hoja-a4.pagina-horizontal {
-        width: 520mm !important;
-        height: 216mm !important;
+    .tabla-espacio-general tr {
+        page-break-inside: avoid;
+        /* Previene que una fila individual se corte a la mitad */
+        page-break-after: auto;
+    }
 
-        transform: rotate(-90deg) translate(-98%, 0);
-        transform-origin: top left;
+    /* 2. Definición del tamaño de página físico (Oficio / Legal) */
+    @page {
+        size: 340mm 216mm;
+        /* Tamaño Oficio en Horizontal (Ancho x Alto) */
+        margin: 8mm;
+        /* Margen reducido para maximizar espacio */
+    }
 
-        position: absolute !important;
-        margin: 0 !important;
+    /* Regla para las hojas en orientación horizontal */
+    @page hoja-horizontal {
+        size: legal landscape;
+        /* O bien: size: 340mm 216mm; */
+        margin: 10mm;
+    }
 
-        top: 10mm !important;
-        left: 10mm !important;
-
-        box-shadow: none !important;
-        border: none !important;
-        background: #ffffff !important;
-        box-sizing: border-box !important;
+    /* 1. Elimina la altura fija que corta el contenedor de las páginas */
+    .pagina-oculta-pantalla:has(.pagina-horizontal),
+    .pagina-activa:has(.pagina-horizontal) {
+        height: auto !important;
+        /* Cambiado de 295mm a auto */
+        min-height: 100vh;
+        width: auto !important;
         page-break-after: always !important;
         break-after: page !important;
-
-        overflow: hidden !important;
+        position: relative !important;
+        display: block !important;
     }
 
-    body,
-    html {
-        background: #ffffff !important;
+    /* 2. Permite que la hoja crezca si la tabla tiene más filas */
+    .hoja-a4.pagina-horizontal {
+        width: 100% !important;
+        height: auto !important;
+        /* Cambiado de 216mm a auto */
+        min-height: 100% !important;
+        position: relative !important;
+        transform: none !important;
+        /* Si usas @page landscape nativo */
         margin: 0 !important;
-        padding: 0 !important;
-        width: 623mm !important;
+        top: 0 !important;
+        left: 0 !important;
+        overflow: visible !important;
+        /* Evita que la tabla se amputé verticalmente */
     }
 
-    .documento-preview-container {
+    /* 3. Aplicación de la orientación sin transform */
+    .pagina-horizontal {
+        page: hoja-horizontal;
+        width: 100% !important;
+        height: auto !important;
+        transform: none !important;
+        /* Elimina la rotación CSS */
+        position: static !important;
         padding: 0 !important;
-        background: transparent !important;
-        box-shadow: none !important;
+        /* box-shadow: none !important; */
         overflow: visible !important;
     }
 
-}
+    .hoja-a4 {
+        width: 100% !important;
+        height: auto !important;
+        /* Permitir que fluya la altura */
+        overflow: visible !important;
+        /* Evita el recorte de bordes */
+        box-shadow: none !important;
+        /* Evita que la sombra de la hoja aparezca en el PDF */
+        zoom: .75;
+    }
 
-/* Estilos para el contenedor principal de la vista previa */
-.documento-preview-container {
-    padding: 1rem;
-    background-color: #f3f4f6;
-    border-radius: 0.5rem;
-    overflow: auto;
+    /* 1. Reset de contenedor */
+    body,
+    html {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background-color: #ffffff !important;
+    }
+
+    .no-print,
+    .paginacion-controles {
+        display: none !important;
+    }
+
+    .page-container>.dashboard:first-of-type {
+        display: none;
+    }
+
+    .pagina-oculta-pantalla,
+    .pagina-activa {
+        display: block !important;
+        visibility: visible !important;
+        position: relative !important;
+    }
+
+    /* Fila separadora de Mes (ej. AGOSTO / ENERO) */
+    .fila-mes {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+        font-weight: bold !important;
+        text-align: center !important;
+    }
+
+    /* Solución al corte de Firmas */
+    .firmas,
+    .documento-footer {
+        page-break-inside: avoid !important;
+        /* Evita que la sección se divida */
+        break-inside: avoid !important;
+        margin-top: 15px !important;
+        display: block !important;
+    }
+
+    .linea-firma {
+        width: 60% !important;
+        margin: 25px auto 5px auto !important;
+        border-top: 1px solid #000 !important;
+    }
 }
 
 /* Hoja física en pantalla */
@@ -114,15 +230,18 @@
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
     color: #000000;
     width: 387mm;
-    min-height: 216mm;
+    min-height: 306mm;
     margin: 0 auto 2rem auto;
     box-sizing: border-box;
+    zoom: .80;
+
 }
 
 /* Hoja horizontal solo en pantalla */
 .pagina-horizontal {
     width: 387mm;
-    min-height: 216mm;
+    max-height: 306mm;
+    height: auto;
     margin: 0 auto 2rem auto;
     box-sizing: border-box;
 
@@ -164,7 +283,7 @@
 .documento-contenido {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
     color: #000000;
 }
 
@@ -259,10 +378,9 @@
 
 /* Pie de página */
 .documento-footer {
-    margin-top: 5rem;
+    margin-top: 2rem;
     padding-top: 1rem;
     border-top-width: 1px;
-    border-color: #e5e7eb;
     /* text-align: center; */
     font-size: 0.75rem;
     color: #000000;
@@ -271,7 +389,7 @@
 
 /* Firmas*/
 .firmas {
-    margin-top: 40px;
+    margin-top: 20px;
     text-align: center;
     margin-left: 80px;
     margin-right: 80px;
@@ -295,7 +413,7 @@
     height: fit-content;
     display: flex;
     gap: 20px;
-    height: 100%;
+    /* height: 100%; */
     align-items: flex-start;
 }
 
@@ -305,4 +423,72 @@
 
 .dashboard-right {
     flex: 2;
+}
+
+
+/*Diseño para la barra de carga animado*/
+.loader {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: space-evenly; */
+    padding: 30px;
+    /* box-shadow: 2px 2px 10px -5px lightgrey; */
+}
+
+.loading {
+    width: 100%;
+    height: 10px;
+    background: lightgrey;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.loading::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 10px;
+    background: #002;
+    border-radius: 10px;
+    z-index: 1;
+    animation: loading 0.6s alternate infinite;
+}
+
+.component-cargando {
+    color: #002;
+    font-size: 18px;
+    animation: bit 0.6s alternate infinite;
+}
+
+@keyframes bit {
+    from {
+        opacity: 0.3;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes loading {
+    0% {
+        left: -25%;
+    }
+
+    100% {
+        left: 70%;
+    }
+
+    0% {
+        left: -25%;
+    }
 }
