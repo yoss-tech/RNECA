@@ -364,6 +364,14 @@ class OficiosRnecaController extends Controller
     //Registrar observaciones de los oficios y cambiar su estatus a "Correcciones"
     public function observaOficios(Request $request)
     {
+        $request->validate([
+            'id_oficio' => 'required|string|exists:oficios_rneca,id_oficio',
+            'id_estatus' => 'required',
+            'observacion' => 'required|string',
+        ], [
+            'observacion.required' => 'La observación es obligatoria.',
+            'id_estatus.required' => 'El estatus del informe es obligatorio.',
+        ]);
         $validator = Validator::make($request->all(), [
             'id_oficio' => 'required|string|exists:oficios_rneca,id_oficio',
             'observacion' => 'required|string',
@@ -371,20 +379,17 @@ class OficiosRnecaController extends Controller
             'id_estatus' => 'required'
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Error en la validación de datos',
-                'status' => 400,
-                'errors' => $validator->errors()
-            ], 400);
-        }
-
-        $oficio = oficios_rneca::findOrFail($request->input('id_oficio'));
-
-        $oficio->observacion = $request->input('observacion');
-        $oficio->fecha_obser = $request->input('fecha_obser');
-        $oficio->id_estatus = $request->input('id_estatus');
-        $oficio->save();
+        DB::table('oficios_rneca')
+            ->where('id_oficio', $request->id_oficio)
+            ->update([
+                'id_estatus' => $request->id_estatus,
+                'observacion' => $request->observacion,
+                'fecha_obser' => now(),
+            ]);
+        
+        $oficio = DB::table('oficios_rneca')
+            ->where('id_oficio', $request->id_oficio)
+            ->first();
 
         if ($oficio->id_estatus === 'EST-8HCVW2C7') {
             $eca = Eca::where('clave_eca', $oficio->clave_eca)->first();
@@ -423,13 +428,21 @@ class OficiosRnecaController extends Controller
     }
 
     // lista de estatus para los oficios que pueden ser asignados a un oficio
-    public function estatusOficios(Request $request)
+    public function estatusOficios()
     {
         $estatusOfic = DB::table('tipo_estatus')
-            ->select('id_estatus', 'nombre_tipo')
-            ->whereIn('nombre_tipo', ['Correcciones', 'Validado', 'Rechazado'])
+            ->select(
+                'id_estatus',
+                'nombre_tipo'
+            )
+            ->whereIn('nombre_tipo', ['Correcciones', 'Validado'])
             ->get();
-        return response()->json($estatusOfic);
+
+        return response()->json([
+            'message' => 'Estatus obtenidos correctamente',
+            'status' => 200,
+            'body' => $estatusOfic,
+        ], 200);
     }
 
     /**

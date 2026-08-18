@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('detalle_eca', function (Blueprint $table) {
             $table->string('id_detalle_eca', 20)->primary();
-            $table->string('telefonos', 130);
-            $table->string('dias_hora_aten');
+            $table->string('telefonos', 150);
+            $table->string('dias_hora_aten', 150);
             $table->text('equipo_movil');
             $table->text('equipo_electr');
             $table->text('material_didact');
-            $table->text('comentarios', 300);
+            $table->text('comentarios');
             $table->string('id_estatus', 20);
             $table->string('clave_eca', 12);
 
