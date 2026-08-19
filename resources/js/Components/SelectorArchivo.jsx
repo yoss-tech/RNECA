@@ -1,51 +1,52 @@
 import React, { useState } from "react";
 import "/resources/css/Style.css";
+import Swal from "sweetalert2";
 
 function SelectorArchivo({ onChange, multiple = false }) {
   const [archivos, setArchivos] = useState([]);
-  const [error, setError] = useState('');
-  const MAX_SIZE = 5 * 1024 * 1024;
+  const MAX_SIZE_BYTES = 5 * 1024 * 1024;
 
   const manejarArchivo = (e) => {
     const listaArchivos = Array.from(e.target.files);
 
-    if (!listaArchivos.length > 1) {
-      setError(
-        Swal.fire({
-          title: 'Error',
-          text: 'Solo puedes subir un solo archivo',
-          icon: 'error',
-          confirmButtonText: 'Aceptar'
-        })
-      );
+    if (listaArchivos.length === 0) return;
+
+    if (!multiple && listaArchivos.length > 1) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Solo puedes subir un solo archivo',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
       e.target.value = '';
       return;
     }
 
-    if (listaArchivos > MAX_SIZE) {
-      setError(
-        Swal.fire({
-          title: 'Error',
-          text: 'El archivo es muy pesado, revisa que no sea mayor a 5MB',
-          icon: 'error',
-          confirmButtonText: 'Aceptar'
-        })
-      );
-      e.target.value = '';
-      return;
-    }
+    for (const file of listaArchivos) {
+      const isPdfType = file.type === 'application/pdf';
+      const isPdfExtension = file.name.toLowerCase().endsWith('.pdf');
 
-    if (listaArchivos.type !== 'application/pdf') {
-      setError(
+      if (!isPdfType && !isPdfExtension) {
         Swal.fire({
           title: 'Error',
-          text: 'El archivo seleccionado no es un PDF',
+          text: `El archivo "${file.name}" no es un PDF válido`,
           icon: 'error',
           confirmButtonText: 'Aceptar'
-        })
-      );
-      e.target.value = '';
-      return;
+        });
+        e.target.value = '';
+        return;
+      }
+
+      if (file.size > MAX_SIZE_BYTES) {
+        Swal.fire({
+          title: 'Error',
+          text: `El archivo "${file.name}" supera el límite de 5 MB`,
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+        e.target.value = '';
+        return;
+      }
     }
 
     setArchivos(listaArchivos);
@@ -64,7 +65,7 @@ function SelectorArchivo({ onChange, multiple = false }) {
         onChange={manejarArchivo}
         className="selector-control"
         style={{ display: 'none' }}
-        accept="application/pdf"
+        accept=".pdf, application/pdf"
       />
       <label
         htmlFor={inputId}
@@ -75,11 +76,15 @@ function SelectorArchivo({ onChange, multiple = false }) {
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.backgroundColor = '#98989a';
-          e.currentTarget.style.color = '#fff'
+          e.currentTarget.style.color = '#fff';
         }}
       >
         <i className="bi bi-file-earmark-arrow-up"></i>
-        <span>{archivos.length > 0 ? (multiple ? `${archivos.length} archivos seleccionados` : archivos[0].name) : "Seleccionar archivo"}</span>
+        <span>
+          {archivos.length > 0 
+            ? (multiple ? `${archivos.length} archivos seleccionados` : archivos[0].name) 
+            : "Seleccionar archivo"}
+        </span>
       </label>
     </div>
   );
