@@ -21,7 +21,7 @@ function SelectorImagen({ onChange, multiple = false }) {
   const manejarImagen = (e) => {
     const archivos = Array.from(e.target.files);
 
-    if(archivos.length > MAX_IMAGENES){
+    if (archivos.length > MAX_IMAGENES) {
       setError(
         Swal.fire({
           title: 'Error',
@@ -30,7 +30,7 @@ function SelectorImagen({ onChange, multiple = false }) {
           confirmButtonText: 'Aceptar'
         })
       );
-      e.target.value = ''; 
+      e.target.value = '';
       return;
     }
 
@@ -45,20 +45,18 @@ function SelectorImagen({ onChange, multiple = false }) {
             confirmButtonText: 'Aceptar'
           })
         );
-        e.target.value = ''; 
+        e.target.value = '';
         return;
       }
 
-      if(file.type !== 'image/*'){
-        setError(
-          Swal.fire({
-            title: 'Error',
-            text: 'Uno de los archivo no es una imagen',
-            icon: 'error',
-            confirmButtonText: 'Aceptar'
-          })
-        );
-        e.target.value = ''; 
+      if (!file.type.startsWith('image/')) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Uno de los archivos no es una imagen válida',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+        e.target.value = '';
         return;
       }
     }

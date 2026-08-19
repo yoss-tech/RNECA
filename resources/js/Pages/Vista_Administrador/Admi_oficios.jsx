@@ -364,8 +364,8 @@ function Admin_oficios() {
             );
         });
 
-        const firstPageRows = 35;
-        const subsequentPageRows = 44;
+        const firstPageRows = 55;
+        const subsequentPageRows = 70;
         const chunks = [];
         if (allRowElements.length > 0) {
             let remainingRows = [...allRowElements];
