@@ -127,3 +127,9 @@
 .swal2-popup.custom-swal-zindex {
     z-index: 99999 !important;
 }
+
+.modal-oficio{
+    width: 100%;
+    max-width: 155vh;
+    max-height: 155vh;
+}

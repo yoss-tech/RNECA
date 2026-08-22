@@ -282,7 +282,7 @@ class EcaController extends Controller
     public function show()
     {
         $eca = DB::table('eca')
-            ->join('detalle_eca', 'eca.clave_eca', '=', 'detalle_eca.clave_eca')
+            ->leftJoin('detalle_eca', 'eca.clave_eca', '=', 'detalle_eca.clave_eca')
             ->join('direccion', 'eca.id_direccion', '=', 'direccion.id_direccion')
             ->join('municipio', 'direccion.id_municipio', '=', 'municipio.id_municipio')
             ->join('usuarios', 'eca.id_usuario', '=', 'usuarios.id_usuario')

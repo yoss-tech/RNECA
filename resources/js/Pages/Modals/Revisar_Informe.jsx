@@ -163,7 +163,7 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
         <>
         <Toast alerts={alerts} />
         <div className="overlay">
-            <div className="modal-box modal-grid" style={{ width: showPdf ? '85%' : '500px', height: showPdf ? '90vh' : 'auto', transition: 'width 0.3s ease, height 0.3s ease' }}>
+            <div className="modal-box modal-grid modal-oficio" style={{ width: showPdf ? '85%' : '500px', height: showPdf ? '90vh' : 'auto', transition: 'width 0.3s ease, height 0.3s ease' }}>
                 <div className="modal-head">
                     <h3>Revisión de informes</h3>
                 </div>
@@ -184,7 +184,7 @@ function Revisar_Informe({ cerrarModal, idOficio, cargarLista }) {
                                         style={{ width: '100%', height: '100%', border: 'none' }}
                                     />
                                 </div>
-                                <div className="dashboard-right">
+                                <div className="dashboard-right" style={{ width: '40%'}}>
                                     <div className="form-group">
                                         <label className="form-label">Estatus</label>
                                         <select

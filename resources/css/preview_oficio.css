@@ -233,14 +233,14 @@
     min-height: 306mm;
     margin: 0 auto 2rem auto;
     box-sizing: border-box;
-    zoom: .80;
+    zoom: .85;
 
 }
 
 /* Hoja horizontal solo en pantalla */
 .pagina-horizontal {
     width: 387mm;
-    max-height: 306mm;
+    max-height: 326mm;
     height: auto;
     margin: 0 auto 2rem auto;
     box-sizing: border-box;
