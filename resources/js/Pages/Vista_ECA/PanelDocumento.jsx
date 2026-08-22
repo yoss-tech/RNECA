@@ -117,8 +117,22 @@ function PanelDocumento() {
         Swal.fire({ title: "¡Reenviado!", text: "Oficio corregido reenviado para revisión correctamente.", icon: "success", confirmButtonText: "Aceptar" });
       } else {
         // Si es la primera vez o no está en correcciones, lo creamos
-        await create_ofice({ mes_oficio: mes_oficio, ruta_oficio: ruta_oficio });
-        Swal.fire({ title: "¡Enviado!", text: "Archivo enviado correctamente.", icon: "success", confirmButtonText: "Aceptar" });
+        const result = await Swal.fire({
+          title: '¿Estas seguro de enviar el oficio?',
+          text: 'Asegurece que de que toda la información sea correcta antes de continuar. ¡Si todo esta bien, continua con el envio!',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Aceptar",
+          cancelButtonText: "Cancelar"
+
+        })
+
+        if (result.isConfirmed) {
+          create_ofice({ mes_oficio: mes_oficio, ruta_oficio: ruta_oficio });
+          Swal.fire({ title: "¡Enviado!", text: "Archivo enviado correctamente.", icon: "success", confirmButtonText: "Aceptar" });
+        }
       }
     } catch (error) {
       console.error("Error al enviar/actualizar oficio:", error);

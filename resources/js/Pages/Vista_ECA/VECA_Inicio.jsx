@@ -15,6 +15,7 @@ import Swal from "sweetalert2";
 import Notificaciones_Eca from "../Modals/Notificaciones.jsx";
 import PerfilECA from "../Modals/Perfil.jsx";
 import miImagen from "/resources/img/PNG/Logotipo1.png";
+import { sistemaActivo } from "@/Components/bloqueo_sistema.jsx";
 import "/resources/css/Style.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
@@ -34,6 +35,11 @@ function VECA_Inicio() {
   const [hasShownCorrectionsAlert, setHasShownCorrecorrectionsAlert] = useState(false); // Nuevo estado
   const [ultimoOficioInfo, setUltimoOficioInfo] = useState({ mes: '', estatus: '', cargando: true });
   const [contador, setContador] = useState(0);
+  const [canRegister, setCanRegister] = useState(false);
+
+  useEffect(() => {
+    setCanRegister(sistemaActivo());
+  }, []);
 
   useEffect(() => {
     const fetchRegistrationStatus = async () => {
@@ -219,6 +225,18 @@ function VECA_Inicio() {
   useEffect(() => {
     cargarContador();
   }, []);
+
+  if (!canRegister) {
+    return (
+      <div style={{ textAlign: 'center', padding: '50px' }}>
+        <h2>Sistema Bloqueado Temporalmente</h2>
+        <p>
+          El período para realizar nuevos registros ha finalizado. 
+          El sistema se habilitará nuevamente durante los <strong>primeros 5 días del próximo mes</strong>.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <>
